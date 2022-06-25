@@ -14,4 +14,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - The coordinates of the hexagon cells are defined.
 
-- View function for rendering the board consists of hexagon cells are written.
+- View function for rendering the board consists of hexagon cells is written.
+
+- Functions to move and render characters on the board are added. (Use a solid black circle to represent the character)

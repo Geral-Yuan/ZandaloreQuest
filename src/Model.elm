@@ -21,4 +21,4 @@ init _ =
 
 initModel : Model
 initModel =
-    Model [(Character Warrior (6, 6) 100 20 5)] (initBoard 1) (1000,1000)
+    Model [(Character Warrior (6, 6) 100 20 5 True)] (initBoard 1) (1500,1000)

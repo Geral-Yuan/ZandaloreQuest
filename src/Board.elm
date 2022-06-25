@@ -10,15 +10,20 @@ pairRange x ( y1, y2 ) =
 
 map : List Pos
 map =
-    pairRange 1 ( 6, 8 )
-        ++ pairRange 2 ( 4, 9 )
-        ++ pairRange 3 ( 3, 9 )
-        ++ pairRange 4 ( 2, 9 )
-        ++ pairRange 5 ( 2, 8 )
-        ++ pairRange 6 ( 1, 8 )
-        ++ pairRange 7 ( 1, 7 )
-        ++ pairRange 8 ( 1, 6 )
-        ++ pairRange 9 ( 2, 4 )
+    List.concat
+        (List.map2 pairRange
+            (List.range 1 9)
+            [ ( 5, 9 )
+            , ( 4, 9 )
+            , ( 3, 9 )
+            , ( 2, 9 )
+            , ( 1, 9 )
+            , ( 1, 8 )
+            , ( 1, 7 )
+            , ( 1, 6 )
+            , ( 1, 5 )
+            ]
+        )
 
 
 type alias Board =
