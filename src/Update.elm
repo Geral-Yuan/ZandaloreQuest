@@ -8,8 +8,11 @@ import Model exposing (Model)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Key dir False->
+        Key dir False ->
             ( moveChara model dir, Cmd.none )
+
+        Select class False ->
+            ( selectChara model class, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -44,6 +47,21 @@ moveChara model dir =
 
         Just chara ->
             { model | characters = { chara | pos = vecAdd chara.pos dr } :: unselectedChara model.characters }
+
+
+selectChara : Model -> Class -> Model
+selectChara model class =
+    let
+        ( wantedChara, unwantedChara ) =
+            List.partition (\chara -> chara.class == class) model.characters
+
+        newwantedChara =
+            List.map (\chara -> { chara | selected = True }) wantedChara
+
+        newunwantedChara =
+            List.map (\chara -> { chara | selected = False }) unwantedChara
+    in
+    { model | characters = newwantedChara ++ newunwantedChara }
 
 
 selectedChara : List Character -> Maybe Character

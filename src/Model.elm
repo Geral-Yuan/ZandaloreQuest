@@ -1,16 +1,18 @@
 module Model exposing (..)
 
-import Data exposing (..)
+import Board exposing (..)
 import Browser.Dom exposing (getViewport)
+import Data exposing (..)
 import Html.Attributes exposing (class)
 import Message exposing (..)
-import Board exposing (..)
+
 
 type alias Model =
     { characters : List Character
     , board : Board
-    , size : (Float, Float)
+    , size : ( Float, Float )
     }
+
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -21,4 +23,9 @@ init _ =
 
 initModel : Model
 initModel =
-    Model [(Character Warrior (6, 6) 100 20 5 True)] (initBoard 1) (1500,1000)
+    Model
+        [ Character Warrior ( 6, 6 ) 100 15 5 False
+        , Character Archer ( 5, 8 ) 40 20 3 False
+        ]
+        (initBoard 1)
+        ( 1500, 1000 )

@@ -47,5 +47,17 @@ key on keycode =
         65 ->
             Key A on
 
+        49 ->
+            Select Warrior on -- Key 1
+        
+        50 ->
+            Select Archer on -- Key 2
+        
+        51 ->
+            Select Assassin on -- Key 3
+
+        52 ->
+            Select Mage on -- Key 4
+
         _ ->
             Key_None

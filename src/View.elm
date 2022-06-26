@@ -53,23 +53,31 @@ viewAll model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewMap model.board ++ List.map viewChara model.characters)
+            (viewMap model.board ++ List.map viewChara model.characters ++ List.map viewEnemy model.board.enemy)
         ]
 
 
 viewMap : Board -> List (Svg msg)
 viewMap board =
-    List.map viewCell board.map
+    List.map (viewCell board) board.map
 
 
-viewCell : Pos -> Svg msg
-viewCell ( row, column ) =
-    Svg.polygon
-        [ SvgAttr.fill "white"
-        , SvgAttr.stroke "blue"
-        , SvgAttr.points (detPoints (findPos ( row, column )))
-        ]
-        []
+viewCell : Board -> Pos -> Svg msg
+viewCell board ( row, column ) =
+    if List.member (row, column) board.barrier then
+        Svg.polygon
+            [ SvgAttr.fill "black"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+    else
+        Svg.polygon
+            [ SvgAttr.fill "white"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
 
 
 detPoints : ( Float, Float ) -> String
@@ -93,11 +101,66 @@ viewChara character =
             findPos character.pos
     in
     case character.class of
-        _ ->
+        Warrior ->
             Svg.circle
                 [ SvgAttr.cx (toString x)
                 , SvgAttr.cy (toString y)
                 , SvgAttr.r "40"
-                , SvgAttr.fill "black"
+                , SvgAttr.fill "red"
+                ]
+                []
+
+        Archer ->
+            Svg.circle
+                [ SvgAttr.cx (toString x)
+                , SvgAttr.cy (toString y)
+                , SvgAttr.r "40"
+                , SvgAttr.fill "yellow"
+                ]
+                []
+
+        Assassin ->
+            Svg.circle
+                [ SvgAttr.cx (toString x)
+                , SvgAttr.cy (toString y)
+                , SvgAttr.r "40"
+                , SvgAttr.fill "blue"
+                ]
+                []
+
+        Mage ->
+            Svg.circle
+                [ SvgAttr.cx (toString x)
+                , SvgAttr.cy (toString y)
+                , SvgAttr.r "40"
+                , SvgAttr.fill "green"
+                ]
+                []
+
+
+viewEnemy : Enemy -> Svg Msg
+viewEnemy enemy =
+    let
+        ( x, y ) =
+            findPos enemy.pos
+    in
+    case enemy.class of
+        Warrior ->
+            Svg.rect
+                [ SvgAttr.x (toString (x - 30))
+                , SvgAttr.y (toString (y - 30))
+                , SvgAttr.width "60"
+                , SvgAttr.height "60"
+                , SvgAttr.fill "red"
+                ]
+                []
+
+        _ ->
+            Svg.rect
+                [ SvgAttr.x (toString (x - 30))
+                , SvgAttr.y (toString (y - 30))
+                , SvgAttr.width "60"
+                , SvgAttr.height "60"
+                , SvgAttr.fill "yellow"
                 ]
                 []

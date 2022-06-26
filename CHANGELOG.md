@@ -6,6 +6,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.2] -- 2022-06-26
+
+- Render all kinds of characters, enemies and barriers on the board using different color shapes.
+
+- Realize the selection of characters by the players (Press 1/2/3/4 to select Warrior/Archer/Assissin/Mage)
+
 ## [m1.1] -- 2022-06-25
 
 ### Added

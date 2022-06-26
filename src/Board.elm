@@ -37,14 +37,14 @@ initbarrier : Int -> List Pos
 initbarrier k =
     case k of
         _ ->
-            [ ( 5, 5 ) ]
+            [ ( 4, 6 ), ( 5, 5 ), ( 6, 4 ) ]
 
 
 initenemy : Int -> List Enemy
 initenemy k =
     case k of
         _ ->
-            [ Enemy ( 3, 3 ) 100 10 5 ]
+            [ Enemy Warrior ( 3, 3 ) 100 10 5 ]
 
 
 initBoard : Int -> Board

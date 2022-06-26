@@ -44,9 +44,9 @@ type alias Pos =
 
 type Class
     = Warrior
+    | Archer
     | Assassin
     | Mage
-    | Archer
 
 
 type alias Character =
@@ -60,7 +60,8 @@ type alias Character =
 
 
 type alias Enemy =
-    { pos : Pos
+    { class : Class
+    , pos : Pos
     , health : Int
     , damage : Int
     , armour : Int
