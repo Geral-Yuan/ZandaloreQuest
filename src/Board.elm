@@ -30,6 +30,7 @@ type alias Board =
     { map : List Pos
     , barrier : List Pos
     , enemy : List Enemy
+    , turn : Turn
     }
 
 
@@ -37,18 +38,21 @@ initbarrier : Int -> List Pos
 initbarrier k =
     case k of
         _ ->
-            [ ( 5, 5 ) ]
+            [(5,5)]
 
 
 initenemy : Int -> List Enemy
 initenemy k =
     case k of
         _ ->
-            [ Enemy ( 3, 3 ) 100 10 5 ]
+            [ Enemy Warrior ( 3, 3 ) 100 10 5 0 True
+            , Enemy Warrior ( 1, 8 ) 100 10 5 0 True
+            , Enemy Warrior ( 5, 2 ) 100 10 5 0 True
+            ]
 
 
 initBoard : Int -> Board
 initBoard k =
     case k of
         _ ->
-            Board map (initbarrier k) (initenemy k)
+            Board map (initbarrier k) (initenemy k) HeroTurn
