@@ -8,9 +8,10 @@ import Message exposing (..)
 
 
 type alias Model =
-    { characters : List Character
+    { heroes : List Hero
     , board : Board
     , size : ( Float, Float )
+    , time : Float
     }
 
 
@@ -24,8 +25,9 @@ init _ =
 initModel : Model
 initModel =
     Model
-        [ Character Warrior ( 6, 6 ) 100 15 5 False
-        , Character Archer ( 5, 8 ) 40 20 3 False
+        [ Hero Warrior ( 6, 6 ) 100 15 5 5 False
+        , Hero Archer ( 5, 8 ) 40 20 3 5 False
         ]
         (initBoard 1)
         ( 1500, 1000 )
+        0

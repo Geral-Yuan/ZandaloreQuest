@@ -8,4 +8,5 @@ type Msg
     | Select Class Bool
     | Resize Int Int
     | Tick Float
+    | EndTurn
     | Key_None

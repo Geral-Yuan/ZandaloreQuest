@@ -1,5 +1,7 @@
 module Data exposing (..)
 
+import Random exposing (maxInt)
+import Svg.Attributes exposing (x2, y2)
 import Time exposing (Posix)
 
 
@@ -42,6 +44,20 @@ type alias Pos =
     ( Int, Int )
 
 
+type Orientation
+    = LeftUp
+    | RightUp
+    | Right
+    | RightDown
+    | LeftDown
+    | Left
+
+
+type Turn
+    = HeroTurn
+    | EnemyTurn
+
+
 type Class
     = Warrior
     | Archer
@@ -49,12 +65,13 @@ type Class
     | Mage
 
 
-type alias Character =
+type alias Hero =
     { class : Class
     , pos : Pos
     , health : Int
     , damage : Int
     , armour : Int
+    , energy : Int
     , selected : Bool
     }
 
@@ -65,6 +82,8 @@ type alias Enemy =
     , health : Int
     , damage : Int
     , armour : Int
+    , steps : Int
+    , done : Bool
     }
 
 
