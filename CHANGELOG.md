@@ -16,6 +16,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Add `time` to Model, add `energy` to Hero, add `turn` to Board and add `steps` and `done` to Enemy
 
+- Realize the change of the turn between the player and the automatic enemy.
+
+- Realize the automatic motion of the enemy. (Not that intelligent now. Try to move towards the nearest hero 2 step each turn without bypassing barriers)
+
+- Define the distance between two Hexagons and define function to calculate distance between two Hexagons and function to find the least distance between one Hexagon and a list of Hexagons.
+
 ### Changed
 
 - Change the name of type Charater into Hero and so do all relative parameters.

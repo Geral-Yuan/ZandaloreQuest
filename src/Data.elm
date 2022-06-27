@@ -94,3 +94,47 @@ type Dir
     | X
     | Z
     | A
+
+
+distance : Pos -> Pos -> Int
+distance ( x1, y1 ) ( x2, y2 ) =
+    let
+        maxDis =
+            max (max (abs (x1 - x2)) (abs (y1 - y2))) (abs (x1 + y1 - x2 - y2))
+    in
+    abs (x1 - x2) + abs (y1 - y2) + abs (x1 + y1 - x2 - y2) - maxDis
+
+
+leastdistance : List Pos -> Pos -> Maybe Int
+leastdistance pos_list pos =
+    List.minimum (List.map (distance pos) pos_list)
+
+
+detOrientation : Pos -> Pos -> Orientation
+detOrientation ( x1, y1 ) ( x2, y2 ) =
+    let
+        orient1 =
+            y1 >= y2
+
+        orient2 =
+            x1 <= x2
+
+        orient3 =
+            x1 + y1 <= x2 + y2
+    in
+    case ( orient1, orient2 ) of
+        ( True, False ) ->
+            RightDown
+
+        ( True, True ) ->
+            if not orient3 then
+                LeftDown
+
+            else
+                Left
+
+        ( False, True ) ->
+            RightUp
+
+        ( False, False ) ->
+            Right
