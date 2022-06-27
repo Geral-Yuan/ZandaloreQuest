@@ -88,8 +88,12 @@ moveHero model dir =
             model
 
         Just hero ->
-            if legalHeroMove model.board model.heroes hero dr then
-                { model | heroes = { hero | pos = vecAdd hero.pos dr } :: unselectedHero model.heroes }
+            if legalHeroMove model.board model.heroes hero dr && hero.energy > 1 then
+                let
+                    currEnergy =
+                        hero.energy
+                in
+                { model | heroes = { hero | pos = vecAdd hero.pos dr, energy = currEnergy - 2 } :: unselectedHero model.heroes }
 
             else
                 model
