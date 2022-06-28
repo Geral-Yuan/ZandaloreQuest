@@ -27,7 +27,7 @@ initModel =
     Model
         [ Hero Warrior ( 6, 6 ) 100 15 5 5 False 1
         , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-        , Hero Assassin ( 8, 5 ) 40 20 3 5 False 3
+        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
         ]
         (initBoard 1)
         ( 1500, 1000 )

@@ -11,9 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - numberOnBoard field to hero class as an index for the heroes in the game because players can choose different heroes every round
 - Assasin class for initModel
-- Images of heroes in assets folder for debugging and game mechanics 
+- Images of heroes and enemies in assets folder for debugging and game mechanics 
 - Added the images into the view function 
-- Added viewInformation, getHero and viewHeroInfo functions so that the health and energy of heroes can be displayed
+- Added viewInformation, viewHeroInfo functions so that the selected hero's information can be displayed
 ### Changed
 - moveHero function can now only be move the character only if the hero has sufficient energy 
 - 
