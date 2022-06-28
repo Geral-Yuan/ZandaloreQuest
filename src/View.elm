@@ -2,6 +2,7 @@ module View exposing (view)
 
 import Board exposing (..)
 import Data exposing (..)
+import ShortestPath exposing (shortestPath)
 import Debug exposing (toString)
 import Html exposing (Html, col, div)
 import Html.Attributes as HtmlAttr
@@ -39,6 +40,7 @@ viewAll model =
 
             else
                 Basics.min 1 (w / pixelWidth)
+        board = model.board
     in
     div
         [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
@@ -54,9 +56,16 @@ viewAll model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewMap model.board ++ List.map viewHero model.heroes ++ List.map viewEnemy model.board.enemy)
+            (viewMap model.board 
+            ++ List.map viewHero model.heroes 
+            ++ List.map viewEnemy model.board.enemy
+            ++ (List.map (viewCoordinate) board.map)
+            ++ viewRoute model.board model.heroes (1,9) (9,1)
+            )
         , endTurnButton
         , viewHeroInfo model
+        
+             
         ]
 
 
@@ -83,7 +92,40 @@ viewCell board ( row, column ) =
             ]
             []
 
+viewCoordinate :  Pos -> Svg msg
+viewCoordinate  ( row, column ) =
+    let
+        (c_x, c_y) = findPos ( row, column )
+        s_row = toString row
+        s_column = toString column
+    in
+    
+    Svg.text_
+        [ SvgAttr.x (toString c_x)
+        , SvgAttr.y (toString c_y)
+        , SvgAttr.textAnchor "middle"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "grey"
+        ]
+        [
+            Svg.text (s_row ++ " , " ++ s_column) 
+        ]
 
+{- use it to view the shortest path -}
+viewRoute : Board -> List Hero  -> Pos -> Pos -> List (Svg msg)
+viewRoute board hero_list begin end=
+    let
+       
+        list_points = shortestPath board hero_list begin end
+        
+    in
+
+    List.map (\x -> Svg.circle
+                [ SvgAttr.cx (toString (Tuple.first x))
+                , SvgAttr.cy (toString (Tuple.second x))
+                , SvgAttr.r "5"
+                ]
+                []) (List.map findPos list_points)
 detPoints : ( Float, Float ) -> String
 detPoints ( x, y ) =
     String.concat
