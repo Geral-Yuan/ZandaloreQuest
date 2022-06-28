@@ -50,15 +50,14 @@ viewAll model =
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
         ]
-        ([ Svg.svg
+        [ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
             (viewMap model.board ++ List.map viewHero model.heroes ++ List.map viewEnemy model.board.enemy)
-         , endTurnButton
-         ]
-            ++ viewInformation model
-        )
+        , endTurnButton
+        , viewHeroInfo model
+        ]
 
 
 viewMap : Board -> List (Svg msg)
@@ -113,7 +112,7 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/warrior.png"
+                , SvgAttr.xlinkHref "../assets/image/WarriorGood.png"
                 ]
                 []
 
@@ -124,7 +123,7 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/archer.png"
+                , SvgAttr.xlinkHref "../assets/image/ArcherGood.png"
                 ]
                 []
 
@@ -135,16 +134,18 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/assassin.png"
+                , SvgAttr.xlinkHref "../assets/image/AssassinGood.png"
                 ]
                 []
 
         Mage ->
-            Svg.circle
-                [ SvgAttr.cx (toString x)
-                , SvgAttr.cy (toString y)
-                , SvgAttr.r "40"
-                , SvgAttr.fill "green"
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "../assets/image/MageGood.png"
                 ]
                 []
 
@@ -157,21 +158,45 @@ viewEnemy enemy =
     in
     case enemy.class of
         Warrior ->
-            Svg.rect
-                [ SvgAttr.x (toString (x - 30))
-                , SvgAttr.y (toString (y - 30))
-                , SvgAttr.width "60"
-                , SvgAttr.height "60"
-                , SvgAttr.fill "red"
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "../assets/image/WarriorBad.png"
                 ]
                 []
 
-        _ ->
-            Svg.rect
-                [ SvgAttr.x (toString (x - 30))
-                , SvgAttr.y (toString (y - 30))
-                , SvgAttr.width "60"
-                , SvgAttr.height "60"
-                , SvgAttr.fill "yellow"
+        Archer ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "../assets/image/ArcherBad.png"
+                ]
+                []
+
+        Assassin ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "../assets/image/AssassinBad.png"
+                ]
+                []
+
+        Mage ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "../assets/image/MageBad.png"
                 ]
                 []
