@@ -73,6 +73,7 @@ type alias Hero =
     , armour : Int
     , energy : Int
     , selected : Bool
+    , numberOnBoard : Int
     }
 
 

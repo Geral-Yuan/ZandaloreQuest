@@ -48,6 +48,7 @@ key on keycode =
             Key A on
 
         49 ->
+        -- This might have to change because players can select 3 heroes from their inventory
             Select Warrior on -- Key 1
         
         50 ->
