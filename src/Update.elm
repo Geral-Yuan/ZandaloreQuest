@@ -28,7 +28,7 @@ update msg model =
                     ( model, Cmd.none )
 
         EndTurn ->
-            ( { model | board = turnEnemy model.board }, Cmd.none )
+            ( { model | board = turnEnemy model.board, heroes = List.map resetEnergy model.heroes }, Cmd.none )
 
         Tick elapsed ->
             case model.board.turn of
@@ -45,6 +45,22 @@ update msg model =
 turnEnemy : Board -> Board
 turnEnemy board =
     { board | turn = EnemyTurn, enemy = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemy }
+
+
+resetEnergy : Hero -> Hero
+resetEnergy hero =
+    case hero.class of
+        Warrior ->
+            { hero | energy = 5 }
+
+        Archer ->
+            { hero | energy = 5 }
+
+        Mage ->
+            { hero | energy = 5 }
+
+        Assassin ->
+            { hero | energy = 6 }
 
 
 checkTurn : Model -> Model
@@ -88,8 +104,12 @@ moveHero model dir =
             model
 
         Just hero ->
-            if legalHeroMove model.board model.heroes hero dr then
-                { model | heroes = { hero | pos = vecAdd hero.pos dr } :: unselectedHero model.heroes }
+            if legalHeroMove model.board model.heroes hero dr && hero.energy > 1 then
+                let
+                    currEnergy =
+                        hero.energy
+                in
+                { model | heroes = { hero | pos = vecAdd hero.pos dr, energy = currEnergy - 2 } :: unselectedHero model.heroes }
 
             else
                 model
