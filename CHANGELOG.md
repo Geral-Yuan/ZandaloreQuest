@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Images of heroes and enemies in assets folder for debugging and game mechanics 
 - Added the images into the view function 
 - Added viewInformation, viewHeroInfo functions so that the selected hero's information can be displayed
+- Added resetEnergy function to reset heroes' energy every end of the turn
 ### Changed
 - moveHero function can now only be move the character only if the hero has sufficient energy 
 - 
