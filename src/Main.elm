@@ -47,18 +47,26 @@ key on keycode =
         65 ->
             Key A on
 
+        72 ->
+            -- Key H
+            Hit on
+
         49 ->
-        -- This might have to change because players can select 3 heroes from their inventory
-            Select Warrior on -- Key 1
-        
+            -- Key 1
+            -- This might have to change because players can select 3 heroes from their inventory
+            Select Warrior on
+
         50 ->
-            Select Archer on -- Key 2
-        
+            -- Key 2
+            Select Archer on
+
         51 ->
-            Select Assassin on -- Key 3
+            -- Key 3
+            Select Assassin on
 
         52 ->
-            Select Mage on -- Key 4
+            -- Key 4
+            Select Mage on
 
         _ ->
             Key_None

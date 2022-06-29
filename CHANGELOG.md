@@ -6,6 +6,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.6] -- 2022-6-29
+
+### Added 
+- added key H for hit message
+- added checkMelee, checkForEnemy, checkAttack functions to check for damage
+- added the ViewAllEnemy file that contains all views related to enemies
+- added the ViewAllHero file that contains all views related to heroes
+- added the ViewOthers file that contains all other views
+### Changed
+- changed enemy in board to enemies in board type 
+- changed numberOnBoard to indexOnBoard in hero type 
+### Removed
+- viewInfo file
+
 ## [m1.5] -- 2022-6-28
 
 ### Added
@@ -30,7 +45,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Added resetEnergy function to reset heroes' energy every end of the turn
 ### Changed
 - moveHero function can now only be move the character only if the hero has sufficient energy 
-- 
+
 ## [m1.3] -- 2022-6-27
 
 ### Added
