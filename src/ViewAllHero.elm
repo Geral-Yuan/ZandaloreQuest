@@ -64,7 +64,7 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/WarriorGood.png"
+                , SvgAttr.xlinkHref "./assets/image/WarriorGood.png"
                 ]
                 []
 
@@ -75,7 +75,7 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/ArcherGood.png"
+                , SvgAttr.xlinkHref "./assets/image/ArcherGood.png"
                 ]
                 []
 
@@ -86,7 +86,7 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/AssassinGood.png"
+                , SvgAttr.xlinkHref "./assets/image/AssassinGood.png"
                 ]
                 []
 
@@ -97,6 +97,6 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/MageGood.png"
+                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
                 ]
                 []

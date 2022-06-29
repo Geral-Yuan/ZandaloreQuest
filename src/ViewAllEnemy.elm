@@ -27,7 +27,7 @@ viewEnemy enemy =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/WarriorBad.png"
+                , SvgAttr.xlinkHref "./assets/image/WarriorBad.png"
                 ]
                 []
 
@@ -38,7 +38,7 @@ viewEnemy enemy =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/ArcherBad.png"
+                , SvgAttr.xlinkHref "./assets/image/ArcherBad.png"
                 ]
                 []
 
@@ -49,7 +49,7 @@ viewEnemy enemy =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/AssassinBad.png"
+                , SvgAttr.xlinkHref "./assets/image/AssassinBad.png"
                 ]
                 []
 
@@ -60,7 +60,7 @@ viewEnemy enemy =
                 , SvgAttr.x (toString (x - 35))
                 , SvgAttr.y (toString (y - 35))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "../assets/image/MageBad.png"
+                , SvgAttr.xlinkHref "./assets/image/MageBad.png"
                 ]
                 []
 
