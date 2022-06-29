@@ -73,7 +73,7 @@ type alias Hero =
     , armour : Int
     , energy : Int
     , selected : Bool
-    , numberOnBoard : Int
+    , indexOnBoard : Int --give an index to the heroes on the board
     }
 
 
@@ -85,6 +85,7 @@ type alias Enemy =
     , armour : Int
     , steps : Int
     , done : Bool
+    , indexOnBoard : Int --give an index to the enemies on the board
     }
 
 
