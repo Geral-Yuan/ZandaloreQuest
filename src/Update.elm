@@ -6,6 +6,7 @@ import Html.Attributes exposing (target)
 import Message exposing (..)
 import Model exposing (Model)
 import String exposing (endsWith)
+import ViewAllEnemy exposing (getEnemy)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -27,6 +28,14 @@ update msg model =
                 EnemyTurn ->
                     ( model, Cmd.none )
 
+        Hit False ->
+            case model.board.turn of
+                HeroTurn ->
+                    ( checkAttack model, Cmd.none )
+
+                EnemyTurn ->
+                    ( model, Cmd.none )
+
         EndTurn ->
             ( { model | board = turnEnemy model.board, heroes = List.map resetEnergy model.heroes }, Cmd.none )
 
@@ -42,9 +51,102 @@ update msg model =
             ( model, Cmd.none )
 
 
+checkAttack : Model -> Model
+checkAttack model =
+    -- reduce the energy of a hero when player clicks h (hit) and check surroundings for enemies
+    case selectedHero model.heroes of
+        Nothing ->
+            model
+
+        Just hero ->
+            if hero.energy > 2 then
+                let
+                    currEnergy =
+                        hero.energy
+                in
+                { model | heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
+
+            else
+                model
+
+
+checkForEnemy : Model -> Board
+checkForEnemy model =
+    -- check if there are enemies in the surroundings
+    case selectedHero model.heroes of
+        Nothing ->
+            model.board
+
+        Just hero ->
+            let
+                enemy =
+                    { class = Data.Warrior
+                    , pos = ( 6, 6 )
+                    , health = 100
+                    , damage = 15
+                    , armour = 5
+                    , steps = 0
+                    , done = False
+                    , indexOnBoard = 1
+                    }
+
+                board =
+                    model.board
+
+                enemy1 =
+                    getEnemy enemy model.board.enemies 1
+
+                enemy2 =
+                    getEnemy enemy model.board.enemies 2
+
+                enemy3 =
+                    getEnemy enemy model.board.enemies 3
+            in
+            case hero.class of
+                Warrior ->
+                    { board | enemies = checkMelee hero.pos hero.damage enemy1 :: checkMelee hero.pos hero.damage enemy2 :: [ checkMelee hero.pos hero.damage enemy3 ] }
+
+                Assassin ->
+                    { board | enemies = checkMelee hero.pos hero.damage enemy1 :: checkMelee hero.pos hero.damage enemy2 :: [ checkMelee hero.pos hero.damage enemy3 ] }
+
+                _ ->
+                    model.board
+
+
+checkMelee : Pos -> Int -> Enemy -> Enemy
+checkMelee ( x, y ) damage enemy =
+    -- for warriors and assassins classes
+    -- if there are enemies within the 6 hexagons around their current location
+    -- the enemies will receive the damage
+    let
+        newHealth =
+            enemy.health - damage
+    in
+    if enemy.pos == ( x + 1, y ) then
+        { enemy | health = newHealth }
+
+    else if enemy.pos == ( x, y + 1 ) then
+        { enemy | health = newHealth }
+
+    else if enemy.pos == ( x + 1, y - 1 ) then
+        { enemy | health = newHealth }
+
+    else if enemy.pos == ( x, y - 1 ) then
+        { enemy | health = newHealth }
+
+    else if enemy.pos == ( x - 1, y ) then
+        { enemy | health = newHealth }
+
+    else if enemy.pos == ( x - 1, y + 1 ) then
+        { enemy | health = newHealth }
+
+    else
+        enemy
+
+
 turnEnemy : Board -> Board
 turnEnemy board =
-    { board | turn = EnemyTurn, enemy = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemy }
+    { board | turn = EnemyTurn, enemies = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemies }
 
 
 resetEnergy : Hero -> Hero
@@ -69,7 +171,7 @@ checkTurn model =
         board =
             model.board
     in
-    if List.all (\enemy -> enemy.done) model.board.enemy then
+    if List.all (\enemy -> enemy.done) model.board.enemies then
         { model | board = { board | turn = HeroTurn } }
 
     else
@@ -126,9 +228,9 @@ moveEnemy model =
             model.board
 
         ( newEnemy, newmodel ) =
-            moveEnemyList model board.enemy
+            moveEnemyList model board.enemies
     in
-    { newmodel | board = { board | enemy = newEnemy } }
+    { newmodel | board = { board | enemies = newEnemy } }
 
 
 moveEnemyList : Model -> List Enemy -> ( List Enemy, Model )
@@ -213,12 +315,12 @@ targetHero hero_list enemy =
 
 legalHeroMove : Board -> List Hero -> Hero -> Pos -> Bool
 legalHeroMove board hero_list hero dr =
-    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemy))
+    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
 
 
 legalEnemyMove : Board -> List Hero -> Enemy -> Bool
 legalEnemyMove board hero_list enemy =
-    List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemy))
+    List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
 
 
 selectHero : Model -> Class -> Model
