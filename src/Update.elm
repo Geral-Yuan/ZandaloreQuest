@@ -79,35 +79,23 @@ checkForEnemy model =
 
         Just hero ->
             let
-                enemy =
-                    { class = Data.Warrior
-                    , pos = ( 6, 6 )
-                    , health = 100
-                    , damage = 15
-                    , armour = 5
-                    , steps = 0
-                    , done = False
-                    , indexOnBoard = 1
-                    }
-
                 board =
                     model.board
-
-                enemy1 =
-                    getEnemy enemy model.board.enemies 1
-
-                enemy2 =
-                    getEnemy enemy model.board.enemies 2
-
-                enemy3 =
-                    getEnemy enemy model.board.enemies 3
             in
             case hero.class of
                 Warrior ->
-                    { board | enemies = checkMelee hero.pos hero.damage enemy1 :: checkMelee hero.pos hero.damage enemy2 :: [ checkMelee hero.pos hero.damage enemy3 ] }
+                    { board
+                        | enemies =
+                            List.map (checkMelee hero.pos hero.damage) model.board.enemies
+                                |> List.filter (\{ health } -> health > 0)
+                    }
 
                 Assassin ->
-                    { board | enemies = checkMelee hero.pos hero.damage enemy1 :: checkMelee hero.pos hero.damage enemy2 :: [ checkMelee hero.pos hero.damage enemy3 ] }
+                    { board
+                        | enemies =
+                            List.map (checkMelee hero.pos hero.damage) model.board.enemies
+                                |> List.filter (\{ health } -> health > 0)
+                    }
 
                 _ ->
                     model.board
@@ -346,3 +334,19 @@ selectedHero hero_list =
 unselectedHero : List Hero -> List Hero
 unselectedHero hero_list =
     List.filter (\hero -> not hero.selected) hero_list
+
+
+
+-- wait for more scene
+
+
+checkEnd : Model -> Model
+checkEnd model =
+    if List.length model.heroes == 0 then
+        model
+
+    else if List.length model.board.enemies == 0 then
+        model
+
+    else
+        model

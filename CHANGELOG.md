@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.7] -- 2022-6-30
+
+### Added 
+- added checkEnd function
+
+### Changed
+- changed checkForEnemy, improve the code quality by using List.map
+- changed viewEnemyInformation to receive different input and stop displaying enemy information when they die 
+- changed viewEnemyInfo to display the text top aligned
+
+### Removed
+- 
 
 ## [m1.6] -- 2022-6-29
 

@@ -70,7 +70,7 @@ viewAll model =
          , endTurnButton
          , viewHeroInfo model
          ]
-            ++ viewEnemyInformation model
+            ++ viewEnemyInformation model.board.enemies 1
         )
 
 
