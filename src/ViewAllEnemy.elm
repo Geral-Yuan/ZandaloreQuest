@@ -65,23 +65,33 @@ viewEnemy enemy =
                 []
 
 
-viewEnemyInformation : Model -> List (Html Msg)
-viewEnemyInformation model =
-    let
-        enemy =
-            { class = Data.Warrior
-            , pos = ( 6, 6 )
-            , health = 100
-            , damage = 15
-            , armour = 5
-            , steps = 0
-            , done = False
-            , indexOnBoard = 1
-            }
-    in
-    List.range 1 3
-        |> List.map (getEnemy enemy model.board.enemies)
-        |> List.map viewEnemyInfo
+viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
+viewEnemyInformation enemies n =
+    case enemies of
+        [] ->
+            [ div [] [] ]
+
+        enemy :: rest ->
+            viewEnemyInfo enemy n :: viewEnemyInformation rest (n + 1)
+
+
+
+{- let
+       enemy =
+           { class = Data.Warrior
+           , pos = ( 6, 6 )
+           , health = 100
+           , damage = 15
+           , armour = 5
+           , steps = 0
+           , done = False
+           , indexOnBoard = 1
+           }
+   in
+   List.range 1 3
+       |> List.map (getEnemy enemy model.board.enemies)
+       |> List.map viewEnemyInfo
+-}
 
 
 getEnemy : Enemy -> List Enemy -> Int -> Enemy
@@ -98,11 +108,11 @@ getEnemy defaultoutput enemy n =
                 getEnemy defaultoutput xs (n - 1)
 
 
-viewEnemyInfo : Enemy -> Html Msg
-viewEnemyInfo enemy =
+viewEnemyInfo : Enemy -> Int -> Html Msg
+viewEnemyInfo enemy n =
     -- display health and energy
     div
-        [ HtmlAttr.style "top" (toString (20 + (enemy.indexOnBoard - 1) * 120) ++ "px")
+        [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
         , HtmlAttr.style "left" "-120px"
         , HtmlAttr.style "color" "black"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
