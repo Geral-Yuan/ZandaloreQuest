@@ -69,6 +69,7 @@ viewAll model =
             )
          , endTurnButton
          , viewHeroInfo model
+         , viewCritical model
          ]
             ++ viewEnemyInformation model.board.enemies 1
         )

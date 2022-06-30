@@ -1,6 +1,7 @@
 module Board exposing (..)
 
 import Data exposing (..)
+import Message exposing (..)
 
 
 pairRange : Int -> ( Int, Int ) -> List Pos
