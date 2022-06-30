@@ -1,6 +1,7 @@
 module Board exposing (..)
 
 import Data exposing (..)
+import Message exposing (..)
 
 
 pairRange : Int -> ( Int, Int ) -> List Pos
@@ -29,7 +30,7 @@ map =
 type alias Board =
     { map : List Pos
     , barrier : List Pos
-    , enemy : List Enemy
+    , enemies : List Enemy
     , turn : Turn
     }
 
@@ -38,16 +39,16 @@ initbarrier : Int -> List Pos
 initbarrier k =
     case k of
         _ ->
-            [(5,5)]
+            [ ( 5, 5 ) ]
 
 
 initenemy : Int -> List Enemy
 initenemy k =
     case k of
         _ ->
-            [ Enemy Warrior ( 3, 3 ) 100 10 5 0 True
-            , Enemy Warrior ( 1, 8 ) 100 10 5 0 True
-            , Enemy Warrior ( 5, 2 ) 100 10 5 0 True
+            [ Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
+            , Enemy Warrior ( 1, 8 ) 100 10 5 0 True 2
+            , Enemy Warrior ( 5, 2 ) 100 10 5 0 True 3
             ]
 
 

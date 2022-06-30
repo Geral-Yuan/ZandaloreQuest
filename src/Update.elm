@@ -2,10 +2,12 @@ module Update exposing (update)
 
 import Board exposing (..)
 import Data exposing (..)
+import HeroAttack exposing (checkAttack, generateDamage, selectedHero, unselectedHero)
 import Html.Attributes exposing (target)
 import Message exposing (..)
 import Model exposing (Model)
 import String exposing (endsWith)
+import ViewAllEnemy exposing (getEnemy)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -27,6 +29,14 @@ update msg model =
                 EnemyTurn ->
                     ( model, Cmd.none )
 
+        Hit False ->
+            case model.board.turn of
+                HeroTurn ->
+                    ( model, generateDamage )
+
+                EnemyTurn ->
+                    ( model, Cmd.none )
+
         EndTurn ->
             ( { model | board = turnEnemy model.board, heroes = List.map resetEnergy model.heroes }, Cmd.none )
 
@@ -38,13 +48,16 @@ update msg model =
                 EnemyTurn ->
                     ( moveEnemy { model | time = model.time + elapsed / 1000 } |> checkTurn, Cmd.none )
 
+        GetCritical critical ->
+            ( checkAttack model critical, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
 
 
 turnEnemy : Board -> Board
 turnEnemy board =
-    { board | turn = EnemyTurn, enemy = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemy }
+    { board | turn = EnemyTurn, enemies = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemies }
 
 
 resetEnergy : Hero -> Hero
@@ -69,7 +82,7 @@ checkTurn model =
         board =
             model.board
     in
-    if List.all (\enemy -> enemy.done) model.board.enemy then
+    if List.all (\enemy -> enemy.done) model.board.enemies then
         { model | board = { board | turn = HeroTurn } }
 
     else
@@ -126,9 +139,9 @@ moveEnemy model =
             model.board
 
         ( newEnemy, newmodel ) =
-            moveEnemyList model board.enemy
+            moveEnemyList model board.enemies
     in
-    { newmodel | board = { board | enemy = newEnemy } }
+    { newmodel | board = { board | enemies = newEnemy } }
 
 
 moveEnemyList : Model -> List Enemy -> ( List Enemy, Model )
@@ -213,12 +226,12 @@ targetHero hero_list enemy =
 
 legalHeroMove : Board -> List Hero -> Hero -> Pos -> Bool
 legalHeroMove board hero_list hero dr =
-    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemy))
+    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
 
 
 legalEnemyMove : Board -> List Hero -> Enemy -> Bool
 legalEnemyMove board hero_list enemy =
-    List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemy))
+    List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
 
 
 selectHero : Model -> Class -> Model
@@ -236,11 +249,17 @@ selectHero model class =
     { model | heroes = newwantedHero ++ newunwantedHero }
 
 
-selectedHero : List Hero -> Maybe Hero
-selectedHero hero_list =
-    List.head (List.filter (\hero -> hero.selected) hero_list)
+
+-- wait for more scene
 
 
-unselectedHero : List Hero -> List Hero
-unselectedHero hero_list =
-    List.filter (\hero -> not hero.selected) hero_list
+checkEnd : Model -> Model
+checkEnd model =
+    if List.length model.heroes == 0 then
+        model
+
+    else if List.length model.board.enemies == 0 then
+        model
+
+    else
+        model
