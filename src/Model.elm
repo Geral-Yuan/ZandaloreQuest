@@ -12,6 +12,7 @@ type alias Model =
     , board : Board
     , size : ( Float, Float )
     , time : Float
+    , critical : Int
     }
 
 
@@ -31,4 +32,5 @@ initModel =
         ]
         (initBoard 1)
         ( 1500, 1000 )
+        0
         0

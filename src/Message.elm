@@ -3,6 +3,14 @@ module Message exposing (..)
 import Data exposing (..)
 
 
+type Critical
+    = Less
+    | None
+    | Low
+    | Medium
+    | High
+
+
 type Msg
     = Key Dir Bool
     | Choose Pos
@@ -10,5 +18,6 @@ type Msg
     | Resize Int Int
     | Tick Float
     | Hit Bool
+    | GetCritical Critical
     | EndTurn
     | Key_None

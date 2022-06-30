@@ -6,6 +6,25 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.8] -- 2022-6-30 
+### Added
+
+- Added a heroattack file where all functions related to heroes attacking will be there
+
+- Added randomDamage function with a weighted probability curve to generate critical damage
+
+- Added critical type to determine how much bonus damage players will deal
+
+- Added generateDamage Cmd Msg
+
+- Added viewCritical 
+
+- Added critical field in model
+
+### Changed
+
+- changed the sequence of update to accommodate the RNG
+
 ## [m1.7] -- 2022-6-30
 
 ### Added 

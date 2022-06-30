@@ -2,6 +2,7 @@ module Update exposing (update)
 
 import Board exposing (..)
 import Data exposing (..)
+import HeroAttack exposing (checkAttack, generateDamage, selectedHero, unselectedHero)
 import Html.Attributes exposing (target)
 import Message exposing (..)
 import Model exposing (Model)
@@ -31,7 +32,7 @@ update msg model =
         Hit False ->
             case model.board.turn of
                 HeroTurn ->
-                    ( checkAttack model, Cmd.none )
+                    ( model, generateDamage )
 
                 EnemyTurn ->
                     ( model, Cmd.none )
@@ -47,89 +48,11 @@ update msg model =
                 EnemyTurn ->
                     ( moveEnemy { model | time = model.time + elapsed / 1000 } |> checkTurn, Cmd.none )
 
+        GetCritical critical ->
+            ( checkAttack model critical, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
-
-
-checkAttack : Model -> Model
-checkAttack model =
-    -- reduce the energy of a hero when player clicks h (hit) and check surroundings for enemies
-    case selectedHero model.heroes of
-        Nothing ->
-            model
-
-        Just hero ->
-            if hero.energy > 2 then
-                let
-                    currEnergy =
-                        hero.energy
-                in
-                { model | heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
-
-            else
-                model
-
-
-checkForEnemy : Model -> Board
-checkForEnemy model =
-    -- check if there are enemies in the surroundings
-    case selectedHero model.heroes of
-        Nothing ->
-            model.board
-
-        Just hero ->
-            let
-                board =
-                    model.board
-            in
-            case hero.class of
-                Warrior ->
-                    { board
-                        | enemies =
-                            List.map (checkMelee hero.pos hero.damage) model.board.enemies
-                                |> List.filter (\{ health } -> health > 0)
-                    }
-
-                Assassin ->
-                    { board
-                        | enemies =
-                            List.map (checkMelee hero.pos hero.damage) model.board.enemies
-                                |> List.filter (\{ health } -> health > 0)
-                    }
-
-                _ ->
-                    model.board
-
-
-checkMelee : Pos -> Int -> Enemy -> Enemy
-checkMelee ( x, y ) damage enemy =
-    -- for warriors and assassins classes
-    -- if there are enemies within the 6 hexagons around their current location
-    -- the enemies will receive the damage
-    let
-        newHealth =
-            enemy.health - damage
-    in
-    if enemy.pos == ( x + 1, y ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x, y + 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x + 1, y - 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x, y - 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x - 1, y ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x - 1, y + 1 ) then
-        { enemy | health = newHealth }
-
-    else
-        enemy
 
 
 turnEnemy : Board -> Board
@@ -324,16 +247,6 @@ selectHero model class =
             List.map (\hero -> { hero | selected = False }) unwantedHero
     in
     { model | heroes = newwantedHero ++ newunwantedHero }
-
-
-selectedHero : List Hero -> Maybe Hero
-selectedHero hero_list =
-    List.head (List.filter (\hero -> hero.selected) hero_list)
-
-
-unselectedHero : List Hero -> List Hero
-unselectedHero hero_list =
-    List.filter (\hero -> not hero.selected) hero_list
 
 
 

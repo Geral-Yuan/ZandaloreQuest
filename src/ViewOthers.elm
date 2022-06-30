@@ -14,6 +14,22 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
+viewCritical : Model -> Html Msg
+viewCritical model =
+    div
+        [ HtmlAttr.style "bottom" "60px"
+        , HtmlAttr.style "right" "-60px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("Critical Damage: " ++ toString model.critical) ]
+
+
 viewCoordinate : Pos -> Svg msg
 viewCoordinate ( row, column ) =
     let
