@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.11] -- 2022-7-2
+
+### Added
+
+- Resize of the game view.
+
+- Detect the position of the mouse when it click on the screen and display it on the screen to debug.
+
+### Removed
+
+- Delete some unuseful functions.
+
 ## [m1.10] -- 2022-7-1
 ### Added
 - Added moveable and attackable fields in type alias Board in `Board.elm`

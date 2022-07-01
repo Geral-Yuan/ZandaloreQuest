@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Browser.Events exposing (onAnimationFrameDelta, onKeyDown, onKeyUp, onResize)
+import Browser.Events exposing (onAnimationFrameDelta, onKeyDown, onKeyUp, onResize, onClick)
 import Data exposing (..)
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
@@ -23,6 +23,7 @@ subscriptions _ =
         , onKeyUp (Decode.map (key False) keyCode)
         , onKeyDown (Decode.map (key True) keyCode)
         , onResize Resize
+        , onClick (Decode.map2 Click decodeFractionX decodeFractionY)
         ]
 
 
@@ -70,3 +71,15 @@ key on keycode =
 
         _ ->
             Key_None
+
+decodeFractionX : Decode.Decoder Float
+decodeFractionX =
+  Decode.map2 (/)
+    (Decode.field "clientX" Decode.float)
+    (Decode.at ["currentTarget","defaultView","innerWidth"] Decode.float)
+
+decodeFractionY : Decode.Decoder Float
+decodeFractionY =
+  Decode.map2 (/)
+    (Decode.field "clientY" Decode.float)
+    (Decode.at ["currentTarget","defaultView","innerWidth"] Decode.float)

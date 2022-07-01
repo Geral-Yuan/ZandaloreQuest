@@ -5,6 +5,7 @@ import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import Html.Attributes exposing (class)
 import Message exposing (..)
+import Task
 
 
 type alias Model =
@@ -13,13 +14,14 @@ type alias Model =
     , size : ( Float, Float )
     , time : Float
     , critical : Int
+    , clickPos : (Float, Float)
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel
-    , Cmd.none
+    , Task.perform GetViewport getViewport
     )
 
 
@@ -34,3 +36,4 @@ initModel =
         ( 1500, 1000 )
         0
         0
+        (0, 0)

@@ -14,6 +14,11 @@ import ViewAllEnemy exposing (getEnemy)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Resize width height ->
+            ( { model | size = ( toFloat width, toFloat height ) }
+            , Cmd.none
+            )
+
         Key dir False ->
             case model.board.turn of
                 HeroTurn ->
@@ -62,6 +67,27 @@ update msg model =
 
         GetCritical critical ->
             ( checkAttack model critical, Cmd.none )
+
+        Click x y ->
+            let
+                ( w, h ) =
+                    model.size
+            in
+            if w / h > pixelWidth / pixelHeight then
+                ( { model | clickPos = ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h ) }, Cmd.none )
+
+            else
+                ( { model | clickPos = ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight ) }, Cmd.none )
+
+        GetViewport { viewport } ->
+            ( { model
+                | size =
+                    ( viewport.width
+                    , viewport.height
+                    )
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -221,50 +247,6 @@ enermyWarriorAttack my_enemy_pos damage critical hero =
         hero
 
 
-moveOneEnemy : Model -> Enemy -> ( Enemy, Model )
-moveOneEnemy model enemy =
-    case targetHero model.heroes enemy of
-        Nothing ->
-            ( enemy, model )
-
-        Just hero ->
-            if model.time > 0.5 && not enemy.done then
-                ( moveEnemyOrient model (checkEnemyDone { enemy | steps = enemy.steps - 1 }) (detOrientation hero.pos enemy.pos), { model | time = 0 } )
-
-            else
-                ( enemy, model )
-
-
-moveEnemyOrient : Model -> Enemy -> Orientation -> Enemy
-moveEnemyOrient model enemy orient =
-    let
-        newEnemy =
-            case orient of
-                RightDown ->
-                    { enemy | pos = vecAdd enemy.pos ( 1, 0 ) }
-
-                LeftDown ->
-                    { enemy | pos = vecAdd enemy.pos ( 0, 1 ) }
-
-                Left ->
-                    { enemy | pos = vecAdd enemy.pos ( -1, 1 ) }
-
-                LeftUp ->
-                    { enemy | pos = vecAdd enemy.pos ( -1, 0 ) }
-
-                RightUp ->
-                    { enemy | pos = vecAdd enemy.pos ( 0, -1 ) }
-
-                Right ->
-                    { enemy | pos = vecAdd enemy.pos ( 1, -1 ) }
-    in
-    if legalEnemyMove model.board model.heroes newEnemy then
-        newEnemy
-
-    else
-        enemy
-
-
 checkEnemyDone : Enemy -> Enemy
 checkEnemyDone enemy =
     if enemy.steps == 0 then
@@ -272,16 +254,6 @@ checkEnemyDone enemy =
 
     else
         enemy
-
-
-targetHero : List Hero -> Enemy -> Maybe Hero
-targetHero hero_list enemy =
-    case leastdistance (List.map .pos hero_list) enemy.pos of
-        Just dis ->
-            List.head (List.filter (\hero -> distance enemy.pos hero.pos == dis) hero_list)
-
-        _ ->
-            Nothing
 
 
 legalHeroMove : Board -> List Hero -> Hero -> Pos -> Bool
