@@ -33,6 +33,16 @@ vecAdd ( x1, y1 ) ( x2, y2 ) =
     ( x1 + x2, y1 + y2 )
 
 
+vecScale : Int -> Pos -> Pos
+vecScale a ( x, y ) =
+    ( a * x, a * y )
+
+
+cartesianProduct : (a -> b -> c) -> List a -> List b -> List c
+cartesianProduct f x y =
+    List.concatMap (\x_ -> List.map (f x_) y) x
+
+
 findPos : ( Int, Int ) -> ( Float, Float )
 findPos ( row, column ) =
     ( 600 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
@@ -110,7 +120,6 @@ leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
 
 
-
 detOrientation : Pos -> Pos -> Orientation
 detOrientation ( x1, y1 ) ( x2, y2 ) =
     let
@@ -140,18 +149,27 @@ detOrientation ( x1, y1 ) ( x2, y2 ) =
         ( False, False ) ->
             Right
 
+
 isWarriorAttackRange : Pos -> Pos -> Bool
 isWarriorAttackRange attacked me =
     let
-         ( x, y ) = attacked 
+        ( x, y ) =
+            attacked
     in
-    if me == ( x + 1, y ) 
-                || me == ( x, y + 1 )
-                || me == ( x + 1, y - 1 )
-                || me == ( x, y - 1 )
-                || me == ( x - 1, y )
-                || me == ( x - 1, y + 1 )
-     then
+    if
+        me
+            == ( x + 1, y )
+            || me
+            == ( x, y + 1 )
+            || me
+            == ( x + 1, y - 1 )
+            || me
+            == ( x, y - 1 )
+            || me
+            == ( x - 1, y )
+            || me
+            == ( x - 1, y + 1 )
+    then
         True
 
     else

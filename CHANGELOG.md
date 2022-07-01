@@ -6,6 +6,16 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.10] -- 2022-7-1
+### Added
+- Added moveable and attackable fields in type alias Board in `Board.elm`
+- Added vecScale and cartesianProduct functions in `Data.elm` 
+- Added highlightCells, heroMoveable, and heroAttackable functions to record the list of hexagons that the selected hero (warrior and assassin only) can move and attack in `Update.elm`
+- Added deselectHeroes function to deselect the hero every end of the turn so that it will stop display the information and highlight the hexagons in `Update.elm`
+
+### Changed
+- Changed viewCell function to be able to view the extra highlighted hexagons `View.elm`
+
 ## [m1.9] -- 2022-7-1 
 ### Added
 
