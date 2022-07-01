@@ -8,7 +8,6 @@ import Html.Attributes as HtmlAttr
 import List exposing (length)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import ShortestPath exposing (shortestPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
@@ -64,11 +63,12 @@ viewAll model =
                 ++ List.map viewHero model.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
-                ++ viewRoute model.board model.heroes ( 1, 9 ) ( 9, 1 )
                 ++ List.map viewEnemy model.board.enemies
+                -- ++ viewRoute board.enemies model.board model.heroes
             )
          , endTurnButton
          , viewHeroInfo model
+         , viewCritical model
          ]
             ++ viewEnemyInformation model.board.enemies 1
         )

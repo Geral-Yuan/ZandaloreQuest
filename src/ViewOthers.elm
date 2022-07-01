@@ -9,9 +9,25 @@ import Html.Events exposing (onClick)
 import List exposing (length)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import ShortestPath exposing (shortestPath)
+import ShortestPath exposing (leastPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
+
+
+viewCritical : Model -> Html Msg
+viewCritical model =
+    div
+        [ HtmlAttr.style "bottom" "60px"
+        , HtmlAttr.style "right" "-60px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("Critical Damage: " ++ toString model.critical) ]
 
 
 viewCoordinate : Pos -> Svg msg
@@ -41,11 +57,20 @@ viewCoordinate ( row, column ) =
 {- use it to view the shortest path -}
 
 
-viewRoute : Board -> List Hero -> Pos -> Pos -> List (Svg msg)
-viewRoute board hero_list begin end =
+viewRoute : List Enemy -> Board -> List Hero ->  List (Svg msg)
+viewRoute enemy_list board hero_list  =
     let
+        enemy = 
+            case enemy_list of
+                    [] -> 
+                        Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
+                    [a] ->
+                        a
+                    b :: lst ->
+                        b
+
         list_points =
-            shortestPath board hero_list begin end
+            leastPath enemy board hero_list 
     in
     List.map
         (\x ->

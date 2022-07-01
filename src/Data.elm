@@ -1,8 +1,6 @@
 module Data exposing (..)
 
-import Random exposing (maxInt)
 import Svg.Attributes exposing (x2, y2)
-import Time exposing (Posix)
 
 
 pixelWidth : Float
@@ -112,6 +110,7 @@ leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
 
 
+
 detOrientation : Pos -> Pos -> Orientation
 detOrientation ( x1, y1 ) ( x2, y2 ) =
     let
@@ -140,3 +139,20 @@ detOrientation ( x1, y1 ) ( x2, y2 ) =
 
         ( False, False ) ->
             Right
+
+isWarriorAttackRange : Pos -> Pos -> Bool
+isWarriorAttackRange attacked me =
+    let
+         ( x, y ) = attacked 
+    in
+    if me == ( x + 1, y ) 
+                || me == ( x, y + 1 )
+                || me == ( x + 1, y - 1 )
+                || me == ( x, y - 1 )
+                || me == ( x - 1, y )
+                || me == ( x - 1, y + 1 )
+     then
+        True
+
+    else
+        False
