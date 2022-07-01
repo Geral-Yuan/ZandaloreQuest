@@ -1,7 +1,7 @@
-module Board exposing (..)
+module Board exposing (Board, initBoard)
 
 import Data exposing (..)
-import Message exposing (..)
+import Message exposing (Msg(..))
 
 
 pairRange : Int -> ( Int, Int ) -> List Pos
@@ -31,9 +31,12 @@ type alias Board =
     { map : List Pos
     , barrier : List Pos
     , enemies : List Enemy
+    , heroes : List Hero
     , turn : Turn
+    , critical : Int
     , moveable : List Pos
     , attackable : List Pos
+    , time : Float
     }
 
 
@@ -54,8 +57,18 @@ initenemy k =
             ]
 
 
+inithero : Int -> List Hero
+inithero k =
+    case k of
+        _ ->
+            [ Hero Warrior ( 6, 6 ) 100 15 5 5 False 1
+            , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
+            , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+            ]
+
+
 initBoard : Int -> Board
 initBoard k =
     case k of
         _ ->
-            Board map (initbarrier k) (initenemy k) HeroTurn [] []
+            Board map (initbarrier k) (initenemy k) (inithero k) HeroTurn 0 [] [] 0

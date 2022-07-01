@@ -1,21 +1,19 @@
 module ViewOthers exposing (..)
 
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, button, col, div)
+import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
-import List exposing (length)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import ShortestPath exposing (leastPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewCritical : Model -> Html Msg
-viewCritical model =
+viewCritical : Board -> Html Msg
+viewCritical board =
     div
         [ HtmlAttr.style "bottom" "60px"
         , HtmlAttr.style "right" "-60px"
@@ -27,7 +25,7 @@ viewCritical model =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Critical Damage: " ++ toString model.critical) ]
+        [ text ("Critical Damage: " ++ toString board.critical) ]
 
 
 viewCoordinate : Pos -> Svg msg
@@ -66,7 +64,7 @@ viewRoute enemy_list board hero_list  =
                         Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
                     [a] ->
                         a
-                    b :: lst ->
+                    b :: _ ->
                         b
 
         list_points =

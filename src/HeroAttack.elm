@@ -1,9 +1,8 @@
 module HeroAttack exposing (checkAttack, generateDamage, selectedHero, unselectedHero)
 
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
-import Message exposing (Critical(..), Msg(..))
-import Model exposing (Model)
+import Message exposing (Msg(..))
 import Random exposing (..)
 
 
@@ -23,68 +22,70 @@ generateDamage =
     Random.generate GetCritical randomDamage
 
 
-checkAttack : Model -> Critical -> Model
-checkAttack model critical =
+checkAttack : Board -> Critical -> Board
+checkAttack board critical =
     -- reduce the energy of a hero when player clicks h (hit) and check surroundings for enemies
-    case selectedHero model.heroes of
+    case selectedHero board.heroes of
         Nothing ->
-            model
+            board
 
         Just hero ->
             if hero.energy > 2 then
                 let
                     currEnergy =
                         hero.energy
+
+                    newheroes =
+                        { hero | energy = currEnergy - 3 } :: unselectedHero board.heroes
+
+                    newcritical =
+                        case critical of
+                            Less ->
+                                -2
+
+                            Low ->
+                                2
+
+                            Medium ->
+                                4
+
+                            High ->
+                                6
+
+                            _ ->
+                                0
                 in
-                case critical of
-                    Less ->
-                        { model | critical = -2, heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
-
-                    Low ->
-                        { model | critical = 2, heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
-
-                    Medium ->
-                        { model | critical = 4, heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
-
-                    High ->
-                        { model | critical = 6, heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
-
-                    _ ->
-                        { model | critical = 0, heroes = { hero | energy = currEnergy - 3 } :: unselectedHero model.heroes, board = checkForEnemy model }
+                checkForEnemy { board | critical = newcritical, heroes = newheroes }
 
             else
-                model
+                board
 
 
-checkForEnemy : Model -> Board
-checkForEnemy model =
+checkForEnemy : Board -> Board
+checkForEnemy board =
     -- check if there are enemies in the surroundings
-    case selectedHero model.heroes of
+    case selectedHero board.heroes of
         Nothing ->
-            model.board
+            board
 
         Just hero ->
-            let
-                board =
-                    model.board
-            in
             case hero.class of
                 Warrior ->
                     { board
                         | enemies =
-                            List.map (checkMelee hero.pos hero.damage model.critical) model.board.enemies
+                            List.map (checkMelee hero.pos hero.damage board.critical) board.enemies
                                 |> List.filter (\{ health } -> health > 0)
                     }
 
                 Assassin ->
                     { board
                         | enemies =
-                            List.map (checkMelee hero.pos hero.damage model.critical) model.board.enemies
+                            List.map (checkMelee hero.pos hero.damage board.critical) board.enemies
                                 |> List.filter (\{ health } -> health > 0)
                     }
 
                 _ ->
-                    model.board
+                    board
 
 
 checkMelee : Pos -> Int -> Int -> Enemy -> Enemy
@@ -97,7 +98,6 @@ checkMelee ( x, y ) damage critical enemy =
             enemy.health - damage - critical
     in
     if isWarriorAttackRange enemy.pos ( x, y ) then
-   
         { enemy | health = newHealth }
 
     else

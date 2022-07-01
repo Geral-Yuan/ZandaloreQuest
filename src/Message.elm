@@ -1,15 +1,7 @@
-module Message exposing (..)
+module Message exposing (Msg(..))
 
 import Browser.Dom exposing (Viewport)
 import Data exposing (..)
-
-
-type Critical
-    = Less
-    | None
-    | Low
-    | Medium
-    | High
 
 
 type Msg
