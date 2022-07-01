@@ -45,7 +45,7 @@ cartesianProduct f x y =
 
 findPos : ( Int, Int ) -> ( Float, Float )
 findPos ( row, column ) =
-    ( 600 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
+    ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
 
 
 type alias Pos =
@@ -118,36 +118,6 @@ distance ( x1, y1 ) ( x2, y2 ) =
 leastdistance : List Pos -> Pos -> Maybe Int
 leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
-
-
-detOrientation : Pos -> Pos -> Orientation
-detOrientation ( x1, y1 ) ( x2, y2 ) =
-    let
-        orient1 =
-            y1 >= y2
-
-        orient2 =
-            x1 <= x2
-
-        orient3 =
-            x1 + y1 <= x2 + y2
-    in
-    case ( orient1, orient2 ) of
-        ( True, False ) ->
-            RightDown
-
-        ( True, True ) ->
-            if not orient3 then
-                LeftDown
-
-            else
-                Left
-
-        ( False, True ) ->
-            RightUp
-
-        ( False, False ) ->
-            Right
 
 
 isWarriorAttackRange : Pos -> Pos -> Bool

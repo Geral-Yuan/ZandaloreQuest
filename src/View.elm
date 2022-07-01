@@ -69,9 +69,30 @@ viewAll model =
          , endTurnButton
          , viewHeroInfo model
          , viewCritical model
+         , viewClickPosition model
          ]
             ++ viewEnemyInformation model.board.enemies 1
         )
+
+
+viewClickPosition : Model -> Html Msg
+viewClickPosition model =
+    let
+        ( x, y ) =
+            model.clickPos
+    in
+    div
+        [ HtmlAttr.style "bottom" "30px"
+        , HtmlAttr.style "left" "30px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
 
 
 viewMap : Board -> List (Svg msg)

@@ -1,5 +1,6 @@
 module Message exposing (..)
 
+import Browser.Dom exposing (Viewport)
 import Data exposing (..)
 
 
@@ -20,4 +21,6 @@ type Msg
     | Hit Bool
     | GetCritical Critical
     | EndTurn
+    | Click Float Float
+    | GetViewport Viewport
     | Key_None
