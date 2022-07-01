@@ -8,7 +8,6 @@ import Html.Attributes as HtmlAttr exposing (style)
 import List exposing (length)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import ShortestPath exposing (shortestPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
