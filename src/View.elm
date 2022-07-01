@@ -64,7 +64,7 @@ viewAll model =
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
                 ++ List.map viewEnemy model.board.enemies
-                -- ++ viewRoute board.enemies model.board model.heroes
+             -- ++ viewRoute board.enemies model.board model.heroes
             )
          , endTurnButton
          , viewHeroInfo model
@@ -84,6 +84,22 @@ viewCell board ( row, column ) =
     if List.member ( row, column ) board.barrier then
         Svg.polygon
             [ SvgAttr.fill "black"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+
+    else if List.member ( row, column ) board.moveable then
+        Svg.polygon
+            [ SvgAttr.fill "yellow"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+
+    else if List.member ( row, column ) board.attackable then
+        Svg.polygon
+            [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]

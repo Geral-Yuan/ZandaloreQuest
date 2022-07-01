@@ -32,6 +32,8 @@ type alias Board =
     , barrier : List Pos
     , enemies : List Enemy
     , turn : Turn
+    , moveable : List Pos
+    , attackable : List Pos
     }
 
 
@@ -56,4 +58,4 @@ initBoard : Int -> Board
 initBoard k =
     case k of
         _ ->
-            Board map (initbarrier k) (initenemy k) HeroTurn
+            Board map (initbarrier k) (initenemy k) HeroTurn [] []
