@@ -6,6 +6,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.9] -- 2022-7-1 
+### Added
+
+- leastPath which generates the current optimal path for one enemy 
+- enermyWarriorAttack which attacks the heroes adjacent to the enemy
+- moveSmartWarrior which intelligently controls the enemy to move and attack. (Note: now the enemy attacks with a fixed damage 5 points)
+
+### Changed
+
+- Move isWarriorAttackRange from `HeroAttack.elm` to `Data.elm`
+
+### Removed
+
+- viewRoute (no need for testing)
+
 ## [m1.8] -- 2022-6-30 
 ### Added
 

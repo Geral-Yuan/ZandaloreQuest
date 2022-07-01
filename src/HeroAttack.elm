@@ -96,22 +96,8 @@ checkMelee ( x, y ) damage critical enemy =
         newHealth =
             enemy.health - damage - critical
     in
-    if enemy.pos == ( x + 1, y ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x, y + 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x + 1, y - 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x, y - 1 ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x - 1, y ) then
-        { enemy | health = newHealth }
-
-    else if enemy.pos == ( x - 1, y + 1 ) then
+    if isWarriorAttackRange enemy.pos ( x, y ) then
+   
         { enemy | health = newHealth }
 
     else

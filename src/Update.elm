@@ -8,6 +8,7 @@ import Message exposing (..)
 import Model exposing (Model)
 import String exposing (endsWith)
 import ViewAllEnemy exposing (getEnemy)
+import ShortestPath exposing (leastPath)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -153,12 +154,50 @@ moveEnemyList model enemy_list =
         enemy :: restEnemy ->
             let
                 ( movedEnemy, newmodel ) =
-                    moveOneEnemy model enemy
+                    --moveOneEnemy model enemy
+                    moveSmartWarrior model enemy
 
                 ( newrestEnemy, nnewmodel ) =
                     moveEnemyList newmodel restEnemy
             in
             ( movedEnemy :: newrestEnemy, nnewmodel )
+
+
+moveSmartWarrior : Model -> Enemy  -> ( Enemy, Model )
+moveSmartWarrior model enemy =
+    let 
+        route = leastPath enemy model.board model.heroes
+    in
+    case route of
+        [] ->
+            if  not enemy.done then
+                (  { enemy | done = True}
+                , { model | time = 0
+                            , heroes = List.map (enermyWarriorAttack enemy.pos 5 0) model.heroes
+                                       |> List.filter (\x -> ( x.health > 0 ) )
+                            } )
+            else
+                ( enemy, model )
+
+        a :: r_lst ->
+            if model.time > 0.5 && not enemy.done then
+                ( (checkEnemyDone { enemy | steps = enemy.steps - 1 , pos = a }), { model | time = 0 } )
+            else
+                ( enemy, model )
+
+
+enermyWarriorAttack : Pos -> Int -> Int -> Hero -> Hero
+enermyWarriorAttack my_enemy_pos damage critical hero =
+    let
+        newHealth =
+            hero.health - damage - critical
+    in
+    if isWarriorAttackRange hero.pos my_enemy_pos then
+        { hero | health = newHealth }
+    else
+        hero
+
+
 
 
 moveOneEnemy : Model -> Enemy -> ( Enemy, Model )
@@ -203,7 +242,6 @@ moveEnemyOrient model enemy orient =
 
     else
         enemy
-
 
 checkEnemyDone : Enemy -> Enemy
 checkEnemyDone enemy =
