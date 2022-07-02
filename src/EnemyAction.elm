@@ -55,12 +55,12 @@ actionSmartWarrior board enemy =
     in
     case route of
         [] ->
-            if not enemy.done then
+            if board.time > 0.5 && not enemy.done then
                 ( { enemy | done = True }
                 , { board
                     | time = 0
                     , heroes =
-                        List.map (enermyWarriorAttack enemy.pos 5 0) board.heroes
+                        List.map (enermyWarriorAttack enemy.pos 5 0) board.heroes   --5 is the fixed damage
                             |> List.filter (\x -> x.health > 0)
                   }
                 )
@@ -122,12 +122,12 @@ actionSmartArcher board enemy =
     in
     case route of
         [] ->
-            if not enemy.done then
+            if board.time > 0.5 && not enemy.done then
                 ( { enemy | done = True }
                 , { board
                     | time = 0
                     , heroes =
-                        List.map (enermyArcherAttack board enemy 7 0) board.heroes
+                        List.map (enermyArcherAttack board enemy 7 0) board.heroes  -- 7 is the fixed damage
                             |> List.filter (\x -> x.health > 0)
                   }
                 )
@@ -146,7 +146,6 @@ actionSmartArcher board enemy =
 
 
 checkEnemyDone : Enemy -> Enemy
-
 checkEnemyDone enemy =
     if enemy.steps == 0 then
         { enemy | done = True }

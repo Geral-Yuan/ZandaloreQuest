@@ -6,6 +6,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.15] -- 2022-7-2
+
+### Changed
+
+- Change the enemy's attack range. Now the enemy archer can attack the hero behind other enemies.
+
+
 ## [m1.14] -- 2022-7-2
 
 ### Added
