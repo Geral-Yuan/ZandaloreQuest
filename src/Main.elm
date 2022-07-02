@@ -48,10 +48,6 @@ key on keycode =
         65 ->
             Key A on
 
-        72 ->
-            -- Key H
-            Hit on
-
         49 ->
             -- Key 1
             -- This might have to change because players can select 3 heroes from their inventory

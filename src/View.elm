@@ -62,7 +62,6 @@ viewAll model =
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
-                ++ List.map viewEnemy model.board.enemies
              -- ++ viewRoute board.enemies model.board model.heroes
             )
          , endTurnButton
@@ -70,7 +69,7 @@ viewAll model =
          , viewCritical model.board
          , viewClickPosition model
          ]
-            ++ viewEnemyInformation model.board.enemies 1
+            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 

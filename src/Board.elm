@@ -4,29 +4,6 @@ import Data exposing (..)
 import Message exposing (Msg(..))
 
 
-pairRange : Int -> ( Int, Int ) -> List Pos
-pairRange x ( y1, y2 ) =
-    List.map (Tuple.pair x) (List.range y1 y2)
-
-
-map : List Pos
-map =
-    List.concat
-        (List.map2 pairRange
-            (List.range 1 9)
-            [ ( 5, 9 )
-            , ( 4, 9 )
-            , ( 3, 9 )
-            , ( 2, 9 )
-            , ( 1, 9 )
-            , ( 1, 8 )
-            , ( 1, 7 )
-            , ( 1, 6 )
-            , ( 1, 5 )
-            ]
-        )
-
-
 type alias Board =
     { map : List Pos
     , barrier : List Pos
@@ -61,7 +38,7 @@ inithero : Int -> List Hero
 inithero k =
     case k of
         _ ->
-            [ Hero Healer ( 6, 6 ) 60 15 5 5 False 1 -- for healer, damage is to heal
+            [ Hero Mage ( 6, 6 ) 50 15 5 3 False 1 -- for healer, damage is to heal
             , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
             , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
             ]
