@@ -143,25 +143,3 @@ distance ( x1, y1 ) ( x2, y2 ) =
 leastdistance : List Pos -> Pos -> Maybe Int
 leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
-
-
-isWarriorAttackRange : Pos -> Pos -> Bool
-isWarriorAttackRange attacked me =
-    let
-        ( x, y ) =
-            attacked
-    in
-    if
-        List.member me
-            [ ( x + 1, y )
-            , ( x, y + 1 )
-            , ( x + 1, y - 1 )
-            , ( x, y - 1 )
-            , ( x - 1, y )
-            , ( x - 1, y + 1 )
-            ]
-    then
-        True
-
-    else
-        False

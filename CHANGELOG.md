@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.14] -- 2022-7-2
+
+### Added
+
+- Smart move and Attack action of enemy archer
+- Functions related to enemy archer move in `ShortestPath.elm`
+- ViewLines for debug the enemy archer
+
+### Changed 
+
+- Move functions related to enemy action from `Update.elm` to `EnemyAction.elm`
+
 ## [m1.11] -- 2022-7-2
 
 ### Added

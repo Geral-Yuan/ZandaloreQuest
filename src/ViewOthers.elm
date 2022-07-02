@@ -7,7 +7,7 @@ import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import ShortestPath exposing (leastPath)
+import ShortestPath exposing (leastWarriorPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
@@ -68,7 +68,7 @@ viewRoute enemy_list board hero_list  =
                         b
 
         list_points =
-            leastPath enemy board hero_list 
+            leastWarriorPath enemy board hero_list 
     in
     List.map
         (\x ->

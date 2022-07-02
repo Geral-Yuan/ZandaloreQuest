@@ -1,11 +1,11 @@
-module UpdateBoard exposing (..)
+module UpdateBoard exposing (updateBoard)
 
 
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
-import ShortestPath exposing (leastPath)
+import EnemyAction exposing (..)
 
 updateBoard : Msg -> Board -> Board
 updateBoard msg board =
@@ -40,7 +40,7 @@ updateBoard msg board =
 
                 EnemyTurn ->
                     { nboard | time = nboard.time + elapsed / 1000 }
-                        |> moveEnemy
+                        |> actionEnemy
                         |> checkTurn
 
         GetCritical critical ->
@@ -130,85 +130,6 @@ moveHero board dir =
 
 
 -- To be rewritten later
-
-
-moveEnemy : Board -> Board
-moveEnemy board =
-    let
-        ( newEnemy, newboard ) =
-            moveEnemyList board board.enemies
-    in
-    { newboard | enemies = newEnemy }
-
-
-moveEnemyList : Board -> List Enemy -> ( List Enemy, Board )
-moveEnemyList board enemy_list =
-    case enemy_list of
-        [] ->
-            ( [], board )
-
-        enemy :: restEnemy ->
-            let
-                ( movedEnemy, newboard ) =
-                    --moveOneEnemy model enemy
-                    moveSmartWarrior board enemy
-
-                ( newrestEnemy, nnewboard ) =
-                    moveEnemyList newboard restEnemy
-            in
-            ( movedEnemy :: newrestEnemy, nnewboard )
-
-
-moveSmartWarrior : Board -> Enemy -> ( Enemy, Board )
-moveSmartWarrior board enemy =
-    let
-        route =
-            leastPath enemy board board.heroes
-    in
-    case route of
-        [] ->
-            if not enemy.done then
-                ( { enemy | done = True }
-                , { board
-                    | time = 0
-                    , heroes =
-                        List.map (enermyWarriorAttack enemy.pos 5 0) board.heroes
-                            |> List.filter (\x -> x.health > 0)
-                  }
-                )
-
-            else
-                ( enemy, board )
-
-        first :: _ ->
-            if board.time > 0.5 && not enemy.done then
-                ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }, { board | time = 0 } )
-
-            else
-                ( enemy, board )
-
-
-enermyWarriorAttack : Pos -> Int -> Int -> Hero -> Hero
-enermyWarriorAttack my_enemy_pos damage critical hero =
-    let
-        newHealth =
-            hero.health - damage - critical
-    in
-    if isWarriorAttackRange hero.pos my_enemy_pos then
-        { hero | health = newHealth }
-
-    else
-        hero
-
-
-checkEnemyDone : Enemy -> Enemy
-checkEnemyDone enemy =
-    if enemy.steps == 0 then
-        { enemy | done = True }
-
-    else
-        enemy
-
 
 legalHeroMove : Board -> Hero -> Pos -> Bool
 legalHeroMove board hero dr =

@@ -2,6 +2,7 @@ module HeroAttack exposing (checkAttack, generateDamage, selectedHero, unselecte
 
 import Board exposing (Board)
 import Data exposing (..)
+import AttackCommon exposing (isWarriorAttackRange)
 import Message exposing (Msg(..))
 import Random exposing (..)
 
