@@ -1,13 +1,10 @@
 module ViewAllEnemy exposing (..)
 
-import Board exposing (..)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, col, div)
-import Html.Attributes as HtmlAttr exposing (style)
-import List exposing (length)
+import Html exposing (Html, div)
+import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 

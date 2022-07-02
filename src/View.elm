@@ -1,11 +1,10 @@
 module View exposing (view)
 
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, col, div)
+import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
-import List exposing (length)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Svg exposing (..)
@@ -60,15 +59,15 @@ viewAll model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewHero model.heroes
+                ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
                 ++ List.map viewEnemy model.board.enemies
              -- ++ viewRoute board.enemies model.board model.heroes
             )
          , endTurnButton
-         , viewHeroInfo model
-         , viewCritical model
+         , viewHeroInfo model.board
+         , viewCritical model.board
          , viewClickPosition model
          ]
             ++ viewEnemyInformation model.board.enemies 1

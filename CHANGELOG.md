@@ -14,6 +14,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Detect the position of the mouse when it click on the screen and display it on the screen to debug.
 
+- Field `mode` is added into the `Model` to check the mode.
+
+### Changed
+
+- Add field `heroes` in `Board` and move `time` and `critical` from `Model` to `Board`.
+
+- Adjust all related functions to the change above accordingly.
+
+- Adjust `update` function to make the layer more clear.
+
+- Make the import more clear and safe.
+
 ### Removed
 
 - Delete some unuseful functions.

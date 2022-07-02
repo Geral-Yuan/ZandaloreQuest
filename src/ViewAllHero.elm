@@ -1,26 +1,24 @@
 module ViewAllHero exposing (..)
 
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, col, div)
-import Html.Attributes as HtmlAttr exposing (style)
-import List exposing (length)
+import Html exposing (Html, div)
+import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewHeroInfo : Model -> Html Msg
-viewHeroInfo model =
+viewHeroInfo : Board -> Html Msg
+viewHeroInfo board =
     -- display information of the selected hero
     let
         sample_hero =
             Hero Warrior ( 0, 0 ) 0 0 0 0 False 0
 
         hero =
-            List.filter .selected model.heroes
+            List.filter .selected board.heroes
                 |> List.head
                 |> Maybe.withDefault sample_hero
     in

@@ -5,7 +5,7 @@ import Browser.Events exposing (onAnimationFrameDelta, onKeyDown, onKeyUp, onRes
 import Data exposing (..)
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
-import Message exposing (..)
+import Message exposing (Msg(..))
 import Model exposing (Model, init)
 import Update exposing (update)
 import View exposing (view)
