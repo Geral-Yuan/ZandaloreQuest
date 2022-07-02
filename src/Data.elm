@@ -42,6 +42,7 @@ type Class
     = Warrior
     | Archer
     | Assassin
+    | Healer
     | Mage
 
 

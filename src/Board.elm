@@ -61,7 +61,7 @@ inithero : Int -> List Hero
 inithero k =
     case k of
         _ ->
-            [ Hero Warrior ( 6, 6 ) 100 15 5 5 False 1
+            [ Hero Healer ( 6, 6 ) 60 15 5 5 False 1 -- for healer, damage is to heal
             , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
             , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
             ]

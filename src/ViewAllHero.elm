@@ -97,3 +97,14 @@ viewHero hero =
                 , SvgAttr.xlinkHref "./assets/image/MageGood.png"
                 ]
                 []
+
+        Healer ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
+                ]
+                []

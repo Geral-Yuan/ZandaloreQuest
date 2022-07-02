@@ -6,6 +6,26 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.12] -- 2022-7-2
+
+### Added 
+
+- Added Healer to the Hero type
+
+- checkHeal function
+
+- Healer into checkForEnemy
+
+- Key 53 healer
+
+- Healer in HeroAttackable, viewEnemy, viewHero
+
+
+### Changed
+
+- Changed the first hero on board to healer
+
+
 ## [m1.11] -- 2022-7-2
 
 ### Added
