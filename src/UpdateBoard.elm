@@ -1,11 +1,11 @@
-module UpdateBoard exposing (updateBoard)
-
+module UpdateBoard exposing (..)
 
 import Board exposing (Board)
 import Data exposing (..)
-import Message exposing (Msg(..))
 import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
-import EnemyAction exposing (..)
+import EnemyAction exposing (actionEnemy)
+import Message exposing (Msg(..))
+
 
 updateBoard : Msg -> Board -> Board
 updateBoard msg board =
@@ -30,21 +30,17 @@ updateBoard msg board =
             turnEnemy board
 
         Tick elapsed ->
-            let
-                nboard =
-                    highlightCells board
-            in
             case board.turn of
                 HeroTurn ->
-                    nboard
+                    board
 
                 EnemyTurn ->
-                    { nboard | time = nboard.time + elapsed / 1000 }
+                    { board | time = board.time + elapsed / 1000 }
                         |> actionEnemy
                         |> checkTurn
 
-        GetCritical critical ->
-            checkAttack board critical
+        Attack pos critical ->
+            checkAttack board pos critical
 
         _ ->
             board
@@ -72,6 +68,9 @@ resetEnergy hero =
             { hero | energy = 5 }
 
         Assassin ->
+            { hero | energy = 6 }
+
+        Healer ->
             { hero | energy = 6 }
 
 
@@ -131,113 +130,10 @@ moveHero board dir =
 
 -- To be rewritten later
 
+
 legalHeroMove : Board -> Hero -> Pos -> Bool
 legalHeroMove board hero dr =
     List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos board.heroes ++ List.map .pos board.enemies))
-
-
-highlightCells : Board -> Board
-highlightCells board =
-    board
-        |> heroMoveable
-        |> heroAttackable
-
-
-heroMoveable : Board -> Board
-heroMoveable board =
-    let
-        sample_hero =
-            Hero Warrior ( 100, 100 ) 1 1 1 1 False 100
-
-        selected =
-            selectedHero board.heroes
-                |> Maybe.withDefault sample_hero
-
-        {- neighbour =
-           vecAdd selected.pos ( 1, 0 )
-        -}
-        neighbour =
-            List.map (vecAdd selected.pos) [ ( 1, 0 ), ( 0, 1 ), ( -1, 1 ), ( -1, 0 ), ( 0, -1 ), ( 1, -1 ) ]
-
-        can_move =
-            neighbour
-                |> List.filter (myListMember "in" board.map)
-                |> List.filter (myListMember "not in" board.barrier)
-                |> List.filter (myListMember "not in" (List.map .pos board.heroes))
-                |> List.filter (myListMember "not in" (List.map .pos board.enemies))
-    in
-    { board | moveable = can_move }
-
-
-heroAttackable : Board -> Board
-heroAttackable board =
-    let
-        sample_hero =
-            Hero Warrior ( 100, 100 ) 1 1 1 1 False 100
-
-        selected =
-            selectedHero board.heroes
-                |> Maybe.withDefault sample_hero
-
-        neighbour =
-            [ ( 1, 0 ), ( 0, 1 ), ( -1, 1 ), ( -1, 0 ), ( 0, -1 ), ( 1, -1 ) ]
-    in
-    case selected.class of
-        Warrior ->
-            let
-                attack_range =
-                    List.map (vecAdd selected.pos) neighbour
-
-                can_attack =
-                    attack_range
-                        |> List.filter (myListMember "in" board.map)
-                        |> List.filter (myListMember "not in" board.barrier)
-                        |> List.filter (myListMember "not in" (List.map .pos board.heroes))
-                        |> List.filter (myListMember "in" (List.map .pos board.enemies))
-            in
-            { board | attackable = can_attack }
-
-        Assassin ->
-            let
-                attack_range =
-                    List.map (vecAdd selected.pos) neighbour
-
-                can_attack =
-                    attack_range
-                        |> List.filter (myListMember "in" board.map)
-                        |> List.filter (myListMember "not in" board.barrier)
-                        |> List.filter (myListMember "not in" (List.map .pos board.heroes))
-                        |> List.filter (myListMember "in" (List.map .pos board.enemies))
-            in
-            { board | attackable = can_attack }
-
-        Archer ->
-            board
-
-        {- let
-               attack_range =
-                   List.map (vecAdd selected.pos) (cartesianProduct vecScale (List.range 1 10) neighbour)
-
-               can_attack =
-                   attack_range
-                       |> List.filter (myListMember "in" board.map)
-                       |> List.filter (myListMember "not in" board.barrier)
-                       |> List.filter (myListMember "not in" (List.map .pos hero_list))
-                       |> List.filter (myListMember "in" (List.map .pos board.enemies))
-           in
-           { board | attackable = can_attack }
-        -}
-        Mage ->
-            board
-
-
-myListMember : String -> List a -> a -> Bool
-myListMember s lis x =
-    if s == "in" then
-        List.member x lis
-
-    else
-        not (List.member x lis)
 
 
 

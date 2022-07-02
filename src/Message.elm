@@ -10,8 +10,7 @@ type Msg
     | Select Class Bool
     | Resize Int Int
     | Tick Float
-    | Hit Bool
-    | GetCritical Critical
+    | Attack Pos Critical
     | EndTurn
     | Click Float Float
     | GetViewport Viewport

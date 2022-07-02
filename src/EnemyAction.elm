@@ -2,7 +2,6 @@ module EnemyAction exposing (actionEnemy, actionEnemyList, isArcherAttackRange)
 
 import Board exposing (..)
 import Data exposing (..)
-import AttackCommon exposing (isWarriorAttackRange)
 import ShortestPath exposing (..)
 
 actionEnemy : Board -> Board
@@ -44,7 +43,8 @@ actionSmartEnemy board enemy =
             ( enemy, board )
         Assassin ->
             ( enemy, board )
-
+        Healer ->
+            ( enemy, board )
 
 
 actionSmartWarrior : Board -> Enemy -> ( Enemy, Board )

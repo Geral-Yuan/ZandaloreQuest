@@ -62,7 +62,6 @@ viewAll model =
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
-                ++ List.map viewEnemy model.board.enemies
               --++ viewLines model.board 
             )
          , endTurnButton

@@ -60,6 +60,17 @@ viewEnemy enemy =
                 ]
                 []
 
+        Healer ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 35))
+                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/MageBad.png"
+                ]
+                []
+
 
 viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
 viewEnemyInformation enemies n =
