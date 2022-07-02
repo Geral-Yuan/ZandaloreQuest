@@ -6,6 +6,20 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.13] -- 2022-7-2
+
+### Added
+
+- Attack for archer and mage.
+
+- Click for attack.
+
+- Attack barriers will break it.
+
+### Changed
+
+- Rewrite function to detect attackable hexagons and moveable hexagons.
+
 ## [m1.12] -- 2022-7-2
 
 ### Added 
