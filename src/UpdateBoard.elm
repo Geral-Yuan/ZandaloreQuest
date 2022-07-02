@@ -1,11 +1,11 @@
 module UpdateBoard exposing (..)
 
-
 import Board exposing (Board)
 import Data exposing (..)
-import Message exposing (Msg(..))
 import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
+import Message exposing (Msg(..))
 import ShortestPath exposing (leastPath)
+
 
 updateBoard : Msg -> Board -> Board
 updateBoard msg board =
@@ -72,6 +72,9 @@ resetEnergy hero =
             { hero | energy = 5 }
 
         Assassin ->
+            { hero | energy = 6 }
+
+        Healer ->
             { hero | energy = 6 }
 
 
@@ -277,6 +280,20 @@ heroAttackable board =
             { board | attackable = can_attack }
 
         Assassin ->
+            let
+                attack_range =
+                    List.map (vecAdd selected.pos) neighbour
+
+                can_attack =
+                    attack_range
+                        |> List.filter (myListMember "in" board.map)
+                        |> List.filter (myListMember "not in" board.barrier)
+                        |> List.filter (myListMember "not in" (List.map .pos board.heroes))
+                        |> List.filter (myListMember "in" (List.map .pos board.enemies))
+            in
+            { board | attackable = can_attack }
+
+        Healer ->
             let
                 attack_range =
                     List.map (vecAdd selected.pos) neighbour

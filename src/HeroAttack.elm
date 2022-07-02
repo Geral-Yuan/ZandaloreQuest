@@ -84,6 +84,13 @@ checkForEnemy board =
                                 |> List.filter (\{ health } -> health > 0)
                     }
 
+                Healer ->
+                    { board
+                        | heroes =
+                            List.map (checkHeal hero.pos hero.damage board.critical) board.heroes
+                                |> List.filter (\{ health } -> health > 0)
+                    }
+
                 _ ->
                     board
 
@@ -102,6 +109,22 @@ checkMelee ( x, y ) damage critical enemy =
 
     else
         enemy
+
+
+checkHeal : Pos -> Int -> Int -> Hero -> Hero
+checkHeal ( x, y ) heal critical hero =
+    -- for warriors and assassins classes
+    -- if there are enemies within the 6 hexagons around their current location
+    -- the enemies will receive the damage
+    let
+        newHealth =
+            hero.health + heal + critical
+    in
+    if isWarriorAttackRange hero.pos ( x, y ) then
+        { hero | health = newHealth }
+
+    else
+        hero
 
 
 selectedHero : List Hero -> Maybe Hero
