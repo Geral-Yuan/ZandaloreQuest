@@ -73,12 +73,14 @@ viewAll model =
         )
 
 -- view where the enermy archer can attack the hero (for debugging)
+
 viewLines :  Board -> List (Svg msg)
 viewLines board  =
     let
 
         list_points =
-            getHeroesLines board
+            --List.concatMap (\x -> leastArcherPath x board) board.enemies
+             getHeroesLines board
     in
     List.map
         (\x ->
