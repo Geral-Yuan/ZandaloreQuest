@@ -6,6 +6,36 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.16] -- 2022-7-4
+
+### Added
+- logo.png into assets/image
+
+- more obstacles in initObstacles
+
+- itemType, obstacleType, item, obstacle types 
+
+- checkObstacleType and checkItemType
+
+- view healthpotions and different type of obstacles in view 
+
+### Changed 
+
+- type barrier into type obstacles
+
+- in board type, barrier field to obstacle field with List obstacles
+
+- initBarrier to initObstacles and initBoard
+
+- checkAttackBarrier and checkAttackTarget to work with the new List of obstacles and items 
+
+- every barrier function in ShortestPath.elm to accommodate the new Obstacle type 
+
+- moveHero in UpdateBoard function to accommodate the health potion feature
+
+
+
 ## [m1.15] -- 2022-7-2
 
 ### Changed

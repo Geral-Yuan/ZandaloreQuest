@@ -55,20 +55,22 @@ viewCoordinate ( row, column ) =
 {- use it to view the shortest path -}
 
 
-viewRoute : List Enemy -> Board -> List Hero ->  List (Svg msg)
-viewRoute enemy_list board hero_list  =
+viewRoute : List Enemy -> Board -> List Hero -> List (Svg msg)
+viewRoute enemy_list board hero_list =
     let
-        enemy = 
+        enemy =
             case enemy_list of
-                    [] -> 
-                        Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
-                    [a] ->
-                        a
-                    b :: _ ->
-                        b
+                [] ->
+                    Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
+
+                [ a ] ->
+                    a
+
+                b :: _ ->
+                    b
 
         list_points =
-            leastWarriorPath enemy board hero_list 
+            leastWarriorPath enemy board hero_list
     in
     List.map
         (\x ->

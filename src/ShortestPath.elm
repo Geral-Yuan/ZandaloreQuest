@@ -1,7 +1,7 @@
-module ShortestPath exposing (leastWarriorPath, leastArcherPath, getHeroesLines, isBetweenEmpty)
+module ShortestPath exposing (getHeroesLines, isBetweenEmpty, leastArcherPath, leastWarriorPath)
 
 import Board exposing (Board)
-import Data exposing (Hero, Enemy, Pos, distance)
+import Data exposing (Enemy, Hero, Pos, distance)
 import List exposing (append, minimum, partition)
 
 
@@ -10,6 +10,7 @@ type alias Spa_row =
     , path_length : Int
     , pre_pos : Maybe Pos
     }
+
 
 
 {- Output the shortest path towards the nearest hero in the form of (List Pos).
@@ -23,171 +24,257 @@ type alias Spa_row =
 
 -}
 
+
 leastWarriorPath : Enemy -> Board -> List Hero -> List Pos
 leastWarriorPath my_enemy board list_hero =
     leastWarriorPathHelper my_enemy board list_hero (getHeroesAdjacent board list_hero)
 
-leastArcherPath : Enemy -> Board  -> List Pos
-leastArcherPath my_enemy board  =
-    leastArcherPathHelper my_enemy board ((getHeroesLines board), [])
-    |> Tuple.second
+
+leastArcherPath : Enemy -> Board -> List Pos
+leastArcherPath my_enemy board =
+    leastArcherPathHelper my_enemy board ( getHeroesLines board, [] )
+        |> Tuple.second
 
 
-getHeroesAdjacent :  Board -> List Hero -> List Pos
+getHeroesAdjacent : Board -> List Hero -> List Pos
 getHeroesAdjacent board list_hero =
-    List.map (\x -> List.filter (checkAdjacent board list_hero x.pos ) board.map) list_hero
-    |> List.concat
-    
-getHeroesLines :  Board -> List Pos
-getHeroesLines board =
-    List.map (\enemy -> (List.map (\hero -> List.filter (isBetweenEmpty board enemy hero.pos ) board.map) board.heroes
-                        |> List.concat)
-            ) board.enemies
-            |> List.concat
-    
+    List.map (\x -> List.filter (checkAdjacent board list_hero x.pos) board.map) list_hero
+        |> List.concat
 
-isBetweenEmpty :  Board -> Enemy -> Pos -> Pos -> Bool
+
+getHeroesLines : Board -> List Pos
+getHeroesLines board =
+    List.map
+        (\enemy ->
+            List.map (\hero -> List.filter (isBetweenEmpty board enemy hero.pos) board.map) board.heroes
+                |> List.concat
+        )
+        board.enemies
+        |> List.concat
+
+
+isBetweenEmpty : Board -> Enemy -> Pos -> Pos -> Bool
 isBetweenEmpty board my_enemy my_pos row =
-    let 
-        ( my_x, my_y ) = my_pos
-        ( row_x, row_y ) = row
-        enemy = List.filter (\x -> (x /= my_enemy )) board.enemies
+    let
+        ( my_x, my_y ) =
+            my_pos
+
+        ( row_x, row_y ) =
+            row
+
+        enemy =
+            List.filter (\x -> x /= my_enemy) board.enemies
     in
     if
-        ((my_x == row_x )||(my_y == row_y )||((my_x + my_y) == (row_x + row_y)))
-        && not (List.member row
-                    (board.barrier
+        ((my_x == row_x) || (my_y == row_y) || ((my_x + my_y) == (row_x + row_y)))
+            && not
+                (List.member row
+                    (List.map .pos board.obstacles
                         ++ List.map .pos board.heroes
                         ++ List.map .pos enemy
                     )
                 )
     then
-        if (my_x == row_x ) then
-            let 
-                small_y = min my_y row_y
-                big_y = max my_y row_y
-                pre_list =  List.map (\y -> ( my_x, y )) (List.range small_y big_y )
-                possible_list = 
-                    if List.length pre_list == 2 then
-                        [ row ]
-                    else
-                        pre_list
-                        |> List.take (len)
-                        |> List.drop 1
-                len = big_y - small_y
-            in
-                if List.any identity (List.map (\pos -> List.member pos (board.barrier
-                        ++ List.map .pos board.heroes
-                        --++ List.map .pos board.enemies
-                    )) possible_list)
-                then
-                    False
-                else
-                    True
-        else if (my_y == row_y ) then
-            let 
-                small_x = min my_x row_x
-                big_x = max my_x row_x
-                pre_list = List.map (\x -> ( x, my_y )) (List.range small_x big_x )
-                possible_list = 
-                    if List.length pre_list == 2 then
-                        [ row ]
-                    else
-                        pre_list
-                        |> List.take (len)
-                        |> List.drop 1
-                                
-                len = big_x - small_x
-            in
-                if List.any identity (List.map (\pos -> List.member pos (board.barrier
-                        ++ List.map .pos board.heroes
-                        --++ List.map .pos board.enemies
-                    )) possible_list)
-                then
-                    False
-                else
-                    True
-        else if (my_x + my_y) == (row_x + row_y) then
-            let 
-                sum_xy = my_x + my_y
-                small_x = min my_x row_x
-                big_x = max my_x row_x
-                pre_list = List.map (\x -> ( x, sum_xy - x )) (List.range small_x big_x )
-                possible_list = 
-                    if List.length pre_list == 2 then
-                        [ row ]
-                    else
-                        pre_list
-                        |> List.take (len)
-                        |> List.drop 1
-                len = big_x - small_x
+        if my_x == row_x then
+            let
+                small_y =
+                    min my_y row_y
 
-                
+                big_y =
+                    max my_y row_y
+
+                pre_list =
+                    List.map (\y -> ( my_x, y )) (List.range small_y big_y)
+
+                possible_list =
+                    if List.length pre_list == 2 then
+                        [ row ]
+
+                    else
+                        pre_list
+                            |> List.take len
+                            |> List.drop 1
+
+                len =
+                    big_y - small_y
             in
-                    
-                if List.any identity (List.map (\pos -> List.member pos (board.barrier
-                        ++ List.map .pos board.heroes
-                        --++ List.map .pos board.enemies
-                    )) possible_list)
-                then
-                    False
-                else
-                    True
-        else 
+            if
+                List.any identity
+                    (List.map
+                        (\pos ->
+                            List.member pos
+                                (List.map .pos board.obstacles
+                                    ++ List.map .pos board.heroes
+                                 --++ List.map .pos board.enemies
+                                )
+                        )
+                        possible_list
+                    )
+            then
+                False
+
+            else
+                True
+
+        else if my_y == row_y then
+            let
+                small_x =
+                    min my_x row_x
+
+                big_x =
+                    max my_x row_x
+
+                pre_list =
+                    List.map (\x -> ( x, my_y )) (List.range small_x big_x)
+
+                possible_list =
+                    if List.length pre_list == 2 then
+                        [ row ]
+
+                    else
+                        pre_list
+                            |> List.take len
+                            |> List.drop 1
+
+                len =
+                    big_x - small_x
+            in
+            if
+                List.any identity
+                    (List.map
+                        (\pos ->
+                            List.member pos
+                                (List.map .pos board.obstacles
+                                    ++ List.map .pos board.heroes
+                                 --++ List.map .pos board.enemies
+                                )
+                        )
+                        possible_list
+                    )
+            then
+                False
+
+            else
+                True
+
+        else if (my_x + my_y) == (row_x + row_y) then
+            let
+                sum_xy =
+                    my_x + my_y
+
+                small_x =
+                    min my_x row_x
+
+                big_x =
+                    max my_x row_x
+
+                pre_list =
+                    List.map (\x -> ( x, sum_xy - x )) (List.range small_x big_x)
+
+                possible_list =
+                    if List.length pre_list == 2 then
+                        [ row ]
+
+                    else
+                        pre_list
+                            |> List.take len
+                            |> List.drop 1
+
+                len =
+                    big_x - small_x
+            in
+            if
+                List.any identity
+                    (List.map
+                        (\pos ->
+                            List.member pos
+                                (List.map .pos board.obstacles
+                                    ++ List.map .pos board.heroes
+                                 --++ List.map .pos board.enemies
+                                )
+                        )
+                        possible_list
+                    )
+            then
+                False
+
+            else
+                True
+
+        else
             False
+
     else
         False
 
+
 leastWarriorPathHelper : Enemy -> Board -> List Hero -> List Pos -> List Pos
 leastWarriorPathHelper my_enemy board list_hero tgt_list =
-    if List.any (\x -> (distance my_enemy.pos x.pos == 1)) list_hero then
+    if List.any (\x -> distance my_enemy.pos x.pos == 1) list_hero then
         []
-    else
-    case tgt_list of
-        [] ->
-            []
-        [one_pos] ->
-            shortestPath board list_hero my_enemy.pos one_pos
-        hero1 :: hero2 :: r_lst ->
-            let
-                length1 = shortestPathLength board list_hero my_enemy.pos hero1
-                length2 = shortestPathLength board list_hero my_enemy.pos hero2
-            in
-            
-            if ((length1 < length2) && (length1 > 0)) then
-                leastWarriorPathHelper my_enemy board list_hero (hero1 :: r_lst)
-            else if ((length2 <= length1) && (length2 > 0)) then
-                leastWarriorPathHelper my_enemy board list_hero (hero2 :: r_lst)
-            else
-                []
 
-leastArcherPathHelper : Enemy -> Board -> (List Pos, List Pos) -> (List Pos, List Pos)
-leastArcherPathHelper my_enemy board (tgt_list, opt) =
-    let
-        list_hero = board.heroes
-    in
-    if List.member my_enemy.pos tgt_list then
-        ([], [])
     else
         case tgt_list of
-        [] ->
-            ([], opt)
-        
-        one_pos :: r_lst ->
-            let
-                path1 = shortestPath board list_hero my_enemy.pos one_pos
-                length1 = List.length path1
-                length2 = List.length opt
-            in
-            
-            if ((length1 < length2 || length2 == 0 ) && (length1 > 0)) then
-                (leastArcherPathHelper my_enemy board  (r_lst, path1 ))
-            else
-                leastArcherPathHelper my_enemy board  (r_lst, opt)
+            [] ->
+                []
+
+            [ one_pos ] ->
+                shortestPath board list_hero my_enemy.pos one_pos
+
+            hero1 :: hero2 :: r_lst ->
+                let
+                    length1 =
+                        shortestPathLength board list_hero my_enemy.pos hero1
+
+                    length2 =
+                        shortestPathLength board list_hero my_enemy.pos hero2
+                in
+                if (length1 < length2) && (length1 > 0) then
+                    leastWarriorPathHelper my_enemy board list_hero (hero1 :: r_lst)
+
+                else if (length2 <= length1) && (length2 > 0) then
+                    leastWarriorPathHelper my_enemy board list_hero (hero2 :: r_lst)
+
+                else
+                    []
+
+
+leastArcherPathHelper : Enemy -> Board -> ( List Pos, List Pos ) -> ( List Pos, List Pos )
+leastArcherPathHelper my_enemy board ( tgt_list, opt ) =
+    let
+        list_hero =
+            board.heroes
+    in
+    if List.member my_enemy.pos tgt_list then
+        ( [], [] )
+
+    else
+        case tgt_list of
+            [] ->
+                ( [], opt )
+
+            one_pos :: r_lst ->
+                let
+                    path1 =
+                        shortestPath board list_hero my_enemy.pos one_pos
+
+                    length1 =
+                        List.length path1
+
+                    length2 =
+                        List.length opt
+                in
+                if (length1 < length2 || length2 == 0) && (length1 > 0) then
+                    leastArcherPathHelper my_enemy board ( r_lst, path1 )
+
+                else
+                    leastArcherPathHelper my_enemy board ( r_lst, opt )
+
 
 shortestPathLength : Board -> List Hero -> Pos -> Pos -> Int
 shortestPathLength board hero_list begin end =
     List.length (shortestPath board hero_list begin end)
+
 
 
 {- Output the shortest path in the form of (List Pos).
@@ -209,8 +296,8 @@ shortestPathLength board hero_list begin end =
 
 shortestPath : Board -> List Hero -> Pos -> Pos -> List Pos
 shortestPath board hero_list begin end =
-        shortPathFind board hero_list begin end ( ( initVisited, initTable begin board.map ), [] )
-            |> Tuple.second
+    shortPathFind board hero_list begin end ( ( initVisited, initTable begin board.map ), [] )
+        |> Tuple.second
 
 
 shortPathFind : Board -> List Hero -> Pos -> Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
@@ -312,12 +399,12 @@ initVisited =
 
 
 checkAdjacent : Board -> List Hero -> Pos -> Pos -> Bool
-checkAdjacent board hero_list  my_pos row =
+checkAdjacent board hero_list my_pos row =
     if
         (distance my_pos row == 1)
             && not
                 (List.member row
-                    (board.barrier
+                    (List.map .pos board.obstacles
                         ++ List.map .pos hero_list
                         ++ List.map .pos board.enemies
                     )
@@ -328,13 +415,14 @@ checkAdjacent board hero_list  my_pos row =
     else
         False
 
+
 isAdjacent : Board -> List Hero -> List Pos -> Pos -> Spa_row -> Bool
 isAdjacent board hero_list visited my_pos row =
     if
         (distance my_pos row.pos == 1)
             && not
                 (List.member row.pos
-                    (board.barrier
+                    (List.map .pos board.obstacles
                         ++ List.map .pos hero_list
                         ++ List.map .pos board.enemies
                         ++ visited
