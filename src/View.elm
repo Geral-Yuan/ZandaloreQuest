@@ -12,7 +12,7 @@ import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
 import ViewOthers exposing (..)
-import ShortestPath exposing (getHeroesLines)
+
 
 view : Model -> Html Msg
 view model =
@@ -62,7 +62,7 @@ viewAll model =
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
-              --++ viewLines model.board 
+             --++ viewLines model.board
             )
          , endTurnButton
          , viewHeroInfo model.board
@@ -72,26 +72,30 @@ viewAll model =
             ++ viewEnemyInformation model.board.enemies 1
         )
 
+
+
 -- view where the enermy archer can attack the hero (for debugging)
+{-
+   viewLines :  Board -> List (Svg msg)
+   viewLines board  =
+       let
 
-viewLines :  Board -> List (Svg msg)
-viewLines board  =
-    let
+           list_points =
+               --List.concatMap (\x -> leastArcherPath x board) board.enemies
+                getHeroesLines board
+       in
+       List.map
+           (\x ->
+               Svg.circle
+                   [ SvgAttr.cx (toString (Tuple.first x))
+                   , SvgAttr.cy (toString (Tuple.second x))
+                   , SvgAttr.r "5"
+                   ]
+                   []
+           )
+           (List.map findPos list_points)
+-}
 
-        list_points =
-            --List.concatMap (\x -> leastArcherPath x board) board.enemies
-             getHeroesLines board
-    in
-    List.map
-        (\x ->
-            Svg.circle
-                [ SvgAttr.cx (toString (Tuple.first x))
-                , SvgAttr.cy (toString (Tuple.second x))
-                , SvgAttr.r "5"
-                ]
-                []
-        )
-        (List.map findPos list_points)
 
 viewClickPosition : Model -> Html Msg
 viewClickPosition model =

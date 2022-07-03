@@ -4,6 +4,7 @@ import Board exposing (..)
 import Data exposing (..)
 import ShortestPath exposing (..)
 
+
 actionEnemy : Board -> Board
 actionEnemy board =
     let
@@ -36,13 +37,17 @@ actionSmartEnemy board enemy =
     case enemy.class of
         Warrior ->
             actionSmartWarrior board enemy
+
         Archer ->
-             actionSmartArcher board enemy
+            actionSmartArcher board enemy
+
         Mage ->
             --ToDo some operations
             ( enemy, board )
+
         Assassin ->
             ( enemy, board )
+
         Healer ->
             ( enemy, board )
 
@@ -60,7 +65,8 @@ actionSmartWarrior board enemy =
                 , { board
                     | time = 0
                     , heroes =
-                        List.map (enermyWarriorAttack enemy.pos 5 0) board.heroes   --5 is the fixed damage
+                        List.map (enermyWarriorAttack enemy.pos 5 0) board.heroes
+                            --5 is the fixed damage
                             |> List.filter (\x -> x.health > 0)
                   }
                 )
@@ -104,14 +110,11 @@ enermyArcherAttack board my_enemy damage critical hero =
 
 isArcherAttackRange : Board -> Hero -> Enemy -> Bool
 isArcherAttackRange board attacked me =
-    if
-        isBetweenEmpty board me attacked.pos me.pos
-    then
+    if isBetweenEmpty board me attacked.pos me.pos then
         True
 
     else
         False
-
 
 
 actionSmartArcher : Board -> Enemy -> ( Enemy, Board )
@@ -127,7 +130,8 @@ actionSmartArcher board enemy =
                 , { board
                     | time = 0
                     , heroes =
-                        List.map (enermyArcherAttack board enemy 7 0) board.heroes  -- 7 is the fixed damage
+                        List.map (enermyArcherAttack board enemy 7 0) board.heroes
+                            -- 7 is the fixed damage
                             |> List.filter (\x -> x.health > 0)
                   }
                 )
@@ -141,8 +145,6 @@ actionSmartArcher board enemy =
 
             else
                 ( enemy, board )
-
-
 
 
 checkEnemyDone : Enemy -> Enemy
