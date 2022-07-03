@@ -64,6 +64,7 @@ viewHero hero =
                 , SvgAttr.xlinkHref "./assets/image/MageGood.png"
                 ]
                 []
+
         class ->
             Svg.image
                 [ SvgAttr.width "80"
@@ -71,6 +72,6 @@ viewHero hero =
                 , SvgAttr.x (toString (x - 40))
                 , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class++ "Good.png")
+                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Good.png")
                 ]
                 []

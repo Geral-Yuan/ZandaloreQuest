@@ -37,6 +37,32 @@ type Class
     | Mage
 
 
+type ObstacleType
+    = MysteryBox
+    | Unbreakable
+    | NoObstacle
+
+
+type ItemType
+    = HealthPotion
+    | Gold
+    | Buff
+    | NoItem
+
+
+type alias Obstacle =
+    { obstacleType : ObstacleType
+    , pos : Pos
+    , itemType : ItemType
+    }
+
+
+type alias Item =
+    { itemType : ItemType
+    , pos : Pos
+    }
+
+
 type alias Hero =
     { class : Class
     , pos : Pos

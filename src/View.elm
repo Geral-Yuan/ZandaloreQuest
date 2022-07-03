@@ -1,4 +1,4 @@
-module View exposing (view)
+module View exposing (checkItemType, checkObstacleType, view)
 
 import Board exposing (Board)
 import Data exposing (..)
@@ -117,16 +117,53 @@ viewClickPosition model =
         [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
 
 
-viewMap : Board -> List (Svg msg)
+viewMap : Board -> List (Svg Msg)
 viewMap board =
     List.map (viewCell board) board.map
 
 
-viewCell : Board -> Pos -> Svg msg
+checkObstacleType : Pos -> Obstacle -> ObstacleType
+checkObstacleType ( row, column ) obstacle =
+    if obstacle.pos == ( row, column ) then
+        obstacle.obstacleType
+
+    else
+        NoObstacle
+
+
+checkItemType : Pos -> Item -> ItemType
+checkItemType ( row, column ) item =
+    if item.pos == ( row, column ) then
+        item.itemType
+
+    else
+        NoItem
+
+
+viewCell : Board -> Pos -> Svg Msg
 viewCell board ( row, column ) =
-    if List.member ( row, column ) board.barrier then
+    if List.member Unbreakable (List.map (checkObstacleType ( row, column )) board.obstacles) then
         Svg.polygon
             [ SvgAttr.fill "black"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+
+    else if List.member MysteryBox (List.map (checkObstacleType ( row, column )) board.obstacles) then
+        Svg.image
+            [ SvgAttr.width "121"
+            , SvgAttr.height "140"
+            , SvgAttr.x (toString (Tuple.first (findPos ( row, column )) - 62.0))
+            , SvgAttr.y (toString (Tuple.second (findPos ( row, column )) - 70.0))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/logo.png"
+            ]
+            []
+
+    else if List.member HealthPotion (List.map (checkItemType ( row, column )) board.item) then
+        Svg.polygon
+            [ SvgAttr.fill "red"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]

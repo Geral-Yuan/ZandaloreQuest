@@ -34,7 +34,7 @@ updateAttackable board =
                     List.map (vecAdd hero.pos) (attackRange board hero)
 
                 can_attack =
-                    listintersection realattackRange (board.barrier ++ List.map .pos board.enemies)
+                    listintersection realattackRange (List.map .pos board.obstacles ++ List.map .pos board.enemies)
             in
             { board | attackable = can_attack }
 
@@ -59,7 +59,7 @@ stuckInWay board heropos pos =
             List.map (vecAdd heropos) (sameline pos)
 
         inWay =
-            listintersection linePos (board.barrier ++ List.map .pos board.enemies)
+            listintersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
     in
     case leastdistance inWay heropos of
         Nothing ->
@@ -79,8 +79,9 @@ updateMoveable board =
             let
                 realmoveRange =
                     List.map (vecAdd hero.pos) neighbour
+
                 can_move =
-                    List.filter (\pos -> not (List.member pos (board.barrier ++ List.map .pos board.enemies ++ List.map .pos board.heroes))) realmoveRange
+                    List.filter (\pos -> not (List.member pos (List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes))) realmoveRange
             in
             { board | moveable = can_move }
 

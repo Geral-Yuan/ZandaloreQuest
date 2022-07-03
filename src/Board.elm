@@ -6,22 +6,29 @@ import Message exposing (Msg(..))
 
 type alias Board =
     { map : List Pos
-    , barrier : List Pos
+    , obstacles : List Obstacle
     , enemies : List Enemy
     , heroes : List Hero
     , turn : Turn
     , critical : Int
     , moveable : List Pos
     , attackable : List Pos
+    , item : List Item
     , time : Float
     }
 
 
-initbarrier : Int -> List Pos
-initbarrier k =
+initObstacles : Int -> List Obstacle
+initObstacles k =
+    -- need to change this
     case k of
         _ ->
-            [ ( 5, 5 ) ]
+            [ Obstacle Unbreakable ( 5, 5 ) NoItem
+            , Obstacle Unbreakable ( 2, 6 ) NoItem
+            , Obstacle Unbreakable ( 6, 2 ) NoItem
+            , Obstacle MysteryBox ( 4, 8 ) HealthPotion
+            , Obstacle MysteryBox ( 8, 4 ) HealthPotion
+            ]
 
 
 initenemy : Int -> List Enemy
@@ -38,7 +45,7 @@ inithero : Int -> List Hero
 inithero k =
     case k of
         _ ->
-            [ Hero Mage ( 6, 6 ) 50 15 5 3 False 1 -- for healer, damage is to heal
+            [ Hero Mage ( 6, 6 ) 50 15 5 3 False 1
             , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
             , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
             ]
@@ -48,4 +55,4 @@ initBoard : Int -> Board
 initBoard k =
     case k of
         _ ->
-            Board map (initbarrier k) (initenemy k) (inithero k) HeroTurn 0 [] [] 0
+            Board map (initObstacles k) (initenemy k) (inithero k) HeroTurn 0 [] [] [] 0

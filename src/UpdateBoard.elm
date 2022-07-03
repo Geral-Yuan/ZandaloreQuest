@@ -2,9 +2,10 @@ module UpdateBoard exposing (..)
 
 import Board exposing (Board)
 import Data exposing (..)
-import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
 import EnemyAction exposing (actionEnemy)
+import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
 import Message exposing (Msg(..))
+import View exposing (checkItemType)
 
 
 updateBoard : Msg -> Board -> Board
@@ -116,12 +117,22 @@ moveHero board dir =
             board
 
         Just hero ->
+            let
+                currEnergy =
+                    hero.energy
+
+                newPos =
+                    vecAdd hero.pos dr
+
+                currHealth =
+                    hero.health
+            in
             if legalHeroMove board hero dr && hero.energy > 1 then
-                let
-                    currEnergy =
-                        hero.energy
-                in
-                { board | heroes = { hero | pos = vecAdd hero.pos dr, energy = currEnergy - 2 } :: unselectedHero board.heroes }
+                if List.member HealthPotion (List.map (checkItemType newPos) board.item) then
+                    { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, health = currHealth + 10 } :: unselectedHero board.heroes, item = List.filter (\item -> item.pos /= newPos) board.item }
+
+                else
+                    { board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
 
             else
                 board
@@ -133,7 +144,7 @@ moveHero board dir =
 
 legalHeroMove : Board -> Hero -> Pos -> Bool
 legalHeroMove board hero dr =
-    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (board.barrier ++ List.map .pos board.heroes ++ List.map .pos board.enemies))
+    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (List.map .pos board.obstacles ++ List.map .pos board.heroes ++ List.map .pos board.enemies))
 
 
 

@@ -4,6 +4,7 @@ import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import Random exposing (..)
+import View exposing (checkObstacleType)
 
 
 randomDamage : Generator Critical
@@ -60,7 +61,7 @@ checkAttack board pos critical =
 
 checkAttackTarget : Board -> Pos -> Board
 checkAttackTarget board pos =
-    if List.member pos board.barrier then
+    if List.member MysteryBox (List.map (checkObstacleType pos) board.obstacles) || List.member Unbreakable (List.map (checkObstacleType pos) board.obstacles) then
         checkAttackBarrier board pos
 
     else
@@ -68,18 +69,24 @@ checkAttackTarget board pos =
 
 
 checkAttackBarrier : Board -> Pos -> Board
-checkAttackBarrier board pos =
+checkAttackBarrier board position =
     case selectedHero board.heroes of
         Nothing ->
             board
 
         Just hero ->
-            case hero.class of
-                Mage ->
-                    { board | barrier = List.filter (\bpos -> not (List.member bpos (pos :: List.map (vecAdd pos) neighbour))) board.barrier }
+            let
+                ( attacked, others ) =
+                    List.partition (\barrier -> barrier.pos == position) board.obstacles
 
+                ( attackBreakable, attackOthers ) =
+                    List.partition (\barrier -> barrier.obstacleType == MysteryBox) board.obstacles
+            in
+            case hero.class of
+                -- Mage ->
+                --     { board | obstacles = List.filter (\bpos -> List.member bpos (pos :: List.map (vecAdd pos) neighbour)) board.obstacles }
                 _ ->
-                    { board | barrier = List.filter (\bpos -> bpos /= pos) board.barrier }
+                    { board | obstacles = attackOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackBreakable ++ board.item }
 
 
 checkAttackEnemy : Board -> Pos -> Board
