@@ -98,7 +98,7 @@ checkAttackEnemy board pos =
                         _ ->
                             List.partition (\enemy -> enemy.pos == pos) board.enemies
             in
-            { board | enemies = List.map (damageEnemy hero.damage board.critical) attackedEnemies ++ otherEnemies }
+            { board | enemies = List.filter (\{ health } -> health > 0) (List.map (damageEnemy hero.damage board.critical) attackedEnemies ++ otherEnemies) }
 
 
 damageEnemy : Int -> Int -> Enemy -> Enemy

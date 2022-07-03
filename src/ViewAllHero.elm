@@ -54,57 +54,23 @@ viewHero hero =
             findPos hero.pos
     in
     case hero.class of
-        Warrior ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 35))
-                , SvgAttr.y (toString (y - 35))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/WarriorGood.png"
-                ]
-                []
-
-        Archer ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 35))
-                , SvgAttr.y (toString (y - 35))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/ArcherGood.png"
-                ]
-                []
-
-        Assassin ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 35))
-                , SvgAttr.y (toString (y - 35))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/AssassinGood.png"
-                ]
-                []
-
-        Mage ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 35))
-                , SvgAttr.y (toString (y - 35))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
-                ]
-                []
-
         Healer ->
             Svg.image
                 [ SvgAttr.width "80"
                 , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 35))
-                , SvgAttr.y (toString (y - 35))
+                , SvgAttr.x (toString (x - 40))
+                , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/MageGood.png"
+                ]
+                []
+        class ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 40))
+                , SvgAttr.y (toString (y - 40))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class++ "Good.png")
                 ]
                 []
