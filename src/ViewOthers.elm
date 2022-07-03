@@ -7,7 +7,6 @@ import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import ShortestPath exposing (leastWarriorPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
@@ -16,7 +15,7 @@ viewCritical : Board -> Html Msg
 viewCritical board =
     div
         [ HtmlAttr.style "bottom" "60px"
-        , HtmlAttr.style "right" "-60px"
+        , HtmlAttr.style "right" "100px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -52,37 +51,6 @@ viewCoordinate ( row, column ) =
 
 
 
-{- use it to view the shortest path -}
-
-
-viewRoute : List Enemy -> Board -> List Hero -> List (Svg msg)
-viewRoute enemy_list board hero_list =
-    let
-        enemy =
-            case enemy_list of
-                [] ->
-                    Enemy Warrior ( 3, 3 ) 100 10 5 0 True 1
-
-                [ a ] ->
-                    a
-
-                b :: _ ->
-                    b
-
-        list_points =
-            leastWarriorPath enemy board hero_list
-    in
-    List.map
-        (\x ->
-            Svg.circle
-                [ SvgAttr.cx (toString (Tuple.first x))
-                , SvgAttr.cy (toString (Tuple.second x))
-                , SvgAttr.r "5"
-                ]
-                []
-        )
-        (List.map findPos list_points)
-
 
 detPoints : ( Float, Float ) -> String
 detPoints ( x, y ) =
@@ -107,7 +75,7 @@ endTurnButton =
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "1000px"
+        , HtmlAttr.style "left" "1400px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"

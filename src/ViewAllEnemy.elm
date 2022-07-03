@@ -87,7 +87,7 @@ viewEnemyInfo enemy n =
     -- display health and energy
     div
         [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
-        , HtmlAttr.style "left" "-120px"
+        , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "black"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"

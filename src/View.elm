@@ -1,5 +1,6 @@
-module View exposing (checkItemType, checkObstacleType, view)
+module View exposing (view)
 
+import Action exposing (checkItemType, checkObstacleType)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
@@ -62,14 +63,17 @@ viewAll model =
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
+                ++ List.map viewHeroInfo1 board.heroes
+                ++ List.map viewHeroInfo2 board.heroes
              --++ viewLines model.board
             )
          , endTurnButton
-         , viewHeroInfo model.board
          , viewCritical model.board
          , viewClickPosition model
          ]
-            ++ viewEnemyInformation model.board.enemies 1
+            ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.map viewHeroInfo4 model.board.heroes
+            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 
@@ -120,24 +124,6 @@ viewClickPosition model =
 viewMap : Board -> List (Svg Msg)
 viewMap board =
     List.map (viewCell board) board.map
-
-
-checkObstacleType : Pos -> Obstacle -> ObstacleType
-checkObstacleType ( row, column ) obstacle =
-    if obstacle.pos == ( row, column ) then
-        obstacle.obstacleType
-
-    else
-        NoObstacle
-
-
-checkItemType : Pos -> Item -> ItemType
-checkItemType ( row, column ) item =
-    if item.pos == ( row, column ) then
-        item.itemType
-
-    else
-        NoItem
 
 
 viewCell : Board -> Pos -> Svg Msg

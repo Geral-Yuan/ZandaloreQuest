@@ -1,11 +1,11 @@
 module UpdateBoard exposing (..)
 
+import Action exposing (checkItemType, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy)
-import HeroAttack exposing (checkAttack, selectedHero, unselectedHero)
+import HeroAttack exposing (checkAttack)
 import Message exposing (Msg(..))
-import View exposing (checkItemType)
 
 
 updateBoard : Msg -> Board -> Board
@@ -31,14 +31,22 @@ updateBoard msg board =
             turnEnemy board
 
         Tick elapsed ->
-            case board.turn of
-                HeroTurn ->
-                    board
+            let
+                nboard =
+                    case board.turn of
+                        HeroTurn ->
+                            board
 
-                EnemyTurn ->
-                    { board | time = board.time + elapsed / 1000 }
-                        |> actionEnemy
-                        |> checkTurn
+                        EnemyTurn ->
+                            { board | time = board.time + elapsed / 1000 }
+            in
+            if nboard.time > 1 then
+                { nboard | time = 0 }
+                    |> actionEnemy
+                    |> checkTurn
+
+            else
+                nboard
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -53,6 +61,7 @@ turnEnemy board =
         | turn = EnemyTurn
         , enemies = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemies
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
+        , time = 0
     }
 
 
@@ -66,13 +75,13 @@ resetEnergy hero =
             { hero | energy = 5 }
 
         Mage ->
-            { hero | energy = 5 }
+            { hero | energy = 3 }
 
         Assassin ->
             { hero | energy = 6 }
 
         Healer ->
-            { hero | energy = 6 }
+            { hero | energy = 5 }
 
 
 deselectHeroes : Hero -> Hero

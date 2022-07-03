@@ -1,6 +1,5 @@
 module ViewAllHero exposing (..)
 
-import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, div)
@@ -10,41 +9,84 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewHeroInfo : Board -> Html Msg
-viewHeroInfo board =
-    -- display information of the selected hero
-    let
-        sample_hero =
-            Hero Warrior ( 0, 0 ) 0 0 0 0 False 0
+viewHeroInfo1 : Hero -> Svg msg
+viewHeroInfo1 hero =
+    case hero.class of
+        Healer ->
+            Svg.image
+                [ SvgAttr.width "70"
+                , SvgAttr.height "70"
+                , SvgAttr.x "1600"
+                , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
+                ]
+                []
 
-        hero =
-            List.filter .selected board.heroes
-                |> List.head
-                |> Maybe.withDefault sample_hero
-    in
-    if hero.selected then
-        div
-            [ HtmlAttr.style "top" "50px"
-            , HtmlAttr.style "left" "1050px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-            , HtmlAttr.style "font-size" "50px"
-            , HtmlAttr.style "font-weight" "bold"
-            , HtmlAttr.style "text-align" "center"
-            , HtmlAttr.style "line-height" "60px"
-            , HtmlAttr.style "position" "absolute"
-            ]
-            [ text
-                (toString hero.class
-                    ++ ("\nHealth: " ++ toString hero.health)
-                    ++ ("\nDamage: " ++ toString hero.damage)
-                    ++ ("\nArmour: " ++ toString hero.armour)
-                    ++ ("\nEnergy: " ++ toString hero.energy)
-                )
-            ]
+        class ->
+            Svg.image
+                [ SvgAttr.width "70"
+                , SvgAttr.height "70"
+                , SvgAttr.x "1600"
+                , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Good.png")
+                ]
+                []
 
-    else
-        div [] []
+
+viewHeroInfo2 : Hero -> Svg msg
+viewHeroInfo2 hero =
+    Svg.rect
+        [ SvgAttr.width "400"
+        , SvgAttr.height "120"
+        , SvgAttr.x "1580"
+        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 125))
+        , SvgAttr.fill "transparent"
+        , SvgAttr.stroke "black"
+        , SvgAttr.rx "20"
+        ]
+        []
+
+
+viewHeroInfo3 : Hero -> Html Msg
+viewHeroInfo3 hero =
+    div
+        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
+        , HtmlAttr.style "left" "1700px"
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text
+            (("Health: " ++ toString hero.health)
+                ++ (" Damage: " ++ toString hero.damage)
+            )
+        ]
+
+
+viewHeroInfo4 : Hero -> Html Msg
+viewHeroInfo4 hero =
+    div
+        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
+        , HtmlAttr.style "left" "1700px"
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text
+            (("Armour: " ++ toString hero.armour)
+                ++ (" Energy: " ++ toString hero.energy)
+            )
+        ]
 
 
 viewHero : Hero -> Svg msg
