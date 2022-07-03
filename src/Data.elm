@@ -102,7 +102,7 @@ type Dir
 
 pixelWidth : Float
 pixelWidth =
-    1200
+    2000
 
 
 pixelHeight : Float
@@ -160,6 +160,28 @@ sameline pos =
 listintersection : List a -> List a -> List a
 listintersection list1 list2 =
     List.filter (\x -> List.member x list2) list1
+
+
+listUnion : List a -> List a -> List a
+listUnion list1 list2 =
+    let
+        newElements =
+            List.filter (\x -> not (List.member x list2)) list1
+    in
+    list2 ++ newElements
+
+
+unionList : List (List a) -> List a
+unionList list_of_list =
+    case list_of_list of
+        [] ->
+            []
+
+        [ list ] ->
+            list
+
+        list1 :: (list2 :: restlists) ->
+            unionList (listUnion list1 list2 :: restlists)
 
 
 pairRange : Int -> ( Int, Int ) -> List Pos

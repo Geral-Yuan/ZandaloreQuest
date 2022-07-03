@@ -1,7 +1,8 @@
-module ShortestPath exposing (getHeroesLines, isBetweenEmpty, leastArcherPath, leastWarriorPath)
+module ShortestPath exposing (leastArcherPath, leastWarriorPath)
 
+import Action exposing (attackedByArcherRange)
 import Board exposing (Board)
-import Data exposing (Enemy, Hero, Pos, distance)
+import Data exposing (..)
 import List exposing (append, minimum, partition)
 
 
@@ -25,226 +26,20 @@ type alias Spa_row =
 -}
 
 
-leastWarriorPath : Enemy -> Board -> List Hero -> List Pos
-leastWarriorPath my_enemy board list_hero =
-    leastWarriorPathHelper my_enemy board list_hero (getHeroesAdjacent board list_hero)
+leastWarriorPath : Enemy -> Board -> List Pos
+leastWarriorPath my_enemy board =
+    leastPathHelper my_enemy board ( unionList (List.map (\hero -> List.map (vecAdd hero.pos) neighbour) board.heroes), [] )
+        |> Tuple.second
 
 
 leastArcherPath : Enemy -> Board -> List Pos
 leastArcherPath my_enemy board =
-    leastArcherPathHelper my_enemy board ( getHeroesLines board, [] )
+    leastPathHelper my_enemy board ( unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)), [] )
         |> Tuple.second
 
 
-getHeroesAdjacent : Board -> List Hero -> List Pos
-getHeroesAdjacent board list_hero =
-    List.map (\x -> List.filter (checkAdjacent board list_hero x.pos) board.map) list_hero
-        |> List.concat
-
-
-getHeroesLines : Board -> List Pos
-getHeroesLines board =
-    List.map
-        (\enemy ->
-            List.map (\hero -> List.filter (isBetweenEmpty board enemy hero.pos) board.map) board.heroes
-                |> List.concat
-        )
-        board.enemies
-        |> List.concat
-
-
-isBetweenEmpty : Board -> Enemy -> Pos -> Pos -> Bool
-isBetweenEmpty board my_enemy my_pos row =
-    let
-        ( my_x, my_y ) =
-            my_pos
-
-        ( row_x, row_y ) =
-            row
-
-        enemy =
-            List.filter (\x -> x /= my_enemy) board.enemies
-    in
-    if
-        ((my_x == row_x) || (my_y == row_y) || ((my_x + my_y) == (row_x + row_y)))
-            && not
-                (List.member row
-                    (List.map .pos board.obstacles
-                        ++ List.map .pos board.heroes
-                        ++ List.map .pos enemy
-                    )
-                )
-    then
-        if my_x == row_x then
-            let
-                small_y =
-                    min my_y row_y
-
-                big_y =
-                    max my_y row_y
-
-                pre_list =
-                    List.map (\y -> ( my_x, y )) (List.range small_y big_y)
-
-                possible_list =
-                    if List.length pre_list == 2 then
-                        [ row ]
-
-                    else
-                        pre_list
-                            |> List.take len
-                            |> List.drop 1
-
-                len =
-                    big_y - small_y
-            in
-            if
-                List.any identity
-                    (List.map
-                        (\pos ->
-                            List.member pos
-                                (List.map .pos board.obstacles
-                                    ++ List.map .pos board.heroes
-                                 --++ List.map .pos board.enemies
-                                )
-                        )
-                        possible_list
-                    )
-            then
-                False
-
-            else
-                True
-
-        else if my_y == row_y then
-            let
-                small_x =
-                    min my_x row_x
-
-                big_x =
-                    max my_x row_x
-
-                pre_list =
-                    List.map (\x -> ( x, my_y )) (List.range small_x big_x)
-
-                possible_list =
-                    if List.length pre_list == 2 then
-                        [ row ]
-
-                    else
-                        pre_list
-                            |> List.take len
-                            |> List.drop 1
-
-                len =
-                    big_x - small_x
-            in
-            if
-                List.any identity
-                    (List.map
-                        (\pos ->
-                            List.member pos
-                                (List.map .pos board.obstacles
-                                    ++ List.map .pos board.heroes
-                                 --++ List.map .pos board.enemies
-                                )
-                        )
-                        possible_list
-                    )
-            then
-                False
-
-            else
-                True
-
-        else if (my_x + my_y) == (row_x + row_y) then
-            let
-                sum_xy =
-                    my_x + my_y
-
-                small_x =
-                    min my_x row_x
-
-                big_x =
-                    max my_x row_x
-
-                pre_list =
-                    List.map (\x -> ( x, sum_xy - x )) (List.range small_x big_x)
-
-                possible_list =
-                    if List.length pre_list == 2 then
-                        [ row ]
-
-                    else
-                        pre_list
-                            |> List.take len
-                            |> List.drop 1
-
-                len =
-                    big_x - small_x
-            in
-            if
-                List.any identity
-                    (List.map
-                        (\pos ->
-                            List.member pos
-                                (List.map .pos board.obstacles
-                                    ++ List.map .pos board.heroes
-                                 --++ List.map .pos board.enemies
-                                )
-                        )
-                        possible_list
-                    )
-            then
-                False
-
-            else
-                True
-
-        else
-            False
-
-    else
-        False
-
-
-leastWarriorPathHelper : Enemy -> Board -> List Hero -> List Pos -> List Pos
-leastWarriorPathHelper my_enemy board list_hero tgt_list =
-    if List.any (\x -> distance my_enemy.pos x.pos == 1) list_hero then
-        []
-
-    else
-        case tgt_list of
-            [] ->
-                []
-
-            [ one_pos ] ->
-                shortestPath board list_hero my_enemy.pos one_pos
-
-            hero1 :: hero2 :: r_lst ->
-                let
-                    length1 =
-                        shortestPathLength board list_hero my_enemy.pos hero1
-
-                    length2 =
-                        shortestPathLength board list_hero my_enemy.pos hero2
-                in
-                if (length1 < length2) && (length1 > 0) then
-                    leastWarriorPathHelper my_enemy board list_hero (hero1 :: r_lst)
-
-                else if (length2 <= length1) && (length2 > 0) then
-                    leastWarriorPathHelper my_enemy board list_hero (hero2 :: r_lst)
-
-                else
-                    []
-
-
-leastArcherPathHelper : Enemy -> Board -> ( List Pos, List Pos ) -> ( List Pos, List Pos )
-leastArcherPathHelper my_enemy board ( tgt_list, opt ) =
-    let
-        list_hero =
-            board.heroes
-    in
+leastPathHelper : Enemy -> Board -> ( List Pos, List Pos ) -> ( List Pos, List Pos )
+leastPathHelper my_enemy board ( tgt_list, opt ) =
     if List.member my_enemy.pos tgt_list then
         ( [], [] )
 
@@ -256,7 +51,7 @@ leastArcherPathHelper my_enemy board ( tgt_list, opt ) =
             one_pos :: r_lst ->
                 let
                     path1 =
-                        shortestPath board list_hero my_enemy.pos one_pos
+                        shortestPath board.map (unMoveable board) my_enemy.pos one_pos
 
                     length1 =
                         List.length path1
@@ -265,24 +60,21 @@ leastArcherPathHelper my_enemy board ( tgt_list, opt ) =
                         List.length opt
                 in
                 if (length1 < length2 || length2 == 0) && (length1 > 0) then
-                    leastArcherPathHelper my_enemy board ( r_lst, path1 )
+                    leastPathHelper my_enemy board ( r_lst, path1 )
 
                 else
-                    leastArcherPathHelper my_enemy board ( r_lst, opt )
-
-
-shortestPathLength : Board -> List Hero -> Pos -> Pos -> Int
-shortestPathLength board hero_list begin end =
-    List.length (shortestPath board hero_list begin end)
+                    leastPathHelper my_enemy board ( r_lst, opt )
 
 
 
 {- Output the shortest path in the form of (List Pos).
    Remark : the output path does not include the begin Pos
 
-   "board" is the current board
+   "wholemap" is the map of the board
 
-   "hero_list" is the current List of Hero, which includes all heroes
+   "unmoveable" is a list of the positions can be reached
+
+   "target" is a list of target positions
 
    "begin" is the Pos of the character i.e. one enemy or hero
 
@@ -294,14 +86,14 @@ shortestPathLength board hero_list begin end =
 -}
 
 
-shortestPath : Board -> List Hero -> Pos -> Pos -> List Pos
-shortestPath board hero_list begin end =
-    shortPathFind board hero_list begin end ( ( initVisited, initTable begin board.map ), [] )
+shortestPath : List Pos -> List Pos -> Pos -> Pos -> List Pos
+shortestPath wholemap unmoveable begin end =
+    shortPathFind unmoveable begin end ( ( initVisited, initTable begin wholemap ), [] )
         |> Tuple.second
 
 
-shortPathFind : Board -> List Hero -> Pos -> Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
-shortPathFind board hero_list begin end ( ( visited, table ), path ) =
+shortPathFind : List Pos -> Pos -> Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
+shortPathFind unmoveable begin end ( ( visited, table ), path ) =
     let
         chosen =
             --the optimal one node
@@ -313,7 +105,7 @@ shortPathFind board hero_list begin end ( ( visited, table ), path ) =
                     begin
 
         ( n_table, n_visited ) =
-            updateTable board hero_list visited chosen table
+            updateTable unmoveable visited chosen table
     in
     if List.any (isFindEnd end) table then
         ( ( visited, table )
@@ -324,7 +116,7 @@ shortPathFind board hero_list begin end ( ( visited, table ), path ) =
         ( ( visited, table ), [] )
 
     else
-        shortPathFind board hero_list begin end ( ( n_visited, n_table ), [] )
+        shortPathFind unmoveable begin end ( ( n_visited, n_table ), [] )
 
 
 isFindEnd : Pos -> Spa_row -> Bool
@@ -398,36 +190,11 @@ initVisited =
     []
 
 
-checkAdjacent : Board -> List Hero -> Pos -> Pos -> Bool
-checkAdjacent board hero_list my_pos row =
-    if
-        (distance my_pos row == 1)
-            && not
-                (List.member row
-                    (List.map .pos board.obstacles
-                        ++ List.map .pos hero_list
-                        ++ List.map .pos board.enemies
-                    )
-                )
-    then
-        True
-
-    else
-        False
-
-
-isAdjacent : Board -> List Hero -> List Pos -> Pos -> Spa_row -> Bool
-isAdjacent board hero_list visited my_pos row =
+isAdjacent : List Pos -> List Pos -> Pos -> Spa_row -> Bool
+isAdjacent unmoveable visited my_pos row =
     if
         (distance my_pos row.pos == 1)
-            && not
-                (List.member row.pos
-                    (List.map .pos board.obstacles
-                        ++ List.map .pos hero_list
-                        ++ List.map .pos board.enemies
-                        ++ visited
-                    )
-                )
+            && not (List.member row.pos (unmoveable ++ visited))
     then
         True
 
@@ -435,14 +202,14 @@ isAdjacent board hero_list visited my_pos row =
         False
 
 
-updateTable : Board -> List Hero -> List Pos -> Pos -> List Spa_row -> ( List Spa_row, List Pos )
-updateTable board hero_list visited pos table =
+updateTable : List Pos -> List Pos -> Pos -> List Spa_row -> ( List Spa_row, List Pos )
+updateTable unmoveable visited pos table =
     let
         chosen =
             pos2Spa_row pos table
 
         ( adjacent, others ) =
-            partition (isAdjacent board hero_list visited pos) table
+            partition (isAdjacent unmoveable visited pos) table
 
         n_table =
             List.map (updateAdjacent chosen) adjacent ++ others
@@ -516,3 +283,8 @@ pathLength2Spa_row leng table visited =
 
         Nothing ->
             { pos = ( 999, 999 ), pre_pos = Nothing, path_length = 999 }
+
+
+unMoveable : Board -> List Pos
+unMoveable board =
+    List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes

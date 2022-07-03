@@ -1,10 +1,10 @@
-module HeroAttack exposing (checkAttack, generateDamage, selectedHero, unselectedHero)
+module HeroAttack exposing (checkAttack, generateDamage)
 
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import Random exposing (..)
-import View exposing (checkObstacleType)
+import Action exposing (checkObstacleType, selectedHero, unselectedHero)
 
 
 randomDamage : Generator Critical
@@ -80,7 +80,7 @@ checkAttackBarrier board position =
                     List.partition (\barrier -> barrier.pos == position) board.obstacles
 
                 ( attackBreakable, attackOthers ) =
-                    List.partition (\barrier -> barrier.obstacleType == MysteryBox) board.obstacles
+                    List.partition (\barrier -> barrier.obstacleType == MysteryBox) attacked
             in
             case hero.class of
                 -- Mage ->
@@ -173,12 +173,3 @@ damageEnemy damage critical enemy =
            hero
 -}
 
-
-selectedHero : List Hero -> Maybe Hero
-selectedHero hero_list =
-    List.head (List.filter (\hero -> hero.selected) hero_list)
-
-
-unselectedHero : List Hero -> List Hero
-unselectedHero hero_list =
-    List.filter (\hero -> not hero.selected) hero_list

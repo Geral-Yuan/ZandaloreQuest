@@ -35,7 +35,7 @@ initenemy : Int -> List Enemy
 initenemy k =
     case k of
         _ ->
-            [ Enemy Archer ( 3, 3 ) 100 10 5 0 True 1
+            [ Enemy Archer ( 3, 3 ) 100 15 5 0 True 1
             , Enemy Warrior ( 1, 8 ) 100 10 5 0 True 2
             , Enemy Warrior ( 5, 2 ) 100 10 5 0 True 3
             ]
