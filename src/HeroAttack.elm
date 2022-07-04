@@ -31,7 +31,7 @@ checkAttack board pos critical =
             board
 
         Just hero ->
-            if hero.energy > 2 && List.member pos board.attackable then
+            if hero.energy > 2 && List.member pos (listintersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
                 let
                     newheroes =
                         { hero | energy = hero.energy - 3 } :: unselectedHero board.heroes

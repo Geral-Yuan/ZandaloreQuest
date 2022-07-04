@@ -11,7 +11,7 @@ type alias Board =
     , heroes : List Hero
     , turn : Turn
     , critical : Int
-    , moveable : List Pos
+    , moveable : List ( Pos, Dir )
     , attackable : List Pos
     , item : List Item
     , time : Float

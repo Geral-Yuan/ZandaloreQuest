@@ -50,6 +50,22 @@ viewCoordinate ( row, column ) =
         ]
 
 
+viewMoveable : ( Pos, Dir ) -> Svg Msg
+viewMoveable ( pos, dir ) =
+    let
+        ( c_x, c_y ) =
+            findPos pos
+    in
+    Svg.text_
+        [ SvgAttr.x (toString c_x)
+        , SvgAttr.y (toString c_y)
+        , SvgAttr.fontSize "50"
+        , SvgAttr.textAnchor "middle"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "blue"
+        ]
+        [ Svg.text (toString dir)
+        ]
 
 
 detPoints : ( Float, Float ) -> String

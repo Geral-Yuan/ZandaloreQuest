@@ -63,6 +63,7 @@ viewAll model =
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
+                ++ List.map viewMoveable board.moveable
                 ++ List.map viewHeroInfo1 board.heroes
                 ++ List.map viewHeroInfo2 board.heroes
              --++ viewLines model.board
@@ -70,6 +71,7 @@ viewAll model =
          , endTurnButton
          , viewCritical model.board
          , viewClickPosition model
+         , viewTips
          ]
             ++ List.map viewHeroInfo3 model.board.heroes
             ++ List.map viewHeroInfo4 model.board.heroes
@@ -109,7 +111,7 @@ viewClickPosition model =
     in
     div
         [ HtmlAttr.style "bottom" "30px"
-        , HtmlAttr.style "left" "30px"
+        , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -119,6 +121,25 @@ viewClickPosition model =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
+
+
+
+-- Just for tips now. Later I will delete it
+viewTips : Html Msg
+viewTips =
+    div
+        [ HtmlAttr.style "bottom" "150px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "30px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Tips: Hero's energy for attack and motion!"]
+
 
 
 viewMap : Board -> List (Svg Msg)
@@ -150,14 +171,6 @@ viewCell board ( row, column ) =
     else if List.member HealthPotion (List.map (checkItemType ( row, column )) board.item) then
         Svg.polygon
             [ SvgAttr.fill "red"
-            , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
-            ]
-            []
-
-    else if List.member ( row, column ) board.moveable then
-        Svg.polygon
-            [ SvgAttr.fill "yellow"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]

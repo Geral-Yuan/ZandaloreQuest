@@ -152,6 +152,27 @@ map =
 -- Basic Functions
 
 
+neighbotToDir : Pos -> Dir
+neighbotToDir pos =
+    if pos == ( -1, 0 ) then
+        W
+
+    else if pos == ( 0, -1 ) then
+        E
+
+    else if pos == ( 1, -1 ) then
+        D
+
+    else if pos == ( 1, 0 ) then
+        X
+
+    else if pos == ( 0, 1 ) then
+        Z
+
+    else
+        A
+
+
 sameline : Pos -> List Pos
 sameline pos =
     List.map (\k -> vecScale k pos) (List.range 1 8)
@@ -212,6 +233,34 @@ cartesianProduct f x y =
 findPos : ( Int, Int ) -> ( Float, Float )
 findPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
+
+
+findInfoBoard : ( Float, Float ) -> Int
+findInfoBoard ( x, y ) =
+    if x > 1580 && x < 1980 then
+        if y > 25 && y < 145 then
+            1
+
+        else if y > 175 && y < 295 then
+            2
+
+        else if y > 325 && y < 445 then
+            3
+
+        else
+            0
+
+    else
+        0
+
+
+offset : Hero -> Float
+offset hero =
+    if hero.selected then
+        50
+
+    else
+        0
 
 
 findHexagon : ( Float, Float ) -> Maybe Pos

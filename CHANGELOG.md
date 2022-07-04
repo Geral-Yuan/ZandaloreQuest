@@ -6,7 +6,25 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.17] -- 2022-7-4
 
+### Added
+
+- Heroes' information board.
+
+- Mouse click for hero selection.
+
+### Changed
+
+- Render W/E/D/X/Z/A for moveable.
+
+- Highlight all attackable hexagons (including nonsense attackable hexagons).
+
+### Fixed
+
+- Enemy movement bugs.
+
+- Improve code quality.
 ## [m1.16] -- 2022-7-4
 
 ### Added

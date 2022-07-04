@@ -1,6 +1,6 @@
 module ShortestPath exposing (leastArcherPath, leastWarriorPath)
 
-import Action exposing (attackedByArcherRange)
+import Action exposing (attackedByArcherRange, unMoveable)
 import Board exposing (Board)
 import Data exposing (..)
 import List exposing (append, minimum, partition)
@@ -284,7 +284,3 @@ pathLength2Spa_row leng table visited =
         Nothing ->
             { pos = ( 999, 999 ), pre_pos = Nothing, path_length = 999 }
 
-
-unMoveable : Board -> List Pos
-unMoveable board =
-    List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes
