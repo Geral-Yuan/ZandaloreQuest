@@ -67,7 +67,7 @@ updateMoveable board =
                     List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighbotToDir neighberpos )) neighbour
 
                 really_can_move =
-                    List.filter (\moveable -> not (List.member (Tuple.first moveable) (unMoveable board))) can_move
+                    List.filter (\moveable -> (List.member (Tuple.first moveable) board.map) && not (List.member (Tuple.first moveable) (unMoveable board))) can_move
             in
             { board | moveable = really_can_move }
 
