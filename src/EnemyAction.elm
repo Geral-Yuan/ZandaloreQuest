@@ -86,7 +86,7 @@ enemyArcherAttack : Enemy -> Board -> List Hero
 enemyArcherAttack enemy board =
     let
         ( attackableHeroes, restHeroes ) =
-            List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) (attackedByArcherRange board enemy.pos))) board.heroes
+            List.partition (\hero -> List.member hero.pos (attackedByArcherRange board enemy.pos)) board.heroes
 
         sortedAttackableHeroes =
             List.sortBy .health attackableHeroes
