@@ -1,7 +1,8 @@
-module ShortestPath exposing (shortestPath)
+module ShortestPath exposing (leastArcherPath, leastWarriorPath)
 
+import Action exposing (attackedByArcherRange, unMoveable)
 import Board exposing (Board)
-import Data exposing (Hero, Pos, distance)
+import Data exposing (..)
 import List exposing (append, minimum, partition)
 
 
@@ -13,12 +14,67 @@ type alias Spa_row =
 
 
 
-{- Output the shortest path in the form of (List Pos).
+{- Output the shortest path towards the nearest hero in the form of (List Pos).
    Remark : the output path does not include the begin Pos
+
+   "my_enemy" is the enemy that is to move
 
    "board" is the current board
 
    "hero_list" is the current List of Hero, which includes all heroes
+
+-}
+
+
+leastWarriorPath : Enemy -> Board -> List Pos
+leastWarriorPath my_enemy board =
+    leastPathHelper my_enemy board ( unionList (List.map (\hero -> List.map (vecAdd hero.pos) neighbour) board.heroes), [] )
+        |> Tuple.second
+
+
+leastArcherPath : Enemy -> Board -> List Pos
+leastArcherPath my_enemy board =
+    leastPathHelper my_enemy board ( unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)), [] )
+        |> Tuple.second
+
+
+leastPathHelper : Enemy -> Board -> ( List Pos, List Pos ) -> ( List Pos, List Pos )
+leastPathHelper my_enemy board ( tgt_list, opt ) =
+    if List.member my_enemy.pos tgt_list then
+        ( [], [] )
+
+    else
+        case tgt_list of
+            [] ->
+                ( [], opt )
+
+            one_pos :: r_lst ->
+                let
+                    path1 =
+                        shortestPath board.map (unMoveable board) my_enemy.pos one_pos
+
+                    length1 =
+                        List.length path1
+
+                    length2 =
+                        List.length opt
+                in
+                if (length1 < length2 || length2 == 0) && (length1 > 0) then
+                    leastPathHelper my_enemy board ( r_lst, path1 )
+
+                else
+                    leastPathHelper my_enemy board ( r_lst, opt )
+
+
+
+{- Output the shortest path in the form of (List Pos).
+   Remark : the output path does not include the begin Pos
+
+   "wholemap" is the map of the board
+
+   "unmoveable" is a list of the positions can be reached
+
+   "target" is a list of target positions
 
    "begin" is the Pos of the character i.e. one enemy or hero
 
@@ -30,14 +86,14 @@ type alias Spa_row =
 -}
 
 
-shortestPath : Board -> List Hero -> Pos -> Pos -> List Pos
-shortestPath board hero_list begin end =
-    shortPathFind board hero_list begin end ( ( initVisited, initTable begin board.map ), [] )
+shortestPath : List Pos -> List Pos -> Pos -> Pos -> List Pos
+shortestPath wholemap unmoveable begin end =
+    shortPathFind unmoveable begin end ( ( initVisited, initTable begin wholemap ), [] )
         |> Tuple.second
 
 
-shortPathFind : Board -> List Hero -> Pos -> Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
-shortPathFind board hero_list begin end ( ( visited, table ), path ) =
+shortPathFind : List Pos -> Pos -> Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
+shortPathFind unmoveable begin end ( ( visited, table ), path ) =
     let
         chosen =
             --the optimal one node
@@ -49,7 +105,7 @@ shortPathFind board hero_list begin end ( ( visited, table ), path ) =
                     begin
 
         ( n_table, n_visited ) =
-            updateTable board hero_list visited chosen table
+            updateTable unmoveable visited chosen table
     in
     if List.any (isFindEnd end) table then
         ( ( visited, table )
@@ -60,7 +116,7 @@ shortPathFind board hero_list begin end ( ( visited, table ), path ) =
         ( ( visited, table ), [] )
 
     else
-        shortPathFind board hero_list begin end ( ( n_visited, n_table ), [] )
+        shortPathFind unmoveable begin end ( ( n_visited, n_table ), [] )
 
 
 isFindEnd : Pos -> Spa_row -> Bool
@@ -134,18 +190,11 @@ initVisited =
     []
 
 
-isAdjacent : Board -> List Hero -> List Pos -> Pos -> Spa_row -> Bool
-isAdjacent board hero_list visited my_pos row =
+isAdjacent : List Pos -> List Pos -> Pos -> Spa_row -> Bool
+isAdjacent unmoveable visited my_pos row =
     if
         (distance my_pos row.pos == 1)
-            && not
-                (List.member row.pos
-                    (board.barrier
-                        ++ List.map .pos hero_list
-                        ++ List.map .pos board.enemies
-                        ++ visited
-                    )
-                )
+            && not (List.member row.pos (unmoveable ++ visited))
     then
         True
 
@@ -153,14 +202,14 @@ isAdjacent board hero_list visited my_pos row =
         False
 
 
-updateTable : Board -> List Hero -> List Pos -> Pos -> List Spa_row -> ( List Spa_row, List Pos )
-updateTable board hero_list visited pos table =
+updateTable : List Pos -> List Pos -> Pos -> List Spa_row -> ( List Spa_row, List Pos )
+updateTable unmoveable visited pos table =
     let
         chosen =
             pos2Spa_row pos table
 
         ( adjacent, others ) =
-            partition (isAdjacent board hero_list visited pos) table
+            partition (isAdjacent unmoveable visited pos) table
 
         n_table =
             List.map (updateAdjacent chosen) adjacent ++ others
@@ -171,10 +220,6 @@ updateTable board hero_list visited pos table =
 
         _ ->
             ( n_table, chooseChosen n_table visited :: visited )
-
-
-
---要改
 
 
 updateAdjacent : Spa_row -> Spa_row -> Spa_row
@@ -238,3 +283,4 @@ pathLength2Spa_row leng table visited =
 
         Nothing ->
             { pos = ( 999, 999 ), pre_pos = Nothing, path_length = 999 }
+

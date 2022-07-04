@@ -1,14 +1,13 @@
 module View exposing (view)
 
-import Board exposing (..)
+import Action exposing (checkItemType, checkObstacleType)
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, col, div)
+import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
-import List exposing (length)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import ShortestPath exposing (shortestPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
@@ -61,29 +60,125 @@ viewAll model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewHero model.heroes
+                ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate board.map
-                ++ viewRoute model.board model.heroes ( 1, 9 ) ( 9, 1 )
-                ++ List.map viewEnemy model.board.enemies
+                ++ List.map viewMoveable board.moveable
+                ++ List.map viewHeroInfo1 board.heroes
+                ++ List.map viewHeroInfo2 board.heroes
+             --++ viewLines model.board
             )
          , endTurnButton
-         , viewHeroInfo model
+         , viewCritical model.board
+         , viewClickPosition model
+         , viewTips
          ]
-            ++ viewEnemyInformation model
+            ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.map viewHeroInfo4 model.board.heroes
+            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 
-viewMap : Board -> List (Svg msg)
+
+-- view where the enermy archer can attack the hero (for debugging)
+{-
+   viewLines :  Board -> List (Svg msg)
+   viewLines board  =
+       let
+
+           list_points =
+               --List.concatMap (\x -> leastArcherPath x board) board.enemies
+                getHeroesLines board
+       in
+       List.map
+           (\x ->
+               Svg.circle
+                   [ SvgAttr.cx (toString (Tuple.first x))
+                   , SvgAttr.cy (toString (Tuple.second x))
+                   , SvgAttr.r "5"
+                   ]
+                   []
+           )
+           (List.map findPos list_points)
+-}
+
+
+viewClickPosition : Model -> Html Msg
+viewClickPosition model =
+    let
+        ( x, y ) =
+            model.clickPos
+    in
+    div
+        [ HtmlAttr.style "bottom" "30px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
+
+
+
+-- Just for tips now. Later I will delete it
+viewTips : Html Msg
+viewTips =
+    div
+        [ HtmlAttr.style "bottom" "150px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "30px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Tips: Hero's energy for attack and motion!"]
+
+
+
+viewMap : Board -> List (Svg Msg)
 viewMap board =
     List.map (viewCell board) board.map
 
 
-viewCell : Board -> Pos -> Svg msg
+viewCell : Board -> Pos -> Svg Msg
 viewCell board ( row, column ) =
-    if List.member ( row, column ) board.barrier then
+    if List.member Unbreakable (List.map (checkObstacleType ( row, column )) board.obstacles) then
         Svg.polygon
             [ SvgAttr.fill "black"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+
+    else if List.member MysteryBox (List.map (checkObstacleType ( row, column )) board.obstacles) then
+        Svg.image
+            [ SvgAttr.width "121"
+            , SvgAttr.height "140"
+            , SvgAttr.x (toString (Tuple.first (findPos ( row, column )) - 62.0))
+            , SvgAttr.y (toString (Tuple.second (findPos ( row, column )) - 70.0))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/logo.png"
+            ]
+            []
+
+    else if List.member HealthPotion (List.map (checkItemType ( row, column )) board.item) then
+        Svg.polygon
+            [ SvgAttr.fill "red"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
+
+    else if List.member ( row, column ) board.attackable then
+        Svg.polygon
+            [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]

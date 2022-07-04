@@ -6,6 +6,187 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.17] -- 2022-7-4
+
+### Added
+
+- Heroes' information board.
+
+- Mouse click for hero selection.
+
+### Changed
+
+- Render W/E/D/X/Z/A for moveable.
+
+- Highlight all attackable hexagons (including nonsense attackable hexagons).
+
+### Fixed
+
+- Enemy movement bugs.
+
+- Improve code quality.
+## [m1.16] -- 2022-7-4
+
+### Added
+- logo.png into assets/image
+
+- more obstacles in initObstacles
+
+- itemType, obstacleType, item, obstacle types 
+
+- checkObstacleType and checkItemType
+
+- view healthpotions and different type of obstacles in view 
+
+### Changed 
+
+- type barrier into type obstacles
+
+- in board type, barrier field to obstacle field with List obstacles
+
+- initBarrier to initObstacles and initBoard
+
+- checkAttackBarrier and checkAttackTarget to work with the new List of obstacles and items 
+
+- every barrier function in ShortestPath.elm to accommodate the new Obstacle type 
+
+- moveHero in UpdateBoard function to accommodate the health potion feature
+
+
+
+## [m1.15] -- 2022-7-2
+
+### Changed
+
+- Change the enemy's attack range. Now the enemy archer can attack the hero behind other enemies.
+
+
+## [m1.14] -- 2022-7-2
+
+### Added
+
+- Smart move and Attack action of enemy archer
+- Functions related to enemy archer move in `ShortestPath.elm`
+- ViewLines for debug the enemy archer
+
+### Changed 
+
+- Move functions related to enemy action from `Update.elm` to `EnemyAction.elm`
+
+## [m1.13] -- 2022-7-2
+
+### Added
+
+- Attack for archer and mage.
+
+- Click for attack.
+
+- Attack barriers will break it.
+
+### Changed
+
+- Rewrite function to detect attackable hexagons and moveable hexagons.
+
+## [m1.12] -- 2022-7-2
+
+### Added 
+
+- Added Healer to the Hero type
+
+- checkHeal function
+
+- Healer into checkForEnemy
+
+- Key 53 healer
+
+- Healer in HeroAttackable, viewEnemy, viewHero
+
+
+### Changed
+
+- Changed the first hero on board to healer
+
+
+## [m1.11] -- 2022-7-2
+
+### Added
+
+- Resize of the game view.
+
+- Detect the position of the mouse when it click on the screen and display it on the screen to debug.
+
+- Field `mode` is added into the `Model` to check the mode.
+
+### Changed
+
+- Add field `heroes` in `Board` and move `time` and `critical` from `Model` to `Board`.
+
+- Adjust all related functions to the change above accordingly.
+
+- Adjust `update` function to make the layer more clear.
+
+- Make the import more clear and safe.
+
+### Removed
+
+- Delete some unuseful functions.
+
+## [m1.10] -- 2022-7-1
+### Added
+- Added moveable and attackable fields in type alias Board in `Board.elm`
+- Added vecScale and cartesianProduct functions in `Data.elm` 
+- Added highlightCells, heroMoveable, and heroAttackable functions to record the list of hexagons that the selected hero (warrior and assassin only) can move and attack in `Update.elm`
+- Added deselectHeroes function to deselect the hero every end of the turn so that it will stop display the information and highlight the hexagons in `Update.elm`
+
+### Changed
+- Changed viewCell function to be able to view the extra highlighted hexagons `View.elm`
+
+## [m1.9] -- 2022-7-1 
+### Added
+
+- leastPath which generates the current optimal path for one enemy 
+- enermyWarriorAttack which attacks the heroes adjacent to the enemy
+- moveSmartWarrior which intelligently controls the enemy to move and attack. (Note: now the enemy attacks with a fixed damage 5 points)
+
+### Changed
+
+- Move isWarriorAttackRange from `HeroAttack.elm` to `Data.elm`
+
+### Removed
+
+- viewRoute (no need for testing)
+
+## [m1.8] -- 2022-6-30 
+### Added
+
+- Added a heroattack file where all functions related to heroes attacking will be there
+
+- Added randomDamage function with a weighted probability curve to generate critical damage
+
+- Added critical type to determine how much bonus damage players will deal
+
+- Added generateDamage Cmd Msg
+
+- Added viewCritical 
+
+- Added critical field in model
+
+### Changed
+
+- changed the sequence of update to accommodate the RNG
+
+## [m1.7] -- 2022-6-30
+
+### Added 
+- added checkEnd function
+
+### Changed
+- changed checkForEnemy, improve the code quality by using List.map
+- changed viewEnemyInformation to receive different input and stop displaying enemy information when they die 
+- changed viewEnemyInfo to display the text top aligned
+
+### Removed
+- 
 
 ## [m1.6] -- 2022-6-29
 

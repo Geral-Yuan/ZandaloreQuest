@@ -1,17 +1,30 @@
 module ViewOthers exposing (..)
 
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, button, col, div)
+import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
-import List exposing (length)
 import Message exposing (Msg(..))
-import Model exposing (Model)
-import ShortestPath exposing (shortestPath)
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
+
+
+viewCritical : Board -> Html Msg
+viewCritical board =
+    div
+        [ HtmlAttr.style "bottom" "60px"
+        , HtmlAttr.style "right" "100px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("Critical Damage: " ++ toString board.critical) ]
 
 
 viewCoordinate : Pos -> Svg msg
@@ -37,26 +50,22 @@ viewCoordinate ( row, column ) =
         ]
 
 
-
-{- use it to view the shortest path -}
-
-
-viewRoute : Board -> List Hero -> Pos -> Pos -> List (Svg msg)
-viewRoute board hero_list begin end =
+viewMoveable : ( Pos, Dir ) -> Svg Msg
+viewMoveable ( pos, dir ) =
     let
-        list_points =
-            shortestPath board hero_list begin end
+        ( c_x, c_y ) =
+            findPos pos
     in
-    List.map
-        (\x ->
-            Svg.circle
-                [ SvgAttr.cx (toString (Tuple.first x))
-                , SvgAttr.cy (toString (Tuple.second x))
-                , SvgAttr.r "5"
-                ]
-                []
-        )
-        (List.map findPos list_points)
+    Svg.text_
+        [ SvgAttr.x (toString c_x)
+        , SvgAttr.y (toString c_y)
+        , SvgAttr.fontSize "50"
+        , SvgAttr.textAnchor "middle"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "blue"
+        ]
+        [ Svg.text (toString dir)
+        ]
 
 
 detPoints : ( Float, Float ) -> String
@@ -82,7 +91,7 @@ endTurnButton =
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "1000px"
+        , HtmlAttr.style "left" "1400px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
