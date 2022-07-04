@@ -16,10 +16,8 @@ updateAttackable board =
                 realattackRange =
                     List.map (vecAdd hero.pos) (attackRange board hero)
 
-                can_attack =
-                    listintersection realattackRange (List.map .pos board.obstacles ++ List.map .pos board.enemies)
             in
-            { board | attackable = can_attack }
+            { board | attackable = realattackRange }
 
 
 attackRange : Board -> Hero -> List Pos
@@ -65,13 +63,14 @@ updateMoveable board =
 
         Just hero ->
             let
-                realmoveRange =
-                    List.map (vecAdd hero.pos) neighbour
-
                 can_move =
-                    List.filter (\pos -> not (List.member pos (List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes))) realmoveRange
+                    List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighbotToDir neighberpos )) neighbour
+
+                really_can_move =
+                    List.filter (\moveable -> not (List.member (Tuple.first moveable) (unMoveable board))) can_move
             in
-            { board | moveable = can_move }
+            { board | moveable = really_can_move }
+
 
 selectedHero : List Hero -> Maybe Hero
 selectedHero hero_list =
@@ -81,6 +80,7 @@ selectedHero hero_list =
 unselectedHero : List Hero -> List Hero
 unselectedHero hero_list =
     List.filter (\hero -> not hero.selected) hero_list
+
 
 checkObstacleType : Pos -> Obstacle -> ObstacleType
 checkObstacleType ( row, column ) obstacle =
@@ -98,3 +98,8 @@ checkItemType ( row, column ) item =
 
     else
         NoItem
+
+
+unMoveable : Board -> List Pos
+unMoveable board =
+    List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes

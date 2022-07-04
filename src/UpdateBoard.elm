@@ -19,13 +19,13 @@ updateBoard msg board =
                 EnemyTurn ->
                     board
 
-        Select class False ->
-            case board.turn of
-                HeroTurn ->
-                    selectHero board class
-
-                EnemyTurn ->
-                    board
+--        Select class False ->
+--            case board.turn of
+--                HeroTurn ->
+--                    selectHero board class
+--
+--                EnemyTurn ->
+--                    board
 
         EndTurn ->
             turnEnemy board
@@ -164,11 +164,11 @@ legalHeroMove board hero dr =
 -}
 
 
-selectHero : Board -> Class -> Board
-selectHero board class =
+selectHero : Board -> Int -> Board
+selectHero board index =
     let
         ( wantedHero, unwantedHero ) =
-            List.partition (\hero -> hero.class == class) board.heroes
+            List.partition (\hero -> hero.indexOnBoard == index) board.heroes
 
         newwantedHero =
             List.map (\hero -> { hero | selected = True }) wantedHero
