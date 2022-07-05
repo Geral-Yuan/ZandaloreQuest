@@ -5,6 +5,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
+import Random exposing (Generator)
 import UpdateBoard exposing (selectHero, updateBoard)
 
 
@@ -18,6 +19,7 @@ update msg model =
                 |> checkSelectedClick msg
                 |> getviewport msg
                 |> checkAttackClick msg
+                |> randomEnemies
 
         _ ->
             ( model, Cmd.none )
@@ -115,3 +117,76 @@ getviewport msg model =
 
         _ ->
             model
+
+
+randomEnemies : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+randomEnemies ( model, cmd ) =
+    if List.length model.board.enemies == 0 && model.board.spawn > 0 then
+        ( model, Cmd.batch [ Random.generate Spawn (Random.pair groupClasses (groupPositions model)), cmd ] )
+
+    else
+        ( model, cmd )
+
+
+groupClasses : Generator (List Class)
+groupClasses =
+    Random.list 3 (Random.uniform Warrior [ Archer ])
+
+
+
+-- Assassin, Mage, and Healer will be added later
+
+
+groupPositions : Model -> Generator (List Pos)
+groupPositions model =
+    choosePosition model []
+        |> Random.andThen
+            (\pos1 ->
+                choosePosition model [ pos1 ]
+                    |> Random.andThen
+                        (\pos2 ->
+                            choosePosition model [ pos1, pos2 ]
+                                |> Random.andThen (\pos3 -> choosePosition model [ pos1, pos2, pos3 ])
+                                |> Random.pair (Random.constant pos2)
+                        )
+                    |> Random.pair (Random.constant pos1)
+            )
+        |> Random.map (\( x, ( y, z ) ) -> [ x, y, z ])
+
+
+choosePosition : Model -> List Pos -> Generator Pos
+choosePosition model list_pos =
+    let
+        possiblePos =
+            possiblePosition model list_pos
+    in
+    case possiblePos of
+        [] ->
+            choosePosition model list_pos
+
+        head :: rest ->
+            Random.uniform head rest
+
+
+possiblePosition : Model -> List Pos -> List Pos
+possiblePosition model future_enemies_pos =
+    let
+        heroes_pos =
+            List.map .pos model.board.heroes
+
+        close_heroes =
+            (( 0, 0 ) :: neighbour ++ subneighbour)
+                |> cartesianProduct vecAdd heroes_pos
+
+        close_enemy =
+            (neighbour ++ subneighbour)
+                |> cartesianProduct vecAdd future_enemies_pos
+
+        possible_pos =
+            listDifference (listDifference (listIntersection model.board.map close_enemy) close_heroes) (List.map .pos model.board.obstacles)
+    in
+    if future_enemies_pos == [] then
+        listDifference (listDifference model.board.map close_heroes) (List.map .pos model.board.obstacles)
+
+    else
+        possible_pos

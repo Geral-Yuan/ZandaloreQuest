@@ -85,6 +85,19 @@ getEnemy defaultoutput enemy n =
 viewEnemyInfo : Enemy -> Int -> Html Msg
 viewEnemyInfo enemy n =
     -- display health and energy
+    let
+        idx =
+            toString enemy.indexOnBoard
+
+        health =
+            toString enemy.health
+
+        ( x, y ) =
+            enemy.pos
+
+        ( xs, ys ) =
+            ( toString x, toString y )
+    in
     div
         [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
         , HtmlAttr.style "left" "0px"
@@ -96,4 +109,4 @@ viewEnemyInfo enemy n =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Enemy" ++ toString enemy.indexOnBoard ++ ":" ++ toString enemy.health) ]
+        [ text ("Enemy" ++ idx ++ ": " ++ health ++ " ( " ++ xs ++ " , " ++ ys ++ " ) ") ]

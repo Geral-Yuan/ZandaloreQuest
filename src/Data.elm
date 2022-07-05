@@ -178,9 +178,14 @@ sameline pos =
     List.map (\k -> vecScale k pos) (List.range 1 8)
 
 
-listintersection : List a -> List a -> List a
-listintersection list1 list2 =
+listIntersection : List a -> List a -> List a
+listIntersection list1 list2 =
     List.filter (\x -> List.member x list2) list1
+
+
+listDifference : List a -> List a -> List a
+listDifference list1 list2 =
+    List.filter (\x -> not (List.member x list2)) list1
 
 
 listUnion : List a -> List a -> List a

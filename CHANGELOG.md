@@ -6,6 +6,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.18] -- 2022-7-5
+
+### Added
+- Added field spawn and index in type alias Board
+- Added randomEnemies, groupClasses, groupPositions, choosePositions, and possiblePosition function
+- Added spawnEnemies, mapClassEnemy function
+- Added Spawn and Kill Msg
+- Added Key 75 to kill all the enemy
+- Added listDifference
+
+### Changed
+- display enemies' position too
+
 ## [m1.17] -- 2022-7-4
 
 ### Added

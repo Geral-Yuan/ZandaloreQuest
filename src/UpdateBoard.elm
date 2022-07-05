@@ -19,14 +19,13 @@ updateBoard msg board =
                 EnemyTurn ->
                     board
 
---        Select class False ->
---            case board.turn of
---                HeroTurn ->
---                    selectHero board class
---
---                EnemyTurn ->
---                    board
-
+        --        Select class False ->
+        --            case board.turn of
+        --                HeroTurn ->
+        --                    selectHero board class
+        --
+        --                EnemyTurn ->
+        --                    board
         EndTurn ->
             turnEnemy board
 
@@ -50,6 +49,12 @@ updateBoard msg board =
 
         Attack pos critical ->
             checkAttack board pos critical
+
+        Spawn ( list_class, list_pos ) ->
+            spawnEnemies list_class list_pos board
+
+        Kill False ->
+            { board | enemies = [] }
 
         _ ->
             board
@@ -177,6 +182,43 @@ selectHero board index =
             List.map (\hero -> { hero | selected = False }) unwantedHero
     in
     { board | heroes = newwantedHero ++ newunwantedHero }
+
+
+spawnEnemies : List Class -> List Pos -> Board -> Board
+spawnEnemies list_class list_pos board =
+    if List.length board.enemies == 0 && board.spawn > 0 then
+        let
+            n_enemies =
+                List.range (board.index + 1) (board.index + 3)
+                    |> List.map3 mapClassEnemy list_class list_pos
+        in
+        { board | enemies = n_enemies, spawn = board.spawn - 1 }
+
+    else
+        board
+
+
+
+-- the stats of each enemies can be changed later
+
+
+mapClassEnemy : Class -> Pos -> Int -> Enemy
+mapClassEnemy class pos idx =
+    case class of
+        Warrior ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Archer ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Assassin ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Mage ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Healer ->
+            Enemy class pos 100 10 5 0 False idx
 
 
 

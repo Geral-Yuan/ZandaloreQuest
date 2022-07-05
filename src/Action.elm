@@ -15,7 +15,6 @@ updateAttackable board =
             let
                 realattackRange =
                     List.map (vecAdd hero.pos) (attackRange board hero)
-
             in
             { board | attackable = realattackRange }
 
@@ -45,7 +44,7 @@ stuckInWay board heropos pos =
             List.map (vecAdd heropos) (sameline pos)
 
         inWay =
-            listintersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
+            listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
     in
     case leastdistance inWay heropos of
         Nothing ->
