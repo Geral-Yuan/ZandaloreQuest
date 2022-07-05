@@ -1,18 +1,21 @@
 module Update exposing (update)
 
 import Action exposing (updateAttackable, updateMoveable)
+import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
+import RpgCharacter exposing (moveCharacter)
+import Task
 import UpdateBoard exposing (selectHero, updateBoard)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model.mode of
-        BoardGame ->
+        BoardGame _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable }
                 |> resize msg
                 |> checkClick msg
@@ -21,8 +24,98 @@ update msg model =
                 |> checkAttackClick msg
                 |> randomEnemies
 
+        Scene 0 ->
+            ( updateScene msg model, Task.perform GetViewport getViewport )
+
+        Room 1 ->
+            updateRoom msg model
+
         _ ->
             ( model, Cmd.none )
+
+
+updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateCharacter msg ( model, cmd ) =
+    case msg of
+        Tick elapse ->
+            ( { model
+                | character =
+                    moveCharacter model.character (elapse / 1000)
+              }
+            , cmd
+            )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+updateRoom : Msg -> Model -> ( Model, Cmd Msg )
+updateRoom msg model =
+    case msg of
+        Enter False ->
+            let
+                nModel =
+                    model
+            in
+            ( { nModel | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
+
+        Key Left on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveLeft = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Right on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveRight = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Up on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveUp = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Down on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveDown = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        _ ->
+            ( model, Task.perform GetViewport getViewport )
+                |> updateCharacter msg
+
+
+updateScene : Msg -> Model -> Model
+updateScene msg model =
+    case msg of
+        Enter False ->
+            let
+                nModel =
+                    model
+            in
+            { nModel | mode = Room 1 }
+
+        _ ->
+            model
 
 
 resize : Msg -> Model -> Model

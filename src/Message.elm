@@ -7,6 +7,7 @@ import Data exposing (..)
 type Msg
     = Key Dir Bool
     | Choose Pos
+    | Enter Bool
       --    | Select Class Bool
     | Resize Int Int
     | Tick Float

@@ -13,10 +13,23 @@ import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
 import ViewOthers exposing (..)
+import ViewScenes exposing (..)
 
 
 view : Model -> Html Msg
 view model =
+    let
+        viewAll =
+            case model.mode of
+                Scene 0 ->
+                    viewScene0 model
+
+                BoardGame 1 ->
+                    viewBoard1 model
+
+                _ ->
+                    viewRoom1 model
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -25,12 +38,12 @@ view model =
         , HtmlAttr.style "top" "0"
         , HtmlAttr.style "background" "grey"
         ]
-        [ viewAll model
+        [ viewAll
         ]
 
 
-viewAll : Model -> Html Msg
-viewAll model =
+viewBoard1 : Model -> Html Msg
+viewBoard1 model =
     let
         ( w, h ) =
             model.size
@@ -125,6 +138,8 @@ viewClickPosition model =
 
 
 -- Just for tips now. Later I will delete it
+
+
 viewTips : Html Msg
 viewTips =
     div
@@ -138,8 +153,7 @@ viewTips =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text "Tips: Hero's energy for attack and motion!"]
-
+        [ text "Tips: Hero's energy for attack and motion!" ]
 
 
 viewMap : Board -> List (Svg Msg)

@@ -48,6 +48,21 @@ key on keycode =
         65 ->
             Key A on
 
+        13 ->
+            Enter on
+
+        37 ->
+            Key Left on
+
+        38 ->
+            Key Up on
+
+        39 ->
+            Key Right on
+
+        40 ->
+            Key Down on
+
         75 ->
             -- Key K
             Kill on
