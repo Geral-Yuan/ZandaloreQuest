@@ -7,7 +7,7 @@ import Data exposing (..)
 type Msg
     = Key Dir Bool
     | Choose Pos
---    | Select Class Bool
+      --    | Select Class Bool
     | Resize Int Int
     | Tick Float
     | Attack Pos Critical
@@ -15,3 +15,5 @@ type Msg
     | Click Float Float
     | GetViewport Viewport
     | Key_None
+    | Spawn ( List Class, List Pos )
+    | Kill Bool
