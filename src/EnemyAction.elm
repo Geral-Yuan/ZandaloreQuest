@@ -107,6 +107,7 @@ actionSmartArcher : Board -> Enemy -> ( Enemy, List Hero )
 actionSmartArcher board enemy =
     let
         route =
+            -- leastArcherPath enemy board
             leastArcherPath enemy board
     in
     case route of

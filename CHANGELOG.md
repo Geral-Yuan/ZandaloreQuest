@@ -6,6 +6,14 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.19] -- 2022-7-5
+
+### Changed
+
+- Change input of the previous `shortestPath` function from `Pos` to `List Pos`, and correspondingly change the input `end` to `end_list`.
+- Change the `leastPathFind` functions for warriors and archers to implement the more efficient `shortestPath`.
+
 ## [m1.18] -- 2022-7-5
 
 ### Added
