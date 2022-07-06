@@ -8,12 +8,13 @@ import Svg.Attributes exposing (x2, y2)
 
 
 type GameMode
-    = Room Int
+    = Castle
+    | Shop
       -- | Starting
       -- | ClearLevel Int
       -- | Gameover Int
     | BoardGame Int
-    | Scene Int
+    | Logo
 
 
 type alias Pos =

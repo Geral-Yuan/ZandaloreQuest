@@ -21,14 +21,20 @@ view model =
     let
         viewAll =
             case model.mode of
-                Scene 0 ->
+                Logo ->
                     viewScene0 model
 
                 BoardGame 1 ->
                     viewBoard1 model
 
+                Castle ->
+                    viewCastle model
+
+                Shop ->
+                    viewShop model
+
                 _ ->
-                    viewRoom1 model
+                    viewBoard1 model
     in
     div
         [ HtmlAttr.style "width" "100%"
@@ -36,7 +42,7 @@ view model =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
-        , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "background" "black"
         ]
         [ viewAll
         ]

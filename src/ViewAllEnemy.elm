@@ -101,7 +101,7 @@ viewEnemyInfo enemy n =
     div
         [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
         , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "black"
+        , HtmlAttr.style "color" "blue"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"

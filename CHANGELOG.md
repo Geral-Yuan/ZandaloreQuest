@@ -10,20 +10,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
-- Scene and room to gameMode 
+- Castle, shop and Logo to gameMode 
 
 - Left, Down, Up, Right to Dir type and key 
 
 - Enter Bool in message to skip scenes 
 
-- InitCharacter, InitRoom, InitLevel, Board_1, Room_1 in model 
+- InitCharacter, InitRPG, InitLevel, Board_1, Castle_1, Shop_2 in model 
 
 - RpgCharacter file with moveCharacter, isLegalMoveCharacter, characterPosition functions and RpgCharacter type
 
-- UpdateCharacter, UpdateRoom, UpdateScene
+- UpdateCharacter, UpdateRPG, UpdateScene to ensure scene change on RPG map 
 
 - ViewScene files with all the relevant scenes for RPG
 
+- faceDir in model
+
+- different cases in moveCharacter to ensure that movements will be smoother
 
 ### Changed
 

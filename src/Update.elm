@@ -24,14 +24,19 @@ update msg model =
                 |> checkAttackClick msg
                 |> randomEnemies
 
-        Scene 0 ->
+        Logo ->
             ( updateScene msg model, Task.perform GetViewport getViewport )
 
-        Room 1 ->
-            updateRoom msg model
+        Castle ->
+            updateRPG msg model
 
-        _ ->
-            ( model, Cmd.none )
+        Shop ->
+            updateRPG msg model
+
+
+
+-- _ ->
+--     ( model, Cmd.none )
 
 
 updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
@@ -49,15 +54,27 @@ updateCharacter msg ( model, cmd ) =
             ( model, Cmd.none )
 
 
-updateRoom : Msg -> Model -> ( Model, Cmd Msg )
-updateRoom msg model =
+updateRPG : Msg -> Model -> ( Model, Cmd Msg )
+updateRPG msg model =
     case msg of
         Enter False ->
-            let
-                nModel =
-                    model
-            in
-            ( { nModel | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
+            case model.mode of
+                Shop ->
+                    if Tuple.first model.character.pos > 550 && Tuple.first model.character.pos < 800 && Tuple.second model.character.pos > 900 then
+                        ( { model | mode = Castle }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Task.perform GetViewport getViewport )
+
+                _ ->
+                    if Tuple.first model.character.pos > 1650 && Tuple.second model.character.pos > 750 then
+                        ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+
+                    else if Tuple.first model.character.pos > 850 && Tuple.first model.character.pos < 1050 && Tuple.second model.character.pos > 400 && Tuple.second model.character.pos < 500 then
+                        ( { model | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Task.perform GetViewport getViewport )
 
         Key Left on ->
             let
@@ -112,7 +129,7 @@ updateScene msg model =
                 nModel =
                     model
             in
-            { nModel | mode = Room 1 }
+            { nModel | mode = Castle }
 
         _ ->
             model

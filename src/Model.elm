@@ -31,12 +31,13 @@ init _ =
 
 initCharacter : RpgCharacter
 initCharacter =
-    { pos = ( 500, 1000 )
+    { pos = ( 500, 500 )
     , moveLeft = False
     , moveRight = False
     , moveUp = False
     , moveDown = False
-    , latestDir = Left
+    , latestDir = Right
+    , faceDir = Right
     , height = 80
     , width = 80
     , speed = 500
@@ -46,7 +47,7 @@ initCharacter =
 
 initModel : Model
 initModel =
-    { mode = Scene 0
+    { mode = Logo
     , heroes =
         [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
         , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
@@ -61,11 +62,20 @@ initModel =
     }
 
 
-initRoom : Int -> Model -> Model
-initRoom k model =
-    case k of
+initRPG : Model -> Model
+initRPG model =
+    case model.mode of
+        Castle ->
+            castle_1 model
+
+        Shop ->
+            shop_2 model
+
+        Logo ->
+            initModel
+
         _ ->
-            room_1 model
+            board_1 model
 
 
 initLevel : Int -> Model -> Model
@@ -75,9 +85,26 @@ initLevel k model =
             board_1 model
 
 
-room_1 : Model -> Model
-room_1 model =
-    { mode = Room 1
+castle_1 : Model -> Model
+castle_1 model =
+    { mode = Castle
+    , heroes =
+        [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
+        , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
+        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+        ]
+    , board = initBoard 1
+    , size = ( 1500, 1000 )
+    , character = initCharacter
+
+    -- , time = 0
+    , clickPos = ( 0, 0 )
+    }
+
+
+shop_2 : Model -> Model
+shop_2 model =
+    { mode = Shop
     , heroes =
         [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
         , Hero Archer ( 5, 8 ) 40 20 3 5 False 2

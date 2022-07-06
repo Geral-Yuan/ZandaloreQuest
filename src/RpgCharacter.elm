@@ -9,6 +9,7 @@ type alias RpgCharacter =
     , moveRight : Bool
     , moveUp : Bool
     , moveDown : Bool
+    , faceDir : Dir
     , latestDir : Dir
     , height : Float
     , width : Float
@@ -22,28 +23,76 @@ moveCharacter character dt =
     case [ character.moveLeft, character.moveRight, character.moveUp, character.moveDown ] of
         [ True, False, False, False ] ->
             if isLegalMoveCharacter character Left then
-                { character | pos = newCharacterPos character.pos Left (character.speed * dt) }
+                { character | pos = newCharacterPos character.pos Left (character.speed * dt), latestDir = Left, faceDir = Left }
 
             else
                 character
 
         [ False, True, False, False ] ->
             if isLegalMoveCharacter character Right then
-                { character | pos = newCharacterPos character.pos Right (character.speed * dt) }
+                { character | pos = newCharacterPos character.pos Right (character.speed * dt), latestDir = Right, faceDir = Right }
 
             else
                 character
 
         [ False, False, True, False ] ->
             if isLegalMoveCharacter character Up then
-                { character | pos = newCharacterPos character.pos Up (character.speed * dt) }
+                { character | pos = newCharacterPos character.pos Up (character.speed * dt), latestDir = Up }
 
             else
                 character
 
         [ False, False, False, True ] ->
             if isLegalMoveCharacter character Down then
-                { character | pos = newCharacterPos character.pos Down (character.speed * dt) }
+                { character | pos = newCharacterPos character.pos Down (character.speed * dt), latestDir = Down }
+
+            else
+                character
+
+        [ True, True, False, False ] ->
+            -- make it smoother between Left Right
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
+
+            else
+                character
+
+        [ True, False, True, False ] ->
+            -- make it smoother between Left Up
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
+
+            else
+                character
+
+        [ True, False, False, True ] ->
+            -- make it smoother between Left Down
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
+
+            else
+                character
+
+        [ False, True, False, True ] ->
+            -- make it smoother between Right Down
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
+
+            else
+                character
+
+        [ False, True, True, False ] ->
+            -- make it smoother between Right Up
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
+
+            else
+                character
+
+        [ False, False, True, True ] ->
+            -- make it smoother between Down Up
+            if isLegalMoveCharacter character character.latestDir then
+                { character | pos = newCharacterPos character.pos character.latestDir (character.speed * dt) }
 
             else
                 character
@@ -79,7 +128,7 @@ isLegalMoveCharacter { pos, width, height, move_range } dir =
                 True
 
         Down ->
-            if Tuple.second pos - height * 1.3 >= Tuple.second move_range then
+            if Tuple.second pos + height >= Tuple.second move_range then
                 --the bottom bound of the game screen
                 False
 
