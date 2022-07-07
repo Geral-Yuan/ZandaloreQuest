@@ -1,12 +1,32 @@
 ---
-name: bug report (Team 16)
+name: bug report
+about: issue template for reporting bugs
 ---
 
-**Description**
+**Who:** <name>, team <n>
 
-- Who: Who found the bug?
-- When: When did you find the bug?
-- Where: Where did you try to run this program?
-- What: What is the bug?
-- How: How did you find this bug? Is this bug recreatable?
-- Severity: rate the bug from 1-7 from unplayable to minor inconvinces.
+**When:** <month> <dd>, <yyyy>
+
+**Browser:** <name>, <version>
+
+**Description:**
+
+<bug-short-description>
+
+<expected-result>
+
+**Test Steps**
+
+Is this bug recreateable? <yes/no>
+
+If yes,
+1.) <step1>
+2.) <step2>
+
+**Severity** 
+
+Rate the bug scaling from 1 to 7 (1: minor inconvinience, 7: unplayable): <n>
+
+**Additional Information** (optional)
+
+<attach-screenshots-or-screenrecords>
