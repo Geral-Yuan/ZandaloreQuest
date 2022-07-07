@@ -8,8 +8,13 @@ import Svg.Attributes exposing (x2, y2)
 
 
 type GameMode
-    = RPG
-    | BoardGame
+    = Castle
+    | Shop
+      -- | Starting
+      -- | ClearLevel Int
+      -- | Gameover Int
+    | BoardGame Int
+    | Logo
 
 
 type alias Pos =
@@ -94,9 +99,18 @@ type Dir
     | X
     | Z
     | A
+    | Left
+    | Right
+    | Up
+    | Down
 
 
 
+-- type RpgDir
+--     = Left
+--     | Right
+--     | Up
+--     | Down
 -- Basic values
 
 

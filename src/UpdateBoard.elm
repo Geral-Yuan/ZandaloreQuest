@@ -125,6 +125,9 @@ moveHero board dir =
 
                 A ->
                     ( -1, 1 )
+
+                _ ->
+                    ( 0, 0 )
     in
     case selectedHero board.heroes of
         Nothing ->

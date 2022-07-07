@@ -1,18 +1,21 @@
 module Update exposing (update)
 
 import Action exposing (updateAttackable, updateMoveable)
+import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
+import RpgCharacter exposing (moveCharacter)
+import Task
 import UpdateBoard exposing (selectHero, updateBoard)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model.mode of
-        BoardGame ->
+        BoardGame _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable }
                 |> resize msg
                 |> checkClick msg
@@ -21,8 +24,115 @@ update msg model =
                 |> checkAttackClick msg
                 |> randomEnemies
 
+        Logo ->
+            ( updateScene msg model, Task.perform GetViewport getViewport )
+
+        Castle ->
+            updateRPG msg model
+
+        Shop ->
+            updateRPG msg model
+
+
+
+-- _ ->
+--     ( model, Cmd.none )
+
+
+updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateCharacter msg ( model, cmd ) =
+    case msg of
+        Tick elapse ->
+            ( { model
+                | character =
+                    moveCharacter model.character (elapse / 1000)
+              }
+            , cmd
+            )
+
         _ ->
             ( model, Cmd.none )
+
+
+updateRPG : Msg -> Model -> ( Model, Cmd Msg )
+updateRPG msg model =
+    case msg of
+        Enter False ->
+            case model.mode of
+                Shop ->
+                    if Tuple.first model.character.pos > 550 && Tuple.first model.character.pos < 800 && Tuple.second model.character.pos > 900 then
+                        ( { model | mode = Castle }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Task.perform GetViewport getViewport )
+
+                _ ->
+                    if Tuple.first model.character.pos > 1650 && Tuple.second model.character.pos > 750 then
+                        ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+
+                    else if Tuple.first model.character.pos > 850 && Tuple.first model.character.pos < 1050 && Tuple.second model.character.pos > 400 && Tuple.second model.character.pos < 500 then
+                        ( { model | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Task.perform GetViewport getViewport )
+
+        Key Left on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveLeft = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Right on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveRight = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Up on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveUp = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        Key Down on ->
+            let
+                character =
+                    model.character
+
+                newCharacter =
+                    { character | moveDown = on }
+            in
+            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+
+        _ ->
+            ( model, Task.perform GetViewport getViewport )
+                |> updateCharacter msg
+
+
+updateScene : Msg -> Model -> Model
+updateScene msg model =
+    case msg of
+        Enter False ->
+            let
+                nModel =
+                    model
+            in
+            { nModel | mode = Castle }
+
+        _ ->
+            model
 
 
 resize : Msg -> Model -> Model

@@ -6,6 +6,35 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.20] -- 2022-7-6
+
+### Added
+
+- Castle, shop and Logo to gameMode 
+
+- Left, Down, Up, Right to Dir type and key 
+
+- Enter Bool in message to skip scenes 
+
+- InitCharacter, InitRPG, InitLevel, Board_1, Castle_1, Shop_2 in model 
+
+- RpgCharacter file with moveCharacter, isLegalMoveCharacter, characterPosition functions and RpgCharacter type
+
+- UpdateCharacter, UpdateRPG, UpdateScene to ensure scene change on RPG map 
+
+- ViewScene files with all the relevant scenes for RPG
+
+- faceDir in model
+
+- different cases in moveCharacter to ensure that movements will be smoother
+
+### Changed
+
+- RpgCharacter type in model 
+
+- Optimized Update function to accommodate new functions for RPG 
+
+- Optimized View function to accommodate new functions for RPG 
 
 ## [m1.19] -- 2022-7-5
 
