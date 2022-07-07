@@ -1,6 +1,6 @@
-module ShortestPath exposing (leastArcherPath, leastWarriorPath)
+module ShortestPath exposing (leastArcherPath, leastWarriorPath, leastMagePath)
 
-import Action exposing (attackedByArcherRange)
+import Action exposing (attackedByArcherRange, attackedByMageRange)
 import Board exposing (Board)
 import Data exposing (..)
 import List exposing (append, minimum, partition)
@@ -41,6 +41,21 @@ leastWarriorPath my_enemy board =
 leastArcherPath : Enemy -> Board -> List Pos
 leastArcherPath my_enemy board =
     leastPathHelper my_enemy board ( unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)))
+
+
+{- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
+   Remark : the output path does not include the begin Pos
+
+   "my_enemy" is the enemy that is to move
+
+   "board" is the current board
+
+-}
+
+
+leastMagePath : Enemy -> Board -> List Pos
+leastMagePath my_enemy board =
+    leastPathHelper my_enemy board ( unionList (List.map (attackedByMageRange) (List.map .pos board.heroes)))
 
 
 {- A useful helper to find the shortest path from my_enemy's position towards a list of end positions

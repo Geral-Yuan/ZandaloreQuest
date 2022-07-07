@@ -3,7 +3,7 @@ module EnemyAction exposing (actionEnemy)
 import Board exposing (..)
 import Data exposing (..)
 import ShortestPath exposing (..)
-import Action exposing (attackedByArcherRange)
+import Action exposing (attackedByArcherRange, attackedByMageRange)
 
 
 actionEnemy : Board -> Board
@@ -35,7 +35,7 @@ actionSmartEnemy board enemy =
 
         Mage ->
             --ToDo some operations
-            ( enemy, board.heroes )
+            actionSmartMage board enemy
 
         Assassin ->
             ( enemy, board.heroes )
@@ -119,6 +119,60 @@ actionSmartArcher board enemy =
 
         first :: _ ->
             ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }, board.heroes )
+
+
+actionSmartMage : Board -> Enemy -> ( Enemy, List Hero )
+actionSmartMage board enemy =
+    let
+        route =
+            -- leastArcherPath enemy board
+            leastMagePath enemy board
+    in
+    case route of
+        [] ->
+            ( { enemy | done = True }
+            , enemyMageAttack enemy board
+                |> List.filter (\x -> x.health > 0)
+            )
+
+        first :: _ ->
+            ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }, board.heroes )
+
+
+enemyMageAttack : Enemy -> Board -> List Hero
+enemyMageAttack enemy board =
+    let
+        (_, attackGrids) = List.map (\x -> vecAdd x enemy.pos) subneighbour
+                        |> List.partition (\x -> List.member x (List.map .pos board.obstacles))
+
+        ( attackableHeroes, restHeroes ) =
+            List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
+
+        attackConbination = List.map (\tgt -> attackGroup tgt attackableHeroes ) attackGrids
+
+        sortedAttackableHeroes =
+            List.sortBy (\x -> -1 * List.length x) attackConbination
+
+
+        ( targetHero, newrestHeroes ) =
+            case sortedAttackableHeroes of
+                [] -> 
+                    ( [], board.heroes )
+
+                [[]] ->
+                    ( [], board.heroes )
+
+                hero :: otherHeroes ->
+                    (  hero ,  (List.concatMap (\x -> listDifference x hero) otherHeroes) ++ restHeroes )
+    in
+    -- fix 0 for critical now
+    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
+
+
+
+attackGroup : Pos -> List Hero -> (List Hero)
+attackGroup grid attackable =
+    List.filter (\hero -> List.member hero.pos (List.map (vecAdd grid) ((0,0) :: neighbour))) attackable
 
 
 checkEnemyDone : Enemy -> Enemy
