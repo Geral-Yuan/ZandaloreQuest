@@ -144,6 +144,13 @@ subneighbour =
     [ ( 2, 0 ), ( 1, 1 ), ( 0, 2 ), ( -1, 2 ), ( -2, 2 ), ( -2, 1 ), ( -2, 0 ), ( -1, -1 ), ( 0, -2 ), ( 1, -2 ), ( 2, -2 ), ( 2, -1 ) ]
 
 
+subsubneighbour : List Pos
+subsubneighbour =
+    List.map (\y -> List.concatMap (\x -> [vecAdd x y]) neighbour) subneighbour
+    |> unionList
+    
+
+
 map : List Pos
 map =
     List.concat

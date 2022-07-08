@@ -53,6 +53,12 @@ stuckInWay board heropos pos =
         Just dis ->
             List.map (\k -> vecScale k pos) (List.range 1 dis)
 
+--for enemy mage
+attackedByMageRange : Pos -> List Pos  
+attackedByMageRange  pos =
+    pos :: List.map (vecAdd pos) (subsubneighbour) 
+    
+
 
 updateMoveable : Board -> Board
 updateMoveable board =

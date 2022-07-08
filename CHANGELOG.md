@@ -6,6 +6,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.21] -- 2022-7-6
+
+### Added
+
+- Subsubneighbour.
+
+- Movement and Attack of Mage Enemy. Mage Enemy will automatically go to the nearest position where it can attack the hero. The AOE attack effect is the same as the mage hero. It will automatically choose to attack as many heroes as possible.
+
+- Related functions of Movement and Attack of Mage Enemy.
+
 ## [m1.20] -- 2022-7-6
 
 ### Added
