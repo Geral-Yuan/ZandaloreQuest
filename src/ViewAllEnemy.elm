@@ -14,29 +14,19 @@ viewEnemy enemy =
     let
         ( x, y ) =
             findPos enemy.pos
-    in
-    case enemy.class of
-        Healer ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/MageBad.png"
-                ]
-                []
 
-        class ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Bad.png")
-                ]
-                []
+        class =
+            toString enemy.class
+    in
+    Svg.image
+        [ SvgAttr.width "80"
+        , SvgAttr.height "80"
+        , SvgAttr.x (toString (x - 40))
+        , SvgAttr.y (toString (y - 40))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
+        ]
+        []
 
 
 viewEnemyInformation : List Enemy -> Int -> List (Html Msg)

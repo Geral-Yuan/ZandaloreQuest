@@ -50,8 +50,11 @@ updateBoard msg board =
         Attack pos critical ->
             checkAttack board pos critical
 
-        Spawn ( list_class, list_pos ) ->
+        SpawnEnemy ( list_class, list_pos ) ->
             spawnEnemies list_class list_pos board
+
+        SpawnCrate ( pos, itype ) ->
+            spawnCrate pos itype board
 
         Kill False ->
             { board | enemies = [] }
@@ -222,6 +225,18 @@ mapClassEnemy class pos idx =
 
         Healer ->
             Enemy class pos 100 10 5 0 False idx
+
+
+spawnCrate : Pos -> ItemType -> Board -> Board
+spawnCrate pos itype board =
+    let
+        crate =
+            Obstacle MysteryBox pos itype
+
+        nobstacles =
+            crate :: board.obstacles
+    in
+    { board | obstacles = nobstacles }
 
 
 

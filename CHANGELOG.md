@@ -7,6 +7,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.22] -- 2022-7-8
+
+### Added
+- EnergyPotion in ItemType
+- SpawnCrate message
+- randomCrate, generateCrate, possibleCratePosiiton functions in `update.elm` to generate crate randomly
+- spawnCrate function in `updateboard.elm` to place the generated crate
+- Crate.png, EnergyPotion.png, Gold.png, HealthPotion.png, HealerBlue.png, HealerRed.png
+- viewCrate, viewItem functions in `view.elm` to display mystery boxes and items
+
+### Changed
+- Image file name from Bad to Red and Good to Blue
+- Generalize the viewEnemy and viewHero funciton
+
+### Removed
+- Stop displaying red and logo hexagon for health potion and mystery box
+
+### Fixed
+- Prevent randomly generate enemy in the same position
+
+
 ## [m1.21] -- 2022-7-6
 
 ### Added

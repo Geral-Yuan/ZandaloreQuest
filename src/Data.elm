@@ -50,6 +50,7 @@ type ObstacleType
 
 type ItemType
     = HealthPotion
+    | EnergyPotion
     | Gold
     | Buff
     | NoItem
@@ -146,9 +147,8 @@ subneighbour =
 
 subsubneighbour : List Pos
 subsubneighbour =
-    List.map (\y -> List.concatMap (\x -> [vecAdd x y]) neighbour) subneighbour
-    |> unionList
-    
+    List.map (\y -> List.concatMap (\x -> [ vecAdd x y ]) neighbour) subneighbour
+        |> unionList
 
 
 map : List Pos
@@ -202,6 +202,19 @@ sameline pos =
 listIntersection : List a -> List a -> List a
 listIntersection list1 list2 =
     List.filter (\x -> List.member x list2) list1
+
+
+intersectionList : List (List a) -> List a
+intersectionList llist =
+    case llist of
+        [] ->
+            []
+
+        [ list ] ->
+            list
+
+        list1 :: (list2 :: rest) ->
+            intersectionList (listIntersection list1 list2 :: rest)
 
 
 listDifference : List a -> List a -> List a

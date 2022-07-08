@@ -85,6 +85,8 @@ viewBoard1 model =
                 ++ List.map viewMoveable board.moveable
                 ++ List.map viewHeroInfo1 board.heroes
                 ++ List.map viewHeroInfo2 board.heroes
+                ++ List.map viewCrate board.obstacles
+                ++ List.map viewItem board.item
              --++ viewLines model.board
             )
          , endTurnButton
@@ -177,25 +179,6 @@ viewCell board ( row, column ) =
             ]
             []
 
-    else if List.member MysteryBox (List.map (checkObstacleType ( row, column )) board.obstacles) then
-        Svg.image
-            [ SvgAttr.width "121"
-            , SvgAttr.height "140"
-            , SvgAttr.x (toString (Tuple.first (findPos ( row, column )) - 62.0))
-            , SvgAttr.y (toString (Tuple.second (findPos ( row, column )) - 70.0))
-            , SvgAttr.preserveAspectRatio "none"
-            , SvgAttr.xlinkHref "./assets/image/logo.png"
-            ]
-            []
-
-    else if List.member HealthPotion (List.map (checkItemType ( row, column )) board.item) then
-        Svg.polygon
-            [ SvgAttr.fill "red"
-            , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
-            ]
-            []
-
     else if List.member ( row, column ) board.attackable then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
@@ -211,3 +194,45 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
+
+viewCrate : Obstacle -> Svg Msg
+viewCrate obs =
+    let
+        ( x, y ) =
+            findPos obs.pos
+    in
+    if obs.obstacleType == MysteryBox then
+        Svg.image
+            [ SvgAttr.width "80"
+            , SvgAttr.height "80"
+            , SvgAttr.x (toString (x - 40))
+            , SvgAttr.y (toString (y - 40))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/Crate.png"
+            ]
+            []
+
+    else
+        -- TODO: if possible, return nothing
+        Svg.rect [] []
+
+
+viewItem : Item -> Svg Msg
+viewItem item =
+    let
+        ( x, y ) =
+            findPos item.pos
+
+        itype =
+            toString item.itemType
+    in
+    Svg.image
+        [ SvgAttr.width "80"
+        , SvgAttr.height "80"
+        , SvgAttr.x (toString (x - 40))
+        , SvgAttr.y (toString (y - 40))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ itype ++ ".png")
+        ]
+        []

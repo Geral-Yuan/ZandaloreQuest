@@ -16,5 +16,6 @@ type Msg
     | Click Float Float
     | GetViewport Viewport
     | Key_None
-    | Spawn ( List Class, List Pos )
+    | SpawnEnemy ( List Class, List Pos )
+    | SpawnCrate ( Pos, ItemType )
     | Kill Bool

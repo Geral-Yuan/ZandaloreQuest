@@ -22,6 +22,7 @@ update msg model =
                 |> checkSelectedClick msg
                 |> getviewport msg
                 |> checkAttackClick msg
+                |> randomCrate msg
                 |> randomEnemies
 
         Logo ->
@@ -232,31 +233,31 @@ getviewport msg model =
 randomEnemies : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 randomEnemies ( model, cmd ) =
     if List.length model.board.enemies == 0 && model.board.spawn > 0 then
-        ( model, Cmd.batch [ Random.generate Spawn (Random.pair groupClasses (groupPositions model)), cmd ] )
+        ( model, Cmd.batch [ Random.generate SpawnEnemy (Random.pair groupEnemyClasses (groupEnemPositions model)), cmd ] )
 
     else
         ( model, cmd )
 
 
-groupClasses : Generator (List Class)
-groupClasses =
-    Random.list 3 (Random.uniform Warrior [ Archer ])
+groupEnemyClasses : Generator (List Class)
+groupEnemyClasses =
+    Random.list 3 (Random.uniform Warrior [ Archer, Mage ])
 
 
 
 -- Assassin, Mage, and Healer will be added later
 
 
-groupPositions : Model -> Generator (List Pos)
-groupPositions model =
-    choosePosition model []
+groupEnemPositions : Model -> Generator (List Pos)
+groupEnemPositions model =
+    chooseEnemyPosition model []
         |> Random.andThen
             (\pos1 ->
-                choosePosition model [ pos1 ]
+                chooseEnemyPosition model [ pos1 ]
                     |> Random.andThen
                         (\pos2 ->
-                            choosePosition model [ pos1, pos2 ]
-                                |> Random.andThen (\pos3 -> choosePosition model [ pos1, pos2, pos3 ])
+                            chooseEnemyPosition model [ pos1, pos2 ]
+                                |> Random.andThen (\pos3 -> chooseEnemyPosition model [ pos1, pos2, pos3 ])
                                 |> Random.pair (Random.constant pos2)
                         )
                     |> Random.pair (Random.constant pos1)
@@ -264,22 +265,22 @@ groupPositions model =
         |> Random.map (\( x, ( y, z ) ) -> [ x, y, z ])
 
 
-choosePosition : Model -> List Pos -> Generator Pos
-choosePosition model list_pos =
+chooseEnemyPosition : Model -> List Pos -> Generator Pos
+chooseEnemyPosition model list_pos =
     let
         possiblePos =
-            possiblePosition model list_pos
+            possibleEnemyPosition model list_pos
     in
     case possiblePos of
         [] ->
-            choosePosition model list_pos
+            chooseEnemyPosition model list_pos
 
         head :: rest ->
             Random.uniform head rest
 
 
-possiblePosition : Model -> List Pos -> List Pos
-possiblePosition model future_enemies_pos =
+possibleEnemyPosition : Model -> List Pos -> List Pos
+possibleEnemyPosition model future_enemies_pos =
     let
         heroes_pos =
             List.map .pos model.board.heroes
@@ -293,10 +294,58 @@ possiblePosition model future_enemies_pos =
                 |> cartesianProduct vecAdd future_enemies_pos
 
         possible_pos =
-            listDifference (listDifference (listIntersection model.board.map close_enemy) close_heroes) (List.map .pos model.board.obstacles)
+            unionList [ close_heroes, List.map .pos model.board.obstacles, future_enemies_pos ]
+                |> listDifference (listIntersection model.board.map close_enemy)
     in
     if future_enemies_pos == [] then
-        listDifference (listDifference model.board.map close_heroes) (List.map .pos model.board.obstacles)
+        unionList [ close_heroes, List.map .pos model.board.obstacles ]
+            |> listDifference model.board.map
 
     else
         possible_pos
+
+
+randomCrate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+randomCrate msg ( model, cmd ) =
+    case msg of
+        EndTurn ->
+            ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+
+        _ ->
+            ( model, cmd )
+
+
+generateCrate : Model -> Generator ( Pos, ItemType )
+generateCrate model =
+    let
+        possible_pos =
+            possibleCratePosition model
+    in
+    case possible_pos of
+        [] ->
+            generateCrate model
+
+        head :: rest ->
+            Random.uniform HealthPotion [ EnergyPotion, Gold ]
+                |> Random.pair (Random.uniform head rest)
+
+
+possibleCratePosition : Model -> List Pos
+possibleCratePosition model =
+    let
+        heroes_pos =
+            List.map .pos model.board.heroes
+
+        enemies_pos =
+            List.map .pos model.board.enemies
+
+        close_heroes =
+            (( 0, 0 ) :: neighbour)
+                |> cartesianProduct vecAdd heroes_pos
+
+        close_enemies =
+            (( 0, 0 ) :: neighbour)
+                |> cartesianProduct vecAdd enemies_pos
+    in
+    unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
+        |> listDifference model.board.map
