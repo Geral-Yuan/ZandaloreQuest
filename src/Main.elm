@@ -9,6 +9,7 @@ import Message exposing (Msg(..))
 import Model exposing (Model, init)
 import Update exposing (update)
 import View exposing (view)
+import Browser.Events exposing (onMouseMove)
 
 
 main : Program () Model Msg
@@ -24,6 +25,7 @@ subscriptions _ =
         , onKeyDown (Decode.map (key True) keyCode)
         , onResize Resize
         , onClick (Decode.map2 Click decodeFractionX decodeFractionY)
+        , onMouseMove (Decode.map2 Point decodeFractionX decodeFractionY)
         ]
 
 

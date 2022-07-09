@@ -1,6 +1,6 @@
 module Update exposing (update)
 
-import Action exposing (updateAttackable, updateMoveable)
+import Action exposing (updateAttackable, updateMoveable, updateTarget)
 import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
@@ -14,25 +14,28 @@ import UpdateBoard exposing (selectHero, updateBoard)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case model.mode of
-        BoardGame _ ->
-            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable }
-                |> resize msg
-                |> checkClick msg
-                |> checkSelectedClick msg
-                |> getviewport msg
-                |> checkAttackClick msg
-                |> randomCrate msg
-                |> randomEnemies
+    let
+        ( nmodel, ncmd ) =
+            case model.mode of
+                BoardGame _ ->
+                    { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                        |> checkMouseMove msg
+                        |> checkSelectedClick msg
+                        |> checkAttackClick msg
+                        |> randomCrate msg
+                        |> randomEnemies
 
-        Logo ->
-            ( updateScene msg model, Task.perform GetViewport getViewport )
+                Logo ->
+                    ( updateScene msg model, Cmd.none )
 
-        Castle ->
-            updateRPG msg model
-
-        Shop ->
-            updateRPG msg model
+                _ ->
+                    updateRPG msg model
+    in
+    ( nmodel
+        |> resize msg
+        |> getviewport msg
+    , ncmd
+    )
 
 
 
@@ -44,81 +47,76 @@ updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 updateCharacter msg ( model, cmd ) =
     case msg of
         Tick elapse ->
-            ( { model
-                | character =
+            let
+                newCharacter =
                     moveCharacter model.character (elapse / 1000)
-              }
-            , cmd
-            )
+            in
+            if isReachable model.mode newCharacter.pos then
+                ( { model | character = newCharacter }, cmd )
+
+            else
+                ( model, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
 
 
+isReachable : GameMode -> ( Float, Float ) -> Bool
+isReachable mode ( x, y ) =
+    case mode of
+        Castle ->
+            y > 425 && ((y > 875 && x > 0 && x < 2000) || (y <= 875 && x > 580 && x < 1420))
+
+        _ ->
+            True
+
+
 updateRPG : Msg -> Model -> ( Model, Cmd Msg )
 updateRPG msg model =
+    let
+        character =
+            model.character
+
+        ( x, y ) =
+            character.pos
+    in
     case msg of
         Enter False ->
             case model.mode of
                 Shop ->
-                    if Tuple.first model.character.pos > 550 && Tuple.first model.character.pos < 800 && Tuple.second model.character.pos > 900 then
-                        ( { model | mode = Castle }, Task.perform GetViewport getViewport )
+                    if x > 710 && x < 900 && y > 850 then
+                        ( { model | mode = Castle, character = { character | width = 50, height = 50, pos = ( 1630, 890 ) } }, Task.perform GetViewport getViewport )
 
                     else
-                        ( model, Task.perform GetViewport getViewport )
+                        ( model, Cmd.none )
 
-                _ ->
-                    if Tuple.first model.character.pos > 1650 && Tuple.second model.character.pos > 750 then
-                        ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+                Castle ->
+                    if x > 1600 && x < 1660 && y < 900 then
+                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
 
-                    else if Tuple.first model.character.pos > 850 && Tuple.first model.character.pos < 1050 && Tuple.second model.character.pos > 400 && Tuple.second model.character.pos < 500 then
+                    else if x > 950 && x < 1050 && y < 450 then
                         ( { model | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
 
                     else
-                        ( model, Task.perform GetViewport getViewport )
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         Key Left on ->
-            let
-                character =
-                    model.character
-
-                newCharacter =
-                    { character | moveLeft = on }
-            in
-            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+            ( { model | character = { character | moveLeft = on } }, Cmd.none )
 
         Key Right on ->
-            let
-                character =
-                    model.character
-
-                newCharacter =
-                    { character | moveRight = on }
-            in
-            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+            ( { model | character = { character | moveRight = on } }, Cmd.none )
 
         Key Up on ->
-            let
-                character =
-                    model.character
-
-                newCharacter =
-                    { character | moveUp = on }
-            in
-            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+            ( { model | character = { character | moveUp = on } }, Cmd.none )
 
         Key Down on ->
-            let
-                character =
-                    model.character
-
-                newCharacter =
-                    { character | moveDown = on }
-            in
-            ( { model | character = newCharacter }, Task.perform GetViewport getViewport )
+            ( { model | character = { character | moveDown = on } }, Cmd.none )
 
         _ ->
-            ( model, Task.perform GetViewport getViewport )
+            ( model, Cmd.none )
                 |> updateCharacter msg
 
 
@@ -126,11 +124,7 @@ updateScene : Msg -> Model -> Model
 updateScene msg model =
     case msg of
         Enter False ->
-            let
-                nModel =
-                    model
-            in
-            { nModel | mode = Castle }
+            { model | mode = Castle }
 
         _ ->
             model
@@ -197,19 +191,23 @@ checkAttackClick msg model =
             ( model, Cmd.none )
 
 
-checkClick : Msg -> Model -> Model
-checkClick msg model =
+checkMouseMove : Msg -> Model -> Model
+checkMouseMove msg model =
+    let
+        board =
+            model.board
+    in
     case msg of
-        Click x y ->
+        Point x y ->
             let
                 ( w, h ) =
                     model.size
             in
             if w / h > pixelWidth / pixelHeight then
-                { model | clickPos = ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h ) }
+                { model | board = { board | pointPos = ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h ) } }
 
             else
-                { model | clickPos = ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight ) }
+                { model | board = { board | pointPos = ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight ) } }
 
         _ ->
             model

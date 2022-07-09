@@ -7,6 +7,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.23] -- 2022-7-9
+
+### Added
+
+- Detecting the position of the mouse and higlight the attack target when the mouse is in the attackable range.
+
+### Fixed
+
+- Resize of RPG scenes.
+
+- Attack for hero mage.
+
 ## [m1.22] -- 2022-7-8
 
 ### Added

@@ -1,6 +1,5 @@
 module View exposing (view)
 
-import Action exposing (checkItemType, checkObstacleType)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
@@ -60,9 +59,6 @@ viewBoard1 model =
 
             else
                 Basics.min 1 (w / pixelWidth)
-
-        board =
-            model.board
     in
     div
         [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
@@ -81,12 +77,12 @@ viewBoard1 model =
             (viewMap model.board
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
-                ++ List.map viewCoordinate board.map
-                ++ List.map viewMoveable board.moveable
-                ++ List.map viewHeroInfo1 board.heroes
-                ++ List.map viewHeroInfo2 board.heroes
-                ++ List.map viewCrate board.obstacles
-                ++ List.map viewItem board.item
+                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewMoveable model.board.moveable
+                ++ List.map viewHeroInfo1 model.board.heroes
+                ++ List.map viewHeroInfo2 model.board.heroes
+                ++ List.map viewCrate model.board.obstacles
+                ++ List.map viewItem model.board.item
              --++ viewLines model.board
             )
          , endTurnButton
@@ -128,7 +124,7 @@ viewClickPosition : Model -> Html Msg
 viewClickPosition model =
     let
         ( x, y ) =
-            model.clickPos
+            model.board.pointPos
     in
     div
         [ HtmlAttr.style "bottom" "30px"
@@ -171,14 +167,20 @@ viewMap board =
 
 viewCell : Board -> Pos -> Svg Msg
 viewCell board ( row, column ) =
-    if List.member Unbreakable (List.map (checkObstacleType ( row, column )) board.obstacles) then
+    if List.member ( row, column ) (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
         Svg.polygon
             [ SvgAttr.fill "black"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
-
+    else if List.member ( row, column ) board.target then
+        Svg.polygon
+            [ SvgAttr.fill "yellow"
+            , SvgAttr.stroke "blue"
+            , SvgAttr.points (detPoints (findPos ( row, column )))
+            ]
+            []
     else if List.member ( row, column ) board.attackable then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"

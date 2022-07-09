@@ -13,10 +13,12 @@ type alias Board =
     , critical : Int
     , moveable : List ( Pos, Dir )
     , attackable : List Pos
+    , target : List Pos
     , item : List Item
     , time : Float
     , spawn : Int -- number of times group of enemies will be spawned
     , index : Int -- highest enemies index
+    , pointPos : ( Float, Float )
     }
 
 
@@ -57,4 +59,4 @@ initBoard : Int -> Board
 initBoard k =
     case k of
         _ ->
-            Board map (initObstacles k) (initenemy k) (inithero k) HeroTurn 0 [] [] [] 0 1 3
+            Board map (initObstacles k) (initenemy k) (inithero k) HeroTurn 0 [] [] [] [] 0 1 3 ( 0, 0 )

@@ -45,7 +45,6 @@ type Class
 type ObstacleType
     = MysteryBox
     | Unbreakable
-    | NoObstacle
 
 
 type ItemType
@@ -173,8 +172,8 @@ map =
 -- Basic Functions
 
 
-neighbotToDir : Pos -> Dir
-neighbotToDir pos =
+neighborToDir : Pos -> Dir
+neighborToDir pos =
     if pos == ( -1, 0 ) then
         W
 
@@ -192,6 +191,11 @@ neighbotToDir pos =
 
     else
         A
+
+
+extentPos : List Pos -> List Pos -> List Pos
+extentPos posList relativePos =
+    List.concat (List.map (\pos -> List.map (vecAdd pos) relativePos) posList)
 
 
 sameline : Pos -> List Pos

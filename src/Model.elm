@@ -3,10 +3,8 @@ module Model exposing (..)
 import Board exposing (Board, initBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (..)
-import Json.Decode exposing (int)
 import Message exposing (Msg(..))
 import RpgCharacter exposing (..)
-import Svg.Attributes exposing (mode)
 import Task
 
 
@@ -18,7 +16,6 @@ type alias Model =
     , character : RpgCharacter
 
     -- , time : Float
-    , clickPos : ( Float, Float )
     }
 
 
@@ -31,15 +28,15 @@ init _ =
 
 initCharacter : RpgCharacter
 initCharacter =
-    { pos = ( 500, 500 )
+    { pos = ( 1000, 625 )
     , moveLeft = False
     , moveRight = False
     , moveUp = False
     , moveDown = False
     , latestDir = Right
     , faceDir = Right
-    , height = 80
-    , width = 80
+    , height = 50
+    , width = 50
     , speed = 500
     , move_range = ( pixelWidth, pixelHeight )
     }
@@ -58,7 +55,6 @@ initModel =
     , character = initCharacter
 
     -- , time = 0
-    , clickPos = ( 0, 0 )
     }
 
 
@@ -98,7 +94,6 @@ castle_1 model =
     , character = initCharacter
 
     -- , time = 0
-    , clickPos = ( 0, 0 )
     }
 
 
@@ -115,7 +110,6 @@ shop_2 model =
     , character = initCharacter
 
     -- , time = 0
-    , clickPos = ( 0, 0 )
     }
 
 
@@ -132,5 +126,4 @@ board_1 model =
     , character = initCharacter
 
     -- , time = 0
-    , clickPos = ( 0, 0 )
     }
