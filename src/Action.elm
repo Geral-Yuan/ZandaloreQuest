@@ -126,3 +126,15 @@ checkItemType ( row, column ) item =
 unMoveable : Board -> List Pos
 unMoveable board =
     List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes
+
+
+checkAttackObstacle : List Pos -> Board -> Board
+checkAttackObstacle pos_list board =
+    let
+        ( attackedObstacles, others ) =
+            List.partition (\obstacle -> List.member obstacle.pos pos_list) board.obstacles
+
+        ( attackedBreakable, attackedOthers ) =
+            List.partition (\obstacle -> obstacle.obstacleType == MysteryBox) attackedObstacles
+    in
+    { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
