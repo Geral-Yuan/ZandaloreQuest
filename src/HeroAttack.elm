@@ -1,6 +1,6 @@
 module HeroAttack exposing (checkAttack, generateDamage)
 
-import Action exposing (selectedHero, unselectedHero)
+import Action exposing (selectedHero, unselectedHero, checkAttackObstacle)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -86,9 +86,8 @@ meaningfulTarget board =
 checkAttackTarget : Pos -> Board -> Board
 checkAttackTarget pos board =
     board
-        |> checkAttackObstacle pos
+        |> checkAttackObstacle [pos]
         |> checkAttackEnemy pos
-
 
 
 {-
@@ -100,18 +99,6 @@ checkAttackTarget pos board =
        else
            checkAttackEnemy board pos
 -}
-
-
-checkAttackObstacle : Pos -> Board -> Board
-checkAttackObstacle position board =
-    let
-        ( attackedObstacles, others ) =
-            List.partition (\obstacle -> obstacle.pos == position) board.obstacles
-
-        ( attackedBreakable, attackedOthers ) =
-            List.partition (\obstacle -> obstacle.obstacleType == MysteryBox) attackedObstacles
-    in
-    { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
 
 
 checkAttackEnemy : Pos -> Board -> Board
