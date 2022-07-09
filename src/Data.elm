@@ -10,6 +10,7 @@ import Svg.Attributes exposing (x2, y2)
 type GameMode
     = Castle
     | Shop
+    | HeroChoose Int
       -- | Starting
       -- | ClearLevel Int
       -- | Gameover Int
@@ -276,6 +277,39 @@ cartesianProduct f x y =
 findPos : ( Int, Int ) -> ( Float, Float )
 findPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
+
+
+findChosenHero : ( Float, Float ) -> Int
+findChosenHero ( x, y ) =
+    let
+        row =
+            if y > 100 && y < 400 then
+                1
+
+            else if y > 600 && y < 900 then
+                2
+
+            else
+                0
+
+        column =
+            if x > 250 && x < 550 then
+                1
+
+            else if x > 850 && x < 1150 then
+                2
+
+            else if x > 1450 && x < 1750 then
+                3
+
+            else
+                0
+    in
+    if row == 0 || column == 0 then
+        0
+
+    else
+        (row - 1) * 3 + column
 
 
 findInfoBoard : ( Float, Float ) -> Int

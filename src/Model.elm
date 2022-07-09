@@ -1,6 +1,6 @@
 module Model exposing (..)
 
-import Board exposing (Board, initBoard)
+import Board exposing (Board, sampleBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -10,11 +10,11 @@ import Task
 
 type alias Model =
     { mode : GameMode
-    , heroes : List Hero
+    , indexedheroes : List ( Hero, Int ) -- each hero linked to an index where 0 means not obtained so far
     , board : Board
     , size : ( Float, Float )
     , character : RpgCharacter
-
+    , chosenHero : List Int
     -- , time : Float
     }
 
@@ -42,22 +42,27 @@ initCharacter =
     }
 
 
+
+-- Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
+
+
 initModel : Model
 initModel =
     { mode = Logo
-    , heroes =
-        [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
-        , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+    , indexedheroes =
+        [ ( Hero Warrior ( 0, 0 ) 80 15 5 3 False 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 12 5 3 False 0, 4 )
         ]
-    , board = initBoard 1
+    , board = sampleBoard
     , size = ( 1500, 1000 )
     , character = initCharacter
-
+    , chosenHero = []
     -- , time = 0
     }
 
-
+{-
 initRPG : Model -> Model
 initRPG model =
     case model.mode of
@@ -84,15 +89,16 @@ initLevel k model =
 castle_1 : Model -> Model
 castle_1 model =
     { mode = Castle
-    , heroes =
-        [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
-        , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+    , indexedheroes =
+        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
         ]
-    , board = initBoard 1
+    , board = sampleBoard
     , size = ( 1500, 1000 )
     , character = initCharacter
-
+    , chosenHero = []
     -- , time = 0
     }
 
@@ -100,15 +106,16 @@ castle_1 model =
 shop_2 : Model -> Model
 shop_2 model =
     { mode = Shop
-    , heroes =
-        [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
-        , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+    , indexedheroes =
+        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
         ]
-    , board = initBoard 1
+    , board = sampleBoard
     , size = ( 1500, 1000 )
     , character = initCharacter
-
+    , chosenHero = []
     -- , time = 0
     }
 
@@ -116,14 +123,16 @@ shop_2 model =
 board_1 : Model -> Model
 board_1 model =
     { mode = BoardGame 1
-    , heroes =
-        [ Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
-        , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-        , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
+    , indexedheroes =
+        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
         ]
-    , board = initBoard 1
+    , board = sampleBoard
     , size = ( 1500, 1000 )
     , character = initCharacter
-
+    , chosenHero = []
     -- , time = 0
     }
+-}

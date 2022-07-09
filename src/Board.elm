@@ -1,4 +1,4 @@
-module Board exposing (Board, initBoard)
+module Board exposing (Board, initBoard, sampleBoard)
 
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -45,18 +45,33 @@ initenemy k =
             ]
 
 
-inithero : Int -> List Hero
-inithero k =
-    case k of
-        _ ->
-            [ Hero Mage ( 6, 6 ) 50 15 5 3 False 1
-            , Hero Archer ( 5, 8 ) 40 20 3 5 False 2
-            , Hero Assassin ( 8, 5 ) 40 20 3 6 False 3
-            ]
+inithero : List Hero -> Int -> List Hero
+inithero heroes k =
+    List.map (initPosition k) heroes
 
 
-initBoard : Int -> Board
-initBoard k =
+initPosition : Int -> Hero -> Hero
+initPosition k hero =
     case k of
         _ ->
-            Board map (initObstacles k) (initenemy k) (inithero k) HeroTurn 0 [] [] [] [] 0 1 3 ( 0, 0 )
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 6, 6 ) }
+
+                2 ->
+                    { hero | pos = ( 5, 8 ) }
+
+                _ ->
+                    { hero | pos = ( 8, 5 ) }
+
+
+initBoard : List Hero -> Int -> Board
+initBoard heroes k =
+    case k of
+        _ ->
+            Board map (initObstacles k) (initenemy k) (inithero heroes k) HeroTurn 0 [] [] [] [] 0 1 3 ( 0, 0 )
+
+
+sampleBoard : Board
+sampleBoard =
+    Board [] [] [] [] HeroTurn 0 [] [] [] [] 0 0 0 ( 0, 0 )

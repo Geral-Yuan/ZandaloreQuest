@@ -11,6 +11,7 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
+import ViewChoose exposing (viewHeroChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
 
@@ -21,9 +22,9 @@ view model =
         viewAll =
             case model.mode of
                 Logo ->
-                    viewScene0 model
+                   viewScene0 model
 
-                BoardGame 1 ->
+                BoardGame _ ->
                     viewBoard1 model
 
                 Castle ->
@@ -32,8 +33,8 @@ view model =
                 Shop ->
                     viewShop model
 
-                _ ->
-                    viewBoard1 model
+                HeroChoose _ ->
+                    viewHeroChoose model
     in
     div
         [ HtmlAttr.style "width" "100%"
@@ -174,6 +175,7 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
     else if List.member ( row, column ) board.target then
         Svg.polygon
             [ SvgAttr.fill "yellow"
@@ -181,6 +183,7 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
     else if List.member ( row, column ) board.attackable then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
