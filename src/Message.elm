@@ -14,6 +14,7 @@ type Msg
     | Attack Pos Critical
     | EndTurn
     | Click Float Float
+    | Point Float Float
     | GetViewport Viewport
     | Key_None
     | SpawnEnemy ( List Class, List Pos )

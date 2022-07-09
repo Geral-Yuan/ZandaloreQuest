@@ -39,7 +39,7 @@ updateBoard msg board =
                         EnemyTurn ->
                             { board | time = board.time + elapsed / 1000 }
             in
-            if nboard.time > 1 then
+            if nboard.time > 0.5 then
                 { nboard | time = 0 }
                     |> actionEnemy
                     |> checkTurn
@@ -67,10 +67,27 @@ turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
-        , enemies = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemies
+        , enemies = List.map resetSteps board.enemies
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
         , time = 0
     }
+
+
+resetSteps : Enemy -> Enemy
+resetSteps enemy =
+    let
+        nstep =
+            case enemy.class of
+                Mage ->
+                    1
+
+                Assassin ->
+                    3
+
+                _ ->
+                    2
+    in
+    { enemy | steps = nstep, done = False }
 
 
 resetEnergy : Hero -> Hero

@@ -53,11 +53,14 @@ stuckInWay board heropos pos =
         Just dis ->
             List.map (\k -> vecScale k pos) (List.range 1 dis)
 
+
+
 --for enemy mage
-attackedByMageRange : Pos -> List Pos  
-attackedByMageRange  pos =
-    pos :: List.map (vecAdd pos) (subsubneighbour) 
-    
+
+
+attackedByMageRange : Pos -> List Pos
+attackedByMageRange pos =
+    pos :: List.map (vecAdd pos) subsubneighbour
 
 
 updateMoveable : Board -> Board
@@ -69,12 +72,36 @@ updateMoveable board =
         Just hero ->
             let
                 can_move =
-                    List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighbotToDir neighberpos )) neighbour
+                    List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighborToDir neighberpos )) neighbour
 
                 really_can_move =
-                    List.filter (\moveable -> (List.member (Tuple.first moveable) board.map) && not (List.member (Tuple.first moveable) (unMoveable board))) can_move
+                    List.filter (\moveable -> List.member (Tuple.first moveable) board.map && not (List.member (Tuple.first moveable) (unMoveable board))) can_move
             in
             { board | moveable = really_can_move }
+
+
+updateTarget : Board -> Board
+updateTarget board =
+    case selectedHero board.heroes of
+        Nothing ->
+            { board | target = [] }
+
+        Just hero ->
+            case findHexagon board.pointPos of
+                Just cell ->
+                    if List.member cell board.attackable then
+                        case hero.class of
+                            Mage ->
+                                { board | target = cell :: List.map (vecAdd cell) neighbour }
+
+                            _ ->
+                                { board | target = [ cell ] }
+
+                    else
+                        { board | target = [] }
+
+                Nothing ->
+                    { board | target = [] }
 
 
 selectedHero : List Hero -> Maybe Hero
@@ -85,15 +112,6 @@ selectedHero hero_list =
 unselectedHero : List Hero -> List Hero
 unselectedHero hero_list =
     List.filter (\hero -> not hero.selected) hero_list
-
-
-checkObstacleType : Pos -> Obstacle -> ObstacleType
-checkObstacleType ( row, column ) obstacle =
-    if obstacle.pos == ( row, column ) then
-        obstacle.obstacleType
-
-    else
-        NoObstacle
 
 
 checkItemType : Pos -> Item -> ItemType

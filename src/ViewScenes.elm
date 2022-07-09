@@ -2,18 +2,18 @@ module ViewScenes exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, button, div, img, input, text)
-import Html.Attributes as HtmlAttr exposing (height, src, style, width)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div)
+import Html.Attributes as HtmlAttr
 import Message exposing (..)
 import Model exposing (Model)
-import Svg exposing (Svg, stop)
+import RpgCharacter exposing (RpgCharacter)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 
 logoWidth : Float
 logoWidth =
-    523.2558
+    300 * sqrt 3
 
 
 logoHeight : Float
@@ -36,32 +36,76 @@ viewScene0 model =
         ( w, h ) =
             model.size
 
-        -- t =
-        --     model.time
         r =
-            if w / h > logoWidth / logoHeight then
-                Basics.min 1 (h / logoHeight)
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
 
             else
-                Basics.min 1 (w / logoWidth)
+                Basics.min 1 (w / pixelWidth)
     in
     div
-        [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
-
-        -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
-            |> HtmlAttr.style "background"
+        , HtmlAttr.style "background" "black"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ viewLogo ]
+        ]
+
+
+viewLogo : Svg msg
+viewLogo =
+    Svg.image
+        [ SvgAttr.width (toString logoWidth)
+        , SvgAttr.height (toString logoHeight)
+        , SvgAttr.x (toString (pixelWidth / 2 - logoWidth / 2))
+        , SvgAttr.y (toString (pixelHeight / 2 - logoHeight / 2))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/logo.png"
         ]
         []
 
 
 
+{-
+   viewScene0 : Model -> Html Msg
+   viewScene0 model =
+       let
+           ( w, h ) =
+               model.size
+
+           -- t =
+           --     model.time
+           r =
+               if w / h > logoWidth / logoHeight then
+                   Basics.min 1 (h / logoHeight)
+
+               else
+                   Basics.min 1 (w / logoWidth)
+       in
+       div
+           [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
+           , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
+           , HtmlAttr.style "position" "absolute"
+           , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
+           , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
+
+           -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
+           , HtmlAttr.style "transform-origin" "0 0"
+           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+           , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
+               |> HtmlAttr.style "background"
+           ]
+           []
+-}
 -- Created this code so that the RPG character can change facing but there are bugs
 -- viewRpgCharacter : Model -> Html Msg
 -- viewRpgCharacter model =
@@ -97,22 +141,48 @@ viewScene0 model =
 --         ]
 
 
-viewRpgCharacter : Model -> Svg Msg
-viewRpgCharacter model =
+viewRpgCharacter : RpgCharacter -> Svg msg
+viewRpgCharacter character =
+    let
+        ( w, h ) =
+            ( character.width, character.height )
+
+        ( x, y ) =
+            character.pos
+    in
     Svg.image
-        [ SvgAttr.width (toString model.character.width)
-        , SvgAttr.height (toString model.character.height)
-        , SvgAttr.x (toString (Tuple.first model.character.pos))
-        , SvgAttr.y (toString (Tuple.second model.character.pos))
+        [ SvgAttr.width (toString w)
+        , SvgAttr.height (toString h)
+        , SvgAttr.x (toString (x - w / 2))
+        , SvgAttr.y (toString (y - h / 2))
         , SvgAttr.preserveAspectRatio "xMidYMid slice"
         , SvgAttr.xlinkHref "./assets/image/WarriorBlue.png"
         ]
         []
 
 
+viewCharacterPos : RpgCharacter -> Html Msg
+viewCharacterPos character =
+    let
+        ( x, y ) =
+            character.pos
+    in
+    div
+        [ HtmlAttr.style "bottom" "30px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("( " ++ toString x ++ " ," ++ toString y ++ " )") ]
+
+
 viewCastle : Model -> Html Msg
 viewCastle model =
-    -- Add this when the homepage has been designed
     let
         ( w, h ) =
             model.size
@@ -128,29 +198,77 @@ viewCastle model =
         [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
         , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , ("url('./assets/image/Castle.png')"
-            ++ " no-repeat fixed "
-            ++ " 0px "
-            ++ " 0px / "
-            ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
-          )
-            |> HtmlAttr.style "background"
+        , HtmlAttr.style "background" "black"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewRpgCharacter model ]
+            [ viewCastleSvg, viewRpgCharacter model.character ]
+        , viewCharacterPos model.character
         ]
+
+
+viewCastleSvg : Svg msg
+viewCastleSvg =
+    Svg.image
+        [ SvgAttr.width "1600"
+        , SvgAttr.height "1000"
+        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.y (toString (pixelHeight / 2 - 500))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Castle.png"
+        ]
+        []
+
+
+
+{-
+   viewCastle : Model -> Html Msg
+   viewCastle model =
+       -- Add this when the homepage has been designed
+       let
+           ( w, h ) =
+               model.size
+
+           r =
+               if w / h > pixelWidth / pixelHeight then
+                   Basics.min 1 (h / pixelHeight)
+
+               else
+                   Basics.min 1 (w / pixelWidth)
+       in
+       div
+           [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+           , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+           , HtmlAttr.style "position" "absolute"
+           , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
+           , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+           , HtmlAttr.style "transform-origin" "0 0"
+           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+           , ("url('./assets/image/Castle.png')"
+               ++ " no-repeat fixed "
+               ++ " 0px "
+               ++ " 0px / "
+               ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
+             )
+               |> HtmlAttr.style "background"
+           ]
+           [ Svg.svg
+               [ SvgAttr.width "100%"
+               , SvgAttr.height "100%"
+               ]
+               [ viewRpgCharacter model ]
+           ]
+-}
 
 
 viewShop : Model -> Html Msg
 viewShop model =
-    -- Add this when the homepage has been designed
     let
         ( w, h ) =
             model.size
@@ -166,24 +284,73 @@ viewShop model =
         [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
         , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , ("url('./assets/image/Shop.jpg')"
-            ++ " no-repeat fixed "
-            ++ " 0px "
-            ++ " 0px / "
-            ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
-          )
-            |> HtmlAttr.style "background"
+        , HtmlAttr.style "background" "black"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewRpgCharacter model ]
+            [ viewShopSvg, viewRpgCharacter model.character ]
+        , viewCharacterPos model.character
         ]
+
+
+viewShopSvg : Svg Msg
+viewShopSvg =
+    Svg.image
+        [ SvgAttr.width "1600"
+        , SvgAttr.height "1000"
+        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.y (toString (pixelHeight / 2 - 500))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Shop.jpg"
+        ]
+        []
+
+
+
+{-
+   viewShop : Model -> Html Msg
+   viewShop model =
+       -- Add this when the homepage has been designed
+       let
+           ( w, h ) =
+               model.size
+
+           r =
+               if w / h > pixelWidth / pixelHeight then
+                   Basics.min 1 (h / pixelHeight)
+
+               else
+                   Basics.min 1 (w / pixelWidth)
+       in
+       div
+           [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+           , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+           , HtmlAttr.style "position" "absolute"
+           , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
+           , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+           , HtmlAttr.style "transform-origin" "0 0"
+           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+           , ("url('./assets/image/Shop.jpg')"
+               ++ " no-repeat fixed "
+               ++ " 0px "
+               ++ " 0px / "
+               ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
+             )
+               |> HtmlAttr.style "background"
+           ]
+           [ Svg.svg
+               [ SvgAttr.width "100%"
+               , SvgAttr.height "100%"
+               ]
+               [ viewRpgCharacter model ]
+           ]
+-}
 
 
 startWidth : Float
