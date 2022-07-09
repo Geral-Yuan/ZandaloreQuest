@@ -105,7 +105,7 @@ viewRpgCharacter model =
         , SvgAttr.x (toString (Tuple.first model.character.pos))
         , SvgAttr.y (toString (Tuple.second model.character.pos))
         , SvgAttr.preserveAspectRatio "xMidYMid slice"
-        , SvgAttr.xlinkHref "./assets/image/WarriorGood.png"
+        , SvgAttr.xlinkHref "./assets/image/WarriorBlue.png"
         ]
         []
 

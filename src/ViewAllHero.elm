@@ -11,28 +11,19 @@ import Svg.Attributes as SvgAttr
 
 viewHeroInfo1 : Hero -> Svg msg
 viewHeroInfo1 hero =
-    case hero.class of
-        Healer ->
-            Svg.image
-                [ SvgAttr.width "70"
-                , SvgAttr.height "70"
-                , SvgAttr.x (toString (1600 - offset hero))
-                , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
-                ]
-                []
-
-        class ->
-            Svg.image
-                [ SvgAttr.width "70"
-                , SvgAttr.height "70"
-                , SvgAttr.x (toString (1600 - offset hero))
-                , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Good.png")
-                ]
-                []
+    let
+        class =
+            toString hero.class
+    in
+    Svg.image
+        [ SvgAttr.width "70"
+        , SvgAttr.height "70"
+        , SvgAttr.x (toString (1600 - offset hero))
+        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
+        ]
+        []
 
 
 viewHeroInfo2 : Hero -> Svg msg
@@ -94,26 +85,16 @@ viewHero hero =
     let
         ( x, y ) =
             findPos hero.pos
-    in
-    case hero.class of
-        Healer ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/MageGood.png"
-                ]
-                []
 
-        class ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Good.png")
-                ]
-                []
+        class =
+            toString hero.class
+    in
+    Svg.image
+        [ SvgAttr.width "80"
+        , SvgAttr.height "80"
+        , SvgAttr.x (toString (x - 40))
+        , SvgAttr.y (toString (y - 40))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
+        ]
+        []
