@@ -204,7 +204,28 @@ viewCastle model =
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
         ]
-        [ Svg.svg
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "300px"
+            ]
+            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "1400px"
+            ]
+            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "1100px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            ]
+        , Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
@@ -297,6 +318,27 @@ viewShop model =
             , HtmlAttr.style "left" (toString (pixelWidth / 2 - 200) ++ "px")
             ]
             [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "300px"
+            ]
+            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "1400px"
+            ]
+            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
+            , HtmlAttr.style "left" "1100px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"

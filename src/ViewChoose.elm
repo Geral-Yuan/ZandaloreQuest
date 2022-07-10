@@ -188,11 +188,11 @@ confirmButton =
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "920px"
+        , HtmlAttr.style "left" "880px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "160px"
+        , HtmlAttr.style "width" "300px"
         , onClick Confirm
         ]
-        [ text "Confirm" ]
+        [ text "Choose 3 heroes and Confirm" ]

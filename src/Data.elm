@@ -17,6 +17,7 @@ type GameMode
       -- | Gameover Int
     | BoardGame Int
     | Logo
+    | Tutorial Int
 
 
 type alias Pos =

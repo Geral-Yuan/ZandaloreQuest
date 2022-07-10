@@ -19,18 +19,46 @@ update msg model =
     let
         ( nmodel, ncmd ) =
             case model.mode of
+                Tutorial 3 ->
+                    case msg of
+                        Enter False ->
+                            ( { model | mode = model.previousMode }, Cmd.none )
+
+                        _ ->
+                            ( model, Cmd.none )
+
+                Tutorial 1 ->
+                    case msg of
+                        Enter False ->
+                            ( { model | mode = Tutorial 2 }, Cmd.none )
+
+                        _ ->
+                            ( model, Cmd.none )
+
+                Tutorial 2 ->
+                    case msg of
+                        Enter False ->
+                            ( { model | mode = Tutorial 3 }, Cmd.none )
+
+                        _ ->
+                            ( model, Cmd.none )
+
                 BoardGame _ ->
-                    { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                        |> checkMouseMove msg
-                        |> checkSelectedClick msg
-                        |> checkAttackClick msg
-                        |> randomCrate msg
-                        |> randomEnemies
-                        |> checkEnd
+                    case msg of
+                        ViewTutorial ->
+                            ( { model | previousMode = model.mode, mode = Tutorial 1 }, Cmd.none )
 
-                Logo ->
-                    ( updateScene msg model, Cmd.none )
+                        _ ->
+                            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                                |> checkMouseMove msg
+                                |> checkSelectedClick msg
+                                |> checkAttackClick msg
+                                |> randomCrate msg
+                                |> randomEnemies
+                                |> checkEnd
 
+                -- Logo ->
+                --     ( updateScene msg model, Cmd.none )
                 HeroChoose k ->
                     ( model
                         |> checkChooseClick msg
@@ -141,7 +169,10 @@ isReachable : GameMode -> ( Float, Float ) -> Bool
 isReachable mode ( x, y ) =
     case mode of
         Castle ->
-            y > 425 && ((y > 875 && x > 0 && x < 2000) || (y <= 875 && x > 580 && x < 1420))
+            (x > 250 && x < 1700 && y > 780 && y < 850) || (x > 580 && x < 1400 && y < 781 && y > 420)
+
+        Shop ->
+            x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
 
         _ ->
             True
@@ -228,7 +259,7 @@ updateRPG msg model =
             case model.mode of
                 Shop ->
                     if x > 710 && x < 900 && y > 850 then
-                        ( { model | mode = Castle, character = { character | width = 75, height = 75, pos = ( 1630, 890 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1630, 840 ) } }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
