@@ -7,6 +7,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.25] -- 2022-7-9
+
+### Added
+
+- Heroes can pick coins
+- bag field in Model
+- coin field in Bag
+- Enemies can break items
+
+## [m1.24] -- 2022-7-9
+
+### Added
+
+- Enemy Mage can break breakable obstacles
+
+### Changed
+
+- Move the checkAttackObstacle function from `HeroAttack.elm` to `Action.elm`
+- Change the output related to attack mage from (Enemy, List Hero) to Board
+
+### Fixed
+
+- Enemy will seckill heroes behind the obstacle
+
+
+
 ## [m1.23] -- 2022-7-9
 
 ### Added

@@ -11,6 +11,7 @@ import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Task
 import UpdateBoard exposing (selectHero, updateBoard)
+import Bag exposing (addCoin)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -25,6 +26,7 @@ update msg model =
                         |> checkAttackClick msg
                         |> randomCrate msg
                         |> randomEnemies
+                        |> checkEnd
 
                 Logo ->
                     ( updateScene msg model, Cmd.none )
@@ -64,7 +66,7 @@ checkChooseClick msg model =
                 index =
                     findChosenHero clickpos
             in
-            if index > 0 then
+            if index > 0 && index <= List.length model.indexedheroes then
                 if List.member index model.chosenHero then
                     { model | chosenHero = List.filter (\heroindex -> heroindex /= index) model.chosenHero }
 
@@ -398,7 +400,7 @@ generateCrate model =
             generateCrate model
 
         head :: rest ->
-            Random.uniform HealthPotion [ EnergyPotion, Gold ]
+            Random.uniform HealthPotion [ EnergyPotion, Gold 1]
                 |> Random.pair (Random.uniform head rest)
 
 
@@ -421,3 +423,27 @@ possibleCratePosition model =
     in
     unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
         |> listDifference model.board.map
+
+
+checkEnd : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkEnd (model, cmd) =
+    let
+        myboard = model.board
+        wincoins = myboard.coins + 100
+
+        losecoins = myboard.coins
+        nmodel =
+            case model.mode of
+                BoardGame _ ->
+                    if List.isEmpty myboard.enemies then
+                        {model | mode = Castle
+                                , bag = addCoin model.bag wincoins}
+                    else if List.isEmpty myboard.heroes then
+                        {model | mode = Castle
+                                , bag = addCoin model.bag losecoins}
+                    else
+                        model
+                _ ->
+                    model
+    in
+    (nmodel, cmd)

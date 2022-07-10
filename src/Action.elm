@@ -138,3 +138,22 @@ checkAttackObstacle pos_list board =
             List.partition (\obstacle -> obstacle.obstacleType == MysteryBox) attackedObstacles
     in
     { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
+
+
+pos2Item : List Item -> Pos -> Item
+pos2Item all_items pos =
+    case List.filter (\x -> (pos == x.pos)) all_items of
+        [] ->
+            Item NoItem (999, 999)
+        chosen :: _ ->
+            chosen
+
+pos2Hero : List Hero -> Pos -> Hero
+pos2Hero all_hero pos =
+    case List.filter (\x -> (pos == x.pos)) all_hero of
+        [] ->
+            Hero Warrior ( 0, 0 ) -1 15 5 3 False 0
+        chosen :: _ ->
+            chosen
+
+

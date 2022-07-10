@@ -51,7 +51,7 @@ type ObstacleType
 type ItemType
     = HealthPotion
     | EnergyPotion
-    | Gold
+    | Gold Int
     | Buff
     | NoItem
 

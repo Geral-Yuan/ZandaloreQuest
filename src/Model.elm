@@ -2,6 +2,7 @@ module Model exposing (..)
 
 import Board exposing (Board, sampleBoard)
 import Browser.Dom exposing (getViewport)
+import Bag exposing (Bag, initBag)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import RpgCharacter exposing (..)
@@ -15,6 +16,7 @@ type alias Model =
     , size : ( Float, Float )
     , character : RpgCharacter
     , chosenHero : List Int
+    , bag : Bag
     -- , time : Float
     }
 
@@ -50,7 +52,7 @@ initModel : Model
 initModel =
     { mode = Logo
     , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 80 15 5 3 False 0, 1 )
+        [ ( Hero Warrior ( 0, 0 ) 80 15 5 5 False 0, 1 )
         , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
         , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
         , ( Hero Mage ( 0, 0 ) 50 12 5 3 False 0, 4 )
@@ -59,6 +61,7 @@ initModel =
     , size = ( 1500, 1000 )
     , character = initCharacter
     , chosenHero = []
+    , bag = initBag
     -- , time = 0
     }
 

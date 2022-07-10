@@ -88,6 +88,7 @@ viewBoard1 model =
             )
          , endTurnButton
          , viewCritical model.board
+         , viewBoardCoin model.board
          , viewClickPosition model
          , viewTips
          ]

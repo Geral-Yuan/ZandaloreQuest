@@ -1,6 +1,6 @@
 module EnemyAction exposing (actionEnemy)
 
-import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle)
+import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle, pos2Item)
 import Board exposing (..)
 import Data exposing (..)
 import ShortestPath exposing (..)
@@ -22,30 +22,35 @@ actionEnemy board =
 
 actionSmartEnemy : Board -> Enemy -> Board
 actionSmartEnemy board enemy =
-    case enemy.class of
-        Warrior ->
-            let
-                (nenemies, nheroes) =
-                    actionSmartWarrior board enemy
-            in
-            {board| enemies = nenemies, heroes = nheroes}
+    let
+        nboard =
+            case enemy.class of
+                Warrior ->
+                    let
+                        (nenemies, nheroes) =
+                            actionSmartWarrior board enemy
+                    in
+                    {board| enemies = nenemies, heroes = nheroes}
 
-        Archer ->
-            let
-                (nenemies, nheroes) =
-                    actionSmartArcher board enemy
-            in
-            {board| enemies = nenemies, heroes = nheroes}
+                Archer ->
+                    let
+                        (nenemies, nheroes) =
+                            actionSmartArcher board enemy
+                    in
+                    {board| enemies = nenemies, heroes = nheroes}
 
-        Mage ->
-            --ToDo some operations
-            actionSmartMage board enemy
+                Mage ->
+                    --ToDo some operations
+                    actionSmartMage board enemy
 
-        Assassin ->
-            board
+                Assassin ->
+                    board
 
-        Healer ->
-            board
+                Healer ->
+                    board
+    in
+    nboard
+    |> breakItem enemy
 
 
 actionSmartWarrior : Board -> Enemy -> ( List Enemy, List Hero )
@@ -220,3 +225,11 @@ checkEnemyDone enemy =
 --         nheroes = List.filter (\x -> x.health > 0) board.heroes
 --     in
 --     {board | heroes = nheroes, enemies = nenemy}
+
+breakItem : Enemy -> Board -> Board
+breakItem enemy board =
+    let
+        chosenItem = pos2Item board.item enemy.pos
+        otherItems = listDifference board.item [chosenItem]
+    in
+        { board |  item = otherItems }
