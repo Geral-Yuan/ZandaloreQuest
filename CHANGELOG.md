@@ -7,6 +7,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.28] -- 2022-7-10
+
+### Added 
+
+- added pattern matching for gold  
+### Changed
+
+- the viewItem function to display the gold properly
+
 ## [m1.27] -- 2022-7-10
 
 ### Added 
