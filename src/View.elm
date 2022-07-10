@@ -29,6 +29,7 @@ view model =
 
                 Castle ->
                     viewCastle model
+                    
 
                 Shop ->
                     viewShop model
@@ -144,6 +145,8 @@ viewClickPosition model =
 
 
 -- Just for tips now. Later I will delete it
+
+
 
 
 viewTips : Html Msg

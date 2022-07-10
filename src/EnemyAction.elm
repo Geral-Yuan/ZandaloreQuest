@@ -26,21 +26,12 @@ actionSmartEnemy board enemy =
         nboard =
             case enemy.class of
                 Warrior ->
-                    let
-                        (nenemies, nheroes) =
-                            actionSmartWarrior board enemy
-                    in
-                    {board| enemies = nenemies, heroes = nheroes}
+                    actionSmartWarrior board enemy
 
                 Archer ->
-                    let
-                        (nenemies, nheroes) =
-                            actionSmartArcher board enemy
-                    in
-                    {board| enemies = nenemies, heroes = nheroes}
+                    actionSmartArcher board enemy
 
                 Mage ->
-                    --ToDo some operations
                     actionSmartMage board enemy
 
                 Assassin ->
@@ -50,10 +41,9 @@ actionSmartEnemy board enemy =
                     board
     in
     nboard
-    |> breakItem enemy
+    |> breakItem (index2Enemy enemy.indexOnBoard nboard.enemies)
 
-
-actionSmartWarrior : Board -> Enemy -> ( List Enemy, List Hero )
+actionSmartWarrior : Board -> Enemy -> Board
 actionSmartWarrior board enemy =
     let
         route =
@@ -63,14 +53,16 @@ actionSmartWarrior board enemy =
     in
     case route of
         [] ->
+            eh2Board 
             ( { enemy | done = True } :: otherenemies
             , enemyWarriorAttack enemy board.heroes
                 |> List.filter (\x -> x.health > 0)
-            )
+            ) board
 
         first :: _ ->
+            eh2Board 
             ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes )
+            , board.heroes ) board
 
 
 enemyWarriorAttack : Enemy -> List Hero -> List Hero
@@ -115,7 +107,7 @@ enemyArcherAttack enemy board =
     List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
 
 
-actionSmartArcher : Board -> Enemy -> ( List Enemy, List Hero )
+actionSmartArcher : Board -> Enemy -> Board
 actionSmartArcher board enemy =
     let
         route =
@@ -126,14 +118,16 @@ actionSmartArcher board enemy =
     in
     case route of
         [] ->
+            eh2Board
             ( { enemy | done = True } :: otherenemies
             , enemyArcherAttack enemy board
                 |> List.filter (\x -> x.health > 0)
-            )
+            ) board
 
         first :: _ ->
+            eh2Board
             ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes )
+            , board.heroes ) board
 
 
 actionSmartMage : Board -> Enemy -> Board
@@ -160,6 +154,7 @@ actionSmartMage board enemy =
 
         first :: _ ->
             {board | enemies = (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies }
+
 
 
 enemyMageAttack : Enemy -> Board -> Board
@@ -233,3 +228,16 @@ breakItem enemy board =
         otherItems = listDifference board.item [chosenItem]
     in
         { board |  item = otherItems }
+
+eh2Board : (List Enemy, List Hero) -> Board -> Board
+eh2Board (l_enemy, l_hero) board =
+    {board | enemies = l_enemy, heroes = l_hero}
+
+index2Enemy : Int -> List Enemy -> Enemy
+index2Enemy index l_enemy =
+    case List.filter (\x -> (index == x.indexOnBoard)) l_enemy of
+        [] ->
+            Enemy Warrior ( 0, 0 ) -1 15 5 3 False 0
+        chosen :: _ ->
+            chosen
+

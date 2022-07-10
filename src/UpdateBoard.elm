@@ -1,12 +1,11 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (selectedHero, unselectedHero, pos2Item)
+import Action exposing (selectedHero, unselectedHero, pos2Item, index2Hero)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy)
 import HeroAttack exposing (checkAttack)
 import Message exposing (Msg(..))
-import Action exposing (pos2Hero)
 
 
 updateBoard : Msg -> Board -> Board
@@ -150,7 +149,7 @@ moveHero board dir =
                 _ ->
                     ( 0, 0 )
 
-        (doneboard, donepos) = case selectedHero board.heroes of
+        (nboard, ind) = case selectedHero board.heroes of
                         Nothing ->
                             (board, Nothing)
 
@@ -165,16 +164,16 @@ moveHero board dir =
                             in
                             if legalHeroMove board hero dr && hero.energy > 1 then
                                 ({ board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
-                                , Just newPos)
+                                , Just hero.indexOnBoard)
                             else
-                                (board, Just hero.pos)
+                                (board, Just hero.indexOnBoard)
     in
-    case donepos of
+    case ind of
         Nothing ->
             board
-
-        Just pos ->
-            checkHeroItem (pos2Hero doneboard.heroes pos) doneboard
+        Just n ->
+            nboard
+            |> checkHeroItem (index2Hero n nboard.heroes)
     
 
 

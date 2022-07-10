@@ -156,4 +156,11 @@ pos2Hero all_hero pos =
         chosen :: _ ->
             chosen
 
+index2Hero : Int -> List Hero -> Hero
+index2Hero index l_hero =
+    case List.filter (\x -> (index == x.indexOnBoard)) l_hero of
+        [] ->
+            Hero Warrior ( 0, 0 ) -1 15 5 3 False 0
+        chosen :: _ ->
+            chosen
 

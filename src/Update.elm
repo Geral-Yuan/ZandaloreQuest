@@ -400,7 +400,7 @@ generateCrate model =
             generateCrate model
 
         head :: rest ->
-            Random.uniform HealthPotion [ EnergyPotion, Gold 1]
+            Random.uniform HealthPotion [ EnergyPotion, (Gold 1)]
                 |> Random.pair (Random.uniform head rest)
 
 

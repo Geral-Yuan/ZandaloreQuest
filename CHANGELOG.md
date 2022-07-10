@@ -7,7 +7,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
-## [m1.25] -- 2022-7-9
+## [m1.26] -- 2022-7-10
+
+### Added
+
+- View the coins that the character has
+- checkEnd and settlement awards
+
+
+### Changed
+
+- Change Gold into Gold Int
+- use index to check interactions between items and (heroes & enemies)
+
+
+## [m1.25] -- 2022-7-10
 
 ### Added
 
