@@ -17,6 +17,7 @@ type alias Model =
     , character : RpgCharacter
     , chosenHero : List Int
     , bag : Bag
+    , previousMode : GameMode
 
     -- , time : Float
     }
@@ -38,8 +39,8 @@ initCharacter =
     , moveDown = False
     , latestDir = Right
     , faceDir = Right
-    , height = 75
-    , width = 75
+    , height = 65
+    , width = 65
     , speed = 500
     , move_range = ( pixelWidth, pixelHeight )
     }
@@ -51,7 +52,7 @@ initCharacter =
 
 initModel : Model
 initModel =
-    { mode = Logo
+    { mode = Castle
     , indexedheroes =
         [ ( Hero Warrior ( 0, 0 ) 80 15 5 5 False 0, 1 )
         , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
@@ -63,6 +64,7 @@ initModel =
     , character = initCharacter
     , chosenHero = []
     , bag = initBag
+    , previousMode = BoardGame 1
 
     -- , time = 0
     }
