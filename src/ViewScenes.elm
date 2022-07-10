@@ -372,24 +372,24 @@ viewShop model =
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "300px"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
             ]
-            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
-            ]
-        , div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1400px"
-            ]
-            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
             ]
-            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"
@@ -409,6 +409,9 @@ viewShop model =
                 []
             ]
         , viewCharacterPos model.character
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
         ]
 
 
