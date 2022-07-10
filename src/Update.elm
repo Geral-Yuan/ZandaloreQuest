@@ -43,7 +43,7 @@ update msg model =
                         _ ->
                             ( model, Cmd.none )
 
-                BoardGame _ ->
+                BoardGame ->
                     case msg of
                         ViewTutorial ->
                             ( { model | previousMode = model.mode, mode = Tutorial 1 }, Cmd.none )
@@ -57,12 +57,13 @@ update msg model =
                                 |> randomEnemies
                                 |> checkEnd
 
-                -- Logo ->
-                --     ( updateScene msg model, Cmd.none )
-                HeroChoose k ->
+                Logo ->
+                    ( updateScene msg model, Cmd.none )
+
+                HeroChoose ->
                     ( model
                         |> checkChooseClick msg
-                        |> checkConfirm msg k
+                        |> checkConfirm msg
                     , Cmd.none
                     )
 
@@ -111,12 +112,16 @@ checkChooseClick msg model =
             model
 
 
-checkConfirm : Msg -> Int -> Model -> Model
-checkConfirm msg k model =
+checkConfirm : Msg -> Model -> Model
+checkConfirm msg model =
+    let
+        level =
+            model.level
+    in
     case msg of
         Confirm ->
             if List.length model.chosenHero == 3 then
-                { model | mode = BoardGame k, board = initBoard (confirmHeroes model) k }
+                { model | mode = BoardGame, board = initBoard (confirmHeroes model) level, chosenHero = [] }
 
             else
                 model
@@ -169,7 +174,7 @@ isReachable : GameMode -> ( Float, Float ) -> Bool
 isReachable mode ( x, y ) =
     case mode of
         Castle ->
-            (x > 250 && x < 1700 && y > 780 && y < 850) || (x > 580 && x < 1400 && y < 781 && y > 420)
+            (x > 320 && x < 1690 && y > 780 && y < 850) || (x > 580 && x < 1430 && y <= 780 && y > 400)
 
         Shop ->
             x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
@@ -269,7 +274,7 @@ updateRPG msg model =
                         ( { model | mode = Shop, character = { character | width = 90, height = 90, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
 
                     else if x > 950 && x < 1050 && y < 450 then
-                        ( { model | mode = HeroChoose 1 }, Task.perform GetViewport getViewport )
+                        ( { model | mode = HeroChoose }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
@@ -506,7 +511,12 @@ randomCrate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 randomCrate msg ( model, cmd ) =
     case msg of
         EndTurn ->
-            ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+            case model.board.turn of
+                HeroTurn ->
+                    ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+
+                EnemyTurn ->
+                    ( model, cmd )
 
         _ ->
             ( model, cmd )
@@ -562,10 +572,11 @@ checkEnd ( model, cmd ) =
 
         nmodel =
             case model.mode of
-                BoardGame _ ->
-                    if List.isEmpty myboard.enemies then
+                BoardGame ->
+                    if List.isEmpty myboard.enemies && myboard.spawn == 0 then
                         { model
                             | mode = Castle
+                            , level = model.level + 1
                             , bag = addCoin model.bag wincoins
                         }
 

@@ -18,7 +18,7 @@ type alias Model =
     , chosenHero : List Int
     , bag : Bag
     , previousMode : GameMode
-
+    , level : Int
     -- , time : Float
     }
 
@@ -52,20 +52,20 @@ initCharacter =
 
 initModel : Model
 initModel =
-    { mode = Castle
+    { mode = Logo
     , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 80 15 5 5 False 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
-        , ( Hero Mage ( 0, 0 ) 50 12 5 3 False 0, 4 )
+        [ ( Hero Warrior ( 0, 0 ) 80 15 5 False 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 20 5 False 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 20 6 False 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 12 3 False 0, 4 )
         ]
     , board = sampleBoard
     , size = ( 1500, 1000 )
     , character = initCharacter
     , chosenHero = []
     , bag = initBag
-    , previousMode = BoardGame 1
-
+    , previousMode = BoardGame
+    , level = 1
     -- , time = 0
     }
 

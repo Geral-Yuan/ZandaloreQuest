@@ -27,22 +27,34 @@ initObstacles : Int -> List Obstacle
 initObstacles k =
     -- need to change this
     case k of
+        1 ->
+            List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 6 ), ( 5, 5 ), ( 6, 2 ) ]
+                ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 3)
+                   , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
+                   ]
+
         _ ->
-            [ Obstacle Unbreakable ( 5, 5 ) NoItem
-            , Obstacle Unbreakable ( 2, 6 ) NoItem
-            , Obstacle Unbreakable ( 6, 2 ) NoItem
-            , Obstacle MysteryBox ( 4, 8 ) (Gold 3)
-            , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
-            ]
+            List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 1, 9 ), ( 3, 7 ), ( 5, 5 ), ( 7, 3 ), ( 9, 1 ) ]
+                ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 3)
+                   , Obstacle MysteryBox ( 4, 6 ) EnergyPotion
+                   , Obstacle MysteryBox ( 6, 4 ) HealthPotion
+                   , Obstacle MysteryBox ( 8, 2 ) (Gold 3)
+                   ]
 
 
 initenemy : Int -> List Enemy
 initenemy k =
     case k of
+        1 ->
+            [ sampleEnemy Archer ( 3, 3 ) 1
+            , sampleEnemy Mage ( 1, 8 ) 2
+            , sampleEnemy Warrior ( 5, 2 ) 3
+            ]
+
         _ ->
-            [ Enemy Archer ( 3, 3 ) 100 15 5 0 True 1
-            , Enemy Mage ( 1, 8 ) 100 9 1 0 True 2
-            , Enemy Warrior ( 5, 2 ) 100 10 5 0 True 3
+            [ sampleEnemy Archer ( 1, 5 ) 1
+            , sampleEnemy Mage ( 3, 3 ) 2
+            , sampleEnemy Warrior ( 5, 1 ) 3
             ]
 
 
@@ -54,7 +66,7 @@ inithero heroes k =
 initPosition : Int -> Hero -> Hero
 initPosition k hero =
     case k of
-        _ ->
+        1 ->
             case hero.indexOnBoard of
                 1 ->
                     { hero | pos = ( 6, 6 ) }
@@ -65,12 +77,31 @@ initPosition k hero =
                 _ ->
                     { hero | pos = ( 8, 5 ) }
 
+        _ ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 5, 9 ) }
+
+                2 ->
+                    { hero | pos = ( 7, 7 ) }
+
+                _ ->
+                    { hero | pos = ( 9, 5 ) }
+
+
+spawnTimes : Int -> Int
+spawnTimes k =
+    case k of
+        1 ->
+            0
+
+        _ ->
+            1
+
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    case k of
-        _ ->
-            Board map (initObstacles k) (initenemy k) (inithero heroes k) HeroTurn 0 [] [] [] [] 0 1 3 ( 0, 0 ) 0
+    Board map (initObstacles k) (initenemy k) (inithero heroes k) HeroTurn 0 [] [] [] [] 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0
 
 
 sampleBoard : Board

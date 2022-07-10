@@ -9,7 +9,6 @@ import Message exposing (..)
 import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewOthers exposing (viewBoardCoin)
 import ViewScenes exposing (viewBagCoin)
 
 
@@ -138,7 +137,7 @@ viewFrame : Int -> Svg Msg
 viewFrame index =
     let
         y =
-            ((index - 1) // 3) * 500 + 50
+            ((index - 1) // 3) * 400 + 50
 
         x =
             modBy 3 (index - 1) * 600 + 200
@@ -160,7 +159,7 @@ viewYourHeroes : ( Hero, Int ) -> Svg Msg
 viewYourHeroes ( hero, index ) =
     let
         y =
-            ((index - 1) // 3) * 500 + 100
+            ((index - 1) // 3) * 400 + 100
 
         x =
             modBy 3 (index - 1) * 600 + 250

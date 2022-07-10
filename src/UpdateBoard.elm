@@ -27,7 +27,12 @@ updateBoard msg board =
         --                EnemyTurn ->
         --                    board
         EndTurn ->
-            turnEnemy board
+            case board.turn of
+                HeroTurn ->
+                    turnEnemy board
+
+                EnemyTurn ->
+                    board
 
         Tick elapsed ->
             let
@@ -255,7 +260,7 @@ spawnEnemies list_class list_pos board =
         let
             n_enemies =
                 List.range (board.index + 1) (board.index + 3)
-                    |> List.map3 mapClassEnemy list_class list_pos
+                    |> List.map3 sampleEnemy list_class list_pos
         in
         { board | enemies = n_enemies, spawn = board.spawn - 1 }
 
@@ -264,26 +269,28 @@ spawnEnemies list_class list_pos board =
 
 
 
--- the stats of each enemies can be changed later
+{-
+   -- the stats of each enemies can be changed later
 
 
-mapClassEnemy : Class -> Pos -> Int -> Enemy
-mapClassEnemy class pos idx =
-    case class of
-        Warrior ->
-            Enemy class pos 100 10 5 0 False idx
+   mapClassEnemy : Class -> Pos -> Int -> Enemy
+   mapClassEnemy class pos idx =
+       case class of
+           Warrior ->
+               Enemy class pos 100 10 0 False idx
 
-        Archer ->
-            Enemy class pos 100 10 5 0 False idx
+           Archer ->
+               Enemy class pos 100 10 0 False idx
 
-        Assassin ->
-            Enemy class pos 100 10 5 0 False idx
+           Assassin ->
+               Enemy class pos 100 10 0 False idx
 
-        Mage ->
-            Enemy class pos 100 10 5 0 False idx
+           Mage ->
+               Enemy class pos 100 10 0 False idx
 
-        Healer ->
-            Enemy class pos 100 10 5 0 False idx
+           Healer ->
+               Enemy class pos 100 10 0 False idx
+-}
 
 
 spawnCrate : Pos -> ItemType -> Board -> Board
