@@ -6,6 +6,179 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.28] -- 2022-7-10
+
+### Added 
+
+- added pattern matching for gold  
+### Changed
+
+- the viewItem function to display the gold properly
+
+## [m1.27] -- 2022-7-10
+
+### Added 
+
+- A few gifs and images to assets
+
+- Buying items in game mode
+
+- Key C to talk to NPCs
+
+- Talk, UpgradeHealth, UpgradeDamage and ExitShop to msg type 
+
+- updateHealth and updateDamage functions
+
+- Energypotion function 
+
+- viewShopChoose to let players see what they want to buy 
+
+- chatbox gif and shopkeeper in the shop 
+
+### Changed
+
+- healthpotion in InitObstacles to energypotion and gold
+
+- optimized the updateRPG function to include the shope system 
+
+## [m1.26] -- 2022-7-10
+
+### Added
+
+- View the coins that the character has
+- checkEnd and settlement awards
+
+
+### Changed
+
+- Change Gold into Gold Int
+- use index to check interactions between items and (heroes & enemies)
+
+
+## [m1.25] -- 2022-7-10
+
+### Added
+
+- Heroes can pick coins
+- bag field in Model
+- coin field in Bag
+- Enemies can break items
+
+## [m1.24] -- 2022-7-9
+
+### Added
+
+- Enemy Mage can break breakable obstacles
+
+### Changed
+
+- Move the checkAttackObstacle function from `HeroAttack.elm` to `Action.elm`
+- Change the output related to attack mage from (Enemy, List Hero) to Board
+
+### Fixed
+
+- Enemy will seckill heroes behind the obstacle
+
+
+
+## [m1.23] -- 2022-7-9
+
+### Added
+
+- Detecting the position of the mouse and higlight the attack target when the mouse is in the attackable range.
+
+- Choose heroes at the beginning of the board game.
+
+- Initialize heroes in the `Board` according to the choice of the player and the current content of the `Model`
+
+### Fixed
+
+- Resize of RPG scenes.
+
+- Attack for hero mage.
+
+## [m1.22] -- 2022-7-8
+
+### Added
+- EnergyPotion in ItemType
+- SpawnCrate message
+- randomCrate, generateCrate, possibleCratePosiiton functions in `update.elm` to generate crate randomly
+- spawnCrate function in `updateboard.elm` to place the generated crate
+- Crate.png, EnergyPotion.png, Gold.png, HealthPotion.png, HealerBlue.png, HealerRed.png
+- viewCrate, viewItem functions in `view.elm` to display mystery boxes and items
+
+### Changed
+- Image file name from Bad to Red and Good to Blue
+- Generalize the viewEnemy and viewHero funciton
+
+### Removed
+- Stop displaying red and logo hexagon for health potion and mystery box
+
+### Fixed
+- Prevent randomly generate enemy in the same position
+
+
+## [m1.21] -- 2022-7-6
+
+### Added
+
+- Subsubneighbour.
+
+- Movement and Attack of Mage Enemy. Mage Enemy will automatically go to the nearest position where it can attack the hero. The AOE attack effect is the same as the mage hero. It will automatically choose to attack as many heroes as possible.
+
+- Related functions of Movement and Attack of Mage Enemy.
+
+## [m1.20] -- 2022-7-6
+
+### Added
+
+- Castle, shop and Logo to gameMode 
+
+- Left, Down, Up, Right to Dir type and key 
+
+- Enter Bool in message to skip scenes 
+
+- InitCharacter, InitRPG, InitLevel, Board_1, Castle_1, Shop_2 in model 
+
+- RpgCharacter file with moveCharacter, isLegalMoveCharacter, characterPosition functions and RpgCharacter type
+
+- UpdateCharacter, UpdateRPG, UpdateScene to ensure scene change on RPG map 
+
+- ViewScene files with all the relevant scenes for RPG
+
+- faceDir in model
+
+- different cases in moveCharacter to ensure that movements will be smoother
+
+### Changed
+
+- RpgCharacter type in model 
+
+- Optimized Update function to accommodate new functions for RPG 
+
+- Optimized View function to accommodate new functions for RPG 
+
+## [m1.19] -- 2022-7-5
+
+### Changed
+
+- Change input of the previous `shortestPath` function from `Pos` to `List Pos`, and correspondingly change the input `end` to `end_list`.
+- Change the `leastPathFind` functions for warriors and archers to implement the more efficient `shortestPath`.
+
+## [m1.18] -- 2022-7-5
+
+### Added
+- Added field spawn and index in type alias Board
+- Added randomEnemies, groupClasses, groupPositions, choosePositions, and possiblePosition function
+- Added spawnEnemies, mapClassEnemy function
+- Added Spawn and Kill Msg
+- Added Key 75 to kill all the enemy
+- Added listDifference
+
+### Changed
+- display enemies' position too
+
 ## [m1.17] -- 2022-7-4
 
 ### Added

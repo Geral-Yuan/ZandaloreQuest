@@ -1,6 +1,6 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (checkItemType, selectedHero, unselectedHero)
+import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy)
@@ -19,14 +19,13 @@ updateBoard msg board =
                 EnemyTurn ->
                     board
 
---        Select class False ->
---            case board.turn of
---                HeroTurn ->
---                    selectHero board class
---
---                EnemyTurn ->
---                    board
-
+        --        Select class False ->
+        --            case board.turn of
+        --                HeroTurn ->
+        --                    selectHero board class
+        --
+        --                EnemyTurn ->
+        --                    board
         EndTurn ->
             turnEnemy board
 
@@ -40,7 +39,7 @@ updateBoard msg board =
                         EnemyTurn ->
                             { board | time = board.time + elapsed / 1000 }
             in
-            if nboard.time > 1 then
+            if nboard.time > 0.5 then
                 { nboard | time = 0 }
                     |> actionEnemy
                     |> checkTurn
@@ -51,6 +50,15 @@ updateBoard msg board =
         Attack pos critical ->
             checkAttack board pos critical
 
+        SpawnEnemy ( list_class, list_pos ) ->
+            spawnEnemies list_class list_pos board
+
+        SpawnCrate ( pos, itype ) ->
+            spawnCrate pos itype board
+
+        Kill False ->
+            { board | enemies = [] }
+
         _ ->
             board
 
@@ -59,10 +67,27 @@ turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
-        , enemies = List.map (\enemy -> { enemy | done = False, steps = 2 }) board.enemies
+        , enemies = List.map resetSteps board.enemies
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
         , time = 0
     }
+
+
+resetSteps : Enemy -> Enemy
+resetSteps enemy =
+    let
+        nstep =
+            case enemy.class of
+                Mage ->
+                    1
+
+                Assassin ->
+                    3
+
+                _ ->
+                    2
+    in
+    { enemy | steps = nstep, done = False }
 
 
 resetEnergy : Hero -> Hero
@@ -120,31 +145,76 @@ moveHero board dir =
 
                 A ->
                     ( -1, 1 )
+
+                _ ->
+                    ( 0, 0 )
+
+        ( nboard, ind ) =
+            case selectedHero board.heroes of
+                Nothing ->
+                    ( board, Nothing )
+
+                Just hero ->
+                    let
+                        currEnergy =
+                            hero.energy
+
+                        newPos =
+                            vecAdd hero.pos dr
+                    in
+                    if legalHeroMove board hero dr && hero.energy > 1 then
+                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
+                        , Just hero.indexOnBoard
+                        )
+
+                    else
+                        ( board, Just hero.indexOnBoard )
     in
-    case selectedHero board.heroes of
+    case ind of
         Nothing ->
             board
 
-        Just hero ->
-            let
-                currEnergy =
-                    hero.energy
+        Just n ->
+            nboard
+                |> checkHeroItem (index2Hero n nboard.heroes)
 
-                newPos =
-                    vecAdd hero.pos dr
 
-                currHealth =
-                    hero.health
-            in
-            if legalHeroMove board hero dr && hero.energy > 1 then
-                if List.member HealthPotion (List.map (checkItemType newPos) board.item) then
-                    { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, health = currHealth + 10 } :: unselectedHero board.heroes, item = List.filter (\item -> item.pos /= newPos) board.item }
+checkHeroItem : Hero -> Board -> Board
+checkHeroItem hero board =
+    let
+        otherHeroes =
+            listDifference board.heroes [ hero ]
 
-                else
-                    { board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
+        chosenItem =
+            pos2Item board.item hero.pos
 
-            else
-                board
+        otherItems =
+            listDifference board.item [ chosenItem ]
+    in
+    case chosenItem.itemType of
+        HealthPotion ->
+            { board
+                | heroes = { hero | health = hero.health + 10 } :: otherHeroes
+                , item = otherItems
+            }
+
+        Gold n ->
+            { board
+                | item = otherItems
+                , coins = board.coins + n
+            }
+
+        EnergyPotion ->
+            { board
+                | heroes = { hero | energy = hero.energy + 2 } :: otherHeroes
+                , item = otherItems
+            }
+
+        Buff ->
+            board
+
+        NoItem ->
+            board
 
 
 
@@ -177,6 +247,55 @@ selectHero board index =
             List.map (\hero -> { hero | selected = False }) unwantedHero
     in
     { board | heroes = newwantedHero ++ newunwantedHero }
+
+
+spawnEnemies : List Class -> List Pos -> Board -> Board
+spawnEnemies list_class list_pos board =
+    if List.length board.enemies == 0 && board.spawn > 0 then
+        let
+            n_enemies =
+                List.range (board.index + 1) (board.index + 3)
+                    |> List.map3 mapClassEnemy list_class list_pos
+        in
+        { board | enemies = n_enemies, spawn = board.spawn - 1 }
+
+    else
+        board
+
+
+
+-- the stats of each enemies can be changed later
+
+
+mapClassEnemy : Class -> Pos -> Int -> Enemy
+mapClassEnemy class pos idx =
+    case class of
+        Warrior ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Archer ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Assassin ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Mage ->
+            Enemy class pos 100 10 5 0 False idx
+
+        Healer ->
+            Enemy class pos 100 10 5 0 False idx
+
+
+spawnCrate : Pos -> ItemType -> Board -> Board
+spawnCrate pos itype board =
+    let
+        crate =
+            Obstacle MysteryBox pos itype
+
+        nobstacles =
+            crate :: board.obstacles
+    in
+    { board | obstacles = nobstacles }
 
 
 

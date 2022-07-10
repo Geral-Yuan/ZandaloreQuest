@@ -14,29 +14,19 @@ viewEnemy enemy =
     let
         ( x, y ) =
             findPos enemy.pos
-    in
-    case enemy.class of
-        Healer ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/MageBad.png"
-                ]
-                []
 
-        class ->
-            Svg.image
-                [ SvgAttr.width "80"
-                , SvgAttr.height "80"
-                , SvgAttr.x (toString (x - 40))
-                , SvgAttr.y (toString (y - 40))
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Bad.png")
-                ]
-                []
+        class =
+            toString enemy.class
+    in
+    Svg.image
+        [ SvgAttr.width "80"
+        , SvgAttr.height "80"
+        , SvgAttr.x (toString (x - 40))
+        , SvgAttr.y (toString (y - 40))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
+        ]
+        []
 
 
 viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
@@ -85,10 +75,23 @@ getEnemy defaultoutput enemy n =
 viewEnemyInfo : Enemy -> Int -> Html Msg
 viewEnemyInfo enemy n =
     -- display health and energy
+    let
+        idx =
+            toString enemy.indexOnBoard
+
+        health =
+            toString enemy.health
+
+        ( x, y ) =
+            enemy.pos
+
+        ( xs, ys ) =
+            ( toString x, toString y )
+    in
     div
         [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
         , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "black"
+        , HtmlAttr.style "color" "blue"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
@@ -96,4 +99,4 @@ viewEnemyInfo enemy n =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Enemy" ++ toString enemy.indexOnBoard ++ ":" ++ toString enemy.health) ]
+        [ text ("Enemy" ++ idx ++ ": " ++ health ++ " ( " ++ xs ++ " , " ++ ys ++ " ) ") ]

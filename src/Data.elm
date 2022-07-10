@@ -8,8 +8,16 @@ import Svg.Attributes exposing (x2, y2)
 
 
 type GameMode
-    = RPG
-    | BoardGame
+    = Castle
+    | Shop
+    | BuyingItems
+    | HeroChoose Int
+      -- | Starting
+      -- | ClearLevel Int
+      -- | Gameover Int
+    | BoardGame Int
+    | Logo
+    | Tutorial Int
 
 
 type alias Pos =
@@ -40,12 +48,12 @@ type Class
 type ObstacleType
     = MysteryBox
     | Unbreakable
-    | NoObstacle
 
 
 type ItemType
     = HealthPotion
-    | Gold
+    | EnergyPotion
+    | Gold Int
     | Buff
     | NoItem
 
@@ -94,9 +102,18 @@ type Dir
     | X
     | Z
     | A
+    | Left
+    | Right
+    | Up
+    | Down
 
 
 
+-- type RpgDir
+--     = Left
+--     | Right
+--     | Up
+--     | Down
 -- Basic values
 
 
@@ -130,6 +147,12 @@ subneighbour =
     [ ( 2, 0 ), ( 1, 1 ), ( 0, 2 ), ( -1, 2 ), ( -2, 2 ), ( -2, 1 ), ( -2, 0 ), ( -1, -1 ), ( 0, -2 ), ( 1, -2 ), ( 2, -2 ), ( 2, -1 ) ]
 
 
+subsubneighbour : List Pos
+subsubneighbour =
+    List.map (\y -> List.concatMap (\x -> [ vecAdd x y ]) neighbour) subneighbour
+        |> unionList
+
+
 map : List Pos
 map =
     List.concat
@@ -152,8 +175,8 @@ map =
 -- Basic Functions
 
 
-neighbotToDir : Pos -> Dir
-neighbotToDir pos =
+neighborToDir : Pos -> Dir
+neighborToDir pos =
     if pos == ( -1, 0 ) then
         W
 
@@ -173,14 +196,37 @@ neighbotToDir pos =
         A
 
 
+extentPos : List Pos -> List Pos -> List Pos
+extentPos posList relativePos =
+    List.concat (List.map (\pos -> List.map (vecAdd pos) relativePos) posList)
+
+
 sameline : Pos -> List Pos
 sameline pos =
     List.map (\k -> vecScale k pos) (List.range 1 8)
 
 
-listintersection : List a -> List a -> List a
-listintersection list1 list2 =
+listIntersection : List a -> List a -> List a
+listIntersection list1 list2 =
     List.filter (\x -> List.member x list2) list1
+
+
+intersectionList : List (List a) -> List a
+intersectionList llist =
+    case llist of
+        [] ->
+            []
+
+        [ list ] ->
+            list
+
+        list1 :: (list2 :: rest) ->
+            intersectionList (listIntersection list1 list2 :: rest)
+
+
+listDifference : List a -> List a -> List a
+listDifference list1 list2 =
+    List.filter (\x -> not (List.member x list2)) list1
 
 
 listUnion : List a -> List a -> List a
@@ -233,6 +279,39 @@ cartesianProduct f x y =
 findPos : ( Int, Int ) -> ( Float, Float )
 findPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
+
+
+findChosenHero : ( Float, Float ) -> Int
+findChosenHero ( x, y ) =
+    let
+        row =
+            if y > 100 && y < 400 then
+                1
+
+            else if y > 600 && y < 900 then
+                2
+
+            else
+                0
+
+        column =
+            if x > 250 && x < 550 then
+                1
+
+            else if x > 850 && x < 1150 then
+                2
+
+            else if x > 1450 && x < 1750 then
+                3
+
+            else
+                0
+    in
+    if row == 0 || column == 0 then
+        0
+
+    else
+        (row - 1) * 3 + column
 
 
 findInfoBoard : ( Float, Float ) -> Int

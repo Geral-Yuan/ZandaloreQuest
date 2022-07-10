@@ -1,10 +1,10 @@
 module HeroAttack exposing (checkAttack, generateDamage)
 
+import Action exposing (selectedHero, unselectedHero, checkAttackObstacle)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import Random exposing (..)
-import Action exposing (checkObstacleType, selectedHero, unselectedHero)
 
 
 randomDamage : Generator Critical
@@ -31,7 +31,8 @@ checkAttack board pos critical =
             board
 
         Just hero ->
-            if hero.energy > 2 && List.member pos (listintersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
+            if hero.energy > 2 && isMeaningfulAttack board hero.class pos then
+                --    if hero.energy > 2 && List.member pos (listIntersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
                 let
                     newheroes =
                         { hero | energy = hero.energy - 3 } :: unselectedHero board.heroes
@@ -52,45 +53,56 @@ checkAttack board pos critical =
 
                             _ ->
                                 0
+
+                    attackedPoslist =
+                        case hero.class of
+                            Mage ->
+                                pos :: List.map (vecAdd pos) neighbour
+
+                            _ ->
+                                [ pos ]
                 in
-                checkAttackTarget { board | critical = newcritical, heroes = newheroes } pos
+                List.foldl checkAttackTarget { board | critical = newcritical, heroes = newheroes } attackedPoslist
 
             else
                 board
 
 
-checkAttackTarget : Board -> Pos -> Board
-checkAttackTarget board pos =
-    if List.member MysteryBox (List.map (checkObstacleType pos) board.obstacles) || List.member Unbreakable (List.map (checkObstacleType pos) board.obstacles) then
-        checkAttackBarrier board pos
+isMeaningfulAttack : Board -> Class -> Pos -> Bool
+isMeaningfulAttack board class pos =
+    case class of
+        Mage ->
+            List.member pos (listIntersection board.attackable (extentPos (meaningfulTarget board) (( 0, 0 ) :: neighbour)))
 
-    else
-        checkAttackEnemy board pos
-
-
-checkAttackBarrier : Board -> Pos -> Board
-checkAttackBarrier board position =
-    case selectedHero board.heroes of
-        Nothing ->
-            board
-
-        Just hero ->
-            let
-                ( attacked, others ) =
-                    List.partition (\barrier -> barrier.pos == position) board.obstacles
-
-                ( attackBreakable, attackOthers ) =
-                    List.partition (\barrier -> barrier.obstacleType == MysteryBox) attacked
-            in
-            case hero.class of
-                -- Mage ->
-                --     { board | obstacles = List.filter (\bpos -> List.member bpos (pos :: List.map (vecAdd pos) neighbour)) board.obstacles }
-                _ ->
-                    { board | obstacles = attackOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackBreakable ++ board.item }
+        _ ->
+            List.member pos (listIntersection board.attackable (meaningfulTarget board))
 
 
-checkAttackEnemy : Board -> Pos -> Board
-checkAttackEnemy board pos =
+meaningfulTarget : Board -> List Pos
+meaningfulTarget board =
+    List.map .pos board.enemies ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
+
+
+checkAttackTarget : Pos -> Board -> Board
+checkAttackTarget pos board =
+    board
+        |> checkAttackObstacle [pos]
+        |> checkAttackEnemy pos
+
+
+{-
+   checkAttackTarget : Pos -> Board -> Board
+   checkAttackTarget pos board =
+       if List.member MysteryBox (List.map (checkObstacleType pos) board.obstacles) || List.member Unbreakable (List.map (checkObstacleType pos) board.obstacles) then
+           checkAttackObstacle board pos
+
+       else
+           checkAttackEnemy board pos
+-}
+
+
+checkAttackEnemy : Pos -> Board -> Board
+checkAttackEnemy pos board =
     case selectedHero board.heroes of
         Nothing ->
             board
@@ -98,12 +110,7 @@ checkAttackEnemy board pos =
         Just hero ->
             let
                 ( attackedEnemies, otherEnemies ) =
-                    case hero.class of
-                        Mage ->
-                            List.partition (\enemy -> List.member enemy.pos (pos :: List.map (vecAdd pos) neighbour)) board.enemies
-
-                        _ ->
-                            List.partition (\enemy -> enemy.pos == pos) board.enemies
+                    List.partition (\enemy -> enemy.pos == pos) board.enemies
             in
             { board | enemies = List.filter (\{ health } -> health > 0) (List.map (damageEnemy hero.damage board.critical) attackedEnemies ++ otherEnemies) }
 
@@ -172,4 +179,3 @@ damageEnemy damage critical enemy =
        else
            hero
 -}
-

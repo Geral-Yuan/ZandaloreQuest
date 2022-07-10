@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onResize)
+import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
 import Data exposing (..)
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
@@ -24,6 +24,7 @@ subscriptions _ =
         , onKeyDown (Decode.map (key True) keyCode)
         , onResize Resize
         , onClick (Decode.map2 Click decodeFractionX decodeFractionY)
+        , onMouseMove (Decode.map2 Point decodeFractionX decodeFractionY)
         ]
 
 
@@ -48,27 +49,44 @@ key on keycode =
         65 ->
             Key A on
 
---        49 ->
---            -- Key 1
---            -- This might have to change because players can select 3 heroes from their inventory
---            Select Warrior on
+        13 ->
+            Enter on
 
---        50 ->
---            -- Key 2
---            Select Archer on
+        37 ->
+            Key Left on
 
---        51 ->
---            -- Key 3
---            Select Assassin on
+        38 ->
+            Key Up on
 
---        52 ->
---            -- Key 4
---            Select Mage on
+        39 ->
+            Key Right on
 
---        53 ->
---            -- Key 5
---            Select Healer on
+        40 ->
+            Key Down on
 
+        67 ->
+            Talk on
+
+        75 ->
+            -- Key K
+            Kill on
+
+        --        49 ->
+        --            -- Key 1
+        --            -- This might have to change because players can select 3 heroes from their inventory
+        --            Select Warrior on
+        --        50 ->
+        --            -- Key 2
+        --            Select Archer on
+        --        51 ->
+        --            -- Key 3
+        --            Select Assassin on
+        --        52 ->
+        --            -- Key 4
+        --            Select Mage on
+        --        53 ->
+        --            -- Key 5
+        --            Select Healer on
         _ ->
             Key_None
 
