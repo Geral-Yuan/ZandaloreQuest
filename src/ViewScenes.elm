@@ -209,21 +209,21 @@ viewCastle model =
             , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
             , HtmlAttr.style "left" "300px"
             ]
-            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
             , HtmlAttr.style "left" "1400px"
             ]
-            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
             , HtmlAttr.style "left" "1100px"
             ]
-            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"
