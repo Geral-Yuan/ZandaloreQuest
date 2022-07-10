@@ -1,8 +1,8 @@
 module Model exposing (..)
 
+import Bag exposing (Bag, initBag)
 import Board exposing (Board, sampleBoard)
 import Browser.Dom exposing (getViewport)
-import Bag exposing (Bag, initBag)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import RpgCharacter exposing (..)
@@ -17,6 +17,7 @@ type alias Model =
     , character : RpgCharacter
     , chosenHero : List Int
     , bag : Bag
+
     -- , time : Float
     }
 
@@ -37,8 +38,8 @@ initCharacter =
     , moveDown = False
     , latestDir = Right
     , faceDir = Right
-    , height = 50
-    , width = 50
+    , height = 75
+    , width = 75
     , speed = 500
     , move_range = ( pixelWidth, pixelHeight )
     }
@@ -62,80 +63,83 @@ initModel =
     , character = initCharacter
     , chosenHero = []
     , bag = initBag
+
     -- , time = 0
     }
+
+
 
 {-
-initRPG : Model -> Model
-initRPG model =
-    case model.mode of
-        Castle ->
-            castle_1 model
+   initRPG : Model -> Model
+   initRPG model =
+       case model.mode of
+           Castle ->
+               castle_1 model
 
-        Shop ->
-            shop_2 model
+           Shop ->
+               shop_2 model
 
-        Logo ->
-            initModel
+           Logo ->
+               initModel
 
-        _ ->
-            board_1 model
-
-
-initLevel : Int -> Model -> Model
-initLevel k model =
-    case k of
-        _ ->
-            board_1 model
+           _ ->
+               board_1 model
 
 
-castle_1 : Model -> Model
-castle_1 model =
-    { mode = Castle
-    , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
-        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
-        ]
-    , board = sampleBoard
-    , size = ( 1500, 1000 )
-    , character = initCharacter
-    , chosenHero = []
-    -- , time = 0
-    }
+   initLevel : Int -> Model -> Model
+   initLevel k model =
+       case k of
+           _ ->
+               board_1 model
 
 
-shop_2 : Model -> Model
-shop_2 model =
-    { mode = Shop
-    , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
-        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
-        ]
-    , board = sampleBoard
-    , size = ( 1500, 1000 )
-    , character = initCharacter
-    , chosenHero = []
-    -- , time = 0
-    }
+   castle_1 : Model -> Model
+   castle_1 model =
+       { mode = Castle
+       , indexedheroes =
+           [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+           , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+           , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+           , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
+           ]
+       , board = sampleBoard
+       , size = ( 1500, 1000 )
+       , character = initCharacter
+       , chosenHero = []
+       -- , time = 0
+       }
 
 
-board_1 : Model -> Model
-board_1 model =
-    { mode = BoardGame 1
-    , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
-        , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
-        ]
-    , board = sampleBoard
-    , size = ( 1500, 1000 )
-    , character = initCharacter
-    , chosenHero = []
-    -- , time = 0
-    }
+   shop_2 : Model -> Model
+   shop_2 model =
+       { mode = Shop
+       , indexedheroes =
+           [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+           , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+           , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+           , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
+           ]
+       , board = sampleBoard
+       , size = ( 1500, 1000 )
+       , character = initCharacter
+       , chosenHero = []
+       -- , time = 0
+       }
+
+
+   board_1 : Model -> Model
+   board_1 model =
+       { mode = BoardGame 1
+       , indexedheroes =
+           [ ( Hero Warrior ( 0, 0 ) 50 15 5 3 False 0, 1 )
+           , ( Hero Archer ( 0, 0 ) 40 20 3 5 False 0, 2 )
+           , ( Hero Assassin ( 0, 0 ) 40 20 3 6 False 0, 3 )
+           , ( Hero Mage ( 0, 0 ) 50 15 5 3 False 0, 4 )
+           ]
+       , board = sampleBoard
+       , size = ( 1500, 1000 )
+       , character = initCharacter
+       , chosenHero = []
+       -- , time = 0
+       }
 -}

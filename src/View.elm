@@ -11,7 +11,7 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
-import ViewChoose exposing (viewHeroChoose)
+import ViewChoose exposing (viewHeroChoose, viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
 
@@ -22,20 +22,22 @@ view model =
         viewAll =
             case model.mode of
                 Logo ->
-                   viewScene0 model
+                    viewScene0 model
 
                 BoardGame _ ->
                     viewBoard1 model
 
                 Castle ->
                     viewCastle model
-                    
 
                 Shop ->
                     viewShop model
 
                 HeroChoose _ ->
                     viewHeroChoose model
+
+                BuyingItems ->
+                    viewShopChoose model
     in
     div
         [ HtmlAttr.style "width" "100%"
@@ -145,8 +147,6 @@ viewClickPosition model =
 
 
 -- Just for tips now. Later I will delete it
-
-
 
 
 viewTips : Html Msg

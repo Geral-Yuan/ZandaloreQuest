@@ -1,6 +1,7 @@
 module Update exposing (update)
 
 import Action exposing (updateAttackable, updateMoveable, updateTarget)
+import Bag exposing (addCoin)
 import Board exposing (initBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (..)
@@ -11,7 +12,6 @@ import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Task
 import UpdateBoard exposing (selectHero, updateBoard)
-import Bag exposing (addCoin)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -147,6 +147,64 @@ isReachable mode ( x, y ) =
             True
 
 
+
+-- updateShop : Msg -> Model -> ( Model, Cmd Msg )
+-- updateShop msg model =
+--     let
+--         currCoins =
+--             model.bag.coins
+--         newBag =
+--             model.bag
+--         currHeroes =
+--             model.indexedheroes
+--     in
+--     case msg of
+--         UpgradeHealth ->
+--             if model.bag.coins > 49 then
+--                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
+--             else
+--                 ( model, Cmd.none )
+--         UpgradeDamage ->
+--             if model.bag.coins > 49 then
+--                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
+--             else
+--                 ( model, Cmd.none )
+--         ExitShop ->
+--             ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+--         _ ->
+--             ( model, Cmd.none )
+
+
+updateHealth : ( Hero, Int ) -> ( Hero, Int )
+updateHealth hero =
+    let
+        currHero =
+            Tuple.first hero
+
+        index =
+            Tuple.second hero
+
+        currHealth =
+            currHero.health
+    in
+    ( { currHero | health = currHealth + 5 }, index )
+
+
+updateDamage : ( Hero, Int ) -> ( Hero, Int )
+updateDamage hero =
+    let
+        currHero =
+            Tuple.first hero
+
+        index =
+            Tuple.second hero
+
+        currDamage =
+            currHero.damage
+    in
+    ( { currHero | damage = currDamage + 2 }, index )
+
+
 updateRPG : Msg -> Model -> ( Model, Cmd Msg )
 updateRPG msg model =
     let
@@ -155,26 +213,43 @@ updateRPG msg model =
 
         ( x, y ) =
             character.pos
+
+        currCoins =
+            model.bag.coins
+
+        newBag =
+            model.bag
+
+        currHeroes =
+            model.indexedheroes
     in
     case msg of
         Enter False ->
             case model.mode of
                 Shop ->
                     if x > 710 && x < 900 && y > 850 then
-                        ( { model | mode = Castle, character = { character | width = 50, height = 50, pos = ( 1630, 890 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | width = 75, height = 75, pos = ( 1630, 890 ) } }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
 
                 Castle ->
                     if x > 1600 && x < 1660 && y < 900 then
-                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Shop, character = { character | width = 90, height = 90, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
 
                     else if x > 950 && x < 1050 && y < 450 then
                         ( { model | mode = HeroChoose 1 }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        Talk False ->
+            case model.mode of
+                Shop ->
+                    ( { model | mode = BuyingItems }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -190,6 +265,23 @@ updateRPG msg model =
 
         Key Down on ->
             ( { model | character = { character | moveDown = on } }, Cmd.none )
+
+        UpgradeHealth ->
+            if model.bag.coins > 49 then
+                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        UpgradeDamage ->
+            if model.bag.coins > 49 then
+                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        ExitShop ->
+            ( { model | mode = Shop }, Task.perform GetViewport getViewport )
 
         _ ->
             ( model, Cmd.none )
@@ -400,7 +492,7 @@ generateCrate model =
             generateCrate model
 
         head :: rest ->
-            Random.uniform HealthPotion [ EnergyPotion, (Gold 1)]
+            Random.uniform HealthPotion [ EnergyPotion, Gold 1 ]
                 |> Random.pair (Random.uniform head rest)
 
 
@@ -426,24 +518,36 @@ possibleCratePosition model =
 
 
 checkEnd : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-checkEnd (model, cmd) =
+checkEnd ( model, cmd ) =
     let
-        myboard = model.board
-        wincoins = myboard.coins + 100
+        myboard =
+            model.board
 
-        losecoins = myboard.coins
+        wincoins =
+            myboard.coins + 100
+
+        losecoins =
+            myboard.coins
+
         nmodel =
             case model.mode of
                 BoardGame _ ->
                     if List.isEmpty myboard.enemies then
-                        {model | mode = Castle
-                                , bag = addCoin model.bag wincoins}
+                        { model
+                            | mode = Castle
+                            , bag = addCoin model.bag wincoins
+                        }
+
                     else if List.isEmpty myboard.heroes then
-                        {model | mode = Castle
-                                , bag = addCoin model.bag losecoins}
+                        { model
+                            | mode = Castle
+                            , bag = addCoin model.bag losecoins
+                        }
+
                     else
                         model
+
                 _ ->
                     model
     in
-    (nmodel, cmd)
+    ( nmodel, cmd )

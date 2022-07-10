@@ -7,6 +7,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.27] -- 2022-7-10
+
+### Added 
+
+- A few gifs and images to assets
+
+- Buying items in game mode
+
+- Key C to talk to NPCs
+
+- Talk, UpgradeHealth, UpgradeDamage and ExitShop to msg type 
+
+- updateHealth and updateDamage functions
+
+- Energypotion function 
+
+- viewShopChoose to let players see what they want to buy 
+
+- chatbox gif and shopkeeper in the shop 
+
+### Changed
+
+- healthpotion in InitObstacles to energypotion and gold
+
+- optimized the updateRPG function to include the shope system 
+
 ## [m1.26] -- 2022-7-10
 
 ### Added

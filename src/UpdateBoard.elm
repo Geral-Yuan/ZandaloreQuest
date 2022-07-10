@@ -1,6 +1,6 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (selectedHero, unselectedHero, pos2Item, index2Hero)
+import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy)
@@ -149,58 +149,74 @@ moveHero board dir =
                 _ ->
                     ( 0, 0 )
 
-        (nboard, ind) = case selectedHero board.heroes of
-                        Nothing ->
-                            (board, Nothing)
+        ( nboard, ind ) =
+            case selectedHero board.heroes of
+                Nothing ->
+                    ( board, Nothing )
 
-                        Just hero ->
-                            let
-                                currEnergy =
-                                    hero.energy
+                Just hero ->
+                    let
+                        currEnergy =
+                            hero.energy
 
-                                newPos =
-                                    vecAdd hero.pos dr
+                        newPos =
+                            vecAdd hero.pos dr
+                    in
+                    if legalHeroMove board hero dr && hero.energy > 1 then
+                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
+                        , Just hero.indexOnBoard
+                        )
 
-                            in
-                            if legalHeroMove board hero dr && hero.energy > 1 then
-                                ({ board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
-                                , Just hero.indexOnBoard)
-                            else
-                                (board, Just hero.indexOnBoard)
+                    else
+                        ( board, Just hero.indexOnBoard )
     in
     case ind of
         Nothing ->
             board
+
         Just n ->
             nboard
-            |> checkHeroItem (index2Hero n nboard.heroes)
-    
+                |> checkHeroItem (index2Hero n nboard.heroes)
 
 
 checkHeroItem : Hero -> Board -> Board
 checkHeroItem hero board =
     let
-        otherHeroes = listDifference board.heroes [hero]
-        chosenItem = pos2Item board.item hero.pos
-        otherItems = listDifference board.item [chosenItem]
+        otherHeroes =
+            listDifference board.heroes [ hero ]
+
+        chosenItem =
+            pos2Item board.item hero.pos
+
+        otherItems =
+            listDifference board.item [ chosenItem ]
     in
     case chosenItem.itemType of
         HealthPotion ->
-            { board | heroes = { hero | health = hero.health + 10 } :: otherHeroes
-                    , item = otherItems }
+            { board
+                | heroes = { hero | health = hero.health + 10 } :: otherHeroes
+                , item = otherItems
+            }
 
         Gold n ->
-            { board | item = otherItems
-                    , coins = board.coins + n }
+            { board
+                | item = otherItems
+                , coins = board.coins + n
+            }
 
         EnergyPotion ->
-            board
+            { board
+                | heroes = { hero | energy = hero.energy + 2 } :: otherHeroes
+                , item = otherItems
+            }
 
         Buff ->
             board
 
         NoItem ->
             board
+
+
 
 -- To be rewritten later
 
