@@ -42,6 +42,23 @@ viewBoardCoin board =
         ]
         [ text ("Coins: " ++ toString board.coins) ]
 
+
+viewLevel : Int -> Html Msg
+viewLevel level =
+    div
+        [ HtmlAttr.style "bottom" "180px"
+        , HtmlAttr.style "right" "100px"
+        , HtmlAttr.style "color" "purple"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("Level " ++ toString level) ]
+
+
 viewCoordinate : Pos -> Svg msg
 viewCoordinate ( row, column ) =
     let

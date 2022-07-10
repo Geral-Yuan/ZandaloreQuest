@@ -476,7 +476,7 @@ viewStarting model =
 viewBagCoin : Model -> Html Msg
 viewBagCoin model =
     div
-        [ HtmlAttr.style "bottom" "120px"
+        [ HtmlAttr.style "bottom" "50px"
         , HtmlAttr.style "right" "100px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"

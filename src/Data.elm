@@ -11,11 +11,11 @@ type GameMode
     = Castle
     | Shop
     | BuyingItems
-    | HeroChoose Int
+    | HeroChoose
       -- | Starting
       -- | ClearLevel Int
       -- | Gameover Int
-    | BoardGame Int
+    | BoardGame
     | Logo
     | Tutorial Int
 
@@ -76,7 +76,6 @@ type alias Hero =
     , pos : Pos
     , health : Int
     , damage : Int
-    , armour : Int
     , energy : Int
     , selected : Bool
     , indexOnBoard : Int --give an index to the heroes on the board
@@ -88,7 +87,6 @@ type alias Enemy =
     , pos : Pos
     , health : Int
     , damage : Int
-    , armour : Int
     , steps : Int
     , done : Bool
     , indexOnBoard : Int --give an index to the enemies on the board
@@ -169,6 +167,22 @@ map =
             , ( 1, 5 )
             ]
         )
+
+
+sampleEnemy : Class -> Pos -> Int -> Enemy
+sampleEnemy class pos index =
+    case class of
+        Warrior ->
+            Enemy Warrior pos 80 8 0 True index
+
+        Archer ->
+            Enemy Archer pos 40 10 0 True index
+
+        Assassin ->
+            Enemy Assassin pos 40 10 0 True index
+
+        _ ->
+            Enemy Mage pos 50 6 0 True index
 
 
 
@@ -288,7 +302,7 @@ findChosenHero ( x, y ) =
             if y > 100 && y < 400 then
                 1
 
-            else if y > 600 && y < 900 then
+            else if y > 500 && y < 900 then
                 2
 
             else

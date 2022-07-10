@@ -25,8 +25,8 @@ view model =
                 Logo ->
                     viewScene0 model
 
-                BoardGame _ ->
-                    viewBoard1 model
+                BoardGame ->
+                    viewBoard model
 
                 Castle ->
                     viewCastle model
@@ -34,7 +34,7 @@ view model =
                 Shop ->
                     viewShop model
 
-                HeroChoose _ ->
+                HeroChoose ->
                     viewHeroChoose model
 
                 BuyingItems ->
@@ -115,8 +115,8 @@ tutorialButton =
         [ text "How to play" ]
 
 
-viewBoard1 : Model -> Html Msg
-viewBoard1 model =
+viewBoard : Model -> Html Msg
+viewBoard model =
     let
         ( w, h ) =
             model.size
@@ -145,7 +145,7 @@ viewBoard1 model =
             (viewMap model.board
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
-                -- ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroInfo1 model.board.heroes
                 ++ List.map viewHeroInfo2 model.board.heroes
@@ -156,7 +156,7 @@ viewBoard1 model =
          , endTurnButton
          , viewCritical model.board
          , viewBoardCoin model.board
-
+         , viewLevel model.level
          --  , viewClickPosition model
          --  , viewTips
          , tutorialButton
@@ -190,7 +190,7 @@ viewBoard1 model =
            (List.map findPos list_points)
 -}
 
-
+{-
 viewClickPosition : Model -> Html Msg
 viewClickPosition model =
     let
@@ -209,7 +209,7 @@ viewClickPosition model =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
-
+-}
 
 
 -- Just for tips now. Later I will delete it

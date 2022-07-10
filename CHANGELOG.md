@@ -6,6 +6,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.29] -- 2022-7-10
+
+### Added
+
+- MultiLevels
+
+### Fixed
+
+- EndTurn button only works in HeroTurn
+
+### Removed
+
+- Unused Armor
 
 ## [m1.28] -- 2022-7-10
 
