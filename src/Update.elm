@@ -1,6 +1,7 @@
 module Update exposing (update)
 
 import Action exposing (updateAttackable, updateMoveable, updateTarget)
+import Board exposing (initBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
@@ -28,6 +29,13 @@ update msg model =
                 Logo ->
                     ( updateScene msg model, Cmd.none )
 
+                HeroChoose k ->
+                    ( model
+                        |> checkChooseClick msg
+                        |> checkConfirm msg k
+                    , Cmd.none
+                    )
+
                 _ ->
                     updateRPG msg model
     in
@@ -38,9 +46,75 @@ update msg model =
     )
 
 
+checkChooseClick : Msg -> Model -> Model
+checkChooseClick msg model =
+    case msg of
+        Click x y ->
+            let
+                ( w, h ) =
+                    model.size
 
--- _ ->
---     ( model, Cmd.none )
+                clickpos =
+                    if w / h > pixelWidth / pixelHeight then
+                        ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h )
+
+                    else
+                        ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
+
+                index =
+                    findChosenHero clickpos
+            in
+            if index > 0 then
+                if List.member index model.chosenHero then
+                    { model | chosenHero = List.filter (\heroindex -> heroindex /= index) model.chosenHero }
+
+                else if List.length model.chosenHero < 3 then
+                    { model | chosenHero = index :: model.chosenHero }
+
+                else
+                    model
+
+            else
+                model
+
+        _ ->
+            model
+
+
+checkConfirm : Msg -> Int -> Model -> Model
+checkConfirm msg k model =
+    case msg of
+        Confirm ->
+            if List.length model.chosenHero == 3 then
+                { model | mode = BoardGame k, board = initBoard (confirmHeroes model) k }
+
+            else
+                model
+
+        _ ->
+            model
+
+
+confirmHeroes : Model -> List Hero
+confirmHeroes model =
+    let
+        chosenIndexedHeroes =
+            List.filter (\( _, y ) -> List.member y model.chosenHero) model.indexedheroes
+
+        sortedHeroes =
+            Tuple.first (List.unzip (List.sortBy (\( _, y ) -> y) chosenIndexedHeroes))
+    in
+    initIndexOnBoard sortedHeroes
+
+
+initIndexOnBoard : List Hero -> List Hero
+initIndexOnBoard heroes =
+    case List.reverse heroes of
+        [] ->
+            []
+
+        lastHero :: rest ->
+            initIndexOnBoard (List.reverse rest) ++ [ { lastHero | indexOnBoard = List.length heroes } ]
 
 
 updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
@@ -95,7 +169,7 @@ updateRPG msg model =
                         ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
 
                     else if x > 950 && x < 1050 && y < 450 then
-                        ( { model | mode = BoardGame 1 }, Task.perform GetViewport getViewport )
+                        ( { model | mode = HeroChoose 1 }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )

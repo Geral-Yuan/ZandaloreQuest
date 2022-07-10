@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Detecting the position of the mouse and higlight the attack target when the mouse is in the attackable range.
 
+- Choose heroes at the beginning of the board game.
+
+- Initialize heroes in the `Board` according to the choice of the player and the current content of the `Model`
+
 ### Fixed
 
 - Resize of RPG scenes.

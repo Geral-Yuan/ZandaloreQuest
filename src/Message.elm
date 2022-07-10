@@ -13,6 +13,7 @@ type Msg
     | Tick Float
     | Attack Pos Critical
     | EndTurn
+    | Confirm
     | Click Float Float
     | Point Float Float
     | GetViewport Viewport
