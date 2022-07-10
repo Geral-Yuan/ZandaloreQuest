@@ -513,7 +513,11 @@ randomCrate msg ( model, cmd ) =
         EndTurn ->
             case model.board.turn of
                 HeroTurn ->
-                    ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+                    if possibleCratePosition model /= [] then
+                        ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+
+                    else
+                        ( model, cmd )
 
                 EnemyTurn ->
                     ( model, cmd )
