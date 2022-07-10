@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onResize)
+import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
 import Data exposing (..)
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
@@ -9,7 +9,6 @@ import Message exposing (Msg(..))
 import Model exposing (Model, init)
 import Update exposing (update)
 import View exposing (view)
-import Browser.Events exposing (onMouseMove)
 
 
 main : Program () Model Msg
@@ -64,6 +63,9 @@ key on keycode =
 
         40 ->
             Key Down on
+
+        67 ->
+            Talk on
 
         75 ->
             -- Key K

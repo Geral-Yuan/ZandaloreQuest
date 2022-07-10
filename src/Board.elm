@@ -31,8 +31,8 @@ initObstacles k =
             [ Obstacle Unbreakable ( 5, 5 ) NoItem
             , Obstacle Unbreakable ( 2, 6 ) NoItem
             , Obstacle Unbreakable ( 6, 2 ) NoItem
-            , Obstacle MysteryBox ( 4, 8 ) HealthPotion
-            , Obstacle MysteryBox ( 8, 4 ) HealthPotion
+            , Obstacle MysteryBox ( 4, 8 ) (Gold 3)
+            , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
             ]
 
 

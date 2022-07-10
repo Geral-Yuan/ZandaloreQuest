@@ -10,6 +10,7 @@ import Svg.Attributes exposing (x2, y2)
 type GameMode
     = Castle
     | Shop
+    | BuyingItems
     | HeroChoose Int
       -- | Starting
       -- | ClearLevel Int

@@ -21,3 +21,7 @@ type Msg
     | SpawnEnemy ( List Class, List Pos )
     | SpawnCrate ( Pos, ItemType )
     | Kill Bool
+    | Talk Bool
+    | UpgradeHealth
+    | UpgradeDamage
+    | ExitShop

@@ -2,8 +2,8 @@ module ViewScenes exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, div)
-import Html.Attributes as HtmlAttr
+import Html exposing (Html, div, img)
+import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
@@ -156,7 +156,7 @@ viewRpgCharacter character =
         , SvgAttr.x (toString (x - w / 2))
         , SvgAttr.y (toString (y - h / 2))
         , SvgAttr.preserveAspectRatio "xMidYMid slice"
-        , SvgAttr.xlinkHref "./assets/image/WarriorBlue.png"
+        , SvgAttr.xlinkHref "./assets/image/MainCharacter.png"
         ]
         []
 
@@ -291,13 +291,47 @@ viewShop model =
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
         ]
-        [ Svg.svg
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 170) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 200) ++ "px")
+            ]
+            [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
+            ]
+        , Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewShopSvg, viewRpgCharacter model.character ]
+            [ viewShopSvg
+            , viewRpgCharacter model.character
+            , Svg.image
+                -- view shopkeeper
+                [ SvgAttr.width "85"
+                , SvgAttr.height "85"
+                , SvgAttr.x (toString (pixelWidth / 2 - 250))
+                , SvgAttr.y (toString (pixelHeight / 2 - 120))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/HealerRed.png"
+                ]
+                []
+            ]
         , viewCharacterPos model.character
         ]
+
+
+
+-- viewShopKeeper : Svg Msg
+-- viewShopKeeper =
+--     Svg.image
+--         [ SvgAttr.width "500"
+--         , SvgAttr.height "500"
+--         , SvgAttr.x (toString (pixelWidth / 2 - 600))
+--         , SvgAttr.y (toString (pixelHeight / 2 - 400))
+--         , SvgAttr.preserveAspectRatio "none"
+--         , SvgAttr.z "2"
+--         , SvgAttr.xlinkHref "./assets/image/HealerRed.png"
+--         ]
+--         []
 
 
 viewShopSvg : Svg Msg
@@ -410,5 +444,4 @@ viewBagCoin model =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Coins: " ++ toString (model.bag).coins) ]
-
+        [ text ("Coins: " ++ toString model.bag.coins) ]
