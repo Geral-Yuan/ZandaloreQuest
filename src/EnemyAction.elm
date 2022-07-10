@@ -1,6 +1,6 @@
 module EnemyAction exposing (actionEnemy)
 
-import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle)
+import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle, pos2Item)
 import Board exposing (..)
 import Data exposing (..)
 import ShortestPath exposing (..)
@@ -22,33 +22,28 @@ actionEnemy board =
 
 actionSmartEnemy : Board -> Enemy -> Board
 actionSmartEnemy board enemy =
-    case enemy.class of
-        Warrior ->
-            let
-                (nenemies, nheroes) =
+    let
+        nboard =
+            case enemy.class of
+                Warrior ->
                     actionSmartWarrior board enemy
-            in
-            {board| enemies = nenemies, heroes = nheroes}
 
-        Archer ->
-            let
-                (nenemies, nheroes) =
+                Archer ->
                     actionSmartArcher board enemy
-            in
-            {board| enemies = nenemies, heroes = nheroes}
 
-        Mage ->
-            --ToDo some operations
-            actionSmartMage board enemy
+                Mage ->
+                    actionSmartMage board enemy
 
-        Assassin ->
-            board
+                Assassin ->
+                    board
 
-        Healer ->
-            board
+                Healer ->
+                    board
+    in
+    nboard
+    |> breakItem (index2Enemy enemy.indexOnBoard nboard.enemies)
 
-
-actionSmartWarrior : Board -> Enemy -> ( List Enemy, List Hero )
+actionSmartWarrior : Board -> Enemy -> Board
 actionSmartWarrior board enemy =
     let
         route =
@@ -58,14 +53,16 @@ actionSmartWarrior board enemy =
     in
     case route of
         [] ->
+            eh2Board 
             ( { enemy | done = True } :: otherenemies
             , enemyWarriorAttack enemy board.heroes
                 |> List.filter (\x -> x.health > 0)
-            )
+            ) board
 
         first :: _ ->
+            eh2Board 
             ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes )
+            , board.heroes ) board
 
 
 enemyWarriorAttack : Enemy -> List Hero -> List Hero
@@ -110,7 +107,7 @@ enemyArcherAttack enemy board =
     List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
 
 
-actionSmartArcher : Board -> Enemy -> ( List Enemy, List Hero )
+actionSmartArcher : Board -> Enemy -> Board
 actionSmartArcher board enemy =
     let
         route =
@@ -121,14 +118,16 @@ actionSmartArcher board enemy =
     in
     case route of
         [] ->
+            eh2Board
             ( { enemy | done = True } :: otherenemies
             , enemyArcherAttack enemy board
                 |> List.filter (\x -> x.health > 0)
-            )
+            ) board
 
         first :: _ ->
+            eh2Board
             ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes )
+            , board.heroes ) board
 
 
 actionSmartMage : Board -> Enemy -> Board
@@ -155,6 +154,7 @@ actionSmartMage board enemy =
 
         first :: _ ->
             {board | enemies = (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies }
+
 
 
 enemyMageAttack : Enemy -> Board -> Board
@@ -220,3 +220,24 @@ checkEnemyDone enemy =
 --         nheroes = List.filter (\x -> x.health > 0) board.heroes
 --     in
 --     {board | heroes = nheroes, enemies = nenemy}
+
+breakItem : Enemy -> Board -> Board
+breakItem enemy board =
+    let
+        chosenItem = pos2Item board.item enemy.pos
+        otherItems = listDifference board.item [chosenItem]
+    in
+        { board |  item = otherItems }
+
+eh2Board : (List Enemy, List Hero) -> Board -> Board
+eh2Board (l_enemy, l_hero) board =
+    {board | enemies = l_enemy, heroes = l_hero}
+
+index2Enemy : Int -> List Enemy -> Enemy
+index2Enemy index l_enemy =
+    case List.filter (\x -> (index == x.indexOnBoard)) l_enemy of
+        [] ->
+            Enemy Warrior ( 0, 0 ) -1 15 5 3 False 0
+        chosen :: _ ->
+            chosen
+

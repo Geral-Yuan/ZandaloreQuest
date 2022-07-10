@@ -27,6 +27,21 @@ viewCritical board =
         [ text ("Critical Damage: " ++ toString board.critical) ]
 
 
+viewBoardCoin : Board -> Html Msg
+viewBoardCoin board =
+    div
+        [ HtmlAttr.style "bottom" "120px"
+        , HtmlAttr.style "right" "100px"
+        , HtmlAttr.style "color" "orange"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text ("Coins: " ++ toString board.coins) ]
+
 viewCoordinate : Pos -> Svg msg
 viewCoordinate ( row, column ) =
     let

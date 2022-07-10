@@ -29,6 +29,7 @@ view model =
 
                 Castle ->
                     viewCastle model
+                    
 
                 Shop ->
                     viewShop model
@@ -88,6 +89,7 @@ viewBoard1 model =
             )
          , endTurnButton
          , viewCritical model.board
+         , viewBoardCoin model.board
          , viewClickPosition model
          , viewTips
          ]
@@ -143,6 +145,8 @@ viewClickPosition model =
 
 
 -- Just for tips now. Later I will delete it
+
+
 
 
 viewTips : Html Msg
