@@ -233,15 +233,28 @@ viewItem item =
         ( x, y ) =
             findPos item.pos
 
-        itype =
+        itemtype =
             toString item.itemType
     in
-    Svg.image
-        [ SvgAttr.width "80"
-        , SvgAttr.height "80"
-        , SvgAttr.x (toString (x - 40))
-        , SvgAttr.y (toString (y - 40))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ itype ++ ".png")
-        ]
-        []
+    case item.itemType of
+        Gold _ ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 40))
+                , SvgAttr.y (toString (y - 40))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/Gold.png"
+                ]
+                []
+
+        _ ->
+            Svg.image
+                [ SvgAttr.width "80"
+                , SvgAttr.height "80"
+                , SvgAttr.x (toString (x - 40))
+                , SvgAttr.y (toString (y - 40))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
+                ]
+                []
