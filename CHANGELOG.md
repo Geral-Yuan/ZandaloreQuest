@@ -6,6 +6,15 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.31] -- 2022-7-11
+
+### Added 
+
+- Dungeon room in the map
+
+- NPCs where players can engage in a battle with them 
+
 ## [m1.30] -- 2022-7-10
 
 ### Added
