@@ -206,22 +206,22 @@ viewCastle model =
         ]
         [ div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "300px"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
             ]
             [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1400px"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
             ]
             [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
             ]
             [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
             ]
@@ -232,7 +232,58 @@ viewCastle model =
             [ viewCastleSvg, viewRpgCharacter model.character ]
         , viewCharacterPos model.character
         , viewBagCoin model
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
         ]
+
+
+viewTipForDir : Html Msg
+viewTipForDir =
+    div
+        [ HtmlAttr.style "top" "280px"
+        , HtmlAttr.style "left" "10px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press ⬆⬅⬇➡ to move" ]
+
+
+viewTipForC : Html Msg
+viewTipForC =
+    div
+        [ HtmlAttr.style "top" "700px"
+        , HtmlAttr.style "left" "5px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press C to talk to NPCs" ]
+
+
+viewTipForEnter : Html Msg
+viewTipForEnter =
+    div
+        [ HtmlAttr.style "top" "500px"
+        , HtmlAttr.style "left" "-5px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press Enter to pass doors" ]
 
 
 viewCastleSvg : Svg msg
@@ -321,24 +372,24 @@ viewShop model =
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "300px"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
             ]
-            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
-            ]
-        , div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1400px"
-            ]
-            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
             ]
-            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"
@@ -358,6 +409,9 @@ viewShop model =
                 []
             ]
         , viewCharacterPos model.character
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
         ]
 
 

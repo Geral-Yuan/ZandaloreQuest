@@ -26,13 +26,6 @@ updateBoard msg board =
         --
         --                EnemyTurn ->
         --                    board
-        EndTurn ->
-            case board.turn of
-                HeroTurn ->
-                    turnEnemy board
-
-                EnemyTurn ->
-                    board
 
         Tick elapsed ->
             let

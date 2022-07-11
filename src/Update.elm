@@ -11,7 +11,7 @@ import Model exposing (Model)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Task
-import UpdateBoard exposing (selectHero, updateBoard)
+import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -359,7 +359,7 @@ checkSelectedClick msg model =
                     else
                         ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
             in
-            if findInfoBoard clickpos > 0 then
+            if findInfoBoard clickpos > 0 && model.board.turn == HeroTurn then
                 { model | board = selectHero model.board (findInfoBoard clickpos) }
 
             else
@@ -514,7 +514,7 @@ randomCrate msg ( model, cmd ) =
             case model.board.turn of
                 HeroTurn ->
                     if possibleCratePosition model /= [] then
-                        ( model, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+                        ( { model | board = turnEnemy model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
 
                     else
                         ( model, cmd )
