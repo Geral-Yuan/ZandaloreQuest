@@ -19,6 +19,8 @@ type alias Model =
     , bag : Bag
     , previousMode : GameMode
     , level : Int
+    , time : Float
+
     -- , time : Float
     }
 
@@ -66,6 +68,8 @@ initModel =
     , bag = initBag
     , previousMode = BoardGame
     , level = 1
+    , time = 0
+
     -- , time = 0
     }
 
