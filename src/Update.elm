@@ -179,6 +179,9 @@ isReachable mode ( x, y ) =
         Shop ->
             x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
 
+        Dungeon ->
+            y > 209 && y < 942 && x > 470 && x < 1510
+
         _ ->
             True
 
@@ -274,7 +277,14 @@ updateRPG msg model =
                         ( { model | mode = Shop, character = { character | width = 90, height = 90, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
 
                     else if x > 950 && x < 1050 && y < 450 then
-                        ( { model | mode = HeroChoose }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon ->
+                    if y > 850 then
+                        ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
@@ -286,6 +296,20 @@ updateRPG msg model =
             case model.mode of
                 Shop ->
                     ( { model | mode = BuyingItems }, Cmd.none )
+
+                Castle ->
+                    if x > 580 && x < 700 && y < 450 then
+                        ( { model | mode = HeroChoose, level = 1 }, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon ->
+                    if x > 500 && x < 700 && y > 250 && y < 400 then
+                        ( { model | mode = HeroChoose, level = 2 }, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )

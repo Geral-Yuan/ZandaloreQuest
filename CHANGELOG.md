@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## [m1.29] -- 2022-7-10
+## [m1.30] -- 2022-7-10
 
 ### Added
 
@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Unused Armor
 
-## [m1.28] -- 2022-7-10
+## [m1.29] -- 2022-7-10
 
 ### Added 
 
@@ -28,6 +28,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 
 - the viewItem function to display the gold properly
+
+
+## [m1.28] -- 2022-7-10
+
+### Added 
+
+- tutorial system
+
+- how to play button 
+
+### Changed 
+
+- boundaries of the map so that players cannot walk out of the map
 
 ## [m1.27] -- 2022-7-10
 

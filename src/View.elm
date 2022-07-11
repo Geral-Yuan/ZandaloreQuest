@@ -40,6 +40,9 @@ view model =
                 BuyingItems ->
                     viewShopChoose model
 
+                Dungeon ->
+                    viewDungeon model
+
                 Tutorial k ->
                     viewTutorial k model
     in
@@ -93,6 +96,16 @@ viewTutorial k model =
                 ]
                 []
             ]
+        , div
+            [ HtmlAttr.style "width" "500px"
+            , HtmlAttr.style "height" "20px"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "750px"
+            , HtmlAttr.style "top" "-50px"
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-size" "50px"
+            ]
+            [ text "Click enter to continue" ]
         ]
 
 
@@ -157,6 +170,7 @@ viewBoard model =
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
+
          --  , viewClickPosition model
          --  , viewTips
          , tutorialButton
@@ -189,29 +203,26 @@ viewBoard model =
            )
            (List.map findPos list_points)
 -}
-
 {-
-viewClickPosition : Model -> Html Msg
-viewClickPosition model =
-    let
-        ( x, y ) =
-            model.board.pointPos
-    in
-    div
-        [ HtmlAttr.style "bottom" "30px"
-        , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "40px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
+   viewClickPosition : Model -> Html Msg
+   viewClickPosition model =
+       let
+           ( x, y ) =
+               model.board.pointPos
+       in
+       div
+           [ HtmlAttr.style "bottom" "30px"
+           , HtmlAttr.style "left" "0px"
+           , HtmlAttr.style "color" "red"
+           , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+           , HtmlAttr.style "font-size" "40px"
+           , HtmlAttr.style "font-weight" "bold"
+           , HtmlAttr.style "text-align" "center"
+           , HtmlAttr.style "line-height" "60px"
+           , HtmlAttr.style "position" "absolute"
+           ]
+           [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
 -}
-
-
 -- Just for tips now. Later I will delete it
 -- viewTips : Html Msg
 -- viewTips =
