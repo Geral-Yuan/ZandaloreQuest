@@ -39,8 +39,9 @@ initCharacter =
     , moveRight = False
     , moveUp = False
     , moveDown = False
-    , latestDir = Right
-    , faceDir = Right
+
+    --    , latestDir = Right
+    --    , faceDir = Right
     , height = 65
     , width = 65
     , speed = 500

@@ -315,16 +315,16 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Key Left on ->
-            ( { model | character = { character | moveLeft = on } }, Cmd.none )
+            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && (not on) } }, Cmd.none )
 
         Key Right on ->
-            ( { model | character = { character | moveRight = on } }, Cmd.none )
+            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && (not on) } }, Cmd.none )
 
         Key Up on ->
-            ( { model | character = { character | moveUp = on } }, Cmd.none )
+            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && (not on) } }, Cmd.none )
 
         Key Down on ->
-            ( { model | character = { character | moveDown = on } }, Cmd.none )
+            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && (not on) } }, Cmd.none )
 
         UpgradeHealth ->
             if model.bag.coins > 49 then
