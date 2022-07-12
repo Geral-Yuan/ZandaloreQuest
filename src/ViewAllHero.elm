@@ -74,9 +74,7 @@ viewHeroInfo4 hero =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text
-            (("Armour: " ++ toString hero.armour)
-                ++ (" Energy: " ++ toString hero.energy)
-            )
+            (" Energy: " ++ toString hero.energy)
         ]
 
 

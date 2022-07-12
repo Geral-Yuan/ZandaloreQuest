@@ -25,8 +25,8 @@ view model =
                 Logo ->
                     viewScene0 model
 
-                BoardGame _ ->
-                    viewBoard1 model
+                BoardGame ->
+                    viewBoard model
 
                 Castle ->
                     viewCastle model
@@ -34,11 +34,14 @@ view model =
                 Shop ->
                     viewShop model
 
-                HeroChoose _ ->
+                HeroChoose ->
                     viewHeroChoose model
 
                 BuyingItems ->
                     viewShopChoose model
+
+                Dungeon ->
+                    viewDungeon model
 
                 Tutorial k ->
                     viewTutorial k model
@@ -93,6 +96,16 @@ viewTutorial k model =
                 ]
                 []
             ]
+        , div
+            [ HtmlAttr.style "width" "500px"
+            , HtmlAttr.style "height" "20px"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "750px"
+            , HtmlAttr.style "top" "-50px"
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-size" "50px"
+            ]
+            [ text "Click enter to continue" ]
         ]
 
 
@@ -115,8 +128,8 @@ tutorialButton =
         [ text "How to play" ]
 
 
-viewBoard1 : Model -> Html Msg
-viewBoard1 model =
+viewBoard : Model -> Html Msg
+viewBoard model =
     let
         ( w, h ) =
             model.size
@@ -145,7 +158,7 @@ viewBoard1 model =
             (viewMap model.board
                 ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
-                -- ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroInfo1 model.board.heroes
                 ++ List.map viewHeroInfo2 model.board.heroes
@@ -156,6 +169,7 @@ viewBoard1 model =
          , endTurnButton
          , viewCritical model.board
          , viewBoardCoin model.board
+         , viewLevel model.level
 
          --  , viewClickPosition model
          --  , viewTips
@@ -189,29 +203,26 @@ viewBoard1 model =
            )
            (List.map findPos list_points)
 -}
-
-
-viewClickPosition : Model -> Html Msg
-viewClickPosition model =
-    let
-        ( x, y ) =
-            model.board.pointPos
-    in
-    div
-        [ HtmlAttr.style "bottom" "30px"
-        , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "40px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
-
-
-
+{-
+   viewClickPosition : Model -> Html Msg
+   viewClickPosition model =
+       let
+           ( x, y ) =
+               model.board.pointPos
+       in
+       div
+           [ HtmlAttr.style "bottom" "30px"
+           , HtmlAttr.style "left" "0px"
+           , HtmlAttr.style "color" "red"
+           , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+           , HtmlAttr.style "font-size" "40px"
+           , HtmlAttr.style "font-weight" "bold"
+           , HtmlAttr.style "text-align" "center"
+           , HtmlAttr.style "line-height" "60px"
+           , HtmlAttr.style "position" "absolute"
+           ]
+           [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
+-}
 -- Just for tips now. Later I will delete it
 -- viewTips : Html Msg
 -- viewTips =

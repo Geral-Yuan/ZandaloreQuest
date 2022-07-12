@@ -21,15 +21,6 @@ logoHeight =
     600
 
 
-determineOpct : Float -> Float
-determineOpct t =
-    if t <= 6 then
-        sin (t * pi / 6) * 2 / 1.732
-
-    else
-        0
-
-
 viewScene0 : Model -> Html Msg
 viewScene0 model =
     let
@@ -61,7 +52,16 @@ viewScene0 model =
         ]
 
 
-viewLogo : Svg msg
+determineOpct : Float -> Float
+determineOpct t =
+    if t <= 6 then
+        sin (t * pi / 6) * 2 / 1.732
+
+    else
+        0
+
+
+viewLogo : Svg Msg
 viewLogo =
     Svg.image
         [ SvgAttr.width (toString logoWidth)
@@ -75,37 +75,34 @@ viewLogo =
 
 
 
-{-
-   viewScene0 : Model -> Html Msg
-   viewScene0 model =
-       let
-           ( w, h ) =
-               model.size
-
-           -- t =
-           --     model.time
-           r =
-               if w / h > logoWidth / logoHeight then
-                   Basics.min 1 (h / logoHeight)
-
-               else
-                   Basics.min 1 (w / logoWidth)
-       in
-       div
-           [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
-           , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
-           , HtmlAttr.style "position" "absolute"
-           , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
-           , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
-
-           -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
-           , HtmlAttr.style "transform-origin" "0 0"
-           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-           , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
-               |> HtmlAttr.style "background"
-           ]
-           []
--}
+-- {-
+--    viewScene0 : Model -> Html Msg
+--    viewScene0 model =
+--        let
+--            ( w, h ) =
+--                model.size
+--            -- t =
+--            --     model.time
+--            r =
+--                if w / h > logoWidth / logoHeight then
+--                    Basics.min 1 (h / logoHeight)
+--                else
+--                    Basics.min 1 (w / logoWidth)
+--        in
+--        div
+--            [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
+--            , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
+--            , HtmlAttr.style "position" "absolute"
+--            , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
+--            , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
+--            -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
+--            , HtmlAttr.style "transform-origin" "0 0"
+--            , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+--            , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
+--                |> HtmlAttr.style "background"
+--            ]
+--            []
+--
 -- Created this code so that the RPG character can change facing but there are bugs
 -- viewRpgCharacter : Model -> Html Msg
 -- viewRpgCharacter model =
@@ -206,33 +203,194 @@ viewCastle model =
         ]
         [ div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "300px"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
             ]
-            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
-            ]
-        , div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1400px"
-            ]
-            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
             ]
-            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 250) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 380) ++ "px")
+            ]
+            [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewCastleSvg, viewRpgCharacter model.character ]
-        , viewCharacterPos model.character
+            [ viewCastleSvg
+            , viewRpgCharacter model.character
+            , Svg.image
+                -- view dark knight
+                [ SvgAttr.width "65"
+                , SvgAttr.height "65"
+                , SvgAttr.x (toString (pixelWidth / 2 - 400))
+                , SvgAttr.y (toString (pixelHeight / 2 - 210))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/EvilNPC.png"
+                ]
+                []
+            ]
+
+        -- , viewCharacterPos model.character
         , viewBagCoin model
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
         ]
+
+
+viewDungeon : Model -> Html Msg
+viewDungeon model =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
+
+            else
+                Basics.min 1 (w / pixelWidth)
+    in
+    div
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        , HtmlAttr.style "background" "black"
+        ]
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
+            ]
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
+            ]
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 250) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 380) ++ "px")
+            ]
+            [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
+            ]
+        , Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ viewDungeonSvg
+            , viewRpgCharacter model.character
+            , Svg.image
+                -- view dark knight
+                [ SvgAttr.width "65"
+                , SvgAttr.height "65"
+                , SvgAttr.x (toString (pixelWidth / 2 - 400))
+                , SvgAttr.y (toString (pixelHeight / 2 - 210))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/EvilNPC.png"
+                ]
+                []
+            ]
+
+        -- , viewCharacterPos model.character
+        , viewBagCoin model
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
+        ]
+
+
+viewDungeonSvg : Svg Msg
+viewDungeonSvg =
+    Svg.image
+        [ SvgAttr.width "1600"
+        , SvgAttr.height "1000"
+        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.y (toString (pixelHeight / 2 - 500))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Dungeon.jpg"
+        ]
+        []
+
+
+viewTipForDir : Html Msg
+viewTipForDir =
+    div
+        [ HtmlAttr.style "top" "280px"
+        , HtmlAttr.style "left" "10px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press ⬆⬅⬇➡ to move" ]
+
+
+viewTipForC : Html Msg
+viewTipForC =
+    div
+        [ HtmlAttr.style "top" "700px"
+        , HtmlAttr.style "left" "5px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press C to talk to NPCs" ]
+
+
+viewTipForEnter : Html Msg
+viewTipForEnter =
+    div
+        [ HtmlAttr.style "top" "500px"
+        , HtmlAttr.style "left" "-5px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press Enter to pass doors" ]
 
 
 viewCastleSvg : Svg msg
@@ -321,24 +479,24 @@ viewShop model =
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "300px"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
             ]
-            [ img [ src "./assets/image/keyGIF.gif", height 120, width 200 ] []
-            ]
-        , div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1400px"
-            ]
-            [ img [ src "./assets/image/enterGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight - 100) ++ "px")
-            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
             ]
-            [ img [ src "./assets/image/cGIF.gif", height 120, width 200 ] []
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
             ]
         , Svg.svg
             [ SvgAttr.width "100%"
@@ -357,7 +515,11 @@ viewShop model =
                 ]
                 []
             ]
-        , viewCharacterPos model.character
+
+        -- , viewCharacterPos model.character
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
         ]
 
 
@@ -476,7 +638,7 @@ viewStarting model =
 viewBagCoin : Model -> Html Msg
 viewBagCoin model =
     div
-        [ HtmlAttr.style "bottom" "120px"
+        [ HtmlAttr.style "bottom" "50px"
         , HtmlAttr.style "right" "100px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"

@@ -7,7 +7,35 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
-## [m1.28] -- 2022-7-10
+## [m1.32] -- 2022-7-12
+
+### Changed
+
+- Make the character move more freely and improve the code quality
+
+## [m1.31] -- 2022-7-11
+
+### Added 
+
+- Dungeon room in the map
+
+- NPCs where players can engage in a battle with them 
+
+## [m1.30] -- 2022-7-10
+
+### Added
+
+- MultiLevels
+
+### Fixed
+
+- EndTurn button only works in HeroTurn
+
+### Removed
+
+- Unused Armor
+
+## [m1.29] -- 2022-7-10
 
 ### Added 
 
@@ -15,6 +43,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 
 - the viewItem function to display the gold properly
+
+
+## [m1.28] -- 2022-7-10
+
+### Added 
+
+- tutorial system
+
+- how to play button 
+
+### Changed 
+
+- boundaries of the map so that players cannot walk out of the map
 
 ## [m1.27] -- 2022-7-10
 
