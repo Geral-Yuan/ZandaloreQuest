@@ -107,7 +107,9 @@ type Dir
     | Down
 
 
-
+type Side
+    = Hostile
+    | Friend
 -- type RpgDir
 --     = Left
 --     | Right

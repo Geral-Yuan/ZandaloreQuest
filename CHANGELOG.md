@@ -7,6 +7,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.33] -- 2022-7-14
+
+### Add
+
+- Union type Side
+
+### Changed
+- Make stuckInWay change with the chosen Side
+### Fix
+
+- Archer Enemies can attack heroes with another enemy in between.
+
 ## [m1.32] -- 2022-7-12
 
 ### Changed
