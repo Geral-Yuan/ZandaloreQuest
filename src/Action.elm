@@ -3,6 +3,7 @@ module Action exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
+import Time exposing (Weekday(..))
 
 
 updateAttackable : Board -> Board
@@ -23,7 +24,7 @@ attackRange : Board -> Hero -> List Pos
 attackRange board hero =
     case hero.class of
         Archer ->
-            List.concat (List.map (stuckInWay board hero.pos) neighbour)
+            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
 
         Mage ->
             subneighbour
@@ -34,24 +35,28 @@ attackRange board hero =
 
 attackedByArcherRange : Board -> Pos -> List Pos
 attackedByArcherRange board pos =
-    List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos) neighbour))
+    List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Hostile) neighbour))
 
 
-stuckInWay : Board -> Pos -> Pos -> List Pos
-stuckInWay board heropos pos =
+stuckInWay : Board -> Pos -> Side -> Pos -> List Pos
+stuckInWay board my_pos my_side nbhd_pos =
     let
         linePos =
-            List.map (vecAdd heropos) (sameline pos)
+            List.map (vecAdd my_pos) (sameline nbhd_pos)
 
         inWay =
-            listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
+            case my_side of
+                Friend ->
+                    listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
+                Hostile ->
+                    listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.heroes)
     in
-    case leastdistance inWay heropos of
+    case leastdistance inWay my_pos of
         Nothing ->
-            sameline pos
+            sameline nbhd_pos
 
         Just dis ->
-            List.map (\k -> vecScale k pos) (List.range 1 dis)
+            List.map (\k -> vecScale k nbhd_pos) (List.range 1 dis)
 
 
 
