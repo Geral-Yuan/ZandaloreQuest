@@ -9,7 +9,8 @@ import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
-import RpgCharacter exposing (moveCharacter)
+import RpgCharacter exposing (CharacterState(..), RpgCharacter, moveCharacter)
+import String exposing (right)
 import Task
 import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 
@@ -69,6 +70,7 @@ update msg model =
 
                 _ ->
                     updateRPG msg model
+                        |> updateCharacter msg
     in
     ( nmodel
         |> resize msg
@@ -174,7 +176,7 @@ isReachable : GameMode -> ( Float, Float ) -> Bool
 isReachable mode ( x, y ) =
     case mode of
         Castle ->
-            (x > 320 && x < 1690 && y > 780 && y < 850) || (x > 580 && x < 1430 && y <= 780 && y > 400)
+            (x > 290 && x < 1660 && y > 750 && y < 800) || (x > 550 && x < 1380 && y <= 750 && y > 400)
 
         Shop ->
             x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
@@ -315,16 +317,16 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Key Left on ->
-            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on, faceDir = Left, state = MovingLeft } }, Cmd.none )
 
         Key Right on ->
-            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && not on, faceDir = Right, state = MovingRight } }, Cmd.none )
 
         Key Up on ->
-            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && not on } }, Cmd.none )
 
         Key Down on ->
-            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && not on } }, Cmd.none )
 
         UpgradeHealth ->
             if model.bag.coins > 49 then
@@ -344,8 +346,7 @@ updateRPG msg model =
             ( { model | mode = Shop }, Task.perform GetViewport getViewport )
 
         _ ->
-            ( model, Cmd.none )
-                |> updateCharacter msg
+            ( { model | character = { character | state = Still } }, Cmd.none )
 
 
 updateScene : Msg -> Model -> Model

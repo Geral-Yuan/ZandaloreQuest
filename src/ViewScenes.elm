@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
-import RpgCharacter exposing (RpgCharacter)
+import RpgCharacter exposing (CharacterState(..), RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
@@ -105,57 +105,80 @@ viewLogo =
 --
 -- Created this code so that the RPG character can change facing but there are bugs
 -- viewRpgCharacter : Model -> Html Msg
--- viewRpgCharacter model =
---     div
---         [ style "position" "absolute"
---         , style "top" (toString (Tuple.first model.character.pos))
---         , style "left" (toString (Tuple.first model.character.pos))
---         , style "z-index" "9999"
---         ]
---         [ case model.character.faceDir of
---             Left ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     , style "transform" "scaleX(-1)"
---                     ]
---                     []
---             Right ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     ]
---                     []
---             _ ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     ]
---                     []
---         ]
 
 
-viewRpgCharacter : RpgCharacter -> Svg msg
+viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
-    let
-        ( w, h ) =
-            ( character.width, character.height )
-
-        ( x, y ) =
-            character.pos
-    in
-    Svg.image
-        [ SvgAttr.width (toString w)
-        , SvgAttr.height (toString h)
-        , SvgAttr.x (toString (x - w / 2))
-        , SvgAttr.y (toString (y - h / 2))
-        , SvgAttr.preserveAspectRatio "xMidYMid slice"
-        , SvgAttr.xlinkHref "./assets/image/MainCharacter.png"
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
+        , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
-        []
+        [ case character.state of
+            MovingRight ->
+                img
+                    [ src "./assets/image/MainCharacter.gif"
+                    , height (floor character.height)
+                    , width (floor character.width)
+                    ]
+                    []
+
+            MovingLeft ->
+                img
+                    [ src "./assets/image/MainCharacter.gif"
+                    , height (floor character.height)
+                    , width (floor character.width)
+                    , HtmlAttr.style "transform" "scaleX(-1)"
+                    ]
+                    []
+
+            Still ->
+                case character.faceDir of
+                    Right ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            ]
+                            []
+
+                    Left ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            , HtmlAttr.style "transform" "scaleX(-1)"
+                            ]
+                            []
+
+                    _ ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            ]
+                            []
+        ]
+
+
+
+-- viewRpgCharacter : RpgCharacter -> Svg msg
+-- viewRpgCharacter character =
+--     let
+--         ( w, h ) =
+--             ( character.width, character.height )
+--         ( x, y ) =
+--             character.pos
+--     in
+--     Svg.image
+--         [ SvgAttr.width (toString w)
+--         , SvgAttr.height (toString h)
+--         , SvgAttr.x (toString (x - w / 2))
+--         , SvgAttr.y (toString (y - h / 2))
+--         , SvgAttr.preserveAspectRatio "xMidYMid slice"
+--         , SvgAttr.xlinkHref "./assets/image/MainCharacter.png"
+--         ]
+--         []
 
 
 viewCharacterPos : RpgCharacter -> Html Msg
@@ -234,7 +257,6 @@ viewCastle model =
             , SvgAttr.height "100%"
             ]
             [ viewCastleSvg
-            , viewRpgCharacter model.character
             , Svg.image
                 -- view dark knight
                 [ SvgAttr.width "65"
@@ -246,12 +268,12 @@ viewCastle model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewCharacterPos model.character
         , viewBagCoin model
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter
+        , viewRpgCharacter model.character
         ]
 
 
@@ -311,7 +333,6 @@ viewDungeon model =
             , SvgAttr.height "100%"
             ]
             [ viewDungeonSvg
-            , viewRpgCharacter model.character
             , Svg.image
                 -- view dark knight
                 [ SvgAttr.width "65"
@@ -323,12 +344,12 @@ viewDungeon model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewCharacterPos model.character
         , viewBagCoin model
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter
+        , viewRpgCharacter model.character
         ]
 
 
