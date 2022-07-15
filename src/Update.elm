@@ -184,6 +184,9 @@ isReachable mode ( x, y ) =
         Dungeon ->
             y > 209 && y < 942 && x > 470 && x < 1510
 
+        Dungeon2 ->
+            y > 209 && y < 942 && x > 470 && x < 1510
+
         _ ->
             True
 
@@ -281,12 +284,22 @@ updateRPG msg model =
                     else if x > 950 && x < 1050 && y < 450 then
                         ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
 
+                    else if x > 290 && x < 400 && y > 750 then
+                        ( { model | mode = Dungeon2, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
+
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if y > 850 then
                         ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Task.perform GetViewport getViewport )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon2 ->
+                    if y > 850 then
+                        ( { model | mode = Castle, character = { character | pos = ( 340, 792 ) } }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
@@ -309,6 +322,13 @@ updateRPG msg model =
                 Dungeon ->
                     if x > 500 && x < 700 && y > 250 && y < 400 then
                         ( { model | mode = HeroChoose, level = 2 }, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon2 ->
+                    if x > 500 && x < 700 && y > 250 && y < 400 then
+                        ( { model | mode = HeroChoose, level = 3 }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -384,7 +404,7 @@ checkSelectedClick msg model =
                     else
                         ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
             in
-            if findInfoBoard clickpos > 0 && model.board.turn == HeroTurn then
+            if findInfoBoard clickpos > 0 && model.board.turn == PlayerTurn then
                 { model | board = selectHero model.board (findInfoBoard clickpos) }
 
             else
@@ -537,7 +557,7 @@ randomCrate msg ( model, cmd ) =
     case msg of
         EndTurn ->
             case model.board.turn of
-                HeroTurn ->
+                PlayerTurn ->
                     if possibleCratePosition model /= [] then
                         ( { model | board = turnEnemy model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
 

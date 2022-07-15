@@ -43,6 +43,9 @@ view model =
                 Dungeon ->
                     viewDungeon model
 
+                Dungeon2 ->
+                    viewDungeon2 model
+
                 Tutorial k ->
                     viewTutorial k model
     in
@@ -170,6 +173,7 @@ viewBoard model =
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
+         , viewTurn model
 
          --  , viewClickPosition model
          --  , viewTips
@@ -278,6 +282,28 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
+
+viewTurn : Model -> Html Msg
+viewTurn model =
+    div
+        [ HtmlAttr.style "left" "400px"
+        , HtmlAttr.style "top" "50px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ case model.board.turn of
+            EnemyTurn ->
+                text "Enemy Turn"
+
+            PlayerTurn ->
+                text "Your Turn"
+        ]
 
 
 viewCrate : Obstacle -> Svg Msg

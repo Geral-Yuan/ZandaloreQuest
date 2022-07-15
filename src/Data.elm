@@ -11,6 +11,7 @@ type GameMode
     = Castle
     | Shop
     | Dungeon
+    | Dungeon2
     | BuyingItems
     | HeroChoose
       -- | Starting
@@ -34,7 +35,7 @@ type Critical
 
 
 type Turn
-    = HeroTurn
+    = PlayerTurn
     | EnemyTurn
 
 
@@ -59,6 +60,12 @@ type ItemType
     | NoItem
 
 
+type HeroState
+    = Waiting
+    | Attacking
+    | Attacked
+
+
 type alias Obstacle =
     { obstacleType : ObstacleType
     , pos : Pos
@@ -79,6 +86,7 @@ type alias Hero =
     , damage : Int
     , energy : Int
     , selected : Bool
+    , state : HeroState
     , indexOnBoard : Int --give an index to the heroes on the board
     }
 
@@ -110,6 +118,9 @@ type Dir
 type Side
     = Hostile
     | Friend
+
+
+
 -- type RpgDir
 --     = Left
 --     | Right

@@ -13,7 +13,7 @@ updateBoard msg board =
     case msg of
         Key dir False ->
             case board.turn of
-                HeroTurn ->
+                PlayerTurn ->
                     moveHero board dir
 
                 EnemyTurn ->
@@ -26,12 +26,11 @@ updateBoard msg board =
         --
         --                EnemyTurn ->
         --                    board
-
         Tick elapsed ->
             let
                 nboard =
                     case board.turn of
-                        HeroTurn ->
+                        PlayerTurn ->
                             board
 
                         EnemyTurn ->
@@ -115,7 +114,7 @@ deselectHeroes hero =
 checkTurn : Board -> Board
 checkTurn board =
     if List.all (\enemy -> enemy.done) board.enemies then
-        { board | turn = HeroTurn }
+        { board | turn = PlayerTurn }
 
     else
         board
