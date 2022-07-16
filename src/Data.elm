@@ -46,6 +46,7 @@ type BoardState
     | HeroMoving
     | HeroHealth
     | HeroEnergy
+    | Healing
 
 
 
@@ -81,6 +82,7 @@ type HeroState
     | Moving
     | TakingHealth
     | TakingEnergy
+    | GettingHealed
 
 
 type alias Obstacle =

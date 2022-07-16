@@ -240,6 +240,9 @@ animateHeroVisuals hero =
             TakingHealth ->
                 text "+10"
 
+            GettingHealed ->
+                text "+10"
+
             Attacking ->
                 text "-3 Energy"
 
