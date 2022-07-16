@@ -146,6 +146,8 @@ resetEnergy hero =
         Healer ->
             { hero | energy = 5 }
 
+        Engineer ->
+            { hero | energy = 5 }
 
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =

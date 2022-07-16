@@ -6,6 +6,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.36] -- 2022-7-16
+
+### Add
+
+- Healer Class: attack, heal and break mystery boxes
+
+### Fix
+
+- Animation of RPGcharacter
+## [m1.35] -- 2022-7-16
+
+### Add
+
+- Engineer Class: attack, build and destroy
 ## [m1.34] -- 2022-7-16
 
 ### Add

@@ -34,7 +34,7 @@ init _ =
 
 initCharacter : RpgCharacter
 initCharacter =
-    { pos = ( 800, 625 )
+    { pos = ( 975, 525 )
     , state = Still
     , moveLeft = False
     , moveRight = False
@@ -62,6 +62,8 @@ initModel =
         , ( Hero Archer ( 0, 0 ) 40 20 5 False Waiting 0, 2 )
         , ( Hero Assassin ( 0, 0 ) 40 20 6 False Waiting 0, 3 )
         , ( Hero Mage ( 0, 0 ) 50 12 3 False Waiting 0, 4 )
+        , ( Hero Healer ( 0, 0 ) 50 5 5 False Waiting 0, 5 )
+        , ( Hero Engineer ( 0, 0 ) 50 5 5 False Waiting 0, 6 )
         ]
     , board = sampleBoard
     , size = ( 1500, 1000 )

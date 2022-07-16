@@ -39,6 +39,9 @@ actionSmartEnemy board enemy =
 
                 Healer ->
                     board
+
+                Engineer ->
+                    board
     in
     nboard
         |> breakItem (index2Enemy enemy.indexOnBoard nboard.enemies)
