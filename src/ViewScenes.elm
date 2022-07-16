@@ -52,15 +52,6 @@ viewScene0 model =
         ]
 
 
-determineOpct : Float -> Float
-determineOpct t =
-    if t <= 6 then
-        sin (t * pi / 6) * 2 / 1.732
-
-    else
-        0
-
-
 viewLogo : Svg Msg
 viewLogo =
     Svg.image
@@ -74,37 +65,47 @@ viewLogo =
         []
 
 
+determineOpct : Float -> Float
+determineOpct t =
+    if t <= 6 then
+        sin (t * pi / 6) * 2 / 1.732
 
--- {-
---    viewScene0 : Model -> Html Msg
---    viewScene0 model =
---        let
---            ( w, h ) =
---                model.size
---            -- t =
---            --     model.time
---            r =
---                if w / h > logoWidth / logoHeight then
---                    Basics.min 1 (h / logoHeight)
---                else
---                    Basics.min 1 (w / logoWidth)
---        in
---        div
---            [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
---            , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
---            , HtmlAttr.style "position" "absolute"
---            , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
---            , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
---            -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
---            , HtmlAttr.style "transform-origin" "0 0"
---            , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
---            , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
---                |> HtmlAttr.style "background"
---            ]
---            []
---
--- Created this code so that the RPG character can change facing but there are bugs
--- viewRpgCharacter : Model -> Html Msg
+    else
+        0
+
+
+
+{-
+   viewScene0 : Model -> Html Msg
+   viewScene0 model =
+       let
+           ( w, h ) =
+               model.size
+
+           t =
+               model.time
+
+           r =
+               if w / h > logoWidth / logoHeight then
+                   Basics.min 1 (h / logoHeight)
+
+               else
+                   Basics.min 1 (w / logoWidth)
+       in
+       div
+           [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
+           , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
+           , HtmlAttr.style "position" "absolute"
+           , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
+           , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
+           , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
+           , HtmlAttr.style "transform-origin" "0 0"
+           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+           , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px /  " ++ toString logoWidth ++ "  " ++ toString logoHeight)
+               |> HtmlAttr.style "background"
+           ]
+           []
+-}
 
 
 viewRpgCharacter : RpgCharacter -> Html Msg
@@ -134,7 +135,7 @@ viewRpgCharacter character =
         , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
         [ img
-            [ src ("./assets/image/MainCharacter."++ image)
+            [ src ("./assets/image/MainCharacter." ++ image)
             , height (floor character.height)
             , width (floor character.width)
             , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
@@ -180,7 +181,7 @@ viewCharacterPos character =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("( " ++ toString x ++ " ," ++ toString y ++ " )") ]
+        [ text ("( " ++ toString (floor x) ++ " ," ++ toString (floor y) ++ " )") ]
 
 
 viewCastle : Model -> Html Msg

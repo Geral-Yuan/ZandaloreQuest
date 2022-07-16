@@ -307,7 +307,7 @@ updateRPG msg model =
                     ( { model | mode = BuyingItems }, Cmd.none )
 
                 Castle ->
-                    if x > 580 && x < 700 && y < 450 then
+                    if x > 545 && x < 620 && y <= 370 && y > 200 then
                         ( { model | mode = HeroChoose, level = 1, previousMode = Castle }, Cmd.none )
 
                     else
@@ -366,6 +366,9 @@ updateRPG msg model =
 updateScene : Msg -> Model -> Model
 updateScene msg model =
     case msg of
+        Tick elapsed ->
+            { model | time = model.time + elapsed / 1000 }
+
         Enter False ->
             { model | mode = Castle }
 
