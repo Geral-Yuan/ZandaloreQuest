@@ -23,7 +23,7 @@ update msg model =
                         nextMode =
                             case k of
                                 3 ->
-                                    model.previousMode
+                                    BoardGame
 
                                 _ ->
                                     Tutorial (k + 1)
@@ -38,7 +38,7 @@ update msg model =
                 BoardGame ->
                     case msg of
                         ViewTutorial ->
-                            ( { model | previousMode = model.mode, mode = Tutorial 1 }, Cmd.none )
+                            ( { model | mode = Tutorial 1 }, Cmd.none )
 
                         _ ->
                             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
@@ -266,7 +266,7 @@ updateRPG msg model =
             case model.mode of
                 Shop ->
                     if x > 710 && x < 900 && y > 800 then
-                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 775 ), speed = 500 } }, Cmd.none )
+                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 770 ), speed = 500 } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -276,24 +276,24 @@ updateRPG msg model =
                         ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Cmd.none )
 
                     else if x > 900 && x < 1050 && y <= 400 && y > 350 then
-                        ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
+                        ( { model | mode = Dungeon, character = { character | pos = ( 970, 930 ) } }, Cmd.none )
 
                     else if x > 290 && x < 410 && y < 780 && y > 750 then
-                        ( { model | mode = Dungeon2, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
+                        ( { model | mode = Dungeon2, character = { character | pos = ( 970, 930 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Cmd.none )
+                        ( { model | mode = Castle, character = { character | pos = ( 975, 375 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon2 ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 340, 792 ) } }, Cmd.none )
+                        ( { model | mode = Castle, character = { character | pos = ( 345, 770 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -308,21 +308,21 @@ updateRPG msg model =
 
                 Castle ->
                     if x > 580 && x < 700 && y < 450 then
-                        ( { model | mode = HeroChoose, level = 1 }, Cmd.none )
+                        ( { model | mode = HeroChoose, level = 1, previousMode = Castle }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if x > 500 && x < 700 && y > 250 && y < 400 then
-                        ( { model | mode = HeroChoose, level = 2 }, Cmd.none )
+                        ( { model | mode = HeroChoose, level = 2, previousMode = Dungeon }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon2 ->
                     if x > 500 && x < 700 && y > 250 && y < 400 then
-                        ( { model | mode = HeroChoose, level = 3 }, Cmd.none )
+                        ( { model | mode = HeroChoose, level = 3, previousMode = Dungeon2 }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -618,14 +618,14 @@ checkEnd ( model, cmd ) =
                 BoardGame ->
                     if List.isEmpty myboard.enemies && myboard.spawn == 0 then
                         { model
-                            | mode = Castle
+                            | mode = model.previousMode
                             , level = model.level + 1
                             , bag = addCoin model.bag wincoins
                         }
 
                     else if List.isEmpty myboard.heroes then
                         { model
-                            | mode = Castle
+                            | mode = model.previousMode
                             , bag = addCoin model.bag losecoins
                         }
 

@@ -383,8 +383,8 @@ viewDungeon2 model =
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 250) ++ "px")
-            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 380) ++ "px")
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 240) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 + 40) ++ "px")
             ]
             [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
             ]
