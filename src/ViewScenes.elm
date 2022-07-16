@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
-import RpgCharacter exposing (RpgCharacter)
+import RpgCharacter exposing (CharacterState(..), RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
@@ -105,57 +105,80 @@ viewLogo =
 --
 -- Created this code so that the RPG character can change facing but there are bugs
 -- viewRpgCharacter : Model -> Html Msg
--- viewRpgCharacter model =
---     div
---         [ style "position" "absolute"
---         , style "top" (toString (Tuple.first model.character.pos))
---         , style "left" (toString (Tuple.first model.character.pos))
---         , style "z-index" "9999"
---         ]
---         [ case model.character.faceDir of
---             Left ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     , style "transform" "scaleX(-1)"
---                     ]
---                     []
---             Right ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     ]
---                     []
---             _ ->
---                 img
---                     [ src "./assets/image/WarriorGood.png"
---                     , height (floor model.character.height)
---                     , width (floor model.character.width)
---                     ]
---                     []
---         ]
 
 
-viewRpgCharacter : RpgCharacter -> Svg msg
+viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
-    let
-        ( w, h ) =
-            ( character.width, character.height )
-
-        ( x, y ) =
-            character.pos
-    in
-    Svg.image
-        [ SvgAttr.width (toString w)
-        , SvgAttr.height (toString h)
-        , SvgAttr.x (toString (x - w / 2))
-        , SvgAttr.y (toString (y - h / 2))
-        , SvgAttr.preserveAspectRatio "xMidYMid slice"
-        , SvgAttr.xlinkHref "./assets/image/MainCharacter.png"
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
+        , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
-        []
+        [ case character.state of
+            MovingRight ->
+                img
+                    [ src "./assets/image/MainCharacter.gif"
+                    , height (floor character.height)
+                    , width (floor character.width)
+                    ]
+                    []
+
+            MovingLeft ->
+                img
+                    [ src "./assets/image/MainCharacter.gif"
+                    , height (floor character.height)
+                    , width (floor character.width)
+                    , HtmlAttr.style "transform" "scaleX(-1)"
+                    ]
+                    []
+
+            Still ->
+                case character.faceDir of
+                    Right ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            ]
+                            []
+
+                    Left ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            , HtmlAttr.style "transform" "scaleX(-1)"
+                            ]
+                            []
+
+                    _ ->
+                        img
+                            [ src "./assets/image/MainCharacter.png"
+                            , height (floor character.height)
+                            , width (floor character.width)
+                            ]
+                            []
+        ]
+
+
+
+-- viewRpgCharacter : RpgCharacter -> Svg msg
+-- viewRpgCharacter character =
+--     let
+--         ( w, h ) =
+--             ( character.width, character.height )
+--         ( x, y ) =
+--             character.pos
+--     in
+--     Svg.image
+--         [ SvgAttr.width (toString w)
+--         , SvgAttr.height (toString h)
+--         , SvgAttr.x (toString (x - w / 2))
+--         , SvgAttr.y (toString (y - h / 2))
+--         , SvgAttr.preserveAspectRatio "xMidYMid slice"
+--         , SvgAttr.xlinkHref "./assets/image/MainCharacter.png"
+--         ]
+--         []
 
 
 viewCharacterPos : RpgCharacter -> Html Msg
@@ -234,7 +257,6 @@ viewCastle model =
             , SvgAttr.height "100%"
             ]
             [ viewCastleSvg
-            , viewRpgCharacter model.character
             , Svg.image
                 -- view dark knight
                 [ SvgAttr.width "65"
@@ -246,12 +268,12 @@ viewCastle model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewCharacterPos model.character
         , viewBagCoin model
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter
+        , viewRpgCharacter model.character
         ]
 
 
@@ -311,7 +333,8 @@ viewDungeon model =
             , SvgAttr.height "100%"
             ]
             [ viewDungeonSvg
-            , viewRpgCharacter model.character
+
+            -- , viewExit
             , Svg.image
                 -- view dark knight
                 [ SvgAttr.width "65"
@@ -323,13 +346,107 @@ viewDungeon model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewCharacterPos model.character
         , viewBagCoin model
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter
+        , viewRpgCharacter model.character
         ]
+
+
+viewDungeon2 : Model -> Html Msg
+viewDungeon2 model =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
+
+            else
+                Basics.min 1 (w / pixelWidth)
+    in
+    div
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        , HtmlAttr.style "background" "black"
+        ]
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "0px"
+            ]
+            [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "left" "32.5px"
+            ]
+            [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "600px"
+            , HtmlAttr.style "left" "72.5px"
+            ]
+            [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 250) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 380) ++ "px")
+            ]
+            [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
+            ]
+        , Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ viewDungeonSvg
+
+            -- , viewExit
+            , Svg.image
+                -- view dark knight
+                [ SvgAttr.width "65"
+                , SvgAttr.height "65"
+                , SvgAttr.x (toString (pixelWidth / 2))
+                , SvgAttr.y (toString (pixelHeight / 2 - 210))
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/EvilNPC.png"
+                ]
+                []
+            ]
+        , viewCharacterPos model.character
+        , viewBagCoin model
+        , viewTipForDir
+        , viewTipForC
+        , viewTipForEnter
+        , viewRpgCharacter model.character
+        ]
+
+
+
+-- viewExit : Svg Msg
+-- viewExit =
+--     Svg.rect
+--         [ SvgAttr.width "60"
+--         , SvgAttr.height "90"
+--         , SvgAttr.x (toString (pixelWidth / 2 - 30))
+--         , SvgAttr.y (toString (pixelHeight / 2 + 410))
+--         , SvgAttr.fontSize "20"
+--         , SvgAttr.fontStyle "blue"
+--         , SvgAttr.color "black"
+--         , SvgAttr.fill "white"
+--         ]
+--         [ Svg.text "Exit" ]
 
 
 viewDungeonSvg : Svg Msg

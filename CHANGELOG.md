@@ -6,6 +6,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.34] -- 2022-7-16
+
+### Add
+- RPG character animations
+- Board visuals to enhance game experience 
+- Animations for RPG character and heroes
 
 ## [m1.33] -- 2022-7-14
 

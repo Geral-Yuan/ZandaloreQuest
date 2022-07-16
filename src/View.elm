@@ -43,6 +43,9 @@ view model =
                 Dungeon ->
                     viewDungeon model
 
+                Dungeon2 ->
+                    viewDungeon2 model
+
                 Tutorial k ->
                     viewTutorial k model
     in
@@ -156,7 +159,6 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewHero model.board.heroes
                 ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
@@ -170,15 +172,74 @@ viewBoard model =
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
+         , viewTurn model
 
          --  , viewClickPosition model
          --  , viewTips
          , tutorialButton
          ]
+            ++ List.map viewHero model.board.heroes
             ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.map animateHeroVisuals model.board.heroes
+            ++ List.map animateEnemyVisuals model.board.enemies
             ++ List.map viewHeroInfo4 model.board.heroes
             ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
+
+
+animateEnemyVisuals : Enemy -> Html Msg
+animateEnemyVisuals enemy =
+    let
+        ( x, y ) =
+            findPos enemy.pos
+    in
+    div
+        [ HtmlAttr.style "left" (toString x ++ "px")
+        , HtmlAttr.style "top" (toString (y - 80) ++ "px")
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "60px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ case enemy.state of
+            Attacked k ->
+                text ("-" ++ toString k)
+
+            _ ->
+                text ""
+        ]
+
+
+animateHeroVisuals : Hero -> Html Msg
+animateHeroVisuals hero =
+    let
+        ( x, y ) =
+            findPos hero.pos
+    in
+    div
+        [ HtmlAttr.style "left" (toString x ++ "px")
+        , HtmlAttr.style "top" (toString (y - 80) ++ "px")
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "60px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ case hero.state of
+            Moving ->
+                text "-2 Energy"
+
+            Attacking ->
+                text "-3 Energy"
+
+            _ ->
+                text ""
+        ]
 
 
 
@@ -278,6 +339,28 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
+
+viewTurn : Model -> Html Msg
+viewTurn model =
+    div
+        [ HtmlAttr.style "left" "400px"
+        , HtmlAttr.style "top" "50px"
+        , HtmlAttr.style "color" "red"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "40px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ case model.board.turn of
+            EnemyTurn ->
+                text "Enemy Turn"
+
+            _ ->
+                text "Your Turn"
+        ]
 
 
 viewCrate : Obstacle -> Svg Msg

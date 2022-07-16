@@ -1,6 +1,6 @@
 module HeroAttack exposing (checkAttack, generateDamage)
 
-import Action exposing (selectedHero, unselectedHero, checkAttackObstacle)
+import Action exposing (checkAttackObstacle, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -35,7 +35,7 @@ checkAttack board pos critical =
                 --    if hero.energy > 2 && List.member pos (listIntersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
                 let
                     newheroes =
-                        { hero | energy = hero.energy - 3 } :: unselectedHero board.heroes
+                        { hero | energy = hero.energy - 3, state = Attacking } :: unselectedHero board.heroes
 
                     newcritical =
                         case critical of
@@ -62,7 +62,7 @@ checkAttack board pos critical =
                             _ ->
                                 [ pos ]
                 in
-                List.foldl checkAttackTarget { board | critical = newcritical, heroes = newheroes } attackedPoslist
+                List.foldl checkAttackTarget { board | critical = newcritical, heroes = newheroes, turn = AttackInProgress } attackedPoslist
 
             else
                 board
@@ -86,8 +86,9 @@ meaningfulTarget board =
 checkAttackTarget : Pos -> Board -> Board
 checkAttackTarget pos board =
     board
-        |> checkAttackObstacle [pos]
+        |> checkAttackObstacle [ pos ]
         |> checkAttackEnemy pos
+
 
 
 {-
@@ -117,7 +118,7 @@ checkAttackEnemy pos board =
 
 damageEnemy : Int -> Int -> Enemy -> Enemy
 damageEnemy damage critical enemy =
-    { enemy | health = enemy.health - damage - critical }
+    { enemy | health = enemy.health - damage - critical, state = Attacked (critical + damage) }
 
 
 
