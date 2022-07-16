@@ -117,7 +117,7 @@ viewRpgCharacter character =
         [ case character.state of
             MovingRight ->
                 img
-                    [ src "./assets/image/MainCharacterGIF.gif"
+                    [ src "./assets/image/MainCharacter.gif"
                     , height (floor character.height)
                     , width (floor character.width)
                     ]
@@ -125,7 +125,7 @@ viewRpgCharacter character =
 
             MovingLeft ->
                 img
-                    [ src "./assets/image/MainCharacterGIF.gif"
+                    [ src "./assets/image/MainCharacter.gif"
                     , height (floor character.height)
                     , width (floor character.width)
                     , HtmlAttr.style "transform" "scaleX(-1)"
