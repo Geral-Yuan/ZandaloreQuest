@@ -9,8 +9,8 @@ import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
-import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 import Svg.Attributes exposing (mode)
+import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -24,8 +24,9 @@ update msg model =
                             case k of
                                 3 ->
                                     model.previousMode
+
                                 _ ->
-                                    Tutorial (k + 1)  
+                                    Tutorial (k + 1)
                     in
                     case msg of
                         Enter False ->
@@ -166,10 +167,13 @@ isReachable : GameMode -> ( Float, Float ) -> Bool
 isReachable mode ( x, y ) =
     case mode of
         Castle ->
-            (x > 290 && x < 1660 && y > 750 && y < 800) || (x > 550 && x < 1380 && y <= 750 && y > 400)
+            (x > 290 && x < 1660 && y > 750 && y < 780)
+                || (x > 545 && x < 1385 && y <= 750 && y > 375)
+                || (x > 700 && x < 1240 && y <= 375 && y > 350)
+                || (y <= 375 && y > 200 && (x > 545 && x < 620 || x > 1310 && x < 1385))
 
         Shop ->
-            x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
+            x > 360 && x < 1300 && y > 590 && y < 750 || y >= 750 && y < 860 && x > 650 && x < 850
 
         Dungeon ->
             y > 209 && y < 942 && x > 470 && x < 1510
@@ -268,13 +272,13 @@ updateRPG msg model =
                         ( model, Cmd.none )
 
                 Castle ->
-                    if x > 1500 && x < 1660 && y < 900 then
+                    if x > 1500 && x < 1660 && y < 780 && y > 750 then
                         ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Cmd.none )
 
-                    else if x > 950 && x < 1050 && y < 450 then
+                    else if x > 900 && x < 1050 && y <= 400 && y > 350 then
                         ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
 
-                    else if x > 290 && x < 400 && y > 750 then
+                    else if x > 290 && x < 410 && y < 780 && y > 750 then
                         ( { model | mode = Dungeon2, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
 
                     else
