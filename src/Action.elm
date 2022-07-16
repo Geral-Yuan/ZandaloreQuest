@@ -10,14 +10,24 @@ updateAttackable : Board -> Board
 updateAttackable board =
     case selectedHero board.heroes of
         Nothing ->
-            { board | attackable = [] }
+            { board | attackable = [], skillable = [] }
 
         Just hero ->
             let
                 realattackRange =
-                    List.map (vecAdd hero.pos) (attackRange board hero)
+                    List.map (vecAdd hero.pos) (attackRange board hero) 
+
+                realskillRange =
+                    case hero.class of 
+                        Healer ->
+                            List.map (vecAdd hero.pos) (skillRange board hero) |> listIntersection (List.map .pos board.heroes)
+
+                        Engineer ->
+                            List.map (vecAdd hero.pos) (skillRange board hero) |> List.filter (\x -> isGridEmpty x board)
+
+                        _ -> []
             in
-            { board | attackable = realattackRange }
+            { board | attackable = realattackRange, skillable = realskillRange }
 
 
 attackRange : Board -> Hero -> List Pos
@@ -31,13 +41,26 @@ attackRange board hero =
 
 
         Engineer ->
+            neighbour
+
+        Healer -> 
+            neighbour
+
+        _ ->
+            neighbour
+
+
+skillRange : Board -> Hero -> List Pos
+skillRange board hero =
+    case hero.class of
+        Engineer ->
             neighbour ++ subneighbour
 
         Healer -> 
             (0, 0) :: neighbour
 
         _ ->
-            neighbour
+            []
 
 
 attackedByArcherRange : Board -> Pos -> List Pos
@@ -102,7 +125,7 @@ updateTarget board =
         Just hero ->
             case findHexagon board.pointPos of
                 Just cell ->
-                    if List.member cell board.attackable then
+                    if List.member cell (listUnion board.attackable board.skillable) then
                         case hero.class of
                             Mage ->
                                 { board | target = cell :: List.map (vecAdd cell) neighbour }

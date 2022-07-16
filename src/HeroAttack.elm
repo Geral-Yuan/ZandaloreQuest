@@ -73,10 +73,22 @@ isMeaningfulAttack : Board -> Class -> Pos -> Bool
 isMeaningfulAttack board class pos =
     case class of
         Mage ->
-            List.member pos (listIntersection board.attackable (extentPos (meaningfulTarget board class) (( 0, 0 ) :: neighbour)))
+            List.member pos (listIntersection (board.attackable) (extentPos (meaningfulTarget board class) (( 0, 0 ) :: neighbour)))
+
+        Engineer ->
+            List.member pos (listUnion 
+                            (listIntersection (board.attackable) (meaningfulTarget board Warrior)) 
+                            (listIntersection (board.skillable) (meaningfulTarget board class))
+                            )
+
+        Healer ->
+            List.member pos (listUnion 
+                            (listIntersection (board.attackable) (meaningfulTarget board Warrior)) 
+                            (listIntersection (board.skillable) (meaningfulTarget board class))
+                            )
 
         _ ->
-            List.member pos (listIntersection board.attackable (meaningfulTarget board class))
+            List.member pos (listIntersection (board.attackable) (meaningfulTarget board class))
 
 
 meaningfulTarget : Board -> Class -> List Pos
@@ -84,6 +96,7 @@ meaningfulTarget board class =
     case class of
         Engineer ->
             listDifference board.map (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
+                                        ++ List.map .pos board.enemies
                                         ++ List.map .pos board.heroes
                                         ++ List.map .pos board.item)
 
