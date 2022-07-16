@@ -59,11 +59,11 @@ actionSmartWarrior board enemy =
     case route of
         [] ->
             eh2Board
-                ( { enemy | done = True } :: otherenemies
+                ( { enemy | done = True, state = Attacking } :: otherenemies
                 , enemyWarriorAttack enemy board.heroes
                     |> List.filter (\x -> x.health > 0)
                 )
-                board
+                { board | boardState = EnemyAttack }
 
         first :: _ ->
             eh2Board
@@ -91,7 +91,7 @@ enemyWarriorAttack enemy heroes =
                     ( [ hero ], otherHeroes ++ restHeroes )
     in
     -- fix 0 for critical now
-    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
+    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
 
 
 enemyArcherAttack : Enemy -> Board -> List Hero
@@ -112,7 +112,7 @@ enemyArcherAttack enemy board =
                     ( [ hero ], otherHeroes ++ restHeroes )
     in
     -- fix 0 for critical now
-    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
+    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
 
 
 actionSmartArcher : Board -> Enemy -> Board
@@ -128,11 +128,11 @@ actionSmartArcher board enemy =
     case route of
         [] ->
             eh2Board
-                ( { enemy | done = True } :: otherenemies
+                ( { enemy | done = True, state = Attacking } :: otherenemies
                 , enemyArcherAttack enemy board
                     |> List.filter (\x -> x.health > 0)
                 )
-                board
+                { board | boardState = EnemyAttack }
 
         first :: _ ->
             eh2Board
@@ -161,10 +161,11 @@ actionSmartMage board enemy =
     case route of
         [] ->
             { board
-                | enemies = { enemy | done = True } :: otherenemies
+                | enemies = { enemy | done = True, state = Attacking } :: otherenemies
                 , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
                 , obstacles = atkboard.obstacles
                 , item = atkboard.item
+                , boardState = EnemyAttack
             }
 
         first :: _ ->
@@ -178,7 +179,7 @@ enemyMageAttack enemy board =
             List.map (\x -> vecAdd x enemy.pos) subneighbour
 
         -- |> List.partition (\x -> List.member x (List.map .pos board.obstacles))
-        ( attackableHeroes, restHeroes ) =
+        ( attackableHeroes, _ ) =
             List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
 
         attackCombination =
@@ -192,11 +193,11 @@ enemyMageAttack enemy board =
                 [] ->
                     ( ( [], [] ), ( -1, -1 ) )
 
-                ( hero, grid ) :: otherHeroes ->
-                    ( ( hero, List.concatMap (\x -> listDifference (Tuple.first x) hero) otherHeroes ++ restHeroes ), grid )
+                ( hero, grid ) :: _ ->
+                    ( ( hero, listDifference board.heroes hero ), grid )
 
         newHeroes =
-            List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
+            List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
 
         tgtObsPos =
             attackObsGroup chosenGrid board.obstacles
