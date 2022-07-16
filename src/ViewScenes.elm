@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
-import RpgCharacter exposing (CharacterState(..), RpgCharacter)
+import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
@@ -114,50 +114,31 @@ viewRpgCharacter character =
         , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
         , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
-        [ case character.state of
-            MovingRight ->
+        [ case character.faceDir of
+            Right ->
                 img
-                    [ src "./assets/image/MainCharacter.gif"
+                    [ src "./assets/image/MainCharacter.png"
                     , height (floor character.height)
                     , width (floor character.width)
                     ]
                     []
 
-            MovingLeft ->
+            Left ->
                 img
-                    [ src "./assets/image/MainCharacter.gif"
+                    [ src "./assets/image/MainCharacter.png"
                     , height (floor character.height)
                     , width (floor character.width)
                     , HtmlAttr.style "transform" "scaleX(-1)"
                     ]
                     []
 
-            Still ->
-                case character.faceDir of
-                    Right ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            ]
-                            []
-
-                    Left ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            , HtmlAttr.style "transform" "scaleX(-1)"
-                            ]
-                            []
-
-                    _ ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            ]
-                            []
+            _ ->
+                img
+                    [ src "./assets/image/MainCharacter.png"
+                    , height (floor character.height)
+                    , width (floor character.width)
+                    ]
+                    []
         ]
 
 

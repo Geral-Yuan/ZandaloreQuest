@@ -9,10 +9,10 @@ import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
-import RpgCharacter exposing (CharacterState(..), RpgCharacter, moveCharacter)
-import String exposing (right)
+import RpgCharacter exposing (moveCharacter)
 import Task
 import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
+import Svg.Attributes exposing (mode)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -337,10 +337,10 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Key Left on ->
-            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on, faceDir = Left, state = MovingLeft } }, Cmd.none )
+            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
 
         Key Right on ->
-            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && not on, faceDir = Right, state = MovingRight } }, Cmd.none )
+            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && not on } }, Cmd.none )
 
         Key Up on ->
             ( { model | character = { character | moveUp = on, moveDown = character.moveDown && not on } }, Cmd.none )
@@ -366,7 +366,7 @@ updateRPG msg model =
             ( { model | mode = Shop }, Task.perform GetViewport getViewport )
 
         _ ->
-            ( { model | character = { character | state = Still } }, Cmd.none )
+            ( model, Cmd.none )
 
 
 updateScene : Msg -> Model -> Model
