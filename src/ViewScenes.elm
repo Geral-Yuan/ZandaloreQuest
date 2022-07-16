@@ -124,10 +124,10 @@ viewRpgCharacter character =
 
         image =
             if character.moveLeft || character.moveRight || character.moveUp || character.moveDown then
-                "gif"
+                "GIF.gif"
 
             else
-                "png"
+                ".png"
     in
     div
         [ HtmlAttr.style "position" "absolute"
@@ -135,7 +135,7 @@ viewRpgCharacter character =
         , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
         [ img
-            [ src ("./assets/image/MainCharacter." ++ image)
+            [ src ("./assets/image/MainCharacter" ++ image)
             , height (floor character.height)
             , width (floor character.width)
             , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
