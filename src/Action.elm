@@ -3,55 +3,91 @@ module Action exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
+import Time exposing (Weekday(..))
 
 
 updateAttackable : Board -> Board
 updateAttackable board =
     case selectedHero board.heroes of
         Nothing ->
-            { board | attackable = [] }
+            { board | attackable = [], skillable = [] }
 
         Just hero ->
             let
                 realattackRange =
-                    List.map (vecAdd hero.pos) (attackRange board hero)
+                    List.map (vecAdd hero.pos) (attackRange board hero) 
+
+                realskillRange =
+                    case hero.class of 
+                        Healer ->
+                            List.map (vecAdd hero.pos) (skillRange board hero) |> listIntersection (List.map .pos board.heroes)
+
+                        Engineer ->
+                            List.map (vecAdd hero.pos) (skillRange board hero) |> List.filter (\x -> isGridEmpty x board)
+
+                        _ -> []
             in
-            { board | attackable = realattackRange }
+            { board | attackable = realattackRange, skillable = realskillRange }
 
 
 attackRange : Board -> Hero -> List Pos
 attackRange board hero =
     case hero.class of
         Archer ->
-            List.concat (List.map (stuckInWay board hero.pos) neighbour)
+            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
 
         Mage ->
             subneighbour
+
+
+        Engineer ->
+            neighbour
+
+        Healer -> 
+            neighbour
 
         _ ->
             neighbour
 
 
+skillRange : Board -> Hero -> List Pos
+skillRange board hero =
+    case hero.class of
+        Engineer ->
+            neighbour ++ subneighbour
+
+        Healer -> 
+            (0, 0) :: neighbour
+
+        _ ->
+            []
+
+
 attackedByArcherRange : Board -> Pos -> List Pos
 attackedByArcherRange board pos =
-    List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos) neighbour))
+    List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Hostile) neighbour))
 
 
-stuckInWay : Board -> Pos -> Pos -> List Pos
-stuckInWay board heropos pos =
+stuckInWay : Board -> Pos -> Side -> Pos -> List Pos
+stuckInWay board my_pos my_side nbhd_pos =
     let
         linePos =
-            List.map (vecAdd heropos) (sameline pos)
+            List.map (vecAdd my_pos) (sameline nbhd_pos)
 
         inWay =
-            listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
+            case my_side of
+                Friend ->
+                    listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.enemies)
+
+                Hostile ->
+                    listIntersection linePos (List.map .pos board.obstacles ++ List.map .pos board.heroes)
     in
-    case leastdistance inWay heropos of
+    case leastdistance inWay my_pos of
         Nothing ->
-            sameline pos
+            sameline nbhd_pos
 
         Just dis ->
-            List.map (\k -> vecScale k pos) (List.range 1 dis)
+            List.map (\k -> vecScale k nbhd_pos) (List.range 1 dis)
 
 
 
@@ -89,7 +125,7 @@ updateTarget board =
         Just hero ->
             case findHexagon board.pointPos of
                 Just cell ->
-                    if List.member cell board.attackable then
+                    if List.member cell (listUnion board.attackable board.skillable) then
                         case hero.class of
                             Mage ->
                                 { board | target = cell :: List.map (vecAdd cell) neighbour }
@@ -140,27 +176,83 @@ checkAttackObstacle pos_list board =
     { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
 
 
+checkBuildObstacle : Class -> Pos -> Board -> Board
+checkBuildObstacle class pos board =
+    case class of
+        Engineer ->
+            let
+                newobslist = 
+                    if isGridEmpty pos board then
+                        (Obstacle MysteryBox pos NoItem) :: board.obstacles
+                    else
+                        board.obstacles
+            in
+            {board | obstacles = newobslist}
+
+        _ -> board
+    
+
+checkHeal : Class -> Pos -> Board -> Board
+checkHeal class pos board =
+    case selectedHero board.heroes of
+        Nothing ->
+            board
+        
+        Just myhealer ->
+            case class of
+                Healer ->
+                    case pos2Hero board.heroes pos of
+                        Nothing ->
+                            board
+                        
+                        Just hero ->
+                            let
+                                others = listDifference board.heroes [hero]
+
+                                newlist = {hero | health = hero.health + (calculateHeal myhealer.damage)} :: others
+                            in
+                            {board| heroes = newlist}
+                _ -> board
+
+
+calculateHeal : Int -> Int
+calculateHeal damage =
+    2 * damage
+
+
 pos2Item : List Item -> Pos -> Item
 pos2Item all_items pos =
-    case List.filter (\x -> (pos == x.pos)) all_items of
+    case List.filter (\x -> pos == x.pos) all_items of
         [] ->
-            Item NoItem (999, 999)
+            Item NoItem ( 999, 999 )
+
         chosen :: _ ->
             chosen
 
-pos2Hero : List Hero -> Pos -> Hero
+
+pos2Hero : List Hero -> Pos -> Maybe Hero
 pos2Hero all_hero pos =
-    case List.filter (\x -> (pos == x.pos)) all_hero of
+    case List.filter (\x -> pos == x.pos) all_hero of
         [] ->
-            Hero Warrior ( 0, 0 ) -1 15 3 False 0
+            Nothing
+
         chosen :: _ ->
-            chosen
+            Just chosen
+
 
 index2Hero : Int -> List Hero -> Hero
 index2Hero index l_hero =
-    case List.filter (\x -> (index == x.indexOnBoard)) l_hero of
+    case List.filter (\x -> index == x.indexOnBoard) l_hero of
         [] ->
-            Hero Warrior ( 0, 0 ) -1 15 3 False 0
+            Hero Warrior ( 0, 0 ) -1 15 3 False Waiting 0
+
         chosen :: _ ->
             chosen
 
+
+isGridEmpty : Pos -> Board -> Bool
+isGridEmpty pos board =
+    not (((List.map .pos board.obstacles) 
+    ++ (List.map .pos board.item)
+    ++ (List.map .pos board.enemies)
+    ++ (List.map .pos board.heroes)) |> List.member pos)

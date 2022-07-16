@@ -17,7 +17,7 @@ actionEnemy board =
             board
 
         enemy :: _ ->
-            (actionSmartEnemy board enemy)
+            actionSmartEnemy board enemy
 
 
 actionSmartEnemy : Board -> Enemy -> Board
@@ -39,9 +39,13 @@ actionSmartEnemy board enemy =
 
                 Healer ->
                     board
+
+                Engineer ->
+                    board
     in
     nboard
-    |> breakItem (index2Enemy enemy.indexOnBoard nboard.enemies)
+        |> breakItem (index2Enemy enemy.indexOnBoard nboard.enemies)
+
 
 actionSmartWarrior : Board -> Enemy -> Board
 actionSmartWarrior board enemy =
@@ -49,20 +53,24 @@ actionSmartWarrior board enemy =
         route =
             leastWarriorPath enemy board
 
-        otherenemies = listDifference board.enemies [enemy]
+        otherenemies =
+            listDifference board.enemies [ enemy ]
     in
     case route of
         [] ->
-            eh2Board 
-            ( { enemy | done = True } :: otherenemies
-            , enemyWarriorAttack enemy board.heroes
-                |> List.filter (\x -> x.health > 0)
-            ) board
+            eh2Board
+                ( { enemy | done = True } :: otherenemies
+                , enemyWarriorAttack enemy board.heroes
+                    |> List.filter (\x -> x.health > 0)
+                )
+                board
 
         first :: _ ->
-            eh2Board 
-            ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes ) board
+            eh2Board
+                ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
+                , board.heroes
+                )
+                board
 
 
 enemyWarriorAttack : Enemy -> List Hero -> List Hero
@@ -114,20 +122,24 @@ actionSmartArcher board enemy =
             -- leastArcherPath enemy board
             leastArcherPath enemy board
 
-        otherenemies = listDifference board.enemies [enemy]
+        otherenemies =
+            listDifference board.enemies [ enemy ]
     in
     case route of
         [] ->
             eh2Board
-            ( { enemy | done = True } :: otherenemies
-            , enemyArcherAttack enemy board
-                |> List.filter (\x -> x.health > 0)
-            ) board
+                ( { enemy | done = True } :: otherenemies
+                , enemyArcherAttack enemy board
+                    |> List.filter (\x -> x.health > 0)
+                )
+                board
 
         first :: _ ->
             eh2Board
-            ( (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies
-            , board.heroes ) board
+                ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
+                , board.heroes
+                )
+                board
 
 
 actionSmartMage : Board -> Enemy -> Board
@@ -137,24 +149,26 @@ actionSmartMage board enemy =
             -- leastArcherPath enemy board
             leastMagePath enemy board
 
+        otherenemies =
+            listDifference board.enemies [ enemy ]
 
-        otherenemies = listDifference board.enemies [enemy]
+        atkboard =
+            enemyMageAttack enemy board
 
-        atkboard = enemyMageAttack enemy board
-
-        atkedheroes = atkboard.heroes
+        atkedheroes =
+            atkboard.heroes
     in
     case route of
         [] ->
-            {board | enemies = { enemy | done = True } :: otherenemies
-            , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
-            , obstacles = atkboard.obstacles
-            , item = atkboard.item
+            { board
+                | enemies = { enemy | done = True } :: otherenemies
+                , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
+                , obstacles = atkboard.obstacles
+                , item = atkboard.item
             }
 
         first :: _ ->
-            {board | enemies = (checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first }) :: otherenemies }
-
+            { board | enemies = checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies }
 
 
 enemyMageAttack : Enemy -> Board -> Board
@@ -162,36 +176,35 @@ enemyMageAttack enemy board =
     let
         attackPlace =
             List.map (\x -> vecAdd x enemy.pos) subneighbour
-                -- |> List.partition (\x -> List.member x (List.map .pos board.obstacles))
 
+        -- |> List.partition (\x -> List.member x (List.map .pos board.obstacles))
         ( attackableHeroes, restHeroes ) =
             List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
-           
 
         attackCombination =
-            List.map (\tgt -> (attackHeroGroup tgt attackableHeroes, tgt)) attackPlace
+            List.map (\tgt -> ( attackHeroGroup tgt attackableHeroes, tgt )) attackPlace
 
         sortedAttackableHeroes =
             List.sortBy (\x -> -1 * List.length (Tuple.first x)) attackCombination
 
-        (( targetHero, newrestHeroes ), chosenGrid) =
+        ( ( targetHero, newrestHeroes ), chosenGrid ) =
             case sortedAttackableHeroes of
                 [] ->
-                    (( [], [] ), (-1, -1))
+                    ( ( [], [] ), ( -1, -1 ) )
 
-                (hero, grid) :: otherHeroes ->
-                    (( hero, List.concatMap (\x -> listDifference (Tuple.first x) hero) (otherHeroes) ++ restHeroes ), grid)
+                ( hero, grid ) :: otherHeroes ->
+                    ( ( hero, List.concatMap (\x -> listDifference (Tuple.first x) hero) otherHeroes ++ restHeroes ), grid )
 
-        newHeroes = List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
-        
-        tgtObsPos = attackObsGroup chosenGrid board.obstacles
-                    |> List.map .pos
+        newHeroes =
+            List.map (\hero -> { hero | health = hero.health - enemy.damage - 0 }) targetHero ++ newrestHeroes
 
-
+        tgtObsPos =
+            attackObsGroup chosenGrid board.obstacles
+                |> List.map .pos
     in
     -- fix 0 for critical now
-    {board | heroes = newHeroes}
-    |> checkAttackObstacle tgtObsPos
+    { board | heroes = newHeroes }
+        |> checkAttackObstacle tgtObsPos
 
 
 attackHeroGroup : Pos -> List Hero -> List Hero
@@ -213,6 +226,7 @@ checkEnemyDone enemy =
         enemy
 
 
+
 -- checkEHDeath : Board -> Board
 -- checkEHDeath board =
 --     let
@@ -221,23 +235,29 @@ checkEnemyDone enemy =
 --     in
 --     {board | heroes = nheroes, enemies = nenemy}
 
+
 breakItem : Enemy -> Board -> Board
 breakItem enemy board =
     let
-        chosenItem = pos2Item board.item enemy.pos
-        otherItems = listDifference board.item [chosenItem]
-    in
-        { board |  item = otherItems }
+        chosenItem =
+            pos2Item board.item enemy.pos
 
-eh2Board : (List Enemy, List Hero) -> Board -> Board
-eh2Board (l_enemy, l_hero) board =
-    {board | enemies = l_enemy, heroes = l_hero}
+        otherItems =
+            listDifference board.item [ chosenItem ]
+    in
+    { board | item = otherItems }
+
+
+eh2Board : ( List Enemy, List Hero ) -> Board -> Board
+eh2Board ( l_enemy, l_hero ) board =
+    { board | enemies = l_enemy, heroes = l_hero }
+
 
 index2Enemy : Int -> List Enemy -> Enemy
 index2Enemy index l_enemy =
-    case List.filter (\x -> (index == x.indexOnBoard)) l_enemy of
+    case List.filter (\x -> index == x.indexOnBoard) l_enemy of
         [] ->
-            Enemy Warrior ( 0, 0 ) -1 15 3 False 0
+            Enemy Warrior ( 0, 0 ) -1 15 3 False Waiting 0
+
         chosen :: _ ->
             chosen
-

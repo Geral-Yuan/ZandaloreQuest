@@ -11,6 +11,7 @@ type GameMode
     = Castle
     | Shop
     | Dungeon
+    | Dungeon2
     | BuyingItems
     | HeroChoose
       -- | Starting
@@ -34,8 +35,14 @@ type Critical
 
 
 type Turn
-    = HeroTurn
+    = PlayerTurn
     | EnemyTurn
+    | AttackInProgress
+    | MovingInProgress
+
+
+
+-- | GettingAttacked
 
 
 type Class
@@ -44,6 +51,7 @@ type Class
     | Assassin
     | Healer
     | Mage
+    | Engineer
 
 
 type ObstacleType
@@ -57,6 +65,13 @@ type ItemType
     | Gold Int
     | Buff
     | NoItem
+
+
+type HeroState
+    = Waiting
+    | Attacking
+    | Attacked Int
+    | Moving
 
 
 type alias Obstacle =
@@ -79,6 +94,7 @@ type alias Hero =
     , damage : Int
     , energy : Int
     , selected : Bool
+    , state : HeroState
     , indexOnBoard : Int --give an index to the heroes on the board
     }
 
@@ -90,6 +106,7 @@ type alias Enemy =
     , damage : Int
     , steps : Int
     , done : Bool
+    , state : HeroState
     , indexOnBoard : Int --give an index to the enemies on the board
     }
 
@@ -105,6 +122,11 @@ type Dir
     | Right
     | Up
     | Down
+
+
+type Side
+    = Hostile
+    | Friend
 
 
 
@@ -174,16 +196,16 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 8 0 True index
+            Enemy Warrior pos 80 8 0 True Waiting index
 
         Archer ->
-            Enemy Archer pos 40 10 0 True index
+            Enemy Archer pos 40 10 0 True Waiting index
 
         Assassin ->
-            Enemy Assassin pos 40 10 0 True index
+            Enemy Assassin pos 40 10 0 True Waiting index
 
         _ ->
-            Enemy Mage pos 50 6 0 True index
+            Enemy Mage pos 50 6 0 True Waiting index
 
 
 

@@ -13,6 +13,7 @@ type alias Board =
     , critical : Int
     , moveable : List ( Pos, Dir )
     , attackable : List Pos
+    , skillable : List Pos
     , target : List Pos
     , item : List Item
     , time : Float
@@ -101,9 +102,9 @@ spawnTimes k =
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    Board map (initObstacles k) (initenemy k) (inithero heroes k) HeroTurn 0 [] [] [] [] 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0
+    Board map (initObstacles k) (initenemy k) (inithero heroes k) PlayerTurn 0 [] [] [] [] [] 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0
 
 
 sampleBoard : Board
 sampleBoard =
-    Board [] [] [] [] HeroTurn 0 [] [] [] [] 0 0 0 ( 0, 0 ) 0
+    Board [] [] [] [] PlayerTurn 0 [] [] [] [] [] 0 0 0 ( 0, 0 ) 0

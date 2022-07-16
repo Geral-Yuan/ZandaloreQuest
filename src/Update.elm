@@ -3,14 +3,13 @@ module Update exposing (update)
 import Action exposing (updateAttackable, updateMoveable, updateTarget)
 import Bag exposing (addCoin)
 import Board exposing (initBoard)
-import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
-import Task
+import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 
 
@@ -19,26 +18,19 @@ update msg model =
     let
         ( nmodel, ncmd ) =
             case model.mode of
-                Tutorial 3 ->
+                Tutorial k ->
+                    let
+                        nextMode =
+                            case k of
+                                3 ->
+                                    BoardGame
+
+                                _ ->
+                                    Tutorial (k + 1)
+                    in
                     case msg of
                         Enter False ->
-                            ( { model | mode = model.previousMode }, Cmd.none )
-
-                        _ ->
-                            ( model, Cmd.none )
-
-                Tutorial 1 ->
-                    case msg of
-                        Enter False ->
-                            ( { model | mode = Tutorial 2 }, Cmd.none )
-
-                        _ ->
-                            ( model, Cmd.none )
-
-                Tutorial 2 ->
-                    case msg of
-                        Enter False ->
-                            ( { model | mode = Tutorial 3 }, Cmd.none )
+                            ( { model | mode = nextMode }, Cmd.none )
 
                         _ ->
                             ( model, Cmd.none )
@@ -46,7 +38,7 @@ update msg model =
                 BoardGame ->
                     case msg of
                         ViewTutorial ->
-                            ( { model | previousMode = model.mode, mode = Tutorial 1 }, Cmd.none )
+                            ( { model | mode = Tutorial 1 }, Cmd.none )
 
                         _ ->
                             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
@@ -69,6 +61,7 @@ update msg model =
 
                 _ ->
                     updateRPG msg model
+                        |> updateCharacter msg
     in
     ( nmodel
         |> resize msg
@@ -174,12 +167,18 @@ isReachable : GameMode -> ( Float, Float ) -> Bool
 isReachable mode ( x, y ) =
     case mode of
         Castle ->
-            (x > 320 && x < 1690 && y > 780 && y < 850) || (x > 580 && x < 1430 && y <= 780 && y > 400)
+            (x > 290 && x < 1660 && y > 750 && y < 780)
+                || (x > 545 && x < 1385 && y <= 750 && y > 375)
+                || (x > 700 && x < 1240 && y <= 375 && y > 350)
+                || (y <= 375 && y > 200 && (x > 545 && x < 620 || x > 1310 && x < 1385))
 
         Shop ->
-            x > 275 && x < 1740 && y > 590 && y < 801 || y > 800 && y < 905 && x > 650 && x < 900
+            x > 360 && x < 1300 && y > 590 && y < 750 || y >= 750 && y < 860 && x > 650 && x < 850
 
         Dungeon ->
+            y > 209 && y < 942 && x > 470 && x < 1510
+
+        Dungeon2 ->
             y > 209 && y < 942 && x > 470 && x < 1510
 
         _ ->
@@ -266,25 +265,35 @@ updateRPG msg model =
         Enter False ->
             case model.mode of
                 Shop ->
-                    if x > 710 && x < 900 && y > 850 then
-                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1630, 840 ) } }, Task.perform GetViewport getViewport )
+                    if x > 710 && x < 900 && y > 800 then
+                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 770 ), speed = 500 } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Castle ->
-                    if x > 1600 && x < 1660 && y < 900 then
-                        ( { model | mode = Shop, character = { character | width = 90, height = 90, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
+                    if x > 1500 && x < 1660 && y < 780 && y > 750 then
+                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Cmd.none )
 
-                    else if x > 950 && x < 1050 && y < 450 then
-                        ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
+                    else if x > 900 && x < 1050 && y <= 400 && y > 350 then
+                        ( { model | mode = Dungeon, character = { character | pos = ( 970, 930 ) } }, Cmd.none )
+
+                    else if x > 290 && x < 410 && y < 780 && y > 750 then
+                        ( { model | mode = Dungeon2, character = { character | pos = ( 970, 930 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | pos = ( 975, 375 ) } }, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon2 ->
+                    if y > 850 then
+                        ( { model | mode = Castle, character = { character | pos = ( 345, 770 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -298,15 +307,22 @@ updateRPG msg model =
                     ( { model | mode = BuyingItems }, Cmd.none )
 
                 Castle ->
-                    if x > 580 && x < 700 && y < 450 then
-                        ( { model | mode = HeroChoose, level = 1 }, Cmd.none )
+                    if x > 545 && x < 620 && y <= 370 && y > 200 then
+                        ( { model | mode = HeroChoose, level = 1, previousMode = Castle }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if x > 500 && x < 700 && y > 250 && y < 400 then
-                        ( { model | mode = HeroChoose, level = 2 }, Cmd.none )
+                        ( { model | mode = HeroChoose, level = 2, previousMode = Dungeon }, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
+
+                Dungeon2 ->
+                    if x > 500 && x < 700 && y > 250 && y < 400 then
+                        ( { model | mode = HeroChoose, level = 3, previousMode = Dungeon2 }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -315,16 +331,16 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Key Left on ->
-            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
 
         Key Right on ->
-            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && not on } }, Cmd.none )
 
         Key Up on ->
-            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && not on } }, Cmd.none )
 
         Key Down on ->
-            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && (not on) } }, Cmd.none )
+            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && not on } }, Cmd.none )
 
         UpgradeHealth ->
             if model.bag.coins > 49 then
@@ -341,21 +357,32 @@ updateRPG msg model =
                 ( model, Cmd.none )
 
         ExitShop ->
-            ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+            ( { model | mode = Shop }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
-                |> updateCharacter msg
 
 
 updateScene : Msg -> Model -> Model
 updateScene msg model =
     case msg of
+        Tick elapsed ->
+            { model | time = model.time + elapsed / 1000 }
+            |> checkLogoEnd
+
         Enter False ->
             { model | mode = Castle }
 
         _ ->
             model
+
+
+checkLogoEnd : Model -> Model
+checkLogoEnd model =
+    if (model.time > 6.1) && (model.mode == Logo) then
+        {model | mode = Castle}
+    else
+        model
 
 
 resize : Msg -> Model -> Model
@@ -383,7 +410,7 @@ checkSelectedClick msg model =
                     else
                         ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
             in
-            if findInfoBoard clickpos > 0 && model.board.turn == HeroTurn then
+            if findInfoBoard clickpos > 0 && model.board.turn == PlayerTurn then
                 { model | board = selectHero model.board (findInfoBoard clickpos) }
 
             else
@@ -536,14 +563,14 @@ randomCrate msg ( model, cmd ) =
     case msg of
         EndTurn ->
             case model.board.turn of
-                HeroTurn ->
+                PlayerTurn ->
                     if possibleCratePosition model /= [] then
                         ( { model | board = turnEnemy model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
 
                     else
                         ( model, cmd )
 
-                EnemyTurn ->
+                _ ->
                     ( model, cmd )
 
         _ ->
@@ -603,14 +630,14 @@ checkEnd ( model, cmd ) =
                 BoardGame ->
                     if List.isEmpty myboard.enemies && myboard.spawn == 0 then
                         { model
-                            | mode = Castle
+                            | mode = model.previousMode
                             , level = model.level + 1
                             , bag = addCoin model.bag wincoins
                         }
 
                     else if List.isEmpty myboard.heroes then
                         { model
-                            | mode = Castle
+                            | mode = model.previousMode
                             , bag = addCoin model.bag losecoins
                         }
 
