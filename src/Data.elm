@@ -51,6 +51,7 @@ type Class
     | Assassin
     | Healer
     | Mage
+    | Engineer
 
 
 type ObstacleType

@@ -29,6 +29,10 @@ attackRange board hero =
         Mage ->
             subneighbour
 
+
+        Engineer ->
+            neighbour ++ subneighbour
+
         _ ->
             neighbour
 
@@ -146,6 +150,23 @@ checkAttackObstacle pos_list board =
     { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
 
 
+checkBuildObstacle : Class -> Pos -> Board -> Board
+checkBuildObstacle class pos board =
+    case class of
+        Engineer ->
+            let
+                newobslist = 
+                    if isGridEmpty pos board then
+                        (Obstacle MysteryBox pos NoItem) :: board.obstacles
+                    else
+                        board.obstacles
+            in
+            {board | obstacles = newobslist}
+
+        _ -> board
+    
+
+
 pos2Item : List Item -> Pos -> Item
 pos2Item all_items pos =
     case List.filter (\x -> pos == x.pos) all_items of
@@ -174,3 +195,11 @@ index2Hero index l_hero =
 
         chosen :: _ ->
             chosen
+
+
+isGridEmpty : Pos -> Board -> Bool
+isGridEmpty pos board =
+    not (((List.map .pos board.obstacles) 
+    ++ (List.map .pos board.item)
+    ++ (List.map .pos board.enemies)
+    ++ (List.map .pos board.heroes)) |> List.member pos)
