@@ -20,10 +20,10 @@ updateAttackable board =
                 realskillRange =
                     case hero.class of 
                         Healer ->
-                            List.map (vecAdd hero.pos) (skillRange board hero) |> listIntersection (List.map .pos board.heroes)
+                            List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
 
                         Engineer ->
-                            List.map (vecAdd hero.pos) (skillRange board hero) |> List.filter (\x -> isGridEmpty x board)
+                            List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> isGridEmpty x board)
 
                         _ -> []
             in
@@ -50,8 +50,8 @@ attackRange board hero =
             neighbour
 
 
-skillRange : Board -> Hero -> List Pos
-skillRange board hero =
+skillRange : Hero -> List Pos
+skillRange hero =
     case hero.class of
         Engineer ->
             neighbour ++ subneighbour
