@@ -317,20 +317,36 @@ viewCell board ( row, column ) =
             []
 
     else if List.member ( row, column ) board.target then
-        Svg.polygon
-            [ SvgAttr.fill "yellow"
-            , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
-            ]
-            []
+        let
+            skilllist =  listIntersection board.target board.skillable
+        in
+        if (not (List.isEmpty skilllist)) then
+            Svg.polygon
+                [ SvgAttr.fill "rgb(154,205,50)"
+                , SvgAttr.stroke "blue"
+                , SvgAttr.points (detPoints (findPos ( row, column )))
+                ]
+                []
+        else
+            Svg.polygon
+                [ SvgAttr.fill "yellow"
+                , SvgAttr.stroke "blue"
+                , SvgAttr.points (detPoints (findPos ( row, column )))
+                ]
+                []
 
-    else if List.member ( row, column ) board.attackable then
+    else if List.member ( row, column ) (listUnion board.attackable board.skillable) then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
+
+    
+
+
+    
 
     else
         Svg.polygon
