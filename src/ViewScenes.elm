@@ -48,7 +48,7 @@ viewScene0 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewLogo model.time]
+            [ viewLogo model.time ]
         ]
 
 
