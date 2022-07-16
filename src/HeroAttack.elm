@@ -1,6 +1,6 @@
 module HeroAttack exposing (checkAttack, generateDamage)
 
-import Action exposing (checkAttackObstacle, selectedHero, unselectedHero, checkBuildObstacle)
+import Action exposing (checkAttackObstacle, selectedHero, unselectedHero, checkBuildObstacle, checkHeal)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -86,6 +86,11 @@ meaningfulTarget board class =
             listDifference board.map (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
                                         ++ List.map .pos board.heroes
                                         ++ List.map .pos board.item)
+
+        Healer ->
+            List.map .pos board.enemies 
+            ++ List.map .pos board.heroes
+            ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
         
         _ ->
             List.map .pos board.enemies ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
@@ -100,7 +105,7 @@ checkAttackTarget class pos board =
         |> checkAttackObstacle [ pos ]
         |> checkAttackEnemy pos
         |> (checkBuildObstacle class pos)
-        -- |> (checkHeal class pos)
+        |> (checkHeal class pos)
 
 
 

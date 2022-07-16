@@ -33,6 +33,9 @@ attackRange board hero =
         Engineer ->
             neighbour ++ subneighbour
 
+        Healer -> 
+            (0, 0) :: neighbour
+
         _ ->
             neighbour
 
@@ -166,6 +169,33 @@ checkBuildObstacle class pos board =
         _ -> board
     
 
+checkHeal : Class -> Pos -> Board -> Board
+checkHeal class pos board =
+    case selectedHero board.heroes of
+        Nothing ->
+            board
+        
+        Just myhealer ->
+            case class of
+                Healer ->
+                    case pos2Hero board.heroes pos of
+                        Nothing ->
+                            board
+                        
+                        Just hero ->
+                            let
+                                others = listDifference board.heroes [hero]
+
+                                newlist = {hero | health = hero.health + (calculateHeal myhealer.damage)} :: others
+                            in
+                            {board| heroes = newlist}
+                _ -> board
+
+
+calculateHeal : Int -> Int
+calculateHeal damage =
+    2 * damage
+
 
 pos2Item : List Item -> Pos -> Item
 pos2Item all_items pos =
@@ -177,14 +207,14 @@ pos2Item all_items pos =
             chosen
 
 
-pos2Hero : List Hero -> Pos -> Hero
+pos2Hero : List Hero -> Pos -> Maybe Hero
 pos2Hero all_hero pos =
     case List.filter (\x -> pos == x.pos) all_hero of
         [] ->
-            Hero Warrior ( 0, 0 ) -1 15 3 False Waiting 0
+            Nothing
 
         chosen :: _ ->
-            chosen
+            Just chosen
 
 
 index2Hero : Int -> List Hero -> Hero

@@ -34,7 +34,7 @@ init _ =
 
 initCharacter : RpgCharacter
 initCharacter =
-    { pos = ( 800, 625 )
+    { pos = ( 975, 525 )
     , state = Still
     , moveLeft = False
     , moveRight = False
