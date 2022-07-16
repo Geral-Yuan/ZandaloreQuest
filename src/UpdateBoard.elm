@@ -28,30 +28,37 @@ updateBoard msg board =
         --                    board
         Tick elapsed ->
             let
-                nboard =
+                nBoard =
                     case board.turn of
                         PlayerTurn ->
                             board
 
-                        AttackInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
-
                         EnemyTurn ->
-                            { board | time = board.time + elapsed / 1000 }
+                            { board | timeTurn = board.timeTurn + elapsed / 1000 }
 
-                        MovingInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
+                nnBoard =
+                    case board.boardState of
+                        NoActions ->
+                            nBoard
+
+                        _ ->
+                            { nBoard | timeBoardState = nBoard.timeBoardState + elapsed / 1000 }
             in
-            if nboard.time > 0.5 && board.turn == EnemyTurn then
-                { nboard | time = 0 }
+            if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 && (nnBoard.boardState == HeroAttack || nnBoard.boardState == HeroMoving || nnBoard.boardState == EnemyAttack) then
+                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
                     |> actionEnemy
                     |> checkTurn
 
-            else if nboard.time > 1 && board.turn == AttackInProgress || nboard.time > 1 && board.turn == MovingInProgress then
-                { nboard | heroes = List.map returnHeroToWaiting board.heroes, enemies = List.map returnEnemyToWaiting board.enemies, turn = PlayerTurn, time = 0 }
+            else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 && (nnBoard.boardState == HeroAttack || nnBoard.boardState == HeroMoving || nnBoard.boardState == EnemyAttack) then
+                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
+
+            else if nnBoard.timeTurn > 3.0 then
+                { nnBoard | timeTurn = 0 }
+                    |> actionEnemy
+                    |> checkTurn
 
             else
-                nboard
+                nnBoard
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -107,7 +114,7 @@ turnEnemy board =
         | turn = EnemyTurn
         , enemies = List.map resetSteps board.enemies
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
-        , time = 0
+        , timeTurn = 0
     }
 
 
@@ -148,6 +155,7 @@ resetEnergy hero =
 
         Engineer ->
             { hero | energy = 5 }
+
 
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
@@ -203,7 +211,7 @@ moveHero board dir =
                             vecAdd hero.pos dr
                     in
                     if legalHeroMove board hero dr && hero.energy > 1 then
-                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, turn = MovingInProgress }
+                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
                         , Just hero.indexOnBoard
                         )
 
