@@ -37,8 +37,13 @@ type Critical
 type Turn
     = PlayerTurn
     | EnemyTurn
-    | AttackInProgress
-    | MovingInProgress
+
+
+type BoardState
+    = NoActions
+    | EnemyAttack
+    | HeroAttack
+    | HeroMoving
 
 
 

@@ -1,6 +1,6 @@
 module HeroAttack exposing (checkAttack, generateDamage)
 
-import Action exposing (checkAttackObstacle, selectedHero, unselectedHero, checkBuildObstacle, checkHeal)
+import Action exposing (checkAttackObstacle, checkBuildObstacle, checkHeal, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -34,7 +34,9 @@ checkAttack board pos critical =
             if hero.energy > 2 && isMeaningfulAttack board hero.class pos then
                 --    if hero.energy > 2 && List.member pos (listIntersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
                 let
-                    chosenclass = hero.class
+                    chosenclass =
+                        hero.class
+
                     newheroes =
                         { hero | energy = hero.energy - 3, state = Attacking } :: unselectedHero board.heroes
 
@@ -63,7 +65,7 @@ checkAttack board pos critical =
                             _ ->
                                 [ pos ]
                 in
-                List.foldl (checkAttackTarget chosenclass) { board | critical = newcritical, heroes = newheroes, turn = AttackInProgress } attackedPoslist
+                List.foldl (checkAttackTarget chosenclass) { board | critical = newcritical, heroes = newheroes, boardState = HeroAttack } attackedPoslist
 
             else
                 board
@@ -73,43 +75,44 @@ isMeaningfulAttack : Board -> Class -> Pos -> Bool
 isMeaningfulAttack board class pos =
     case class of
         Mage ->
-            List.member pos (listIntersection (board.attackable) (extentPos (meaningfulTarget board class) (( 0, 0 ) :: neighbour)))
+            List.member pos (listIntersection board.attackable (extentPos (meaningfulTarget board class) (( 0, 0 ) :: neighbour)))
 
         Engineer ->
-            List.member pos (listUnion 
-                            (listIntersection (board.attackable) (meaningfulTarget board Warrior)) 
-                            (listIntersection (board.skillable) (meaningfulTarget board class))
-                            )
+            List.member pos
+                (listUnion
+                    (listIntersection board.attackable (meaningfulTarget board Warrior))
+                    (listIntersection board.skillable (meaningfulTarget board class))
+                )
 
         Healer ->
-            List.member pos (listUnion 
-                            (listIntersection (board.attackable) (meaningfulTarget board Warrior)) 
-                            (listIntersection (board.skillable) (meaningfulTarget board class))
-                            )
+            List.member pos
+                (listUnion
+                    (listIntersection board.attackable (meaningfulTarget board Warrior))
+                    (listIntersection board.skillable (meaningfulTarget board class))
+                )
 
         _ ->
-            List.member pos (listIntersection (board.attackable) (meaningfulTarget board class))
+            List.member pos (listIntersection board.attackable (meaningfulTarget board class))
 
 
 meaningfulTarget : Board -> Class -> List Pos
 meaningfulTarget board class =
     case class of
         Engineer ->
-            listDifference board.map (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
-                                        ++ List.map .pos board.enemies
-                                        ++ List.map .pos board.heroes
-                                        ++ List.map .pos board.item)
+            listDifference board.map
+                (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
+                    ++ List.map .pos board.enemies
+                    ++ List.map .pos board.heroes
+                    ++ List.map .pos board.item
+                )
 
         Healer ->
-            List.map .pos board.enemies 
-            ++ List.map .pos board.heroes
-            ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
-        
+            List.map .pos board.enemies
+                ++ List.map .pos board.heroes
+                ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
+
         _ ->
             List.map .pos board.enemies ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
-
-
-
 
 
 checkAttackTarget : Class -> Pos -> Board -> Board
@@ -117,8 +120,8 @@ checkAttackTarget class pos board =
     board
         |> checkAttackObstacle [ pos ]
         |> checkAttackEnemy pos
-        |> (checkBuildObstacle class pos)
-        |> (checkHeal class pos)
+        |> checkBuildObstacle class pos
+        |> checkHeal class pos
 
 
 

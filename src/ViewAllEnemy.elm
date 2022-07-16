@@ -2,8 +2,8 @@ module ViewAllEnemy exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, div)
-import Html.Attributes as HtmlAttr
+import Html exposing (Html, div, img)
+import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
@@ -18,15 +18,24 @@ viewEnemy enemy =
         class =
             toString enemy.class
     in
-    Svg.image
-        [ SvgAttr.width "80"
-        , SvgAttr.height "80"
-        , SvgAttr.x (toString (x - 40))
-        , SvgAttr.y (toString (y - 40))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
-        ]
-        []
+    case enemy.state of
+        Attacking ->
+            div
+                [ HtmlAttr.style "position" "absolute"
+                , HtmlAttr.style "top" (toString (y - 45) ++ "px")
+                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                ]
+                [ img [ src ("./assets/image/" ++ class ++ "RedGIF.gif"), height 85, width 115 ] []
+                ]
+
+        _ ->
+            div
+                [ HtmlAttr.style "position" "absolute"
+                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                ]
+                [ img [ src ("./assets/image/" ++ class ++ "Red.png"), height 80, width 80 ] []
+                ]
 
 
 viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
