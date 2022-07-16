@@ -165,7 +165,7 @@ viewBoard model =
                 ++ List.map viewHeroInfo1 model.board.heroes
                 ++ List.map viewHeroInfo2 model.board.heroes
                 ++ List.map viewCrate model.board.obstacles
-                ++ List.map viewItem model.board.item
+                ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
             )
          , endTurnButton
@@ -401,7 +401,7 @@ viewCrate obs =
         Svg.rect [] []
 
 
-viewItem : Item -> Svg Msg
+viewItem : Item -> List (Svg Msg)
 viewItem item =
     let
         ( x, y ) =
@@ -409,10 +409,11 @@ viewItem item =
 
         itemtype =
             toString item.itemType
+    
     in
     case item.itemType of
         Gold _ ->
-            Svg.image
+            [(Svg.image
                 [ SvgAttr.width "80"
                 , SvgAttr.height "80"
                 , SvgAttr.x (toString (x - 40))
@@ -420,10 +421,13 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/Gold.png"
                 ]
-                []
+                [])]
+
+        NoItem ->
+            []
 
         _ ->
-            Svg.image
+            [ (Svg.image
                 [ SvgAttr.width "80"
                 , SvgAttr.height "80"
                 , SvgAttr.x (toString (x - 40))
@@ -431,4 +435,5 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
                 ]
-                []
+                [])
+            ]
