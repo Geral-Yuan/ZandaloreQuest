@@ -106,6 +106,15 @@ viewHero hero =
         --     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "BlueGIF.gif")
         --     ]
         --     []
+        Attacked _ ->
+            div
+                [ HtmlAttr.style "position" "absolute"
+                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                ]
+                [ img [ src ("./assets/image/" ++ class ++ "GotHit.png"), height 80, width 80 ] []
+                ]
+
         _ ->
             div
                 [ HtmlAttr.style "position" "absolute"
