@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Add
 
 - Healer Class: attack, heal and break mystery boxes
+
+### Fix
+
+- Animation of RPGcharacter
 ## [m1.35] -- 2022-7-16
 
 ### Add
