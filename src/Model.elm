@@ -35,13 +35,11 @@ init _ =
 initCharacter : RpgCharacter
 initCharacter =
     { pos = ( 975, 525 )
-    , state = Still
+--    , state = Still
     , moveLeft = False
     , moveRight = False
     , moveUp = False
     , moveDown = False
-
-    --    , latestDir = Right
     , faceDir = Right
     , height = 65
     , width = 65

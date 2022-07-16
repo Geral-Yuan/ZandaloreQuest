@@ -7,6 +7,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.37] -- 2022-7-16
+
+### Changed
+
+- Change the reachable range of the character and the spawn position after pass the doors or beat a level
+
+### Fixed
+
+- Fix the bug that the faceDir of the RPG character sometimes doesn't correspond to its motion direction.
+
+- Fix the bug that the RPG character will disapper when entering the shop.
+
+- Fix the bug that the RPG character will get stuck in wall when exiting the shop or after beating the second
+
 ## [m1.36] -- 2022-7-16
 
 ### Add

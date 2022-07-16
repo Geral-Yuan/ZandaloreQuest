@@ -4,10 +4,11 @@ import Data exposing (Dir(..))
 import Html.Events exposing (on)
 
 
-type CharacterState
-    = Still
-    | MovingLeft
-    | MovingRight
+
+-- type CharacterState
+--     = Still
+--     | MovingLeft
+--     | MovingRight
 
 
 type alias RpgCharacter =
@@ -16,10 +17,9 @@ type alias RpgCharacter =
     , moveRight : Bool
     , moveUp : Bool
     , moveDown : Bool
-    , state : CharacterState
-    , faceDir : Dir
 
-    --    , latestDir : Dir
+    --    , state : CharacterState
+    , faceDir : Dir
     , height : Float
     , width : Float
     , speed : Float
@@ -34,11 +34,20 @@ moveCharacter character dt =
 
 moveCharacterDir : Float -> ( Bool, Dir ) -> RpgCharacter -> RpgCharacter
 moveCharacterDir dt ( on, dir ) character =
-    if on && character.faceDir == Left then
-        { character | pos = newCharacterPos character.pos dir (character.speed * dt), state = MovingLeft }
+    let
+        newFaceDir =
+            case dir of
+                Left ->
+                    Left
 
-    else if on && character.faceDir == Right then
-        { character | pos = newCharacterPos character.pos dir (character.speed * dt), state = MovingRight }
+                Right ->
+                    Right
+
+                _ ->
+                    character.faceDir
+    in
+    if on then
+        { character | pos = newCharacterPos character.pos dir (character.speed * dt), faceDir = newFaceDir }
 
     else
         character
@@ -54,10 +63,10 @@ newCharacterPos ( px, py ) dir ds =
             ( px + ds, py )
 
         Up ->
-            ( px, py - ds )
+            ( px, py - ds / 1.2 )
 
         Down ->
-            ( px, py + ds )
+            ( px, py + ds / 1.2 )
 
         _ ->
             ( px, py )

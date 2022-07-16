@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
-import RpgCharacter exposing (CharacterState(..), RpgCharacter)
+import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
@@ -52,15 +52,6 @@ viewScene0 model =
         ]
 
 
-determineOpct : Float -> Float
-determineOpct t =
-    if t <= 6 then
-        sin (t * pi / 6) * 2 / 1.732
-
-    else
-        0
-
-
 viewLogo : Svg Msg
 viewLogo =
     Svg.image
@@ -74,90 +65,82 @@ viewLogo =
         []
 
 
+determineOpct : Float -> Float
+determineOpct t =
+    if t <= 6 then
+        sin (t * pi / 6) * 2 / 1.732
 
--- {-
---    viewScene0 : Model -> Html Msg
---    viewScene0 model =
---        let
---            ( w, h ) =
---                model.size
---            -- t =
---            --     model.time
---            r =
---                if w / h > logoWidth / logoHeight then
---                    Basics.min 1 (h / logoHeight)
---                else
---                    Basics.min 1 (w / logoWidth)
---        in
---        div
---            [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
---            , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
---            , HtmlAttr.style "position" "absolute"
---            , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
---            , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
---            -- , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
---            , HtmlAttr.style "transform-origin" "0 0"
---            , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
---            , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px / " ++ " 523.2558px " ++ " 600px")
---                |> HtmlAttr.style "background"
---            ]
---            []
---
--- Created this code so that the RPG character can change facing but there are bugs
--- viewRpgCharacter : Model -> Html Msg
+    else
+        0
+
+
+
+{-
+   viewScene0 : Model -> Html Msg
+   viewScene0 model =
+       let
+           ( w, h ) =
+               model.size
+
+           t =
+               model.time
+
+           r =
+               if w / h > logoWidth / logoHeight then
+                   Basics.min 1 (h / logoHeight)
+
+               else
+                   Basics.min 1 (w / logoWidth)
+       in
+       div
+           [ HtmlAttr.style "width" (String.fromFloat (logoWidth + 400) ++ "px")
+           , HtmlAttr.style "height" (String.fromFloat (logoHeight + 400) ++ "px")
+           , HtmlAttr.style "position" "absolute"
+           , HtmlAttr.style "left" (String.fromFloat (550 + (w - logoWidth * r) / 2) ++ "px")
+           , HtmlAttr.style "top" (String.fromFloat ((h - logoHeight * r) / 2) ++ "px")
+           , HtmlAttr.style "opacity" (determineOpct t |> String.fromFloat)
+           , HtmlAttr.style "transform-origin" "0 0"
+           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+           , ("url('./assets/image/logo.png')" ++ " no-repeat fixed " ++ " 0px " ++ " 0px /  " ++ toString logoWidth ++ "  " ++ toString logoHeight)
+               |> HtmlAttr.style "background"
+           ]
+           []
+-}
 
 
 viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
+    let
+        scaleFactor =
+            case character.faceDir of
+                Left ->
+                    -1
+
+                Right ->
+                    1
+
+                _ ->
+                    0
+
+        image =
+            if character.moveLeft || character.moveRight || character.moveUp || character.moveDown then
+                "GIF.gif"
+
+            else
+                ".png"
+    in
     div
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
         , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
-        [ case character.state of
-            MovingRight ->
-                img
-                    [ src "./assets/image/MainCharacter.gif"
-                    , height (floor character.height)
-                    , width (floor character.width)
-                    ]
-                    []
-
-            MovingLeft ->
-                img
-                    [ src "./assets/image/MainCharacter.gif"
-                    , height (floor character.height)
-                    , width (floor character.width)
-                    , HtmlAttr.style "transform" "scaleX(-1)"
-                    ]
-                    []
-
-            Still ->
-                case character.faceDir of
-                    Right ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            ]
-                            []
-
-                    Left ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            , HtmlAttr.style "transform" "scaleX(-1)"
-                            ]
-                            []
-
-                    _ ->
-                        img
-                            [ src "./assets/image/MainCharacter.png"
-                            , height (floor character.height)
-                            , width (floor character.width)
-                            ]
-                            []
+        [ img
+            [ src ("./assets/image/MainCharacter" ++ image)
+            , height (floor character.height)
+            , width (floor character.width)
+            , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
+            ]
+            []
         ]
 
 
@@ -198,7 +181,7 @@ viewCharacterPos character =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("( " ++ toString x ++ " ," ++ toString y ++ " )") ]
+        [ text ("( " ++ toString (floor x) ++ " ," ++ toString (floor y) ++ " )") ]
 
 
 viewCastle : Model -> Html Msg
@@ -401,8 +384,8 @@ viewDungeon2 model =
             ]
         , div
             [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 250) ++ "px")
-            , HtmlAttr.style "left" (toString (pixelWidth / 2 - 380) ++ "px")
+            , HtmlAttr.style "top" (toString (pixelHeight / 2 - 240) ++ "px")
+            , HtmlAttr.style "left" (toString (pixelWidth / 2 + 40) ++ "px")
             ]
             [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
             ]
@@ -620,7 +603,6 @@ viewShop model =
             , SvgAttr.height "100%"
             ]
             [ viewShopSvg
-            , viewRpgCharacter model.character
             , Svg.image
                 -- view shopkeeper
                 [ SvgAttr.width "85"
@@ -632,8 +614,8 @@ viewShop model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewRpgCharacter model.character
+        , viewCharacterPos model.character
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter
