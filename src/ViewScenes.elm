@@ -48,18 +48,19 @@ viewScene0 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewLogo ]
+            [ viewLogo model.time]
         ]
 
 
-viewLogo : Svg Msg
-viewLogo =
+viewLogo : Float -> Svg Msg
+viewLogo t =
     Svg.image
         [ SvgAttr.width (toString logoWidth)
         , SvgAttr.height (toString logoHeight)
         , SvgAttr.x (toString (pixelWidth / 2 - logoWidth / 2))
         , SvgAttr.y (toString (pixelHeight / 2 - logoHeight / 2))
         , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.opacity (determineOpct t |> String.fromFloat)
         , SvgAttr.xlinkHref "./assets/image/logo.png"
         ]
         []
