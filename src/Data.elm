@@ -37,6 +37,12 @@ type Critical
 type Turn
     = PlayerTurn
     | EnemyTurn
+    | AttackInProgress
+    | MovingInProgress
+
+
+
+-- | GettingAttacked
 
 
 type Class
@@ -63,7 +69,8 @@ type ItemType
 type HeroState
     = Waiting
     | Attacking
-    | Attacked
+    | Attacked Int
+    | Moving
 
 
 type alias Obstacle =
@@ -98,6 +105,7 @@ type alias Enemy =
     , damage : Int
     , steps : Int
     , done : Bool
+    , state : HeroState
     , indexOnBoard : Int --give an index to the enemies on the board
     }
 
@@ -187,16 +195,16 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 8 0 True index
+            Enemy Warrior pos 80 8 0 True Waiting index
 
         Archer ->
-            Enemy Archer pos 40 10 0 True index
+            Enemy Archer pos 40 10 0 True Waiting index
 
         Assassin ->
-            Enemy Assassin pos 40 10 0 True index
+            Enemy Assassin pos 40 10 0 True Waiting index
 
         _ ->
-            Enemy Mage pos 50 6 0 True index
+            Enemy Mage pos 50 6 0 True Waiting index
 
 
 

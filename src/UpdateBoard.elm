@@ -13,11 +13,11 @@ updateBoard msg board =
     case msg of
         Key dir False ->
             case board.turn of
-                PlayerTurn ->
-                    moveHero board dir
-
                 EnemyTurn ->
                     board
+
+                _ ->
+                    moveHero board dir
 
         --        Select class False ->
         --            case board.turn of
@@ -33,13 +33,22 @@ updateBoard msg board =
                         PlayerTurn ->
                             board
 
+                        AttackInProgress ->
+                            { board | time = board.time + elapsed / 1000 }
+
                         EnemyTurn ->
                             { board | time = board.time + elapsed / 1000 }
+
+                        MovingInProgress ->
+                            { board | time = board.time + elapsed / 1000 }
             in
-            if nboard.time > 0.5 then
+            if nboard.time > 0.5 && board.turn == EnemyTurn then
                 { nboard | time = 0 }
                     |> actionEnemy
                     |> checkTurn
+
+            else if nboard.time > 1 && board.turn == AttackInProgress || nboard.time > 1 && board.turn == MovingInProgress then
+                { nboard | heroes = List.map returnHeroToWaiting board.heroes, enemies = List.map returnEnemyToWaiting board.enemies, turn = PlayerTurn, time = 0 }
 
             else
                 nboard
@@ -58,6 +67,38 @@ updateBoard msg board =
 
         _ ->
             board
+
+
+returnHeroToWaiting : Hero -> Hero
+returnHeroToWaiting hero =
+    case hero.state of
+        Attacked _ ->
+            { hero | state = Waiting }
+
+        Attacking ->
+            { hero | state = Waiting }
+
+        Moving ->
+            { hero | state = Waiting }
+
+        _ ->
+            hero
+
+
+returnEnemyToWaiting : Enemy -> Enemy
+returnEnemyToWaiting enemy =
+    case enemy.state of
+        Attacked _ ->
+            { enemy | state = Waiting }
+
+        Attacking ->
+            { enemy | state = Waiting }
+
+        Moving ->
+            { enemy | state = Waiting }
+
+        _ ->
+            enemy
 
 
 turnEnemy : Board -> Board
@@ -160,7 +201,7 @@ moveHero board dir =
                             vecAdd hero.pos dr
                     in
                     if legalHeroMove board hero dr && hero.energy > 1 then
-                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2 } :: unselectedHero board.heroes }
+                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, turn = MovingInProgress }
                         , Just hero.indexOnBoard
                         )
 

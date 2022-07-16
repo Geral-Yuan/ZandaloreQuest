@@ -2,8 +2,8 @@ module ViewAllHero exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, div)
-import Html.Attributes as HtmlAttr
+import Html exposing (Html, div, img)
+import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
@@ -78,7 +78,7 @@ viewHeroInfo4 hero =
         ]
 
 
-viewHero : Hero -> Svg msg
+viewHero : Hero -> Html Msg
 viewHero hero =
     let
         ( x, y ) =
@@ -87,12 +87,42 @@ viewHero hero =
         class =
             toString hero.class
     in
-    Svg.image
-        [ SvgAttr.width "80"
-        , SvgAttr.height "80"
-        , SvgAttr.x (toString (x - 40))
-        , SvgAttr.y (toString (y - 40))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
-        ]
-        []
+    case hero.state of
+        Attacking ->
+            div
+                [ HtmlAttr.style "position" "absolute"
+                , HtmlAttr.style "top" (toString (y - 45) ++ "px")
+                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                ]
+                [ img [ src ("./assets/image/" ++ class ++ "BlueGIF.gif"), height 85, width 115 ] []
+                ]
+
+        -- Svg.image
+        --     [ SvgAttr.width "80"
+        --     , SvgAttr.height "80"
+        --     , SvgAttr.x (toString (x - 40))
+        --     , SvgAttr.y (toString (y - 40))
+        --     , SvgAttr.preserveAspectRatio "none"
+        --     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "BlueGIF.gif")
+        --     ]
+        --     []
+        _ ->
+            div
+                [ HtmlAttr.style "position" "absolute"
+                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                ]
+                [ img [ src ("./assets/image/" ++ class ++ "Blue.png"), height 80, width 80 ] []
+                ]
+
+
+
+-- Svg.image
+--     [ SvgAttr.width "80"
+--     , SvgAttr.height "80"
+--     , SvgAttr.x (toString (x - 40))
+--     , SvgAttr.y (toString (y - 40))
+--     , SvgAttr.preserveAspectRatio "none"
+--     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
+--     ]
+--     []

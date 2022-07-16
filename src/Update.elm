@@ -564,7 +564,7 @@ randomCrate msg ( model, cmd ) =
                     else
                         ( model, cmd )
 
-                EnemyTurn ->
+                _ ->
                     ( model, cmd )
 
         _ ->
