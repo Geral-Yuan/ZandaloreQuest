@@ -3,14 +3,12 @@ module Update exposing (update)
 import Action exposing (updateAttackable, updateMoveable, updateTarget)
 import Bag exposing (addCoin)
 import Board exposing (initBoard)
-import Browser.Dom exposing (getViewport)
 import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
-import Task
 import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
 import Svg.Attributes exposing (mode)
 
@@ -20,26 +18,18 @@ update msg model =
     let
         ( nmodel, ncmd ) =
             case model.mode of
-                Tutorial 3 ->
+                Tutorial k ->
+                    let
+                        nextMode =
+                            case k of
+                                3 ->
+                                    model.previousMode
+                                _ ->
+                                    Tutorial (k + 1)  
+                    in
                     case msg of
                         Enter False ->
-                            ( { model | mode = model.previousMode }, Cmd.none )
-
-                        _ ->
-                            ( model, Cmd.none )
-
-                Tutorial 1 ->
-                    case msg of
-                        Enter False ->
-                            ( { model | mode = Tutorial 2 }, Cmd.none )
-
-                        _ ->
-                            ( model, Cmd.none )
-
-                Tutorial 2 ->
-                    case msg of
-                        Enter False ->
-                            ( { model | mode = Tutorial 3 }, Cmd.none )
+                            ( { model | mode = nextMode }, Cmd.none )
 
                         _ ->
                             ( model, Cmd.none )
@@ -272,34 +262,34 @@ updateRPG msg model =
             case model.mode of
                 Shop ->
                     if x > 710 && x < 900 && y > 800 then
-                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 775 ), speed = 500 } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 775 ), speed = 500 } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Castle ->
                     if x > 1500 && x < 1660 && y < 900 then
-                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Cmd.none )
 
                     else if x > 950 && x < 1050 && y < 450 then
-                        ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
 
                     else if x > 290 && x < 400 && y > 750 then
-                        ( { model | mode = Dungeon2, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Dungeon2, character = { character | pos = ( 1010, 942 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | pos = ( 1040, 450 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon2 ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 340, 792 ) } }, Task.perform GetViewport getViewport )
+                        ( { model | mode = Castle, character = { character | pos = ( 340, 792 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -363,7 +353,7 @@ updateRPG msg model =
                 ( model, Cmd.none )
 
         ExitShop ->
-            ( { model | mode = Shop }, Task.perform GetViewport getViewport )
+            ( { model | mode = Shop }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
