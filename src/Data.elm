@@ -44,6 +44,8 @@ type BoardState
     | EnemyAttack
     | HeroAttack
     | HeroMoving
+    | HeroHealth
+    | HeroEnergy
 
 
 
@@ -77,6 +79,8 @@ type HeroState
     | Attacking
     | Attacked Int
     | Moving
+    | TakingHealth
+    | TakingEnergy
 
 
 type alias Obstacle =
