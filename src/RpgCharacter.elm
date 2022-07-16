@@ -63,10 +63,10 @@ newCharacterPos ( px, py ) dir ds =
             ( px + ds, py )
 
         Up ->
-            ( px, py - ds )
+            ( px, py - ds / 1.6 )
 
         Down ->
-            ( px, py + ds )
+            ( px, py + ds / 1.6 )
 
         _ ->
             ( px, py )

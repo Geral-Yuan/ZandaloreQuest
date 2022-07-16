@@ -109,36 +109,30 @@ viewLogo =
 
 viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
+    let
+        scaleFactor =
+            case character.faceDir of
+                Left ->
+                    -1
+
+                Right ->
+                    1
+
+                _ ->
+                    0
+    in
     div
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
         , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
         ]
-        [ case character.faceDir of
-            Right ->
-                img
-                    [ src "./assets/image/MainCharacter.png"
-                    , height (floor character.height)
-                    , width (floor character.width)
-                    ]
-                    []
-
-            Left ->
-                img
-                    [ src "./assets/image/MainCharacter.png"
-                    , height (floor character.height)
-                    , width (floor character.width)
-                    , HtmlAttr.style "transform" "scaleX(-1)"
-                    ]
-                    []
-
-            _ ->
-                img
-                    [ src "./assets/image/MainCharacter.png"
-                    , height (floor character.height)
-                    , width (floor character.width)
-                    ]
-                    []
+        [ img
+            [ src "./assets/image/MainCharacter.png"
+            , height (floor character.height)
+            , width (floor character.width)
+            , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
+            ]
+            []
         ]
 
 
@@ -601,7 +595,6 @@ viewShop model =
             , SvgAttr.height "100%"
             ]
             [ viewShopSvg
-            , viewRpgCharacter model.character
             , Svg.image
                 -- view shopkeeper
                 [ SvgAttr.width "85"
@@ -613,8 +606,8 @@ viewShop model =
                 ]
                 []
             ]
-
-        -- , viewCharacterPos model.character
+        , viewRpgCharacter model.character
+        , viewCharacterPos model.character
         , viewTipForDir
         , viewTipForC
         , viewTipForEnter

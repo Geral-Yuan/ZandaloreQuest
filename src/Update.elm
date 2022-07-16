@@ -271,15 +271,15 @@ updateRPG msg model =
         Enter False ->
             case model.mode of
                 Shop ->
-                    if x > 710 && x < 900 && y > 850 then
-                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1630, 840 ) } }, Task.perform GetViewport getViewport )
+                    if x > 710 && x < 900 && y > 800 then
+                        ( { model | mode = Castle, character = { character | width = 65, height = 65, pos = ( 1600, 775 ), speed = 500 } }, Task.perform GetViewport getViewport )
 
                     else
                         ( model, Cmd.none )
 
                 Castle ->
-                    if x > 1600 && x < 1660 && y < 900 then
-                        ( { model | mode = Shop, character = { character | width = 90, height = 90, pos = ( 800, 900 ) } }, Task.perform GetViewport getViewport )
+                    if x > 1500 && x < 1660 && y < 900 then
+                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 750, 850 ), speed = 800 } }, Task.perform GetViewport getViewport )
 
                     else if x > 950 && x < 1050 && y < 450 then
                         ( { model | mode = Dungeon, character = { character | pos = ( 1010, 942 ) } }, Task.perform GetViewport getViewport )
