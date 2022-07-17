@@ -161,9 +161,10 @@ viewBoard model =
             (viewMap model.board
                 ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
-                ++ List.map viewHeroInfo1 model.board.heroes
-                ++ List.map viewHeroInfo2 model.board.heroes
-                ++ List.concat (List.map (viewHeroHealth (List.map Tuple.first model.indexedheroes)) model.board.heroes)
+                ++ List.map viewHeroImage model.board.heroes
+                ++ List.map viewHeroFrame model.board.heroes
+                ++ List.concat (List.map viewHeroCondition model.board.heroes)
+                ++ List.concat (List.map viewHeroHealth model.board.heroes)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
@@ -179,11 +180,10 @@ viewBoard model =
          , tutorialButton
          ]
             ++ List.map viewHero model.board.heroes
-            ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.concat (List.map viewHeroInfo model.board.heroes)
             ++ List.map viewEnemy model.board.enemies
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
-            ++ List.map viewHeroInfo4 model.board.heroes
             ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
