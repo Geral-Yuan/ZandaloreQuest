@@ -40,6 +40,42 @@ viewHeroInfo2 hero =
         []
 
 
+viewHeroHealth : List Hero -> Hero -> List (Svg msg)
+viewHeroHealth fullHPheroes myhero =
+    let
+        fullHPhero =
+            List.head (List.filter (\x -> x.class == myhero.class) fullHPheroes)
+    in
+    case fullHPhero of
+        Nothing ->
+            []
+
+        Just fullhero ->
+            let
+                healthBarlen =
+                    200 * toFloat myhero.health / toFloat fullhero.health
+            in
+            [ Svg.rect
+                [ SvgAttr.width (toString healthBarlen)
+                , SvgAttr.height "20"
+                , SvgAttr.x (toString (1750 - offset myhero))
+                , SvgAttr.y (toString (myhero.indexOnBoard * 150 - 95))
+                , SvgAttr.fill "red"
+                , SvgAttr.stroke "red"
+                ]
+                []
+            , Svg.rect
+                [ SvgAttr.width (toString (200 - healthBarlen))
+                , SvgAttr.height "20"
+                , SvgAttr.x (toString ((1750 - offset myhero) + healthBarlen))
+                , SvgAttr.y (toString (myhero.indexOnBoard * 150 - 95))
+                , SvgAttr.fill "transparent"
+                , SvgAttr.stroke "red"
+                ]
+                []
+            ]
+
+
 viewHeroInfo3 : Hero -> Html Msg
 viewHeroInfo3 hero =
     div
@@ -53,11 +89,7 @@ viewHeroInfo3 hero =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text
-            (("Health: " ++ toString hero.health)
-                ++ (" Damage: " ++ toString hero.damage)
-            )
-        ]
+        [ text (toString hero.health) ]
 
 
 viewHeroInfo4 : Hero -> Html Msg
@@ -74,7 +106,7 @@ viewHeroInfo4 hero =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text
-            (" Energy: " ++ toString hero.energy)
+            (" Damage: " ++ toString hero.damage ++ " Energy: " ++ toString hero.energy)
         ]
 
 

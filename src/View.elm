@@ -163,6 +163,7 @@ viewBoard model =
                 ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroInfo1 model.board.heroes
                 ++ List.map viewHeroInfo2 model.board.heroes
+                ++ List.concat (List.map (viewHeroHealth (List.map Tuple.first model.indexedheroes)) model.board.heroes)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
