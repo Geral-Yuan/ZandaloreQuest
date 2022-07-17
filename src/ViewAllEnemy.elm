@@ -6,7 +6,6 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
-import Svg.Attributes as SvgAttr
 
 
 viewEnemy : Enemy -> Svg Msg
