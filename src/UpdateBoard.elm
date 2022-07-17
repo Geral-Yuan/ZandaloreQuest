@@ -229,8 +229,15 @@ checkHeroItem hero board =
     in
     case chosenItem.itemType of
         HealthPotion ->
+            let
+                nhealth =
+                    min (hero.health + 10) hero.maxHealth
+
+                healthDif =
+                    nhealth - hero.maxHealth
+            in
             { board
-                | heroes = { hero | health = hero.health + 10, state = TakingHealth } :: otherHeroes
+                | heroes = { hero | health = nhealth, state = TakingHealth healthDif } :: otherHeroes
                 , item = otherItems
                 , boardState = HeroHealth
             }

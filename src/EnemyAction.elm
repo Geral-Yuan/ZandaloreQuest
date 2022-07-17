@@ -258,7 +258,7 @@ index2Enemy : Int -> List Enemy -> Enemy
 index2Enemy index l_enemy =
     case List.filter (\x -> index == x.indexOnBoard) l_enemy of
         [] ->
-            Enemy Warrior ( 0, 0 ) -1 15 3 False Waiting 0
+            Enemy Warrior ( 0, 0 ) 80 -1 15 3 False Waiting 0
 
         chosen :: _ ->
             chosen
