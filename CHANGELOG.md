@@ -7,6 +7,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.39] -- 2022-7-17
+
+### Added
+- Animation for healing
+- Animation for items like picking up the health or energy potions
+- Animation when heroes or enemies are getting attacked 
+- Animation for the game board
+
+### Fixed
+- viewBug for tutorial system
+- formatting
+- bug for turn and time 
+- 4 heroes in a list bug for smartmage function 
+
 ## [m1.38] -- 2022-7-17
 
 ### Fixed

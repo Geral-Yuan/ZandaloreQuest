@@ -368,7 +368,7 @@ updateScene msg model =
     case msg of
         Tick elapsed ->
             { model | time = model.time + elapsed / 1000 }
-            |> checkLogoEnd
+                |> checkLogoEnd
 
         Enter False ->
             { model | mode = Castle }
@@ -380,7 +380,8 @@ updateScene msg model =
 checkLogoEnd : Model -> Model
 checkLogoEnd model =
     if (model.time > 6.1) && (model.mode == Logo) then
-        {model | mode = Castle}
+        { model | mode = Castle }
+
     else
         model
 

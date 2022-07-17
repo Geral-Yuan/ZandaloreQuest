@@ -37,8 +37,16 @@ type Critical
 type Turn
     = PlayerTurn
     | EnemyTurn
-    | AttackInProgress
-    | MovingInProgress
+
+
+type BoardState
+    = NoActions
+    | EnemyAttack
+    | HeroAttack
+    | HeroMoving
+    | HeroHealth
+    | HeroEnergy
+    | Healing
 
 
 
@@ -72,6 +80,9 @@ type HeroState
     | Attacking
     | Attacked Int
     | Moving
+    | TakingHealth
+    | TakingEnergy
+    | GettingHealed
 
 
 type alias Obstacle =

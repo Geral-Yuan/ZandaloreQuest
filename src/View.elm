@@ -103,8 +103,8 @@ viewTutorial k model =
             [ HtmlAttr.style "width" "500px"
             , HtmlAttr.style "height" "20px"
             , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "750px"
-            , HtmlAttr.style "top" "-50px"
+            , HtmlAttr.style "left" "1100px"
+            , HtmlAttr.style "top" "0px"
             , HtmlAttr.style "color" "blue"
             , HtmlAttr.style "font-size" "50px"
             ]
@@ -159,7 +159,6 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewEnemy model.board.enemies
                 ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroInfo1 model.board.heroes
@@ -180,6 +179,7 @@ viewBoard model =
          ]
             ++ List.map viewHero model.board.heroes
             ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.map viewEnemy model.board.enemies
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ List.map viewHeroInfo4 model.board.heroes
@@ -220,7 +220,7 @@ animateHeroVisuals hero =
             findPos hero.pos
     in
     div
-        [ HtmlAttr.style "left" (toString x ++ "px")
+        [ HtmlAttr.style "left" (toString (x + 40) ++ "px")
         , HtmlAttr.style "top" (toString (y - 80) ++ "px")
         , HtmlAttr.style "color" "blue"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -234,8 +234,20 @@ animateHeroVisuals hero =
             Moving ->
                 text "-2 Energy"
 
+            TakingEnergy ->
+                text "+2 Energy"
+
+            TakingHealth ->
+                text "+10"
+
+            GettingHealed ->
+                text "+10"
+
             Attacking ->
                 text "-3 Energy"
+
+            Attacked k ->
+                text ("-" ++ toString k)
 
             _ ->
                 text ""
@@ -318,15 +330,17 @@ viewCell board ( row, column ) =
 
     else if List.member ( row, column ) board.target then
         let
-            skilllist =  listIntersection board.target board.skillable
+            skilllist =
+                listIntersection board.target board.skillable
         in
-        if (not (List.isEmpty skilllist)) then
+        if not (List.isEmpty skilllist) then
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos ( row, column )))
                 ]
                 []
+
         else
             Svg.polygon
                 [ SvgAttr.fill "yellow"
@@ -342,11 +356,6 @@ viewCell board ( row, column ) =
             , SvgAttr.points (detPoints (findPos ( row, column )))
             ]
             []
-
-    
-
-
-    
 
     else
         Svg.polygon
@@ -409,11 +418,10 @@ viewItem item =
 
         itemtype =
             toString item.itemType
-    
     in
     case item.itemType of
         Gold _ ->
-            [(Svg.image
+            [ Svg.image
                 [ SvgAttr.width "80"
                 , SvgAttr.height "80"
                 , SvgAttr.x (toString (x - 40))
@@ -421,13 +429,14 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/Gold.png"
                 ]
-                [])]
+                []
+            ]
 
         NoItem ->
             []
 
         _ ->
-            [ (Svg.image
+            [ Svg.image
                 [ SvgAttr.width "80"
                 , SvgAttr.height "80"
                 , SvgAttr.x (toString (x - 40))
@@ -435,5 +444,5 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
                 ]
-                [])
+                []
             ]

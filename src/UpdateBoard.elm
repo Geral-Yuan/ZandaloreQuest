@@ -28,30 +28,37 @@ updateBoard msg board =
         --                    board
         Tick elapsed ->
             let
-                nboard =
+                nBoard =
                     case board.turn of
                         PlayerTurn ->
                             board
 
-                        AttackInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
-
                         EnemyTurn ->
-                            { board | time = board.time + elapsed / 1000 }
+                            { board | timeTurn = board.timeTurn + elapsed / 1000 }
 
-                        MovingInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
+                nnBoard =
+                    case board.boardState of
+                        NoActions ->
+                            nBoard
+
+                        _ ->
+                            { nBoard | timeBoardState = nBoard.timeBoardState + elapsed / 1000 }
             in
-            if nboard.time > 0.5 && board.turn == EnemyTurn then
-                { nboard | time = 0 }
+            if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
+                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
                     |> actionEnemy
                     |> checkTurn
 
-            else if nboard.time > 1 && board.turn == AttackInProgress || nboard.time > 1 && board.turn == MovingInProgress then
-                { nboard | heroes = List.map returnHeroToWaiting board.heroes, enemies = List.map returnEnemyToWaiting board.enemies, turn = PlayerTurn, time = 0 }
+            else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
+                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
+
+            else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
+                { nnBoard | timeTurn = 0 }
+                    |> actionEnemy
+                    |> checkTurn
 
             else
-                nboard
+                nnBoard
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -72,33 +79,21 @@ updateBoard msg board =
 returnHeroToWaiting : Hero -> Hero
 returnHeroToWaiting hero =
     case hero.state of
-        Attacked _ ->
-            { hero | state = Waiting }
-
-        Attacking ->
-            { hero | state = Waiting }
-
-        Moving ->
-            { hero | state = Waiting }
+        Waiting ->
+            hero
 
         _ ->
-            hero
+            { hero | state = Waiting }
 
 
 returnEnemyToWaiting : Enemy -> Enemy
 returnEnemyToWaiting enemy =
     case enemy.state of
-        Attacked _ ->
-            { enemy | state = Waiting }
-
-        Attacking ->
-            { enemy | state = Waiting }
-
-        Moving ->
-            { enemy | state = Waiting }
+        Waiting ->
+            enemy
 
         _ ->
-            enemy
+            { enemy | state = Waiting }
 
 
 turnEnemy : Board -> Board
@@ -107,7 +102,7 @@ turnEnemy board =
         | turn = EnemyTurn
         , enemies = List.map resetSteps board.enemies
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
-        , time = 0
+        , timeTurn = 0
     }
 
 
@@ -148,6 +143,7 @@ resetEnergy hero =
 
         Engineer ->
             { hero | energy = 5 }
+
 
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
@@ -203,7 +199,7 @@ moveHero board dir =
                             vecAdd hero.pos dr
                     in
                     if legalHeroMove board hero dr && hero.energy > 1 then
-                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, turn = MovingInProgress }
+                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
                         , Just hero.indexOnBoard
                         )
 
@@ -234,8 +230,9 @@ checkHeroItem hero board =
     case chosenItem.itemType of
         HealthPotion ->
             { board
-                | heroes = { hero | health = hero.health + 10 } :: otherHeroes
+                | heroes = { hero | health = hero.health + 10, state = TakingHealth } :: otherHeroes
                 , item = otherItems
+                , boardState = HeroHealth
             }
 
         Gold n ->
@@ -246,8 +243,9 @@ checkHeroItem hero board =
 
         EnergyPotion ->
             { board
-                | heroes = { hero | energy = hero.energy + 2 } :: otherHeroes
+                | heroes = { hero | energy = hero.energy + 2, state = TakingEnergy } :: otherHeroes
                 , item = otherItems
+                , boardState = HeroEnergy
             }
 
         Buff ->

@@ -15,17 +15,18 @@ updateAttackable board =
         Just hero ->
             let
                 realattackRange =
-                    List.map (vecAdd hero.pos) (attackRange board hero) 
+                    List.map (vecAdd hero.pos) (attackRange board hero)
 
                 realskillRange =
-                    case hero.class of 
+                    case hero.class of
                         Healer ->
                             List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
 
                         Engineer ->
                             List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> isGridEmpty x board)
 
-                        _ -> []
+                        _ ->
+                            []
             in
             { board | attackable = realattackRange, skillable = realskillRange }
 
@@ -39,11 +40,10 @@ attackRange board hero =
         Mage ->
             subneighbour
 
-
         Engineer ->
             neighbour
 
-        Healer -> 
+        Healer ->
             neighbour
 
         _ ->
@@ -56,8 +56,8 @@ skillRange hero =
         Engineer ->
             neighbour ++ subneighbour
 
-        Healer -> 
-            (0, 0) :: neighbour
+        Healer ->
+            ( 0, 0 ) :: neighbour
 
         _ ->
             []
@@ -181,38 +181,44 @@ checkBuildObstacle class pos board =
     case class of
         Engineer ->
             let
-                newobslist = 
+                newobslist =
                     if isGridEmpty pos board then
-                        (Obstacle MysteryBox pos NoItem) :: board.obstacles
+                        Obstacle MysteryBox pos NoItem :: board.obstacles
+
                     else
                         board.obstacles
             in
-            {board | obstacles = newobslist}
+            { board | obstacles = newobslist }
 
-        _ -> board
-    
+        _ ->
+            board
+
 
 checkHeal : Class -> Pos -> Board -> Board
 checkHeal class pos board =
     case selectedHero board.heroes of
         Nothing ->
             board
-        
+
         Just myhealer ->
             case class of
                 Healer ->
                     case pos2Hero board.heroes pos of
                         Nothing ->
                             board
-                        
+
                         Just hero ->
                             let
-                                others = listDifference board.heroes [hero]
+                                others =
+                                    listDifference board.heroes [ hero ]
 
-                                newlist = {hero | health = hero.health + (calculateHeal myhealer.damage)} :: others
+                                newlist =
+                                    { hero | health = hero.health + calculateHeal myhealer.damage, state = GettingHealed } :: others
                             in
-                            {board| heroes = newlist}
-                _ -> board
+                            { board | heroes = newlist, boardState = Healing }
+
+                _ ->
+                    board
 
 
 calculateHeal : Int -> Int
@@ -252,7 +258,11 @@ index2Hero index l_hero =
 
 isGridEmpty : Pos -> Board -> Bool
 isGridEmpty pos board =
-    not (((List.map .pos board.obstacles) 
-    ++ (List.map .pos board.item)
-    ++ (List.map .pos board.enemies)
-    ++ (List.map .pos board.heroes)) |> List.member pos)
+    not
+        ((List.map .pos board.obstacles
+            ++ List.map .pos board.item
+            ++ List.map .pos board.enemies
+            ++ List.map .pos board.heroes
+         )
+            |> List.member pos
+        )
