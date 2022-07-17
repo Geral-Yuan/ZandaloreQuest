@@ -212,8 +212,15 @@ checkHeal class pos board =
                                 others =
                                     listDifference board.heroes [ hero ]
 
+                                nhealth =
+                                    (hero.health + calculateHeal myhealer.damage)
+                                        |> min hero.maxHealth
+
+                                healthDif =
+                                    nhealth - hero.health
+
                                 newlist =
-                                    { hero | health = hero.health + calculateHeal myhealer.damage, state = GettingHealed } :: others
+                                    { hero | health = nhealth, state = GettingHealed healthDif } :: others
                             in
                             { board | heroes = newlist, boardState = Healing }
 
@@ -250,7 +257,7 @@ index2Hero : Int -> List Hero -> Hero
 index2Hero index l_hero =
     case List.filter (\x -> index == x.indexOnBoard) l_hero of
         [] ->
-            Hero Warrior ( 0, 0 ) -1 15 3 False Waiting 0
+            Hero Warrior ( 0, 0 ) 80 -1 15 3 False Waiting 0
 
         chosen :: _ ->
             chosen

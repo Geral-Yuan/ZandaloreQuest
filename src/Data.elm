@@ -80,9 +80,9 @@ type HeroState
     | Attacking
     | Attacked Int
     | Moving
-    | TakingHealth
+    | TakingHealth Int
     | TakingEnergy
-    | GettingHealed
+    | GettingHealed Int
 
 
 type alias Obstacle =
@@ -101,6 +101,7 @@ type alias Item =
 type alias Hero =
     { class : Class
     , pos : Pos
+    , maxHealth : Int
     , health : Int
     , damage : Int
     , energy : Int
@@ -113,6 +114,7 @@ type alias Hero =
 type alias Enemy =
     { class : Class
     , pos : Pos
+    , maxHealth : Int
     , health : Int
     , damage : Int
     , steps : Int
@@ -207,16 +209,16 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 8 0 True Waiting index
+            Enemy Warrior pos 80 80 8 0 True Waiting index
 
         Archer ->
-            Enemy Archer pos 40 10 0 True Waiting index
+            Enemy Archer pos 40 40 10 0 True Waiting index
 
         Assassin ->
-            Enemy Assassin pos 40 10 0 True Waiting index
+            Enemy Assassin pos 40 40 10 0 True Waiting index
 
         _ ->
-            Enemy Mage pos 50 6 0 True Waiting index
+            Enemy Mage pos 50 50 6 0 True Waiting index
 
 
 

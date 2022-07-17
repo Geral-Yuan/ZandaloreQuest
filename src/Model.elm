@@ -57,12 +57,12 @@ initModel : Model
 initModel =
     { mode = Logo
     , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 80 15 5 False Waiting 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 20 5 False Waiting 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 20 6 False Waiting 0, 3 )
-        , ( Hero Mage ( 0, 0 ) 50 12 3 False Waiting 0, 4 )
-        , ( Hero Healer ( 0, 0 ) 50 5 5 False Waiting 0, 5 )
-        , ( Hero Engineer ( 0, 0 ) 50 5 5 False Waiting 0, 6 )
+        [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 40 20 5 False Waiting 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 40 20 6 False Waiting 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 50 12 3 False Waiting 0, 4 )
+        , ( Hero Healer ( 0, 0 ) 50 50 5 5 False Waiting 0, 5 )
+        , ( Hero Engineer ( 0, 0 ) 50 50 5 5 False Waiting 0, 6 )
         ]
     , board = sampleBoard
     , size = ( 1500, 1000 )
