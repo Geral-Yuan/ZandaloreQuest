@@ -24,7 +24,12 @@ updateBoard msg board =
                 nBoard =
                     case board.turn of
                         PlayerTurn ->
-                            board
+                            case board.boardState of
+                                NoActions ->
+                                    board
+
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
                         EnemyTurn ->
                             case board.boardState of
