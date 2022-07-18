@@ -51,7 +51,7 @@ initenemy : Int -> List Enemy
 initenemy k =
     case k of
         1 ->
-            [ sampleEnemy Archer ( 3, 3 ) 1
+            [ sampleEnemy Healer ( 3, 3 ) 1
             , sampleEnemy Mage ( 1, 8 ) 2
             , sampleEnemy Warrior ( 5, 2 ) 3
             ]

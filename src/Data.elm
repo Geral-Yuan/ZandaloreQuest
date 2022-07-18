@@ -218,6 +218,9 @@ sampleEnemy class pos index =
         Assassin ->
             Enemy Assassin pos 40 40 10 0 True Waiting False index
 
+        Healer ->
+            Enemy Healer pos 50 50 5 0 True Waiting False index
+
         _ ->
             Enemy Mage pos 50 50 6 0 True Waiting False index
 
