@@ -53,12 +53,20 @@ viewEnemyImage board enemy =
     let
         class =
             toString enemy.class
+
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
     in
     Svg.image
         [ SvgAttr.width "70"
         , SvgAttr.height "70"
         , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 100))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 100))
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
         ]
@@ -67,11 +75,20 @@ viewEnemyImage board enemy =
 
 viewEnemyFrame : Board -> Enemy -> Svg msg
 viewEnemyFrame board enemy =
+    let
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
+    in
     Svg.rect
         [ SvgAttr.width "400"
         , SvgAttr.height "120"
         , SvgAttr.x (toString (30 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 125))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 125))
         , SvgAttr.fill "transparent"
         , SvgAttr.stroke "black"
         , SvgAttr.rx "20"
@@ -81,11 +98,20 @@ viewEnemyFrame board enemy =
 
 viewEnemyCondition : Board -> Enemy -> List (Svg msg)
 viewEnemyCondition board enemy =
+    let
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
+    in
     [ Svg.image
         [ SvgAttr.width "30"
         , SvgAttr.height "30"
         , SvgAttr.x (toString (150 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 100))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 100))
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref "./assets/image/Heart.png"
         ]
@@ -94,7 +120,7 @@ viewEnemyCondition board enemy =
         [ SvgAttr.width "30"
         , SvgAttr.height "30"
         , SvgAttr.x (toString (150 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 60))
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref "./assets/image/Sword.png"
         ]
@@ -123,12 +149,20 @@ viewEnemyHealth board enemy =
 
         healthBarlen2 =
             100 * toFloat enemy.health / toFloat enemy.maxHealth
+
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
     in
     [ Svg.rect
         [ SvgAttr.width "200"
         , SvgAttr.height "20"
         , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 95))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 95))
         , SvgAttr.fill "transparent"
         , SvgAttr.stroke "red"
         , SvgAttr.rx "5"
@@ -138,7 +172,7 @@ viewEnemyHealth board enemy =
         [ SvgAttr.width (toString healthBarlen1)
         , SvgAttr.height "20"
         , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 95))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 95))
         , SvgAttr.fill "red"
         , SvgAttr.stroke "red"
         , SvgAttr.rx "5"
@@ -169,8 +203,17 @@ viewEnemyHealth board enemy =
 
 viewEnemyInfo : Board -> Enemy -> List (Html Msg)
 viewEnemyInfo board enemy =
+    let
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
+    in
     [ div
-        [ HtmlAttr.style "top" (toString (enemy.indexOnBoard * 150 - 115) ++ "px")
+        [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 115) ++ "px")
         , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "blue"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -182,7 +225,7 @@ viewEnemyInfo board enemy =
         ]
         [ text (toString enemy.health ++ "/" ++ toString enemy.maxHealth) ]
     , div
-        [ HtmlAttr.style "top" (toString (enemy.indexOnBoard * 150 - 75) ++ "px")
+        [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 75) ++ "px")
         , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "blue"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"

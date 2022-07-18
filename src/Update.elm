@@ -321,7 +321,7 @@ updateRPG msg model =
                         ( model, Cmd.none )
 
                 Dungeon2 ->
-                    if x > 500 && x < 700 && y > 250 && y < 400 then
+                    if x > 900 && x < 1100 && y > 250 && y < 400 then
                         ( { model | mode = HeroChoose, level = 3, previousMode = Dungeon2 }, Cmd.none )
 
                     else
