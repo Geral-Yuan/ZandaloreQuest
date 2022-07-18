@@ -164,6 +164,9 @@ viewBoard model =
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
+                ++ List.map (viewEnemyImage model.board) model.board.enemies
+                ++ List.map (viewEnemyFrame model.board) model.board.enemies
+                ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
                 ++ List.concat (List.map viewHeroHealth model.board.heroes)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
@@ -184,7 +187,7 @@ viewBoard model =
             ++ List.map viewEnemy model.board.enemies
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
-            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
+--            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 

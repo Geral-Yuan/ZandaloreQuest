@@ -6,7 +6,8 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
-
+import Svg.Attributes as SvgAttr
+import Board exposing (Board)
 
 viewEnemy : Enemy -> Svg Msg
 viewEnemy enemy =
@@ -46,6 +47,67 @@ viewEnemy enemy =
                 ]
 
 
+viewEnemyImage : Board -> Enemy -> Svg msg
+viewEnemyImage board enemy =
+    let
+        class =
+            toString enemy.class
+    in
+    Svg.image
+        [ SvgAttr.width "70"
+        , SvgAttr.height "70"
+        , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 100))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
+        ]
+        []
+
+viewEnemyFrame : Board -> Enemy -> Svg msg
+viewEnemyFrame board enemy =
+    Svg.rect
+        [ SvgAttr.width "400"
+        , SvgAttr.height "120"
+        , SvgAttr.x (toString (30 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 125))
+        , SvgAttr.fill "transparent"
+        , SvgAttr.stroke "black"
+        , SvgAttr.rx "20"
+        ]
+        []
+
+viewEnemyCondition : Board -> Enemy -> List (Svg msg)
+viewEnemyCondition board enemy =
+    [ Svg.image
+        [ SvgAttr.width "30"
+        , SvgAttr.height "30"
+        , SvgAttr.x (toString (150 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 100))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Heart.png"
+        ]
+        []
+    , Svg.image
+        [ SvgAttr.width "30"
+        , SvgAttr.height "30"
+        , SvgAttr.x (toString (150 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Sword.png"
+        ]
+        []
+--        , Svg.image
+--            [ SvgAttr.width "30"
+--            , SvgAttr.height "30"
+--            , SvgAttr.x (toString (280 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+--            , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
+--            , SvgAttr.preserveAspectRatio "none"
+--            , SvgAttr.xlinkHref "./assets/image/Energy.png"
+--            ]
+--        []
+    ]
+
+{-
 viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
 viewEnemyInformation enemies n =
     case enemies of
@@ -54,7 +116,7 @@ viewEnemyInformation enemies n =
 
         enemy :: rest ->
             viewEnemyInfo enemy n :: viewEnemyInformation rest (n + 1)
-
+-}
 
 
 {- let

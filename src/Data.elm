@@ -383,9 +383,18 @@ findInfoBoard ( x, y ) =
         0
 
 
-offset : Hero -> Float
-offset hero =
+offsetHero : Hero -> Float
+offsetHero hero =
     if hero.selected then
+        50
+
+    else
+        0
+
+
+offsetEnemy : Bool -> Float
+offsetEnemy selected =
+    if selected then
         50
 
     else

@@ -43,22 +43,23 @@ updateBoard msg board =
 
                         _ ->
                             { nBoard | timeBoardState = nBoard.timeBoardState + elapsed / 1000 }
+
+                updatedBoard =
+                    if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
+                        { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
+                            |> actionEnemy
+
+                    else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
+                        { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
+
+                    else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
+                        { nnBoard | timeTurn = 0 }
+                            |> actionEnemy
+
+                    else
+                        nnBoard
             in
-            if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
-                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
-                    |> actionEnemy
-                    |> checkTurn
-
-            else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
-                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
-
-            else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
-                { nnBoard | timeTurn = 0 }
-                    |> actionEnemy
-                    |> checkTurn
-
-            else
-                nnBoard
+            updatedBoard |> checkCurrentEnemy |> checkTurn
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -148,6 +149,20 @@ resetEnergy hero =
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
     { hero | selected = False }
+
+
+checkCurrentEnemy : Board -> Board
+checkCurrentEnemy board =
+    let
+        ( _, undoneEnemy ) =
+            List.partition .done board.enemies
+    in
+    case undoneEnemy of
+        [] ->
+            { board | cntEnemy = 0 }
+
+        enemy :: _ ->
+            { board | cntEnemy = enemy.indexOnBoard }
 
 
 checkTurn : Board -> Board

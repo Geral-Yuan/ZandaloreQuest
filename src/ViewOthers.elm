@@ -92,6 +92,7 @@ viewMoveable ( pos, dir ) =
         [ SvgAttr.x (toString c_x)
         , SvgAttr.y (toString c_y)
         , SvgAttr.fontSize "50"
+        , SvgAttr.fontFamily "Helvetica, Arial, sans-serif"
         , SvgAttr.textAnchor "middle"
         , SvgAttr.dominantBaseline "middle"
         , SvgAttr.fill "blue"
