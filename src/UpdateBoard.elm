@@ -19,13 +19,6 @@ updateBoard msg board =
                 _ ->
                     moveHero board dir
 
-        --        Select class False ->
-        --            case board.turn of
-        --                HeroTurn ->
-        --                    selectHero board class
-        --
-        --                EnemyTurn ->
-        --                    board
         Tick elapsed ->
             let
                 nBoard =
@@ -43,30 +36,14 @@ updateBoard msg board =
 
                 updatedBoard =
                     if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
-                        { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> (List.map returnEnemyToWaiting) |> (List.map checkEnemyDone), boardState = NoActions, timeBoardState = 0 }
+                        { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> List.map returnEnemyToWaiting |> List.map checkEnemyDone, boardState = NoActions, timeBoardState = 0 }
 
                     else if board.boardState == NoActions && nBoard.timeTurn > 0.8 then
-                        { nBoard | timeTurn = 0, enemies = nBoard.enemies |> (List.map checkEnemyDone) }
+                        { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
                             |> actionEnemy
 
                     else
                         nBoard
-
-                {-
-                   if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
-                       { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
-                           |> actionEnemy
-
-                   else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
-                       { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
-
-                   else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
-                       { nnBoard | timeTurn = 0 }
-                           |> actionEnemy
-
-                   else
-                       nnBoard
-                -}
             in
             updatedBoard |> checkCurrentEnemy |> checkTurn
 
@@ -104,6 +81,7 @@ returnEnemyToWaiting enemy =
 
         _ ->
             { enemy | state = Waiting }
+
 
 turnEnemy : Board -> Board
 turnEnemy board =

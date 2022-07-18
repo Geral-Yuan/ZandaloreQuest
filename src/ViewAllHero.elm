@@ -214,14 +214,3 @@ viewHero hero =
                 [ img [ src ("./assets/image/" ++ class ++ "Blue.png"), height 80, width 80 ] []
                 ]
 
-
-
--- Svg.image
---     [ SvgAttr.width "80"
---     , SvgAttr.height "80"
---     , SvgAttr.x (toString (x - 40))
---     , SvgAttr.y (toString (y - 40))
---     , SvgAttr.preserveAspectRatio "none"
---     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
---     ]
---     []

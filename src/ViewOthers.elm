@@ -133,36 +133,3 @@ endTurnButton =
         ]
         [ text "End Your Turn" ]
 
-
-
-{- viewInformation : Model -> List (Html Msg)
-   viewInformation model =
-       let
-           hero =
-               { class = Data.Warrior
-               , pos = ( 6, 6 )
-               , health = 100
-               , damage = 15
-               , armour = 5
-               , energy = 5
-               , selected = False
-               , numberOnBoard = 1
-               }
-       in
-       List.range 1 3
-           |> List.map (getHero hero model.heroes)
-           |> List.map viewHeroInfo
--}
-{- getHero : Hero -> List Hero -> Int -> Hero
-   getHero defaultoutput heroes n =
-       case heroes of
-           [] ->
-               defaultoutput
-
-           x :: xs ->
-               if n == 1 then
-                   x
-
-               else
-                   getHero defaultoutput xs (n - 1)
--}

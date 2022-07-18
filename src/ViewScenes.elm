@@ -507,47 +507,6 @@ viewCastleSvg =
         []
 
 
-
-{-
-   viewCastle : Model -> Html Msg
-   viewCastle model =
-       -- Add this when the homepage has been designed
-       let
-           ( w, h ) =
-               model.size
-
-           r =
-               if w / h > pixelWidth / pixelHeight then
-                   Basics.min 1 (h / pixelHeight)
-
-               else
-                   Basics.min 1 (w / pixelWidth)
-       in
-       div
-           [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-           , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-           , HtmlAttr.style "position" "absolute"
-           , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
-           , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-           , HtmlAttr.style "transform-origin" "0 0"
-           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-           , ("url('./assets/image/Castle.png')"
-               ++ " no-repeat fixed "
-               ++ " 0px "
-               ++ " 0px / "
-               ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
-             )
-               |> HtmlAttr.style "background"
-           ]
-           [ Svg.svg
-               [ SvgAttr.width "100%"
-               , SvgAttr.height "100%"
-               ]
-               [ viewRpgCharacter model ]
-           ]
--}
-
-
 viewShop : Model -> Html Msg
 viewShop model =
     let
@@ -649,47 +608,6 @@ viewShopSvg =
         , SvgAttr.xlinkHref "./assets/image/Shop.jpg"
         ]
         []
-
-
-
-{-
-   viewShop : Model -> Html Msg
-   viewShop model =
-       -- Add this when the homepage has been designed
-       let
-           ( w, h ) =
-               model.size
-
-           r =
-               if w / h > pixelWidth / pixelHeight then
-                   Basics.min 1 (h / pixelHeight)
-
-               else
-                   Basics.min 1 (w / pixelWidth)
-       in
-       div
-           [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-           , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-           , HtmlAttr.style "position" "absolute"
-           , HtmlAttr.style "left" (String.fromFloat (560 + (w - pixelWidth * r) / 2) ++ "px")
-           , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-           , HtmlAttr.style "transform-origin" "0 0"
-           , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-           , ("url('./assets/image/Shop.jpg')"
-               ++ " no-repeat fixed "
-               ++ " 0px "
-               ++ " 0px / "
-               ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
-             )
-               |> HtmlAttr.style "background"
-           ]
-           [ Svg.svg
-               [ SvgAttr.width "100%"
-               , SvgAttr.height "100%"
-               ]
-               [ viewRpgCharacter model ]
-           ]
--}
 
 
 startWidth : Float
