@@ -374,8 +374,8 @@ viewCell board ( row, column ) =
 viewTurn : Model -> Html Msg
 viewTurn model =
     div
-        [ HtmlAttr.style "left" "200px"
-        , HtmlAttr.style "top" "800px"
+        [ HtmlAttr.style "left" "1690px"
+        , HtmlAttr.style "top" "500px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"

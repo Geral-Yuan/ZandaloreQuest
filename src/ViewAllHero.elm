@@ -75,8 +75,14 @@ viewHeroCondition hero =
 viewHeroHealth : Hero -> List (Svg msg)
 viewHeroHealth hero =
     let
-        healthBarlen =
+        ( x, y ) =
+            findPos hero.pos
+
+        healthBarlen1 =
             200 * toFloat hero.health / toFloat hero.maxHealth
+
+        healthBarlen2 =
+            100 * toFloat hero.health / toFloat hero.maxHealth
     in
     [ Svg.rect
         [ SvgAttr.width "200"
@@ -89,10 +95,30 @@ viewHeroHealth hero =
         ]
         []
     , Svg.rect
-        [ SvgAttr.width (toString healthBarlen)
+        [ SvgAttr.width (toString healthBarlen1)
         , SvgAttr.height "20"
         , SvgAttr.x (toString (1740 - offsetHero hero))
         , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
+        , SvgAttr.fill "red"
+        , SvgAttr.stroke "red"
+        , SvgAttr.rx "5"
+        ]
+        []
+    , Svg.rect
+        [ SvgAttr.width "100"
+        , SvgAttr.height "10"
+        , SvgAttr.x (toString (x - 50))
+        , SvgAttr.y (toString (y - 60))
+        , SvgAttr.fill "transparent"
+        , SvgAttr.stroke "red"
+        , SvgAttr.rx "5"
+        ]
+        []
+    , Svg.rect
+        [ SvgAttr.width (toString healthBarlen2)
+        , SvgAttr.height "10"
+        , SvgAttr.x (toString (x - 50))
+        , SvgAttr.y (toString (y - 60))
         , SvgAttr.fill "red"
         , SvgAttr.stroke "red"
         , SvgAttr.rx "5"
