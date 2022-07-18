@@ -1,5 +1,6 @@
 module ViewAllEnemy exposing (..)
 
+import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
@@ -7,7 +8,7 @@ import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
-import Board exposing (Board)
+
 
 viewEnemy : Enemy -> Svg Msg
 viewEnemy enemy =
@@ -63,6 +64,7 @@ viewEnemyImage board enemy =
         ]
         []
 
+
 viewEnemyFrame : Board -> Enemy -> Svg msg
 viewEnemyFrame board enemy =
     Svg.rect
@@ -75,6 +77,7 @@ viewEnemyFrame board enemy =
         , SvgAttr.rx "20"
         ]
         []
+
 
 viewEnemyCondition : Board -> Enemy -> List (Svg msg)
 viewEnemyCondition board enemy =
@@ -96,29 +99,101 @@ viewEnemyCondition board enemy =
         , SvgAttr.xlinkHref "./assets/image/Sword.png"
         ]
         []
---        , Svg.image
---            [ SvgAttr.width "30"
---            , SvgAttr.height "30"
---            , SvgAttr.x (toString (280 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
---            , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
---            , SvgAttr.preserveAspectRatio "none"
---            , SvgAttr.xlinkHref "./assets/image/Energy.png"
---            ]
---        []
+
+    --        , Svg.image
+    --            [ SvgAttr.width "30"
+    --            , SvgAttr.height "30"
+    --            , SvgAttr.x (toString (280 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+    --            , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
+    --            , SvgAttr.preserveAspectRatio "none"
+    --            , SvgAttr.xlinkHref "./assets/image/Energy.png"
+    --            ]
+    --        []
     ]
 
+
+viewEnemyHealth : Board -> Enemy -> List (Svg msg)
+viewEnemyHealth board enemy =
+    let
+        healthBarlen =
+            200 * toFloat enemy.health / toFloat enemy.maxHealth
+    in
+    [ Svg.rect
+        [ SvgAttr.width "200"
+        , SvgAttr.height "20"
+        , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 95))
+        , SvgAttr.fill "transparent"
+        , SvgAttr.stroke "red"
+        , SvgAttr.rx "5"
+        ]
+        []
+    , Svg.rect
+        [ SvgAttr.width (toString healthBarlen)
+        , SvgAttr.height "20"
+        , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 95))
+        , SvgAttr.fill "red"
+        , SvgAttr.stroke "red"
+        , SvgAttr.rx "5"
+        ]
+        []
+    ]
+
+
+viewEnemyInfo : Board -> Enemy -> List (Html Msg)
+viewEnemyInfo board enemy =
+    [ div
+        [ HtmlAttr.style "top" (toString (enemy.indexOnBoard * 150 - 115) ++ "px")
+        , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "30px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text (toString enemy.health ++ "/" ++ toString enemy.maxHealth) ]
+    , div
+        [ HtmlAttr.style "top" (toString (enemy.indexOnBoard * 150 - 75) ++ "px")
+        , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-size" "30px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text (toString enemy.damage) ]
+
+    --    , div
+    --        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
+    --        , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
+    --        , HtmlAttr.style "color" "blue"
+    --        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+    --        , HtmlAttr.style "font-size" "30px"
+    --        , HtmlAttr.style "font-weight" "bold"
+    --        , HtmlAttr.style "text-align" "center"
+    --        , HtmlAttr.style "line-height" "60px"
+    --        , HtmlAttr.style "position" "absolute"
+    --        ]
+    --        [ text (toString hero.energy) ]
+    ]
+
+
+
 {-
-viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
-viewEnemyInformation enemies n =
-    case enemies of
-        [] ->
-            [ div [] [] ]
+   viewEnemyInformation : List Enemy -> Int -> List (Html Msg)
+   viewEnemyInformation enemies n =
+       case enemies of
+           [] ->
+               [ div [] [] ]
 
-        enemy :: rest ->
-            viewEnemyInfo enemy n :: viewEnemyInformation rest (n + 1)
+           enemy :: rest ->
+               viewEnemyInfo enemy n :: viewEnemyInformation rest (n + 1)
 -}
-
-
 {- let
        enemy =
            { class = Data.Warrior
@@ -151,31 +226,34 @@ getEnemy defaultoutput enemy n =
                 getEnemy defaultoutput xs (n - 1)
 
 
-viewEnemyInfo : Enemy -> Int -> Html Msg
-viewEnemyInfo enemy n =
-    -- display health and energy
-    let
-        idx =
-            toString enemy.indexOnBoard
 
-        health =
-            toString enemy.health
+{-
+   viewEnemyInfo : Enemy -> Int -> Html Msg
+   viewEnemyInfo enemy n =
+       -- display health and energy
+       let
+           idx =
+               toString enemy.indexOnBoard
 
-        ( x, y ) =
-            enemy.pos
+           health =
+               toString enemy.health
 
-        ( xs, ys ) =
-            ( toString x, toString y )
-    in
-    div
-        [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
-        , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "40px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text ("Enemy" ++ idx ++ ": " ++ health ++ " ( " ++ xs ++ " , " ++ ys ++ " ) ") ]
+           ( x, y ) =
+               enemy.pos
+
+           ( xs, ys ) =
+               ( toString x, toString y )
+       in
+       div
+           [ HtmlAttr.style "top" (toString (20 + (n - 1) * 120) ++ "px")
+           , HtmlAttr.style "left" "0px"
+           , HtmlAttr.style "color" "blue"
+           , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+           , HtmlAttr.style "font-size" "40px"
+           , HtmlAttr.style "font-weight" "bold"
+           , HtmlAttr.style "text-align" "center"
+           , HtmlAttr.style "line-height" "60px"
+           , HtmlAttr.style "position" "absolute"
+           ]
+           [ text ("Enemy" ++ idx ++ ": " ++ health ++ " ( " ++ xs ++ " , " ++ ys ++ " ) ") ]
+-}

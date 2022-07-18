@@ -120,12 +120,12 @@ tutorialButton =
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "60px"
-        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "height" "80px"
+        , HtmlAttr.style "left" "20px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "150px"
+        , HtmlAttr.style "width" "170px"
         , onClick ViewTutorial
         ]
         [ text "How to play" ]
@@ -164,10 +164,11 @@ viewBoard model =
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
+                ++ List.concat (List.map viewHeroHealth model.board.heroes)
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
                 ++ List.map (viewEnemyFrame model.board) model.board.enemies
                 ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
-                ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
@@ -185,9 +186,9 @@ viewBoard model =
             ++ List.map viewHero model.board.heroes
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
             ++ List.map viewEnemy model.board.enemies
+            ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
---            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 
@@ -373,8 +374,8 @@ viewCell board ( row, column ) =
 viewTurn : Model -> Html Msg
 viewTurn model =
     div
-        [ HtmlAttr.style "left" "400px"
-        , HtmlAttr.style "top" "50px"
+        [ HtmlAttr.style "left" "200px"
+        , HtmlAttr.style "top" "800px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
