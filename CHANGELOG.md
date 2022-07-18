@@ -6,6 +6,23 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.40] -- 2022-7-18
+
+### Added
+
+- Add the attackable range for enemies
+
+- Add health bar over the head of heroes and enemies on the board.
+
+### Changed
+
+- Improve the display of the information board of heroes in the board game
+
+- Improve the display of the information board of enemies in the board game
+
+- Adjust the position of the EndTurn button and Turn information
+
+- Adjust the duration of the enemy animation
 
 ## [m1.39] -- 2022-7-17
 
