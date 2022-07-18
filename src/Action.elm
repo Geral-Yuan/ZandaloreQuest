@@ -6,6 +6,24 @@ import Message exposing (Msg(..))
 import Time exposing (Weekday(..))
 
 
+updateEnemyAttackable : Board -> Board
+updateEnemyAttackable board =
+    let
+        maybeEnemy =
+            List.head (List.filter (\x -> x.indexOnBoard == board.cntEnemy) board.enemies)
+    in
+    case maybeEnemy of
+        Nothing ->
+            { board | enemyAttackable = [] }
+
+        Just enemy ->
+            let
+                realattackRange =
+                    List.map (vecAdd enemy.pos) (attackRangeEnemy board enemy)
+            in
+            { board | enemyAttackable = realattackRange }
+
+
 updateAttackable : Board -> Board
 updateAttackable board =
     case selectedHero board.heroes of
@@ -40,11 +58,18 @@ attackRange board hero =
         Mage ->
             subneighbour
 
-        Engineer ->
+        _ ->
             neighbour
 
-        Healer ->
-            neighbour
+
+attackRangeEnemy : Board -> Enemy -> List Pos
+attackRangeEnemy board enemy =
+    case enemy.class of
+        Archer ->
+            List.concat (List.map (stuckInWay board enemy.pos Friend) neighbour)
+
+        Mage ->
+            subneighbour
 
         _ ->
             neighbour

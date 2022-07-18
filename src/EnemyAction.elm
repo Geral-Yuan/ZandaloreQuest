@@ -1,4 +1,4 @@
-module EnemyAction exposing (actionEnemy)
+module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle, pos2Item)
 import Board exposing (..)
@@ -59,7 +59,7 @@ actionSmartWarrior board enemy =
     case route of
         [] ->
             eh2Board
-                ( { enemy | done = True, state = Attacking } :: otherenemies
+                ( { enemy | justAttack = True, state = Attacking } :: otherenemies
                 , enemyWarriorAttack enemy board.heroes
                     |> List.filter (\x -> x.health > 0)
                 )
@@ -67,7 +67,7 @@ actionSmartWarrior board enemy =
 
         first :: _ ->
             eh2Board
-                ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
+                ( { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
                 , board.heroes
                 )
                 board
@@ -128,7 +128,7 @@ actionSmartArcher board enemy =
     case route of
         [] ->
             eh2Board
-                ( { enemy | done = True, state = Attacking } :: otherenemies
+                ( { enemy | justAttack = True, state = Attacking } :: otherenemies
                 , enemyArcherAttack enemy board
                     |> List.filter (\x -> x.health > 0)
                 )
@@ -136,7 +136,7 @@ actionSmartArcher board enemy =
 
         first :: _ ->
             eh2Board
-                ( checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
+                ( { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
                 , board.heroes
                 )
                 board
@@ -161,7 +161,7 @@ actionSmartMage board enemy =
     case route of
         [] ->
             { board
-                | enemies = { enemy | done = True, state = Attacking } :: otherenemies
+                | enemies = { enemy | justAttack = True, state = Attacking } :: otherenemies
                 , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
                 , obstacles = atkboard.obstacles
                 , item = atkboard.item
@@ -169,7 +169,7 @@ actionSmartMage board enemy =
             }
 
         first :: _ ->
-            { board | enemies = checkEnemyDone { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies }
+            { board | enemies = { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies }
 
 
 enemyMageAttack : Enemy -> Board -> Board
@@ -220,8 +220,11 @@ attackObsGroup grid attackable =
 
 checkEnemyDone : Enemy -> Enemy
 checkEnemyDone enemy =
-    if enemy.steps == 0 then
+    if enemy.steps == 0 && enemy.state == Waiting then
         { enemy | done = True }
+
+    else if enemy.justAttack then
+        { enemy | justAttack = False, done = True }
 
     else
         enemy
@@ -258,7 +261,7 @@ index2Enemy : Int -> List Enemy -> Enemy
 index2Enemy index l_enemy =
     case List.filter (\x -> index == x.indexOnBoard) l_enemy of
         [] ->
-            Enemy Warrior ( 0, 0 ) 80 -1 15 3 False Waiting 0
+            Enemy Warrior ( 0, 0 ) 80 -1 15 3 False Waiting False 0
 
         chosen :: _ ->
             chosen

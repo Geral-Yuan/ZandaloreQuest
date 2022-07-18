@@ -120,12 +120,12 @@ tutorialButton =
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "60px"
-        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "height" "80px"
+        , HtmlAttr.style "left" "20px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "150px"
+        , HtmlAttr.style "width" "170px"
         , onClick ViewTutorial
         ]
         [ text "How to play" ]
@@ -161,9 +161,14 @@ viewBoard model =
             (viewMap model.board
                 ++ List.map viewCoordinate model.board.map
                 ++ List.map viewMoveable model.board.moveable
-                ++ List.map viewHeroInfo1 model.board.heroes
-                ++ List.map viewHeroInfo2 model.board.heroes
-                ++ List.concat (List.map (viewHeroHealth (List.map Tuple.first model.indexedheroes)) model.board.heroes)
+                ++ List.map viewHeroImage model.board.heroes
+                ++ List.map viewHeroFrame model.board.heroes
+                ++ List.concat (List.map viewHeroCondition model.board.heroes)
+                ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.map (viewEnemyImage model.board) model.board.enemies
+                ++ List.map (viewEnemyFrame model.board) model.board.enemies
+                ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
+                ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
@@ -179,12 +184,11 @@ viewBoard model =
          , tutorialButton
          ]
             ++ List.map viewHero model.board.heroes
-            ++ List.map viewHeroInfo3 model.board.heroes
+            ++ List.concat (List.map viewHeroInfo model.board.heroes)
             ++ List.map viewEnemy model.board.enemies
+            ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
-            ++ List.map viewHeroInfo4 model.board.heroes
-            ++ viewEnemyInformation (List.sortBy .indexOnBoard model.board.enemies) 1
         )
 
 
@@ -277,41 +281,6 @@ animateHeroVisuals hero =
            )
            (List.map findPos list_points)
 -}
-{-
-   viewClickPosition : Model -> Html Msg
-   viewClickPosition model =
-       let
-           ( x, y ) =
-               model.board.pointPos
-       in
-       div
-           [ HtmlAttr.style "bottom" "30px"
-           , HtmlAttr.style "left" "0px"
-           , HtmlAttr.style "color" "red"
-           , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-           , HtmlAttr.style "font-size" "40px"
-           , HtmlAttr.style "font-weight" "bold"
-           , HtmlAttr.style "text-align" "center"
-           , HtmlAttr.style "line-height" "60px"
-           , HtmlAttr.style "position" "absolute"
-           ]
-           [ text ("( " ++ toString (Basics.round x) ++ " ," ++ toString (Basics.round y) ++ " )") ]
--}
--- Just for tips now. Later I will delete it
--- viewTips : Html Msg
--- viewTips =
---     div
---         [ HtmlAttr.style "bottom" "150px"
---         , HtmlAttr.style "left" "0px"
---         , HtmlAttr.style "color" "red"
---         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
---         , HtmlAttr.style "font-size" "30px"
---         , HtmlAttr.style "font-weight" "bold"
---         , HtmlAttr.style "text-align" "center"
---         , HtmlAttr.style "line-height" "60px"
---         , HtmlAttr.style "position" "absolute"
---         ]
---         [ text "Tips: Hero's energy for attack and motion!" ]
 
 
 viewMap : Board -> List (Svg Msg)
@@ -350,7 +319,7 @@ viewCell board ( row, column ) =
                 ]
                 []
 
-    else if List.member ( row, column ) (listUnion board.attackable board.skillable) then
+    else if List.member ( row, column ) (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
@@ -370,8 +339,8 @@ viewCell board ( row, column ) =
 viewTurn : Model -> Html Msg
 viewTurn model =
     div
-        [ HtmlAttr.style "left" "400px"
-        , HtmlAttr.style "top" "50px"
+        [ HtmlAttr.style "left" "1690px"
+        , HtmlAttr.style "top" "500px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"

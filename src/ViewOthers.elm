@@ -92,6 +92,7 @@ viewMoveable ( pos, dir ) =
         [ SvgAttr.x (toString c_x)
         , SvgAttr.y (toString c_y)
         , SvgAttr.fontSize "50"
+        , SvgAttr.fontFamily "Helvetica, Arial, sans-serif"
         , SvgAttr.textAnchor "middle"
         , SvgAttr.dominantBaseline "middle"
         , SvgAttr.fill "blue"
@@ -118,50 +119,17 @@ endTurnButton : Html Msg
 endTurnButton =
     button
         [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "790px"
+        , HtmlAttr.style "top" "600px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "1400px"
+        , HtmlAttr.style "left" "1700px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "160px"
+        , HtmlAttr.style "width" "170px"
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
 
-
-
-{- viewInformation : Model -> List (Html Msg)
-   viewInformation model =
-       let
-           hero =
-               { class = Data.Warrior
-               , pos = ( 6, 6 )
-               , health = 100
-               , damage = 15
-               , armour = 5
-               , energy = 5
-               , selected = False
-               , numberOnBoard = 1
-               }
-       in
-       List.range 1 3
-           |> List.map (getHero hero model.heroes)
-           |> List.map viewHeroInfo
--}
-{- getHero : Hero -> List Hero -> Int -> Hero
-   getHero defaultoutput heroes n =
-       case heroes of
-           [] ->
-               defaultoutput
-
-           x :: xs ->
-               if n == 1 then
-                   x
-
-               else
-                   getHero defaultoutput xs (n - 1)
--}

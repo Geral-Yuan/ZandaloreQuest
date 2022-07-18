@@ -1,9 +1,9 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
+import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero, updateEnemyAttackable)
 import Board exposing (Board)
 import Data exposing (..)
-import EnemyAction exposing (actionEnemy)
+import EnemyAction exposing (actionEnemy, checkEnemyDone)
 import HeroAttack exposing (checkAttack)
 import Message exposing (Msg(..))
 
@@ -19,46 +19,41 @@ updateBoard msg board =
                 _ ->
                     moveHero board dir
 
-        --        Select class False ->
-        --            case board.turn of
-        --                HeroTurn ->
-        --                    selectHero board class
-        --
-        --                EnemyTurn ->
-        --                    board
         Tick elapsed ->
             let
                 nBoard =
                     case board.turn of
                         PlayerTurn ->
-                            board
+                            case board.boardState of
+                                NoActions ->
+                                    board
+
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
                         EnemyTurn ->
-                            { board | timeTurn = board.timeTurn + elapsed / 1000 }
+                            case board.boardState of
+                                NoActions ->
+                                    { board | timeTurn = board.timeTurn + elapsed / 1000 }
 
-                nnBoard =
-                    case board.boardState of
-                        NoActions ->
-                            nBoard
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
-                        _ ->
-                            { nBoard | timeBoardState = nBoard.timeBoardState + elapsed / 1000 }
+                updatedBoard =
+                    if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
+                        { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> List.map returnEnemyToWaiting |> List.map checkEnemyDone, boardState = NoActions, timeBoardState = 0 }
+
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 then
+                        { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
+                            |> actionEnemy
+
+                    else if board.timeTurn > 0.5 then
+                        { nBoard | enemies = nBoard.enemies |> List.map checkEnemyDone }
+
+                    else
+                        nBoard
             in
-            if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
-                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
-                    |> actionEnemy
-                    |> checkTurn
-
-            else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
-                { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
-
-            else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
-                { nnBoard | timeTurn = 0 }
-                    |> actionEnemy
-                    |> checkTurn
-
-            else
-                nnBoard
+            updatedBoard |> checkCurrentEnemy |> updateEnemyAttackable |> checkTurn
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -100,7 +95,7 @@ turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
-        , enemies = List.map resetSteps board.enemies
+        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
         , timeTurn = 0
     }
@@ -148,6 +143,20 @@ resetEnergy hero =
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
     { hero | selected = False }
+
+
+checkCurrentEnemy : Board -> Board
+checkCurrentEnemy board =
+    let
+        ( _, undoneEnemy ) =
+            List.partition .done board.enemies
+    in
+    case undoneEnemy of
+        [] ->
+            { board | cntEnemy = 0 }
+
+        enemy :: _ ->
+            { board | cntEnemy = enemy.indexOnBoard }
 
 
 checkTurn : Board -> Board
