@@ -3,7 +3,7 @@ module UpdateBoard exposing (..)
 import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
-import EnemyAction exposing (actionEnemy)
+import EnemyAction exposing (actionEnemy, checkEnemyDone)
 import HeroAttack exposing (checkAttack)
 import Message exposing (Msg(..))
 
@@ -34,30 +34,39 @@ updateBoard msg board =
                             board
 
                         EnemyTurn ->
-                            { board | timeTurn = board.timeTurn + elapsed / 1000 }
+                            case board.boardState of
+                                NoActions ->
+                                    { board | timeTurn = board.timeTurn + elapsed / 1000 }
 
-                nnBoard =
-                    case board.boardState of
-                        NoActions ->
-                            nBoard
-
-                        _ ->
-                            { nBoard | timeBoardState = nBoard.timeBoardState + elapsed / 1000 }
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
                 updatedBoard =
-                    if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
-                        { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
-                            |> actionEnemy
+                    if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
+                        { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> (List.map returnEnemyToWaiting) |> (List.map checkEnemyDone), boardState = NoActions, timeBoardState = 0 }
 
-                    else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
-                        { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
-
-                    else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
-                        { nnBoard | timeTurn = 0 }
+                    else if board.boardState == NoActions && nBoard.timeTurn > 0.8 then
+                        { nBoard | timeTurn = 0, enemies = nBoard.enemies |> (List.map checkEnemyDone) }
                             |> actionEnemy
 
                     else
-                        nnBoard
+                        nBoard
+
+                {-
+                   if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn > 3.0 then
+                       { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeTurn = 0, timeBoardState = 0 }
+                           |> actionEnemy
+
+                   else if nnBoard.timeBoardState > 1.0 && nnBoard.timeTurn <= 3.0 then
+                       { nnBoard | heroes = List.map returnHeroToWaiting nnBoard.heroes, enemies = List.map returnEnemyToWaiting nnBoard.enemies, boardState = NoActions, timeBoardState = 0 }
+
+                   else if nnBoard.timeTurn > 3.0 && nnBoard.timeBoardState <= 1.0 then
+                       { nnBoard | timeTurn = 0 }
+                           |> actionEnemy
+
+                   else
+                       nnBoard
+                -}
             in
             updatedBoard |> checkCurrentEnemy |> checkTurn
 
@@ -96,12 +105,11 @@ returnEnemyToWaiting enemy =
         _ ->
             { enemy | state = Waiting }
 
-
 turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
-        , enemies = List.map resetSteps board.enemies
+        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
         , timeTurn = 0
     }

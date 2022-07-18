@@ -120,6 +120,7 @@ type alias Enemy =
     , steps : Int
     , done : Bool
     , state : HeroState
+    , justAttack : Bool
     , indexOnBoard : Int --give an index to the enemies on the board
     }
 
@@ -209,16 +210,16 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 80 8 0 True Waiting index
+            Enemy Warrior pos 80 80 8 0 True Waiting False index
 
         Archer ->
-            Enemy Archer pos 40 40 10 0 True Waiting index
+            Enemy Archer pos 40 40 10 0 True Waiting False index
 
         Assassin ->
-            Enemy Assassin pos 40 40 10 0 True Waiting index
+            Enemy Assassin pos 40 40 10 0 True Waiting False index
 
         _ ->
-            Enemy Mage pos 50 50 6 0 True Waiting index
+            Enemy Mage pos 50 50 6 0 True Waiting False index
 
 
 
