@@ -319,7 +319,7 @@ viewCell board ( row, column ) =
                 ]
                 []
 
-    else if List.member ( row, column ) (listUnion board.attackable board.skillable) then
+    else if List.member ( row, column ) (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"

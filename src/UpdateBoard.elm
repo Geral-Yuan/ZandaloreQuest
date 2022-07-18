@@ -1,6 +1,6 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
+import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero, updateEnemyAttackable)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
@@ -38,14 +38,17 @@ updateBoard msg board =
                     if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
                         { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> List.map returnEnemyToWaiting |> List.map checkEnemyDone, boardState = NoActions, timeBoardState = 0 }
 
-                    else if board.boardState == NoActions && nBoard.timeTurn > 0.8 then
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 then
                         { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
                             |> actionEnemy
+
+                    else if board.timeTurn > 0.5 then
+                        { nBoard | enemies = nBoard.enemies |> List.map checkEnemyDone }
 
                     else
                         nBoard
             in
-            updatedBoard |> checkCurrentEnemy |> checkTurn
+            updatedBoard |> checkCurrentEnemy |> updateEnemyAttackable |> checkTurn
 
         Attack pos critical ->
             checkAttack board pos critical
