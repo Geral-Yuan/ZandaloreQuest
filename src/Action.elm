@@ -66,7 +66,7 @@ attackRangeEnemy : Board -> Enemy -> List Pos
 attackRangeEnemy board enemy =
     case enemy.class of
         Archer ->
-            List.concat (List.map (stuckInWay board enemy.pos Friend) neighbour)
+            List.concat (List.map (stuckInWay board enemy.pos Hostile) neighbour)
 
         Mage ->
             subneighbour

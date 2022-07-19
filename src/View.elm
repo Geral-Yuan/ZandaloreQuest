@@ -185,7 +185,7 @@ viewBoard model =
          ]
             ++ List.map viewHero model.board.heroes
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
-            ++ List.map viewEnemy model.board.enemies
+            ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
             ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
