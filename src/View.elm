@@ -213,6 +213,9 @@ animateEnemyVisuals enemy =
             Attacked k ->
                 text ("-" ++ toString k)
 
+            GettingHealed h2 ->
+                text ("+" ++ toString h2)
+
             _ ->
                 text ""
         ]
