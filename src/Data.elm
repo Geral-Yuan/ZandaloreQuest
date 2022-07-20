@@ -22,6 +22,13 @@ type GameMode
     | Tutorial Int
 
 
+type Task
+    = MeetElder
+    | GoToShop
+    | Level Int
+    | GoToDungeon
+
+
 type alias Pos =
     ( Int, Int )
 

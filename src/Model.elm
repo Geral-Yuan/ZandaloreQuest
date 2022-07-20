@@ -20,6 +20,7 @@ type alias Model =
     , previousMode : GameMode
     , level : Int
     , time : Float
+    , cntTask : Task
 
     -- , time : Float
     }
@@ -72,6 +73,7 @@ initModel =
     , previousMode = BoardGame
     , level = 1
     , time = 0
+    , cntTask = MeetElder
 
     -- , time = 0
     }
