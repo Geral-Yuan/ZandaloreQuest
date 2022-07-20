@@ -157,12 +157,14 @@ viewCastle model =
         ]
         (viewKeyGif
             ++ [ viewChatBox ( 620, 250 )
+               , viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
                     [ viewCastleSvg
                     , viewDarkKnight ( 600, 290 )
+                    , viewTaskBoard
                     ]
                , viewCharacterPos model.character
                , viewBagCoin model
@@ -199,6 +201,7 @@ viewDungeon model =
         ]
         (viewKeyGif
             ++ [ viewChatBox ( 620, 250 )
+               , viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
@@ -207,6 +210,7 @@ viewDungeon model =
 
                     -- , viewExit
                     , viewDarkKnight ( 600, 290 )
+                    , viewTaskBoard
                     ]
                , viewCharacterPos model.character
                , viewBagCoin model
@@ -243,6 +247,7 @@ viewDungeon2 model =
         ]
         (viewKeyGif
             ++ [ viewChatBox ( 1040, 260 )
+               , viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
@@ -251,6 +256,7 @@ viewDungeon2 model =
 
                     -- , viewExit
                     , viewDarkKnight ( 1000, 290 )
+                    , viewTaskBoard
                     ]
                , viewCharacterPos model.character
                , viewBagCoin model
@@ -291,7 +297,7 @@ viewDungeonSvg =
         []
 
 
-viewKeyGif : List (Svg msg)
+viewKeyGif : List (Html msg)
 viewKeyGif =
     [ viewSvgForDir
     , viewSvgForC
@@ -299,7 +305,7 @@ viewKeyGif =
     ]
 
 
-viewSvgForDir : Svg msg
+viewSvgForDir : Html msg
 viewSvgForDir =
     div
         [ HtmlAttr.style "position" "absolute"
@@ -418,12 +424,14 @@ viewShop model =
         ]
         (viewKeyGif
             ++ [ viewChatBox ( 800, 330 )
+               , viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
                     [ viewShopSvg
                     , viewShopKeeper
+                    , viewTaskBoard
                     ]
                , viewRpgCharacter model.character
                , viewCharacterPos model.character
