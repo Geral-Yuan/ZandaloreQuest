@@ -10,6 +10,9 @@ import Task
 import NPC exposing (npcElder)
 import NPC exposing (npcWarrior)
 import NPC exposing (npcArcher)
+import NPC exposing (npcMage)
+import NPC exposing (npcHealer)
+import NPC exposing (npcEngineer)
 
 
 type alias Model =
@@ -39,7 +42,7 @@ init _ =
 
 initCharacter : RpgCharacter
 initCharacter =
-    { pos = ( 975, 525 )
+    { pos = ( 1005, 555 )
 
     --    , state = Still
     , moveLeft = False
@@ -47,8 +50,8 @@ initCharacter =
     , moveUp = False
     , moveDown = False
     , faceDir = Right
-    , height = 65
-    , width = 65
+    , height = 64
+    , width = 64
     , speed = 500
     , move_range = ( pixelWidth, pixelHeight )
     }
@@ -78,7 +81,7 @@ initModel =
     , level = 1
     , time = 0
     , cntTask = MeetElder
-    , npclist = [npcElder, npcWarrior, npcArcher]
+    , npclist = [npcElder, npcWarrior, npcArcher, npcMage, npcHealer, npcEngineer]
 
     -- , time = 0
     }

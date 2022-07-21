@@ -61,8 +61,8 @@ npcMage =
     , dialogue = []
     , image = "MageBlue"
     , faceDir = Left
-    , position = ( 880, 420 )
-    , size = ( 84, 84 )
+    , position = ( 880, 430 )
+    , size = ( 100, 100 )
     , beaten = False
     }
 
@@ -74,8 +74,8 @@ npcHealer =
     , dialogue = []
     , image = "HealerBlue"
     , faceDir = Right
-    , position = ( 790, 420 )
-    , size = ( 84, 84 )
+    , position = ( 790, 370 )
+    , size = ( 100, 100 )
     , beaten = False
     }
 
@@ -87,7 +87,7 @@ npcEngineer =
     , dialogue = []
     , image = "EngineerBlue"
     , faceDir = Right
-    , position = ( 700, 420 )
-    , size = ( 84, 84 )
+    , position = ( 700, 430 )
+    , size = ( 100, 100 )
     , beaten = False
     }

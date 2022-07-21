@@ -34,8 +34,8 @@ viewSingleNPC npc =
         ]
         [ img
             [ src ("./assets/image/" ++ npc.image ++ ".png")
-            , height (floor w)
-            , width (floor h)
+            , width (floor w)
+            , height (floor h)
             , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
             ]
             []

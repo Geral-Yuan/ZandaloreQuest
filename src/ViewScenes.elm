@@ -79,6 +79,15 @@ determineOpct t =
 viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
     let
+        ( x, y ) =
+            character.pos
+
+        w =
+            character.width
+
+        h =
+            character.height
+
         scaleFactor =
             case character.faceDir of
                 Left ->
@@ -99,13 +108,13 @@ viewRpgCharacter character =
     in
     div
         [ HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "top" (toString (Tuple.second character.pos) ++ "px")
-        , HtmlAttr.style "left" (toString (Tuple.first character.pos) ++ "px")
+        , HtmlAttr.style "left" (toString (x - w / 2) ++ "px")
+        , HtmlAttr.style "top" (toString (y - h / 2) ++ "px")
         ]
         [ img
             [ src ("./assets/image/MainCharacter" ++ image)
-            , height (floor character.height)
-            , width (floor character.width)
+            , width (floor w)
+            , height (floor h)
             , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
             ]
             []
@@ -169,9 +178,9 @@ viewCastle model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
-               , viewRpgCharacter model.character
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
+            ++ [ viewRpgCharacter model.character ]
         )
 
 
@@ -214,8 +223,9 @@ viewDungeon model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
-               , viewRpgCharacter model.character
                ]
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == DungeonScene)))
+            ++ [ viewRpgCharacter model.character ]
         )
 
 
@@ -258,9 +268,9 @@ viewDungeon2 model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
-               , viewRpgCharacter model.character
                ]
-            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == Dungeon2Scene)))
+            ++ [ viewRpgCharacter model.character ]
         )
 
 
@@ -427,12 +437,13 @@ viewShop model =
                     [ viewShopSvg
                     , viewTaskBoard
                     ]
-               , viewRpgCharacter model.character
                , viewCharacterPos model.character
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
                ]
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
+            ++ [ viewRpgCharacter model.character ]
         )
 
 

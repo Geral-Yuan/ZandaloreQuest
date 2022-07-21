@@ -32,7 +32,7 @@ type Scene
     = CastleScene
     | ShopScene
     | DungeonScene
-    | Dugenon2Scene
+    | Dungeon2Scene
 
 type alias Pos =
     ( Int, Int )
