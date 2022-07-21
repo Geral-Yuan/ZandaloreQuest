@@ -28,11 +28,13 @@ type Task
     | Level Int
     | GoToDungeon
 
+
 type Scene
     = CastleScene
     | ShopScene
     | DungeonScene
     | Dungeon2Scene
+
 
 type alias Pos =
     ( Int, Int )
@@ -136,16 +138,19 @@ type alias Enemy =
     , indexOnBoard : Int --give an index to the enemies on the board
     }
 
+
 type alias NPC =
     { scene : Scene
     , name : String
     , dialogue : List String
     , image : String
     , faceDir : Dir
-    , position : (Float, Float)
-    , size : (Float, Float)
+    , position : ( Float, Float )
+    , size : ( Float, Float )
     , beaten : Bool
+    , talkRange : ( ( Float, Float ), ( Float, Float ) )
     }
+
 
 type Dir
     = W

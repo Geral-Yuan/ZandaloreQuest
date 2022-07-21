@@ -7,10 +7,12 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
+import NPC exposing (npcAssassin, npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
+import ViewNPCTask exposing (checkTalkRange)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -167,7 +169,7 @@ isReachable : GameMode -> ( Float, Float ) -> List NPC -> Bool
 isReachable mode ( x, y ) npclist =
     case mode of
         Castle ->
-            ((x > 322 && x < 1692 && y > 782 && y < 812)
+            ((x > 310 && x < 1692 && y > 782 && y < 812)
                 || (x > 572 && x < 1427 && y <= 782 && y > 407)
                 || (x > 732 && x < 1272 && y <= 407 && y > 382)
                 || (y <= 407 && y > 197 && (x > 572 && x < 667 || x > 1332 && x < 1427))
@@ -305,14 +307,14 @@ updateRPG msg model =
 
                 Dungeon ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 975, 375 ) } }, Cmd.none )
+                        ( { model | mode = Castle, character = { character | pos = ( 1007, 407 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
 
                 Dungeon2 ->
                     if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 345, 770 ) } }, Cmd.none )
+                        ( { model | mode = Castle, character = { character | pos = ( 377, 802 ) } }, Cmd.none )
 
                     else
                         ( model, Cmd.none )
@@ -321,33 +323,7 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Talk False ->
-            case model.mode of
-                Shop ->
-                    ( { model | mode = BuyingItems }, Cmd.none )
-
-                Castle ->
-                    if x > 545 && x < 620 && y <= 370 && y > 200 then
-                        ( { model | mode = HeroChoose, level = 1, previousMode = Castle }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
-
-                Dungeon ->
-                    if x > 500 && x < 700 && y > 250 && y < 400 then
-                        ( { model | mode = HeroChoose, level = 2, previousMode = Dungeon }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
-
-                Dungeon2 ->
-                    if x > 900 && x < 1100 && y > 250 && y < 400 then
-                        ( { model | mode = HeroChoose, level = 3, previousMode = Dungeon2 }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+            ( model |> checkTalkRange, Cmd.none )
 
         Key Left on ->
             ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
@@ -640,7 +616,7 @@ checkEnd ( model, cmd ) =
             model.board
 
         wincoins =
-            myboard.coins + 100
+            myboard.coins + 50
 
         losecoins =
             myboard.coins
@@ -652,7 +628,9 @@ checkEnd ( model, cmd ) =
                         { model
                             | mode = model.previousMode
                             , level = model.level + 1
+                            , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
+                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                         }
 
                     else if List.isEmpty myboard.heroes then
@@ -668,3 +646,41 @@ checkEnd ( model, cmd ) =
                     model
     in
     ( nmodel, cmd )
+
+
+
+-- To be modified
+
+
+nextTask : Task -> Task
+nextTask task =
+    case task of
+        MeetElder ->
+            Level 1
+
+        Level k ->
+            Level (k + 1)
+
+        _ ->
+            GoToDungeon
+
+
+nextNPC : Task -> List NPC
+nextNPC task =
+    case task of
+        MeetElder ->
+            [ npcDarkKnight1 ]
+
+        Level 1 ->
+            [ npcDarkKnight2 ]
+
+        Level 2 ->
+            [ npcAssassin ]
+
+        _ ->
+            []
+
+
+updateBeaten : List NPC -> List NPC
+updateBeaten npclist =
+    List.map (\npc -> { npc | beaten = True }) npclist

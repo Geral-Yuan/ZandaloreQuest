@@ -10,9 +10,10 @@ npcElder =
     , dialogue = []
     , image = "EvilNPC" -- To be modified to "Elder"
     , faceDir = Left
-    , position = ( 1300, 610)
+    , position = ( 1300, 610 )
     , size = ( 64, 64 )
     , beaten = False
+    , talkRange = ( ( 1200, 1427 ), ( 500, 720 ) )
     }
 
 
@@ -26,6 +27,21 @@ npcDarkKnight1 =
     , position = ( 630, 320 )
     , size = ( 64, 64 )
     , beaten = False
+    , talkRange = ( ( 572, 667 ), ( 260, 390 ) )
+    }
+
+
+npcDarkKnight2 : NPC
+npcDarkKnight2 =
+    { scene = CastleScene
+    , name = "DarkKnight 2"
+    , dialogue = []
+    , image = "EvilNPC"
+    , faceDir = Left
+    , position = ( 1600, 200 )
+    , size = ( 64, 64 )
+    , beaten = False
+    , talkRange = ( ( 1500, 1700 ), ( 100, 300 ) )
     }
 
 
@@ -38,8 +54,10 @@ npcWarrior =
     , faceDir = Left
     , position = ( 1350, 550 )
     , size = ( 64, 64 )
-    , beaten = False
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
     }
+
 
 npcArcher : NPC
 npcArcher =
@@ -50,7 +68,22 @@ npcArcher =
     , faceDir = Left
     , position = ( 1350, 670 )
     , size = ( 64, 64 )
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    }
+
+
+npcAssassin : NPC
+npcAssassin =
+    { scene = CastleScene
+    , name = "Assassin"
+    , dialogue = []
+    , image = "AssassinBlue"
+    , faceDir = Right
+    , position = ( 315, 810 )
+    , size = ( 64, 64 )
     , beaten = False
+    , talkRange = ( ( 315, 415 ), ( 750, 850 ) )
     }
 
 
@@ -63,7 +96,8 @@ npcMage =
     , faceDir = Left
     , position = ( 880, 430 )
     , size = ( 100, 100 )
-    , beaten = False
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
     }
 
 
@@ -76,7 +110,8 @@ npcHealer =
     , faceDir = Right
     , position = ( 790, 370 )
     , size = ( 100, 100 )
-    , beaten = False
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
     }
 
 
@@ -89,5 +124,6 @@ npcEngineer =
     , faceDir = Right
     , position = ( 700, 430 )
     , size = ( 100, 100 )
-    , beaten = False
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
     }

@@ -105,3 +105,48 @@ textTask model =
         -- Maybe a name for each NPC later
         _ ->
             ""
+
+
+checkTalkRange : Model -> Model
+checkTalkRange model =
+    let
+        scene =
+            case model.mode of
+                Castle ->
+                    CastleScene
+
+                Shop ->
+                    ShopScene
+
+                Dungeon ->
+                    DungeonScene
+
+                _ ->
+                    Dungeon2Scene
+    in
+    checkNPCTalk model (List.filter (\npc -> npc.scene == scene) model.npclist)
+
+
+checkNPCTalk : Model -> List NPC -> Model
+checkNPCTalk model npclist =
+    let
+        targetNPC =
+            List.head (List.filter (checkInTalkRange (model.character.pos)) npclist)
+    in
+    case targetNPC of
+        Nothing ->
+            model
+        Just npc ->
+            if npc.beaten then
+                model -- To be modified
+            else
+                { model | mode = HeroChoose, previousMode = Castle }
+
+
+checkInTalkRange : ( Float, Float ) -> NPC -> Bool
+checkInTalkRange ( x, y ) npc =
+    let
+        ( ( lx, rx ), ( uy, dy ) ) =
+            npc.talkRange
+    in
+    x > lx && x < rx && y > uy && y < dy
