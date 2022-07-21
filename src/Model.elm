@@ -7,6 +7,9 @@ import Data exposing (..)
 import Message exposing (Msg(..))
 import RpgCharacter exposing (..)
 import Task
+import NPC exposing (npcElder)
+import NPC exposing (npcWarrior)
+import NPC exposing (npcArcher)
 
 
 type alias Model =
@@ -21,6 +24,7 @@ type alias Model =
     , level : Int
     , time : Float
     , cntTask : Task
+    , npclist : List NPC 
 
     -- , time : Float
     }
@@ -74,6 +78,7 @@ initModel =
     , level = 1
     , time = 0
     , cntTask = MeetElder
+    , npclist = [npcElder, npcWarrior, npcArcher]
 
     -- , time = 0
     }

@@ -156,14 +156,12 @@ viewCastle model =
         , HtmlAttr.style "background" "black"
         ]
         (viewKeyGif
-            ++ [ viewChatBox ( 620, 250 )
-               , viewTask model
+            ++ [ viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
                     [ viewCastleSvg
-                    , viewDarkKnight ( 600, 290 )
                     , viewTaskBoard
                     ]
                , viewCharacterPos model.character
@@ -173,6 +171,7 @@ viewCastle model =
                , viewTipForEnter
                , viewRpgCharacter model.character
                ]
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
         )
 
 
@@ -200,8 +199,7 @@ viewDungeon model =
         , HtmlAttr.style "background" "black"
         ]
         (viewKeyGif
-            ++ [ viewChatBox ( 620, 250 )
-               , viewTask model
+            ++ [ viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
@@ -209,7 +207,6 @@ viewDungeon model =
                     [ viewDungeonSvg
 
                     -- , viewExit
-                    , viewDarkKnight ( 600, 290 )
                     , viewTaskBoard
                     ]
                , viewCharacterPos model.character
@@ -246,8 +243,7 @@ viewDungeon2 model =
         , HtmlAttr.style "background" "black"
         ]
         (viewKeyGif
-            ++ [ viewChatBox ( 1040, 260 )
-               , viewTask model
+            ++ [ viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
@@ -255,7 +251,6 @@ viewDungeon2 model =
                     [ viewDungeonSvg
 
                     -- , viewExit
-                    , viewDarkKnight ( 1000, 290 )
                     , viewTaskBoard
                     ]
                , viewCharacterPos model.character
@@ -265,6 +260,7 @@ viewDungeon2 model =
                , viewTipForEnter
                , viewRpgCharacter model.character
                ]
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
         )
 
 
@@ -423,14 +419,12 @@ viewShop model =
         , HtmlAttr.style "background" "black"
         ]
         (viewKeyGif
-            ++ [ viewChatBox ( 800, 330 )
-               , viewTask model
+            ++ [ viewTask model
                , Svg.svg
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
                     [ viewShopSvg
-                    , viewShopKeeper
                     , viewTaskBoard
                     ]
                , viewRpgCharacter model.character

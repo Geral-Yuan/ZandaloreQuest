@@ -10,49 +10,62 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 
-viewDarkKnight : ( Float, Float ) -> Svg msg
-viewDarkKnight ( x, y ) =
-    Svg.image
-        -- view dark knight
-        [ SvgAttr.width "65"
-        , SvgAttr.height "65"
-        , SvgAttr.x (toString x)
-        , SvgAttr.y (toString y)
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/EvilNPC.png"
+viewSingleNPC : NPC -> List (Html Msg)
+viewSingleNPC npc =
+    let
+        ( x, y ) =
+            npc.position
+
+        ( w, h ) =
+            npc.size
+
+        scaleFactor =
+            case npc.faceDir of
+                Left ->
+                    -1
+
+                _ ->
+                    1
+    in
+    [ div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (toString (x - w / 2) ++ "px")
+        , HtmlAttr.style "top" (toString (y - h / 2) ++ "px")
         ]
-        []
+        [ img
+            [ src ("./assets/image/" ++ npc.image ++ ".png")
+            , height (floor w)
+            , width (floor h)
+            , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
+            ]
+            []
+        ]
+    , viewChatBox ( x + 30 * scaleFactor, y - 30 ) scaleFactor
+    ]
 
 
-viewChatBox : ( Float, Float ) -> Html msg
-viewChatBox ( x, y ) =
+viewChatBox : ( Float, Float ) -> Int -> Html Msg
+viewChatBox ( x, y ) scaleFactor =
     div
         [ HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (toString x ++ "px")
-        , HtmlAttr.style "top" (toString y ++ "px")
+        , HtmlAttr.style "left" (toString (x - 20) ++ "px")
+        , HtmlAttr.style "top" (toString (y - 20) ++ "px")
         ]
-        [ img [ src "./assets/image/ChatBox.gif", height 40, width 40 ] []
+        [ img
+            [ src "./assets/image/ChatBox.gif"
+            , height 40
+            , width 40
+            , HtmlAttr.style "transform" ("scaleX(" ++ toString scaleFactor ++ ")")
+            ]
+            []
         ]
-
-
-viewShopKeeper : Svg msg
-viewShopKeeper =
-    Svg.image
-        [ SvgAttr.width "85"
-        , SvgAttr.height "85"
-        , SvgAttr.x "750"
-        , SvgAttr.y "380"
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/HealerRed.png"
-        ]
-        []
 
 
 viewTaskBoard : Svg msg
 viewTaskBoard =
     Svg.rect
         [ SvgAttr.width "270"
-        , SvgAttr.height "150"
+        , SvgAttr.height "200"
         , SvgAttr.x "1730"
         , SvgAttr.y "100"
         , SvgAttr.rx "20"
@@ -74,20 +87,21 @@ viewTask model =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text (textTask model) ]
+        [ text ("Current Task: " ++ textTask model) ]
 
 
 textTask : Model -> String
 textTask model =
     case model.cntTask of
         MeetElder ->
-            "Go to meet elder and have the Tutorial Level!"
+            "Go to meet Elder and have the Tutorial Level!"
 
         GoToShop ->
             "Go to the shop and get the free Mage!"
 
         Level k ->
-            "Go to talk with NPC " ++ toString k ++ " and beat him!" -- Maybe a name for each NPC later
+            "Go to talk with NPC " ++ toString k ++ " and beat him!"
 
+        -- Maybe a name for each NPC later
         _ ->
             ""
