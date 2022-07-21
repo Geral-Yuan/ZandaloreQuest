@@ -6,6 +6,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.42] -- 2022-7-21
+
+### Added
+
+- Task system with task board and current task shown on the board
+
+- Tutorial level
+
+- Define NPC Type and write functions for view of NPCs
+
+- Extend the reachable range of the RPG character
+
+- Add many new NPCs on the different scenes
 
 ## [m1.41] -- 2022-7-18
 
