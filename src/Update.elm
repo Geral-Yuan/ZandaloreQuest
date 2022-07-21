@@ -7,7 +7,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (npcAssassin, npcDarkKnight1, npcDarkKnight2)
+import NPC exposing (npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
@@ -431,7 +431,7 @@ checkAttackClick msg model =
                     else
                         ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
             in
-            case findHexagon clickpos of
+            case findHexagon clickpos model.level of
                 Just cell ->
                     ( model, generateDamage cell )
 
@@ -673,9 +673,6 @@ nextNPC task =
 
         Level 1 ->
             [ npcDarkKnight2 ]
-
-        Level 2 ->
-            [ npcAssassin ]
 
         _ ->
             []

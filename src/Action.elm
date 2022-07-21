@@ -148,7 +148,7 @@ updateTarget board =
             { board | target = [] }
 
         Just hero ->
-            case findHexagon board.pointPos of
+            case findHexagon board.pointPos board.level of
                 Just cell ->
                     if List.member cell (listUnion board.attackable board.skillable) then
                         case hero.class of

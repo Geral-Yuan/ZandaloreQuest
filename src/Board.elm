@@ -25,6 +25,7 @@ type alias Board =
     , index : Int -- highest enemies index
     , pointPos : ( Float, Float )
     , coins : Int
+    , level : Int
     }
 
 
@@ -32,6 +33,12 @@ initObstacles : Int -> List Obstacle
 initObstacles k =
     -- need to change this
     case k of
+        0 ->
+            [ Obstacle MysteryBox ( 5, 5 ) (Gold 3)
+            , Obstacle MysteryBox ( 5, 4 ) EnergyPotion
+            , Obstacle MysteryBox ( 6, 5 ) HealthPotion
+            ]
+
         1 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 6 ), ( 5, 5 ), ( 6, 2 ) ]
                 ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 3)
@@ -50,6 +57,9 @@ initObstacles k =
 initenemy : Int -> List Enemy
 initenemy k =
     case k of
+        0 ->
+            [ sampleEnemy Archer ( 8, 2 ) 1 ]
+
         1 ->
             [ sampleEnemy Healer ( 3, 3 ) 1
             , sampleEnemy Mage ( 1, 8 ) 2
@@ -71,6 +81,17 @@ inithero heroes k =
 initPosition : Int -> Hero -> Hero
 initPosition k hero =
     case k of
+        0 ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 2, 8 ) }
+
+                2 ->
+                    { hero | pos = ( 2, 7 ) }
+
+                _ ->
+                    { hero | pos = ( 3, 8 ) }
+
         1 ->
             case hero.indexOnBoard of
                 1 ->
@@ -97,6 +118,9 @@ initPosition k hero =
 spawnTimes : Int -> Int
 spawnTimes k =
     case k of
+        0 ->
+            0
+
         1 ->
             0
 
@@ -106,9 +130,9 @@ spawnTimes k =
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    Board map (initObstacles k) (initenemy k) (inithero heroes k) PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0
+    Board (map k) (initObstacles k) (initenemy k) (inithero heroes k) PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0 k
 
 
 sampleBoard : Board
 sampleBoard =
-    Board [] [] [] [] PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 0 0 ( 0, 0 ) 0
+    Board [] [] [] [] PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 0 0 ( 0, 0 ) 0 0

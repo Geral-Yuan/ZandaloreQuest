@@ -215,22 +215,41 @@ subsubneighbour =
         |> unionList
 
 
-map : List Pos
-map =
-    List.concat
-        (List.map2 pairRange
-            (List.range 1 9)
-            [ ( 5, 9 )
-            , ( 4, 9 )
-            , ( 3, 9 )
-            , ( 2, 9 )
-            , ( 1, 9 )
-            , ( 1, 8 )
-            , ( 1, 7 )
-            , ( 1, 6 )
-            , ( 1, 5 )
-            ]
-        )
+map : Int -> List Pos
+map level =
+    case level of
+        0 ->
+            List.concat
+                (List.map2 pairRange
+                    (List.range 1 9)
+                    [ ( 5, 9 )
+                    , ( 4, 9 )
+                    , ( 3, 9 )
+                    , ( 2, 9 )
+                    , ( 1, 9 )
+                    , ( 1, 8 )
+                    , ( 1, 7 )
+                    , ( 1, 6 )
+                    , ( 1, 5 )
+                    ]
+                )
+                |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
+
+        _ ->
+            List.concat
+                (List.map2 pairRange
+                    (List.range 1 9)
+                    [ ( 5, 9 )
+                    , ( 4, 9 )
+                    , ( 3, 9 )
+                    , ( 2, 9 )
+                    , ( 1, 9 )
+                    , ( 1, 8 )
+                    , ( 1, 7 )
+                    , ( 1, 6 )
+                    , ( 1, 5 )
+                    ]
+                )
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy
@@ -432,9 +451,9 @@ offsetEnemy selected =
         0
 
 
-findHexagon : ( Float, Float ) -> Maybe Pos
-findHexagon targetPos =
-    List.head (List.filter (inHexagon targetPos) map)
+findHexagon : ( Float, Float ) -> Int -> Maybe Pos
+findHexagon targetPos level =
+    List.head (List.filter (inHexagon targetPos) (map level))
 
 
 inHexagon : ( Float, Float ) -> Pos -> Bool

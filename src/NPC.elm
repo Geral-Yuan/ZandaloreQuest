@@ -37,11 +37,11 @@ npcDarkKnight2 =
     , name = "DarkKnight 2"
     , dialogue = []
     , image = "EvilNPC"
-    , faceDir = Left
-    , position = ( 1600, 200 )
+    , faceDir = Right
+    , position = ( 315, 810 )
     , size = ( 64, 64 )
     , beaten = False
-    , talkRange = ( ( 1500, 1700 ), ( 100, 300 ) )
+    , talkRange = ( ( 315, 415 ), ( 750, 850 ) )
     }
 
 
@@ -75,15 +75,15 @@ npcArcher =
 
 npcAssassin : NPC
 npcAssassin =
-    { scene = CastleScene
+    { scene = ShopScene
     , name = "Assassin"
     , dialogue = []
     , image = "AssassinBlue"
-    , faceDir = Right
-    , position = ( 315, 810 )
-    , size = ( 64, 64 )
-    , beaten = False
-    , talkRange = ( ( 315, 415 ), ( 750, 850 ) )
+    , faceDir = Left
+    , position = ( 920, 370 )
+    , size = ( 100, 100 )
+    , beaten = True
+    , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
     }
 
 
@@ -94,7 +94,7 @@ npcMage =
     , dialogue = []
     , image = "MageBlue"
     , faceDir = Left
-    , position = ( 880, 430 )
+    , position = ( 830, 430 )
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
@@ -108,7 +108,7 @@ npcHealer =
     , dialogue = []
     , image = "HealerBlue"
     , faceDir = Right
-    , position = ( 790, 370 )
+    , position = ( 740, 370 )
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
@@ -122,7 +122,7 @@ npcEngineer =
     , dialogue = []
     , image = "EngineerBlue"
     , faceDir = Right
-    , position = ( 700, 430 )
+    , position = ( 650, 430 )
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )

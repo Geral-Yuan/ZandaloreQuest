@@ -45,6 +45,15 @@ viewBoardCoin board =
 
 viewLevel : Int -> Html Msg
 viewLevel level =
+    let
+        levelText =
+            case level of
+                0 ->
+                    "Tutorial Level"
+
+                k ->
+                    "Level " ++ toString k
+    in
     div
         [ HtmlAttr.style "bottom" "180px"
         , HtmlAttr.style "right" "100px"
@@ -56,7 +65,7 @@ viewLevel level =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Level " ++ toString level) ]
+        [ text levelText ]
 
 
 viewCoordinate : Pos -> Svg msg
@@ -132,4 +141,3 @@ endTurnButton =
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
-
