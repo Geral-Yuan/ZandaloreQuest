@@ -96,22 +96,22 @@ viewDialog task model =
             [ viewDungeonSvg
             , viewDialogBox
             ]
-        , viewDialogMatch task model
+        , viewDialogMatch task
         ]
 
 
-viewDialogMatch : Task -> Model -> Html Msg
-viewDialogMatch task model =
+viewDialogMatch : Task -> Html Msg
+viewDialogMatch task =
     case task of
         MeetElder ->
-            viewDialogElder model
+            viewDialogElder
 
         _ ->
-            viewDialogGeneral model
+            viewDialogGeneral
 
 
-viewDialogElder : Model -> Html Msg
-viewDialogElder model =
+viewDialogElder : Html Msg
+viewDialogElder =
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -147,8 +147,8 @@ viewDialogElder model =
         ]
 
 
-viewDialogGeneral : Model -> Html Msg
-viewDialogGeneral model =
+viewDialogGeneral : Html Msg
+viewDialogGeneral =
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
