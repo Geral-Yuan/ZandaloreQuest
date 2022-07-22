@@ -3,7 +3,8 @@ module View exposing (view)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, button, div, img)
+import DetectMouse exposing (..)
+import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
@@ -95,22 +96,22 @@ viewDialog task model =
             [ viewDungeonSvg
             , viewDialogBox
             ]
-        , viewDialogMatch task model
+        , viewDialogMatch task
         ]
 
 
-viewDialogMatch : Task -> Model -> Html Msg
-viewDialogMatch task model =
+viewDialogMatch : Task -> Html Msg
+viewDialogMatch task =
     case task of
         MeetElder ->
-            viewDialogElder model
+            viewDialogElder
 
         _ ->
-            viewDialogGeneral model
+            viewDialogGeneral
 
 
-viewDialogElder : Model -> Html Msg
-viewDialogElder model =
+viewDialogElder : Html Msg
+viewDialogElder =
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -146,8 +147,8 @@ viewDialogElder model =
         ]
 
 
-viewDialogGeneral : Model -> Html Msg
-viewDialogGeneral model =
+viewDialogGeneral : Html Msg
+viewDialogGeneral =
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -206,8 +207,7 @@ viewTutorial k model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewCoordinate model.board.map
-                ++ List.map viewMoveable model.board.moveable
+                --                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -267,8 +267,7 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewCoordinate model.board.map
-                ++ List.map viewMoveable model.board.moveable
+                --                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -399,41 +398,51 @@ viewMap board =
 
 
 viewCell : Board -> Pos -> Svg Msg
-viewCell board ( row, column ) =
-    if List.member ( row, column ) (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
+viewCell board pos =
+    if List.member pos (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
         Svg.polygon
             [ SvgAttr.fill "black"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
+            , onContentMenu (Hit pos)
             ]
             []
 
-    else if List.member ( row, column ) board.target then
-        let
-            skilllist =
-                listIntersection board.target board.skillable
-        in
-        if not (List.isEmpty skilllist) then
+    else if List.member pos board.target then
+        if List.member pos board.skillable then
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos ( row, column )))
+                , SvgAttr.points (detPoints (findPos pos))
+                , onClick (Move pos)
+                , onContentMenu (Hit pos)
                 ]
                 []
 
-        else
+        else if List.member pos (List.map .pos board.enemies ++ List.map .pos board.obstacles) then
             Svg.polygon
                 [ SvgAttr.fill "yellow"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos ( row, column )))
+                , SvgAttr.points (detPoints (findPos pos))
+                , onContentMenu (Hit pos)
+                ]
+                []
+        else
+            Svg.polygon
+                [ SvgAttr.fill "rgb(132,112,255)"
+                , SvgAttr.stroke "blue"
+                , SvgAttr.points (detPoints (findPos pos))
+                , onClick (Move pos)
+                , onContentMenu (Hit pos)
                 ]
                 []
 
-    else if List.member ( row, column ) (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
+    else if List.member pos (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
+            , onContentMenu (Hit pos)
             ]
             []
 
@@ -441,7 +450,9 @@ viewCell board ( row, column ) =
         Svg.polygon
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
+            , onClick (Move pos)
+            , onContentMenu (Hit pos)
             ]
             []
 
@@ -482,6 +493,7 @@ viewCrate obs =
             , SvgAttr.y (toString (y - 40))
             , SvgAttr.preserveAspectRatio "none"
             , SvgAttr.xlinkHref "./assets/image/Crate.png"
+            , onContentMenu (Hit obs.pos)
             ]
             []
 
@@ -508,6 +520,8 @@ viewItem item =
                 , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/Gold.png"
+                , onClick (Move item.pos)
+                , onContentMenu (Hit item.pos)
                 ]
                 []
             ]
@@ -523,6 +537,8 @@ viewItem item =
                 , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
+                , onClick (Move item.pos)
+                , onContentMenu (Hit item.pos)
                 ]
                 []
             ]

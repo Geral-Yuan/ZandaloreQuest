@@ -11,6 +11,10 @@ type Msg
     | Resize Int Int
     | Tick Float
     | Attack Pos Critical
+    | Hit Pos
+--    | Skill Pos
+    | Select Hero
+    | Move Pos
     | EndTurn
     | Confirm
     | Click Float Float

@@ -31,23 +31,23 @@ subscriptions _ =
 key : Bool -> Int -> Msg
 key on keycode =
     case keycode of
-        87 ->
-            Key W on
-
-        69 ->
-            Key E on
-
-        68 ->
-            Key D on
-
-        88 ->
-            Key X on
-
-        90 ->
-            Key Z on
-
-        65 ->
-            Key A on
+--        87 ->
+--            Key W on
+--
+--        69 ->
+--            Key E on
+--
+--        68 ->
+--            Key D on
+--
+--        88 ->
+--            Key X on
+--
+--        90 ->
+--            Key Z on
+--
+--        65 ->
+--            Key A on
 
         13 ->
             Enter on

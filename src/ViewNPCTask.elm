@@ -143,7 +143,7 @@ checkNPCTalk model npclist =
                 -- To be modified
 
             else
-                { model | mode = Dialog MeetElder, previousMode = Castle }
+                { model | mode = Dialog model.cntTask, previousMode = Castle }
 
 
 checkInTalkRange : ( Float, Float ) -> NPC -> Bool

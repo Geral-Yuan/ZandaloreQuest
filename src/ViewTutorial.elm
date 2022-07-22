@@ -106,7 +106,7 @@ viewTutorial1 model =
             , HtmlAttr.style "height" "20px"
             , HtmlAttr.style "position" "fixed"
             , HtmlAttr.style "left" "20px"
-            , HtmlAttr.style "top" "950px"
+            , HtmlAttr.style "top" "900px"
             , HtmlAttr.style "color" "blue"
             , HtmlAttr.style "font-size" "50px"
             ]
