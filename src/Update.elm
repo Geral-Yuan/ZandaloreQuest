@@ -63,7 +63,7 @@ updateTutorial msg k model =
     case k of
         1 ->
             if msg == Enter False then
-                ( { model | mode = Tutorial 2 }, Cmd.none )
+                ( { model | mode = BoardGame }, Cmd.none )
                 -- { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                 --     |> checkMouseMove msg
                 --     |> checkSelectedClick msg
@@ -76,7 +76,13 @@ updateTutorial msg k model =
                 ( model, Cmd.none )
 
         _ ->
-            ( model, Cmd.none )
+            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                |> checkMouseMove msg
+                |> checkSelectedClick msg
+                |> checkAttackClick msg
+                |> randomCrate msg
+                |> randomEnemies
+                |> checkEnd
 
 
 checkChooseClick : Msg -> Model -> Model
