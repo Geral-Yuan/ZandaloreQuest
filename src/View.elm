@@ -207,7 +207,7 @@ viewTutorial k model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
---                ++ List.map viewCoordinate model.board.map
+                --                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -267,7 +267,7 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
---                ++ List.map viewCoordinate model.board.map
+                --                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -418,13 +418,20 @@ viewCell board pos =
                 ]
                 []
 
-        else
+        else if List.member pos (List.map .pos board.enemies ++ List.map .pos board.obstacles) then
             Svg.polygon
                 [ SvgAttr.fill "yellow"
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
-                , onClick (Move pos)
                 , onContentMenu (Hit pos)
+                ]
+                []
+        else
+            Svg.polygon
+                [ SvgAttr.fill "rgb(132,112,255)"
+                , SvgAttr.stroke "blue"
+                , SvgAttr.points (detPoints (findPos pos))
+                , onClick (Move pos)
                 ]
                 []
 
@@ -509,6 +516,7 @@ viewItem item =
                 , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/Gold.png"
+                , onClick (Move item.pos)
                 ]
                 []
             ]
@@ -524,6 +532,7 @@ viewItem item =
                 , SvgAttr.y (toString (y - 40))
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
+                , onClick (Move item.pos)
                 ]
                 []
             ]
