@@ -2,7 +2,9 @@ module ViewAllHero exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
+import DetectMouse exposing (..)
 import Html exposing (Html, div, img)
+import Html.Events exposing (onClick)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
@@ -210,6 +212,7 @@ viewHero hero =
                 [ HtmlAttr.style "position" "absolute"
                 , HtmlAttr.style "top" (toString (y - 40) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                , onClick (Select hero)
                 ]
                 [ img [ src ("./assets/image/" ++ class ++ "Blue.png"), height 80, width 80 ] []
                 ]

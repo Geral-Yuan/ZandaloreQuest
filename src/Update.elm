@@ -11,7 +11,7 @@ import NPC exposing (npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
-import UpdateBoard exposing (selectHero, turnEnemy, updateBoard)
+import UpdateBoard exposing (turnEnemy, updateBoard)
 import ViewNPCTask exposing (checkTalkRange)
 
 
@@ -31,7 +31,6 @@ update msg model =
                         _ ->
                             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                                 |> checkMouseMove msg
-                                |> checkSelectedClick msg
                                 |> checkAttackClick msg
                                 |> randomCrate msg
                                 |> randomEnemies
@@ -95,7 +94,6 @@ updateTutorial msg k model =
         _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                 |> checkMouseMove msg
-                |> checkSelectedClick msg
                 |> checkAttackClick msg
                 |> randomCrate msg
                 |> randomEnemies
@@ -419,31 +417,6 @@ resize msg model =
     case msg of
         Resize width height ->
             { model | size = ( toFloat width, toFloat height ) }
-
-        _ ->
-            model
-
-
-checkSelectedClick : Msg -> Model -> Model
-checkSelectedClick msg model =
-    case msg of
-        Click x y ->
-            let
-                ( w, h ) =
-                    model.size
-
-                clickpos =
-                    if w / h > pixelWidth / pixelHeight then
-                        ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h )
-
-                    else
-                        ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
-            in
-            if findInfoBoard clickpos > 0 && model.board.turn == PlayerTurn then
-                { model | board = selectHero model.board (findInfoBoard clickpos) }
-
-            else
-                model
 
         _ ->
             model

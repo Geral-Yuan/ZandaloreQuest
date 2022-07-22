@@ -67,6 +67,9 @@ updateBoard msg board =
         Kill False ->
             { board | enemies = [] }
 
+        Select hero ->
+            selectHero board hero
+
         _ ->
             board
 
@@ -288,11 +291,11 @@ legalHeroMove board hero dr =
 -}
 
 
-selectHero : Board -> Int -> Board
-selectHero board index =
+selectHero : Board -> Hero -> Board
+selectHero board clickedhero =
     let
         ( wantedHero, unwantedHero ) =
-            List.partition (\hero -> hero.indexOnBoard == index) board.heroes
+            List.partition ( (==) clickedhero) board.heroes
 
         newwantedHero =
             List.map (\hero -> { hero | selected = True }) wantedHero
