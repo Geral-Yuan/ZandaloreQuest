@@ -40,6 +40,9 @@ update msg model =
                 Logo ->
                     ( updateScene msg model, Cmd.none )
 
+                Dialog task ->
+                    updateDialog msg task model
+
                 HeroChoose ->
                     ( model
                         |> checkChooseClick msg
@@ -56,6 +59,20 @@ update msg model =
         |> getviewport msg
     , ncmd
     )
+
+
+updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
+updateDialog msg task model =
+    case task of
+        MeetElder ->
+            if msg == Enter False then
+                ( { model | mode = HeroChoose }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
