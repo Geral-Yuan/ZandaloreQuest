@@ -1,6 +1,6 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero, updateEnemyAttackable)
+import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
@@ -11,14 +11,6 @@ import Message exposing (Msg(..))
 updateBoard : Msg -> Board -> Board
 updateBoard msg board =
     case msg of
-        Key dir False ->
-            case board.turn of
-                EnemyTurn ->
-                    board
-
-                _ ->
-                    moveHero board dir
-
         Tick elapsed ->
             let
                 nBoard =
@@ -68,7 +60,15 @@ updateBoard msg board =
             { board | enemies = [] }
 
         Select hero ->
-            selectHero board hero
+            case board.turn of
+                PlayerTurn ->
+                    selectHero board hero
+
+                EnemyTurn ->
+                    board
+
+        Move pos ->
+            moveHero board pos
 
         _ ->
             board
@@ -171,54 +171,24 @@ checkTurn board =
         board
 
 
-moveHero : Board -> Dir -> Board
-moveHero board dir =
+moveHero : Board -> Pos -> Board
+moveHero board clickpos =
     let
-        dr =
-            case dir of
-                W ->
-                    ( -1, 0 )
-
-                E ->
-                    ( 0, -1 )
-
-                D ->
-                    ( 1, -1 )
-
-                X ->
-                    ( 1, 0 )
-
-                Z ->
-                    ( 0, 1 )
-
-                A ->
-                    ( -1, 1 )
-
-                _ ->
-                    ( 0, 0 )
-
-        ( nboard, ind ) =
+        ( nboard, index ) =
             case selectedHero board.heroes of
                 Nothing ->
                     ( board, Nothing )
 
                 Just hero ->
-                    let
-                        currEnergy =
-                            hero.energy
-
-                        newPos =
-                            vecAdd hero.pos dr
-                    in
-                    if legalHeroMove board hero dr && hero.energy > 1 then
-                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
+                    if distance clickpos hero.pos == 1 && not (List.member clickpos (unMoveable board)) && hero.energy >= 2 then
+                        ( { board | heroes = { hero | pos = clickpos, energy = hero.energy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
                         , Just hero.indexOnBoard
                         )
 
                     else
-                        ( board, Just hero.indexOnBoard )
+                        ( board, Nothing )
     in
-    case ind of
+    case index of
         Nothing ->
             board
 
@@ -276,14 +246,6 @@ checkHeroItem hero board =
 
 
 -- To be rewritten later
-
-
-legalHeroMove : Board -> Hero -> Pos -> Bool
-legalHeroMove board hero dr =
-    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (List.map .pos board.obstacles ++ List.map .pos board.heroes ++ List.map .pos board.enemies))
-
-
-
 {-
    legalEnemyMove : Board -> List Hero -> Enemy -> Bool
    legalEnemyMove board hero_list enemy =
@@ -295,7 +257,7 @@ selectHero : Board -> Hero -> Board
 selectHero board clickedhero =
     let
         ( wantedHero, unwantedHero ) =
-            List.partition ( (==) clickedhero) board.heroes
+            List.partition ((==) clickedhero) board.heroes
 
         newwantedHero =
             List.map (\hero -> { hero | selected = True }) wantedHero

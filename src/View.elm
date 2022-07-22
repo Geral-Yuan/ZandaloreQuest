@@ -6,6 +6,7 @@ import Debug exposing (toString)
 import DetectMouse exposing (..)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
+import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import Svg exposing (..)
@@ -206,7 +207,7 @@ viewTutorial k model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewCoordinate model.board.map
+--                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -266,7 +267,7 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                ++ List.map viewCoordinate model.board.map
+--                ++ List.map viewCoordinate model.board.map
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -407,11 +408,12 @@ viewCell board pos =
             []
 
     else if List.member pos board.target then
-        if not (List.member pos board.skillable) then
+        if List.member pos board.skillable then
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
+                , onClick (Move pos)
                 ]
                 []
 
@@ -420,6 +422,7 @@ viewCell board pos =
                 [ SvgAttr.fill "yellow"
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
+                , onClick (Move pos)
                 ]
                 []
 
@@ -436,6 +439,7 @@ viewCell board pos =
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
+            , onClick (Move pos)
             ]
             []
 
