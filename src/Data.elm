@@ -416,25 +416,6 @@ findChosenHero ( x, y ) =
         (row - 1) * 3 + column
 
 
-findInfoBoard : ( Float, Float ) -> Int
-findInfoBoard ( x, y ) =
-    if x > 1580 && x < 1980 then
-        if y > 25 && y < 145 then
-            1
-
-        else if y > 175 && y < 295 then
-            2
-
-        else if y > 325 && y < 445 then
-            3
-
-        else
-            0
-
-    else
-        0
-
-
 offsetHero : Hero -> Float
 offsetHero hero =
     if hero.selected then
@@ -479,25 +460,3 @@ distance ( x1, y1 ) ( x2, y2 ) =
 leastdistance : List Pos -> Pos -> Maybe Int
 leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
-
-
-isWarriorAttackRange : Pos -> Pos -> Bool
-isWarriorAttackRange attacked me =
-    let
-        ( x, y ) =
-            attacked
-    in
-    if
-        List.member me
-            [ ( x + 1, y )
-            , ( x, y + 1 )
-            , ( x + 1, y - 1 )
-            , ( x, y - 1 )
-            , ( x - 1, y )
-            , ( x - 1, y + 1 )
-            ]
-    then
-        True
-
-    else
-        False

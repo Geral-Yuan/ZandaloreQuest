@@ -404,6 +404,7 @@ viewCell board pos =
             [ SvgAttr.fill "black"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
+            , onContentMenu (Hit pos)
             ]
             []
 
@@ -432,6 +433,7 @@ viewCell board pos =
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
                 , onClick (Move pos)
+                , onContentMenu (Hit pos)
                 ]
                 []
 
@@ -440,6 +442,7 @@ viewCell board pos =
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
+            , onContentMenu (Hit pos)
             ]
             []
 
@@ -449,6 +452,7 @@ viewCell board pos =
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
             , onClick (Move pos)
+            , onContentMenu (Hit pos)
             ]
             []
 
@@ -517,6 +521,7 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref "./assets/image/Gold.png"
                 , onClick (Move item.pos)
+                , onContentMenu (Hit item.pos)
                 ]
                 []
             ]
@@ -533,6 +538,7 @@ viewItem item =
                 , SvgAttr.preserveAspectRatio "none"
                 , SvgAttr.xlinkHref ("./assets/image/" ++ itemtype ++ ".png")
                 , onClick (Move item.pos)
+                , onContentMenu (Hit item.pos)
                 ]
                 []
             ]
