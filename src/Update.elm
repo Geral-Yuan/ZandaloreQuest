@@ -69,9 +69,13 @@ updateDialog msg task model =
 
             else
                 ( model, Cmd.none )
-
+--To be changed when it's other tasks
         _ ->
-            ( model, Cmd.none )
+            if msg == Enter False then
+                ( { model | mode = HeroChoose }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
 
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
