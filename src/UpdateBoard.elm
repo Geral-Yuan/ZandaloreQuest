@@ -62,7 +62,11 @@ updateBoard msg board =
         Select hero ->
             case board.turn of
                 PlayerTurn ->
-                    selectHero board hero
+                    if board.boardState == NoActions then
+                        selectHero board hero
+
+                    else
+                        board
 
                 EnemyTurn ->
                     board

@@ -3,6 +3,7 @@ module ViewAllEnemy exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
+import DetectMouse exposing (..)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
@@ -43,6 +44,7 @@ viewEnemy enemy =
                 [ HtmlAttr.style "position" "absolute"
                 , HtmlAttr.style "top" (toString (y - 40) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                , onContentMenu (Hit enemy.pos)
                 ]
                 [ img [ src ("./assets/image/" ++ class ++ "Red.png"), height 80, width 80 ] []
                 ]

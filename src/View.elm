@@ -414,6 +414,7 @@ viewCell board pos =
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
                 , onClick (Move pos)
+                , onContentMenu (Hit pos)
                 ]
                 []
 
@@ -423,6 +424,7 @@ viewCell board pos =
                 , SvgAttr.stroke "blue"
                 , SvgAttr.points (detPoints (findPos pos))
                 , onClick (Move pos)
+                , onContentMenu (Hit pos)
                 ]
                 []
 
@@ -480,6 +482,7 @@ viewCrate obs =
             , SvgAttr.y (toString (y - 40))
             , SvgAttr.preserveAspectRatio "none"
             , SvgAttr.xlinkHref "./assets/image/Crate.png"
+            , onContentMenu (Hit obs.pos)
             ]
             []
 

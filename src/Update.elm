@@ -31,7 +31,7 @@ update msg model =
                         _ ->
                             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                                 |> checkMouseMove msg
-                                |> checkAttackClick msg
+                                |> checkHit msg
                                 |> randomCrate msg
                                 |> randomEnemies
                                 |> checkEnd
@@ -94,7 +94,7 @@ updateTutorial msg k model =
         _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                 |> checkMouseMove msg
-                |> checkAttackClick msg
+                |> checkHit msg
                 |> randomCrate msg
                 |> randomEnemies
                 |> checkEnd
@@ -422,27 +422,11 @@ resize msg model =
             model
 
 
-checkAttackClick : Msg -> Model -> ( Model, Cmd Msg )
-checkAttackClick msg model =
+checkHit : Msg -> Model -> ( Model, Cmd Msg )
+checkHit msg model =
     case msg of
-        Click x y ->
-            let
-                ( w, h ) =
-                    model.size
-
-                clickpos =
-                    if w / h > pixelWidth / pixelHeight then
-                        ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h )
-
-                    else
-                        ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
-            in
-            case findHexagon clickpos model.level of
-                Just cell ->
-                    ( model, generateDamage cell )
-
-                Nothing ->
-                    ( model, Cmd.none )
+        Hit pos ->
+            ( model, generateDamage pos )
 
         _ ->
             ( model, Cmd.none )

@@ -12,7 +12,7 @@ type Msg
     | Tick Float
     | Attack Pos Critical
     | Hit Pos
-    | Skill Pos
+--    | Skill Pos
     | Select Hero
     | Move Pos
     | EndTurn
