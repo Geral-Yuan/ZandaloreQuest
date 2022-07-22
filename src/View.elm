@@ -17,6 +17,7 @@ import ViewChoose exposing (viewHeroChoose, viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
 import ViewTutorial exposing (..)
+import ViewShop exposing (viewShop)
 
 
 view : Model -> Html Msg
