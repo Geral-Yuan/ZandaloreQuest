@@ -209,8 +209,8 @@ viewTutorial k model =
             ]
             (viewMap model.board
                 --                ++ List.map viewCoordinate model.board.map
-                ++ List.map viewHeroImage model.board.heroes
-                ++ List.map viewHeroFrame model.board.heroes
+                ++ List.concat (List.map viewHeroImage model.board.heroes)
+                ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
                 ++ List.concat (List.map viewHeroHealth model.board.heroes)
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
@@ -269,8 +269,8 @@ viewBoard model =
             ]
             (viewMap model.board
                 --                ++ List.map viewCoordinate model.board.map
-                ++ List.map viewHeroImage model.board.heroes
-                ++ List.map viewHeroFrame model.board.heroes
+                ++ List.concat (List.map viewHeroImage model.board.heroes)
+                ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
                 ++ List.concat (List.map viewHeroHealth model.board.heroes)
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
@@ -474,6 +474,9 @@ viewTurn model =
         [ case model.board.turn of
             EnemyTurn ->
                 text "Enemy Turn"
+
+            TurretTurn ->
+                text "Turret Turn"
 
             _ ->
                 text "Your Turn"

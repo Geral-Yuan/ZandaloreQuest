@@ -1,6 +1,6 @@
-module HeroAttack exposing (checkAttack, generateDamage)
+module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
-import Action exposing (checkAttackObstacle, checkBuildObstacle, checkHeal, selectedHero, unselectedHero)
+import Action exposing (checkAttackObstacle, checkBuildTurret, checkHeal, selectedHero, unselectedHero, attackedByHeroArcherRange)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -120,7 +120,7 @@ checkAttackTarget class pos board =
     board
         |> checkAttackObstacle [ pos ]
         |> checkAttackEnemy pos
-        |> checkBuildObstacle class pos
+        |> checkBuildTurret class pos
         |> checkHeal class pos
 
 
@@ -214,3 +214,25 @@ damageEnemy damage critical enemy =
        else
            hero
 -}
+
+
+
+heroTurretAttack : Hero -> Board -> List Enemy
+heroTurretAttack my_hero board =
+    let
+        ( attackableEnemies, restEnemies ) =
+            List.partition (\enemy -> List.member enemy.pos (attackedByHeroArcherRange board my_hero.pos)) board.enemies
+
+        sortedAttackableEnemies =
+            List.sortBy .health attackableEnemies
+
+        ( targetEnemies, newrestEnemies ) =
+            case sortedAttackableEnemies of
+                [] ->
+                    ( [], board.enemies )
+
+                hero :: otherHeroes ->
+                    ( [ hero ], otherHeroes ++ restEnemies )
+    in
+    -- fix 0 for critical now
+    List.map (\enemy -> { enemy | health = enemy.health - my_hero.damage - 0, state = Attacked my_hero.damage }) targetEnemies ++ newrestEnemies

@@ -1,10 +1,10 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
+import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable, attackedByHeroArcherRange)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
-import HeroAttack exposing (checkAttack)
+import HeroAttack exposing (checkAttack, heroTurretAttack)
 import Message exposing (Msg(..))
 
 
@@ -23,7 +23,7 @@ updateBoard msg board =
                                 _ ->
                                     { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
-                        EnemyTurn ->
+                        _ ->
                             case board.boardState of
                                 NoActions ->
                                     { board | timeTurn = board.timeTurn + elapsed / 1000 }
@@ -35,17 +35,27 @@ updateBoard msg board =
                     if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
                         { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> List.map returnEnemyToWaiting |> List.map checkEnemyDone, boardState = NoActions, timeBoardState = 0 }
 
-                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 then
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 && board.turn == EnemyTurn then
                         { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
                             |> actionEnemy
 
-                    else if board.timeTurn > 0.5 then
+
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 && board.turn == TurretTurn then
+                        { nBoard | timeTurn = 0 }
+                            |> actionTurret
+
+                    else if board.timeTurn > 0.5 && board.turn == EnemyTurn then
                         { nBoard | enemies = nBoard.enemies |> List.map checkEnemyDone }
+
+                    else if board.timeTurn > 0.5 && board.turn == TurretTurn then
+                        nBoard
 
                     else
                         nBoard
             in
             updatedBoard |> checkCurrentEnemy |> updateEnemyAttackable |> checkTurn
+
+                
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -67,6 +77,9 @@ updateBoard msg board =
 
                     else
                         board
+
+                TurretTurn ->
+                    board
 
                 EnemyTurn ->
                     board
@@ -102,6 +115,16 @@ turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
+        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
+        , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
+        , timeTurn = 0
+    }
+
+
+turnTurret : Board -> Board
+turnTurret board =
+    { board
+        | turn = TurretTurn
         , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
         , timeTurn = 0
@@ -146,6 +169,8 @@ resetEnergy hero =
         Engineer ->
             { hero | energy = 5 }
 
+        Turret ->
+            { hero | energy = 0 }
 
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
@@ -171,6 +196,8 @@ checkTurn board =
     if List.all (\enemy -> enemy.done) board.enemies then
         { board | turn = PlayerTurn }
 
+    else if List.all (\turret -> turret.energy < 0) (List.filter (\x -> x.class == Turret) board.heroes) then
+        { board | turn = EnemyTurn } 
     else
         board
 
@@ -337,3 +364,67 @@ spawnCrate pos itype board =
        else
            model
 -}
+
+actionTurret : Board -> Board
+actionTurret board =
+    let
+        undoneTurret =
+            List.filter (\turret -> ((turret.class == Turret) && (turret.energy == 0))) board.heroes
+
+        selectboard =
+            case undoneTurret of
+                [] ->
+                    board
+
+                turret :: _ ->
+                    let 
+                        attackedenemy =  heroTurretAttack turret board
+
+                        in
+                        if (attackedenemy /= board.enemies) then
+                            {board | enemies = attackedenemy |> List.filter (\x -> x.health > 0)
+                            , heroes = {turret| energy = -3, state = Attacking} :: (listDifference board.heroes [turret])
+                            , boardState = HeroAttack
+                            , attackable = attackedByHeroArcherRange board turret.pos
+                            }
+                            
+                        else
+                            {board | heroes = {turret| energy = -4, state = Waiting} :: (listDifference board.heroes [turret])
+                            , attackable = attackedByHeroArcherRange board turret.pos}
+    in
+    selectboard
+
+
+checkCurrentTurret : Board -> Board
+checkCurrentTurret board =
+    let
+        undoneTurret =
+            List.filter (\turret -> ((turret.class == Turret) && (turret.energy == 0))) board.heroes
+    in
+    case undoneTurret of
+        [] ->
+            { board | cntTurret = 0 }
+
+        enemy :: _ ->
+            { board | cntTurret = enemy.indexOnBoard }
+
+updateTurretAttackable : Board -> Board
+updateTurretAttackable board =
+    let
+        maybeTurret =
+            List.head (List.filter (\x -> x.indexOnBoard == board.cntTurret) board.heroes)
+    in
+    if board.turn == TurretTurn then
+        case maybeTurret of
+            Nothing ->
+                { board | attackable = [] }
+
+            Just turret ->
+                let
+                    realattackRange =
+                        attackedByHeroArcherRange board turret.pos
+                in
+                { board | attackable = realattackRange }
+
+    else
+        board

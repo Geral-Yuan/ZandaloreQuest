@@ -11,67 +11,77 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewHeroImage : Hero -> Svg msg
+viewHeroImage : Hero -> List (Svg msg)
 viewHeroImage hero =
     let
         class =
             toString hero.class
     in
-    Svg.image
-        [ SvgAttr.width "70"
-        , SvgAttr.height "70"
-        , SvgAttr.x (toString (1600 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
-        ]
+    if hero.class == Turret then
         []
+    else
+        [Svg.image
+            [ SvgAttr.width "70"
+            , SvgAttr.height "70"
+            , SvgAttr.x (toString (1600 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
+            ]
+            []
+        ]
 
 
-viewHeroFrame : Hero -> Svg msg
+viewHeroFrame : Hero -> List (Svg msg)
 viewHeroFrame hero =
-    Svg.rect
-        [ SvgAttr.width "400"
-        , SvgAttr.height "120"
-        , SvgAttr.x (toString (1580 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 125))
-        , SvgAttr.fill "transparent"
-        , SvgAttr.stroke "black"
-        , SvgAttr.rx "20"
-        ]
+    if hero.class == Turret then
         []
-
+    else
+        [ Svg.rect
+            [ SvgAttr.width "400"
+            , SvgAttr.height "120"
+            , SvgAttr.x (toString (1580 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 125))
+            , SvgAttr.fill "transparent"
+            , SvgAttr.stroke "black"
+            , SvgAttr.rx "20"
+            ]
+            []
+        ]
 
 viewHeroCondition : Hero -> List (Svg msg)
 viewHeroCondition hero =
-    [ Svg.image
-        [ SvgAttr.width "30"
-        , SvgAttr.height "30"
-        , SvgAttr.x (toString (1700 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Heart.png"
-        ]
+    if hero.class == Turret then
         []
-    , Svg.image
-        [ SvgAttr.width "30"
-        , SvgAttr.height "30"
-        , SvgAttr.x (toString (1700 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 60))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Sword.png"
+    else
+        [ Svg.image
+            [ SvgAttr.width "30"
+            , SvgAttr.height "30"
+            , SvgAttr.x (toString (1700 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/Heart.png"
+            ]
+            []
+        , Svg.image
+            [ SvgAttr.width "30"
+            , SvgAttr.height "30"
+            , SvgAttr.x (toString (1700 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 60))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/Sword.png"
+            ]
+            []
+        , Svg.image
+            [ SvgAttr.width "30"
+            , SvgAttr.height "30"
+            , SvgAttr.x (toString (1830 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 60))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/Energy.png"
+            ]
+            []
         ]
-        []
-    , Svg.image
-        [ SvgAttr.width "30"
-        , SvgAttr.height "30"
-        , SvgAttr.x (toString (1830 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 60))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Energy.png"
-        ]
-        []
-    ]
 
 
 viewHeroHealth : Hero -> List (Svg msg)
@@ -85,28 +95,36 @@ viewHeroHealth hero =
 
         healthBarlen2 =
             100 * toFloat hero.health / toFloat hero.maxHealth
+
+        rightInfo = 
+            if hero.class == Turret then
+                []
+            else
+                [ Svg.rect
+                    [ SvgAttr.width "200"
+                    , SvgAttr.height "20"
+                    , SvgAttr.x (toString (1740 - offsetHero hero))
+                    , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
+                    , SvgAttr.fill "transparent"
+                    , SvgAttr.stroke "red"
+                    , SvgAttr.rx "5"
+                    ]
+                    []
+                , Svg.rect
+                    [ SvgAttr.width (toString healthBarlen1)
+                    , SvgAttr.height "20"
+                    , SvgAttr.x (toString (1740 - offsetHero hero))
+                    , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
+                    , SvgAttr.fill "red"
+                    , SvgAttr.stroke "red"
+                    , SvgAttr.rx "5"
+                    ]
+                    []
+                ]
+            
     in
-    [ Svg.rect
-        [ SvgAttr.width "200"
-        , SvgAttr.height "20"
-        , SvgAttr.x (toString (1740 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
-        , SvgAttr.fill "transparent"
-        , SvgAttr.stroke "red"
-        , SvgAttr.rx "5"
-        ]
-        []
-    , Svg.rect
-        [ SvgAttr.width (toString healthBarlen1)
-        , SvgAttr.height "20"
-        , SvgAttr.x (toString (1740 - offsetHero hero))
-        , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
-        , SvgAttr.fill "red"
-        , SvgAttr.stroke "red"
-        , SvgAttr.rx "5"
-        ]
-        []
-    , Svg.rect
+    rightInfo 
+    ++  [ Svg.rect
         [ SvgAttr.width "100"
         , SvgAttr.height "10"
         , SvgAttr.x (toString (x - 50))
@@ -131,43 +149,46 @@ viewHeroHealth hero =
 
 viewHeroInfo : Hero -> List (Html Msg)
 viewHeroInfo hero =
-    [ div
-        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
-        , HtmlAttr.style "left" (toString (1800 - offsetHero hero) ++ "px")
-        , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "30px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
+    if hero.class == Turret then
+        []
+    else
+        [ div
+            [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
+            , HtmlAttr.style "left" (toString (1800 - offsetHero hero) ++ "px")
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "30px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text (toString hero.health ++ "/" ++ toString hero.maxHealth) ]
+        , div
+            [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
+            , HtmlAttr.style "left" (toString (1750 - offsetHero hero) ++ "px")
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "30px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text (toString hero.damage) ]
+        , div
+            [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
+            , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "30px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text (toString hero.energy) ]
         ]
-        [ text (toString hero.health ++ "/" ++ toString hero.maxHealth) ]
-    , div
-        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
-        , HtmlAttr.style "left" (toString (1750 - offsetHero hero) ++ "px")
-        , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "30px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text (toString hero.damage) ]
-    , div
-        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
-        , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
-        , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "30px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text (toString hero.energy) ]
-    ]
 
 
 viewHero : Hero -> Html Msg

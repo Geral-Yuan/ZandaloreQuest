@@ -9,8 +9,10 @@ type alias Board =
     , obstacles : List Obstacle
     , enemies : List Enemy
     , heroes : List Hero
+    , totalHeroNumber : Int
     , turn : Turn
     , cntEnemy : Int
+    , cntTurret : Int
     , boardState : BoardState
     , critical : Int
     , moveable : List ( Pos, Dir )
@@ -130,9 +132,9 @@ spawnTimes k =
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    Board (map k) (initObstacles k) (initenemy k) (inithero heroes k) PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0 k
+    Board (map k) (initObstacles k) (initenemy k) (inithero heroes k) 3 PlayerTurn 0 0 NoActions 0 [] [] [] [] [] [] 0 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0 k
 
 
 sampleBoard : Board
 sampleBoard =
-    Board [] [] [] [] PlayerTurn 0 NoActions 0 [] [] [] [] [] [] 0 0 0 0 ( 0, 0 ) 0 0
+    Board [] [] [] [] 0 PlayerTurn 0 0 NoActions 0 [] [] [] [] [] [] 0 0 0 0 ( 0, 0 ) 0 0
