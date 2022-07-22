@@ -207,7 +207,6 @@ viewTutorial k model =
             ]
             (viewMap model.board
                 ++ List.map viewCoordinate model.board.map
-                ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -268,7 +267,6 @@ viewBoard model =
             ]
             (viewMap model.board
                 ++ List.map viewCoordinate model.board.map
-                ++ List.map viewMoveable model.board.moveable
                 ++ List.map viewHeroImage model.board.heroes
                 ++ List.map viewHeroFrame model.board.heroes
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -399,25 +397,21 @@ viewMap board =
 
 
 viewCell : Board -> Pos -> Svg Msg
-viewCell board ( row, column ) =
-    if List.member ( row, column ) (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
+viewCell board pos =
+    if List.member pos (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
         Svg.polygon
             [ SvgAttr.fill "black"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
             ]
             []
 
-    else if List.member ( row, column ) board.target then
-        let
-            skilllist =
-                listIntersection board.target board.skillable
-        in
-        if not (List.isEmpty skilllist) then
+    else if List.member pos board.target then
+        if not (List.member pos board.skillable) then
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos ( row, column )))
+                , SvgAttr.points (detPoints (findPos pos))
                 ]
                 []
 
@@ -425,15 +419,15 @@ viewCell board ( row, column ) =
             Svg.polygon
                 [ SvgAttr.fill "yellow"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos ( row, column )))
+                , SvgAttr.points (detPoints (findPos pos))
                 ]
                 []
 
-    else if List.member ( row, column ) (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
+    else if List.member pos (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
             ]
             []
 
@@ -441,7 +435,7 @@ viewCell board ( row, column ) =
         Svg.polygon
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos ( row, column )))
+            , SvgAttr.points (detPoints (findPos pos))
             ]
             []
 
