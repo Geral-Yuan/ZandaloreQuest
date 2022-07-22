@@ -15,6 +15,7 @@ import ViewAllHero exposing (..)
 import ViewChoose exposing (viewHeroChoose, viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
+import ViewTutorial exposing (..)
 
 
 view : Model -> Html Msg
@@ -82,53 +83,44 @@ viewTutorial k model =
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-
-        -- , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "background" "grey"
         ]
-        [ Svg.svg
+        ([ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ Svg.image
-                [ SvgAttr.width (String.fromFloat pixelWidth)
-                , SvgAttr.height (String.fromFloat pixelHeight)
-                , SvgAttr.x "0"
-                , SvgAttr.y "0"
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref ("./assets/image/Tutorial" ++ toString k ++ ".jpg")
-                ]
-                []
-            ]
-        , div
-            [ HtmlAttr.style "width" "500px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "1100px"
-            , HtmlAttr.style "top" "0px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Click enter to continue" ]
-        ]
+            (viewMap model.board
+                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewMoveable model.board.moveable
+                ++ List.map viewHeroImage model.board.heroes
+                ++ List.map viewHeroFrame model.board.heroes
+                ++ List.concat (List.map viewHeroCondition model.board.heroes)
+                ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.map (viewEnemyImage model.board) model.board.enemies
+                ++ List.map (viewEnemyFrame model.board) model.board.enemies
+                ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
+                ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
+                ++ List.map viewCrate model.board.obstacles
+                ++ List.concatMap viewItem model.board.item
+             --++ viewLines model.board
+            )
+         , endTurnButton
+         , viewCritical model.board
+         , viewBoardCoin model.board
+         , viewLevel model.level
+         , viewTurn model
+         , viewTutorialScene k model
 
-
-tutorialButton : Html Msg
-tutorialButton =
-    button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "900px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "20px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "170px"
-        , onClick ViewTutorial
-        ]
-        [ text "How to play" ]
+         --  , viewClickPosition model
+         --  , viewTips
+         ]
+            ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
+            ++ List.concat (List.map viewHeroInfo model.board.heroes)
+            ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
+            ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
+            ++ List.map animateHeroVisuals model.board.heroes
+            ++ List.map animateEnemyVisuals model.board.enemies
+        )
 
 
 viewBoard : Model -> Html Msg
@@ -181,7 +173,6 @@ viewBoard model =
 
          --  , viewClickPosition model
          --  , viewTips
-         , tutorialButton
          ]
             ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
