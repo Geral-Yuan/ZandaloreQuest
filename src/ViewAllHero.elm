@@ -213,4 +213,3 @@ viewHero hero =
                 ]
                 [ img [ src ("./assets/image/" ++ class ++ "Blue.png"), height 80, width 80 ] []
                 ]
-

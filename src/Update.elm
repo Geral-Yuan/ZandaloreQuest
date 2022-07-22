@@ -21,21 +21,7 @@ update msg model =
         ( nmodel, ncmd ) =
             case model.mode of
                 Tutorial k ->
-                    let
-                        nextMode =
-                            case k of
-                                3 ->
-                                    BoardGame
-
-                                _ ->
-                                    Tutorial (k + 1)
-                    in
-                    case msg of
-                        Enter False ->
-                            ( { model | mode = nextMode }, Cmd.none )
-
-                        _ ->
-                            ( model, Cmd.none )
+                    updateTutorial msg k model
 
                 BoardGame ->
                     case msg of
@@ -54,6 +40,9 @@ update msg model =
                 Logo ->
                     ( updateScene msg model, Cmd.none )
 
+                Dialog task ->
+                    updateDialog msg task model
+
                 HeroChoose ->
                     ( model
                         |> checkChooseClick msg
@@ -70,6 +59,47 @@ update msg model =
         |> getviewport msg
     , ncmd
     )
+
+
+updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
+updateDialog msg task model =
+    case task of
+        MeetElder ->
+            if msg == Enter False then
+                ( { model | mode = HeroChoose }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
+updateTutorial msg k model =
+    case k of
+        1 ->
+            if msg == Enter False then
+                ( { model | mode = BoardGame }, Cmd.none )
+                -- { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                --     |> checkMouseMove msg
+                --     |> checkSelectedClick msg
+                --     |> checkAttackClick msg
+                --     |> randomCrate msg
+                --     |> randomEnemies
+                --     |> checkEnd
+
+            else
+                ( model, Cmd.none )
+
+        _ ->
+            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                |> checkMouseMove msg
+                |> checkSelectedClick msg
+                |> checkAttackClick msg
+                |> randomCrate msg
+                |> randomEnemies
+                |> checkEnd
 
 
 checkChooseClick : Msg -> Model -> Model
@@ -115,7 +145,10 @@ checkConfirm msg model =
     in
     case msg of
         Confirm ->
-            if List.length model.chosenHero == 3 then
+            if List.length model.chosenHero == 3 && model.level == 0 then
+                { model | mode = Tutorial 1, board = initBoard (confirmHeroes model) level, chosenHero = [] }
+
+            else if List.length model.chosenHero == 3 then
                 { model | mode = BoardGame, board = initBoard (confirmHeroes model) level, chosenHero = [] }
 
             else

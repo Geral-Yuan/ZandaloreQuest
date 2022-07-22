@@ -131,16 +131,19 @@ checkNPCTalk : Model -> List NPC -> Model
 checkNPCTalk model npclist =
     let
         targetNPC =
-            List.head (List.filter (checkInTalkRange (model.character.pos)) npclist)
+            List.head (List.filter (checkInTalkRange model.character.pos) npclist)
     in
     case targetNPC of
         Nothing ->
             model
+
         Just npc ->
             if npc.beaten then
-                model -- To be modified
+                model
+                -- To be modified
+
             else
-                { model | mode = HeroChoose, previousMode = Castle }
+                { model | mode = Dialog MeetElder, previousMode = Castle }
 
 
 checkInTalkRange : ( Float, Float ) -> NPC -> Bool

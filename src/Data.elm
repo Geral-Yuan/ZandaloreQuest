@@ -20,12 +20,14 @@ type GameMode
     | BoardGame
     | Logo
     | Tutorial Int
+    | Dialog Task
 
 
 type Task
     = MeetElder
     | GoToShop
     | Level Int
+      -- | Beaten (to be added later)
     | GoToDungeon
 
 

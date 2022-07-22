@@ -6,6 +6,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.43] -- 2022-7-22 
+### Added 
+- update Tutorial 
+- viewTutorial.elm file 
+- changed viewTutorial function 
+- dialogbox.png
+- dialog scene
+
+### Changed 
+- Tutorial in update.elm 
+
+
 ## [m1.42] -- 2022-7-21
 
 ### Added
