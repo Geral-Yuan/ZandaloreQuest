@@ -107,7 +107,6 @@ updateTutorial msg k model =
                         { model | mode = Tutorial 3, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                             |> checkMouseMove msg
                             |> checkHit msg
-                            |> randomCrate msg
                             |> randomEnemies
                             |> checkEnd
 
@@ -124,7 +123,6 @@ updateTutorial msg k model =
                         { model | mode = Tutorial 4, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                             |> checkMouseMove msg
                             |> checkHit msg
-                            |> randomCrate msg
                             |> randomEnemies
                             |> checkEnd
 
@@ -136,8 +134,8 @@ updateTutorial msg k model =
 
         4 ->
             case msg of
-                Select hero ->
-                    if hero.class == Warrior then
+                Move pos ->
+                    if pos == ( 4, 6 ) then
                         { model | mode = Tutorial 5, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                             |> checkMouseMove msg
                             |> checkHit msg
@@ -154,7 +152,7 @@ updateTutorial msg k model =
         5 ->
             case msg of
                 Select hero ->
-                    if hero.class == Warrior then
+                    if hero.class == Archer then
                         { model | mode = Tutorial 6, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                             |> checkMouseMove msg
                             |> checkHit msg

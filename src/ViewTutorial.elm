@@ -30,6 +30,12 @@ viewTutorialScene k model =
         3 ->
             viewTutorial3 model
 
+        4 ->
+            viewTutorial4 model
+
+        5 ->
+            viewTutorial5 model
+
         _ ->
             viewTutorial3 model
 
@@ -84,7 +90,7 @@ viewTutorial2 model =
             --     ]
             --     []
             ]
-        , dialogHelper 400 20 500 200 50 "blue" "Left click on Warrior to control it"
+        , dialogHelper 500 20 500 200 50 "blue" "Left click on Warrior to control it"
 
         -- , div
         -- [ HtmlAttr.style "width" "400px"
@@ -115,6 +121,44 @@ viewTutorial3 model =
             [ shapeHelper 100 100 705 450 "blue" ( 3, 7 )
             ]
         , dialogHelper 700 30 500 150 50 "blue" "Blue hexagons denote the movable range of the hero. Left click to move into the rectangle."
+        ]
+
+
+viewTutorial4 : Model -> Html Msg
+viewTutorial4 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 100 830 450 "blue" ( 4, 6 )
+            ]
+        , dialogHelper 800 30 580 150 50 "blue" "Each hero has an energy limit. -2 to move and -3 to attack. Energy refreshes after each turn. Left click to move."
+        ]
+
+
+viewTutorial5 : Model -> Html Msg
+viewTutorial5 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 100 780 370 "blue" ( 2, 7 )
+            ]
+        , dialogHelper 400 20 580 250 50 "blue" "Now left click on archer."
         ]
 
 
