@@ -12,6 +12,7 @@ import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (updateBoard, turnTurret, checkCurrentTurret, updateTurretAttackable)
+import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
 
@@ -48,6 +49,8 @@ update msg model =
                         |> checkConfirm msg
                     , Cmd.none
                     )
+                BuyingItems ->
+                    updateShop msg model
 
                 _ ->
                     updateRPG msg model

@@ -12,7 +12,8 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
-import ViewChoose exposing (viewHeroChoose, viewShopChoose)
+import ViewChoose exposing (viewHeroChoose)
+import ViewShop exposing (viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
 
