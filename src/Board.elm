@@ -132,9 +132,55 @@ spawnTimes k =
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    Board (map k) (initObstacles k) (initenemy k) (inithero heroes k) 3 PlayerTurn 0 0 NoActions 0 [] [] [] [] [] [] 0 0 (spawnTimes k) (List.length (initenemy k)) ( 0, 0 ) 0 k
+    { map = (map k)
+    , obstacles = (initObstacles k)
+    , enemies = (initenemy k)
+    , heroes = (inithero heroes k)
+    , totalHeroNumber = 3
+    , turn = PlayerTurn
+    , cntEnemy = 0
+    , cntTurret = 0
+    , boardState = NoActions
+    , critical = 0
+    , moveable = []
+    , attackable = []
+    , enemyAttackable = []
+    , skillable = []
+    , target = []
+    , item = []
+    , timeTurn = 0
+    , timeBoardState = 0
+    , spawn = (spawnTimes k)
+    , index = (List.length (initenemy k))
+    , pointPos = ( 0, 0 )
+    , coins = 0
+    , level = k
+    }
 
 
 sampleBoard : Board
 sampleBoard =
-    Board [] [] [] [] 0 PlayerTurn 0 0 NoActions 0 [] [] [] [] [] [] 0 0 0 0 ( 0, 0 ) 0 0
+    { map = []
+    , obstacles = []
+    , enemies = []
+    , heroes = []
+    , totalHeroNumber = 0
+    , turn = PlayerTurn
+    , cntEnemy = 0
+    , cntTurret = 0
+    , boardState = NoActions
+    , critical = 0
+    , moveable = []
+    , attackable = []
+    , enemyAttackable = []
+    , skillable = []
+    , target = []
+    , item = []
+    , timeTurn = 0
+    , timeBoardState = 0
+    , spawn = 0
+    , index = 0
+    , pointPos = ( 0, 0 )
+    , coins = 0
+    , level = 0
+    }
