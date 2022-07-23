@@ -11,7 +11,7 @@ import NPC exposing (npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
-import UpdateBoard exposing (turnEnemy, updateBoard)
+import UpdateBoard exposing (updateBoard, turnTurret, checkCurrentTurret, updateTurretAttackable)
 import ViewNPCTask exposing (checkTalkRange)
 
 
@@ -29,7 +29,7 @@ update msg model =
                             ( { model | mode = Tutorial 1 }, Cmd.none )
 
                         _ ->
-                            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
                                 |> checkMouseMove msg
                                 |> checkHit msg
                                 |> randomCrate msg
@@ -69,9 +69,13 @@ updateDialog msg task model =
 
             else
                 ( model, Cmd.none )
-
+--To be changed when it's other tasks
         _ ->
-            ( model, Cmd.none )
+            if msg == Enter False then
+                ( { model | mode = HeroChoose }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
 
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
@@ -92,7 +96,7 @@ updateTutorial msg k model =
                 ( model, Cmd.none )
 
         _ ->
-            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget|> checkCurrentTurret |> updateTurretAttackable }
                 |> checkMouseMove msg
                 |> checkHit msg
                 |> randomCrate msg
@@ -277,7 +281,7 @@ updateHealth hero =
         currHealth =
             currHero.health
     in
-    ( { currHero | health = currHealth + 5 }, index )
+    ( { currHero | health = currHealth + 5, maxHealth = currHealth + 5 }, index )
 
 
 updateDamage : ( Hero, Int ) -> ( Hero, Int )
@@ -551,10 +555,10 @@ randomCrate msg ( model, cmd ) =
             case model.board.turn of
                 PlayerTurn ->
                     if possibleCratePosition model /= [] then
-                        ( { model | board = turnEnemy model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+                        ( { model | board = turnTurret model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
 
                     else
-                        ( model, cmd )
+                        ( { model | board = turnTurret model.board }, cmd )
 
                 _ ->
                     ( model, cmd )
@@ -604,6 +608,9 @@ checkEnd ( model, cmd ) =
     let
         myboard =
             model.board
+        finalboard = {myboard | heroes = List.filter (\x -> x.health > 0) model.board.heroes
+                                , enemies = List.filter (\x -> x.health > 0) model.board.enemies
+                                }
 
         wincoins =
             myboard.coins + 50
@@ -614,7 +621,7 @@ checkEnd ( model, cmd ) =
         nmodel =
             case model.mode of
                 BoardGame ->
-                    if List.isEmpty myboard.enemies && myboard.spawn == 0 then
+                    if List.isEmpty finalboard.enemies && finalboard.spawn == 0 then
                         { model
                             | mode = model.previousMode
                             , level = model.level + 1
@@ -623,7 +630,7 @@ checkEnd ( model, cmd ) =
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                         }
 
-                    else if List.isEmpty myboard.heroes then
+                    else if List.isEmpty finalboard.heroes then
                         { model
                             | mode = model.previousMode
                             , bag = addCoin model.bag losecoins

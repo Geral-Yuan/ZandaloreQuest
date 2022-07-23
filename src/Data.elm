@@ -52,12 +52,14 @@ type Critical
 
 type Turn
     = PlayerTurn
+    | TurretTurn
     | EnemyTurn
 
 
 type BoardState
     = NoActions
     | EnemyAttack
+    | TurretAttack
     | HeroAttack
     | HeroMoving
     | HeroHealth
@@ -76,6 +78,7 @@ type Class
     | Healer
     | Mage
     | Engineer
+    | Turret
 
 
 type ObstacleType

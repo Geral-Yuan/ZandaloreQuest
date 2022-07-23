@@ -40,7 +40,7 @@ actionSmartEnemy board enemy =
                 Healer ->
                     actionSmartHealer board enemy
 
-                Engineer ->
+                _ ->
                     board
     in
     nboard
