@@ -7,6 +7,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+
+## [m1.45] -- 2022-7-23
+
+### Added
+
+- Turret class for hero, it's similar to a fixed and automatic archer
+
+### Changed
+
+- change the engineer skill from placing boxes to turret
 ## [m1.44] -- 2022-7-22
 
 ### Changed
