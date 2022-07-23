@@ -281,7 +281,7 @@ updateHealth hero =
         currHealth =
             currHero.health
     in
-    ( { currHero | health = currHealth + 5 }, index )
+    ( { currHero | health = currHealth + 5, maxHealth = currHealth + 5 }, index )
 
 
 updateDamage : ( Hero, Int ) -> ( Hero, Int )
