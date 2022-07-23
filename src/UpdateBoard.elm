@@ -296,7 +296,12 @@ selectHero board clickedhero =
         newunwantedHero =
             List.map (\hero -> { hero | selected = False }) unwantedHero
     in
-    { board | heroes = newwantedHero ++ newunwantedHero }
+    case clickedhero.class of
+        Turret ->
+            board
+        
+        _ ->
+            { board | heroes = newwantedHero ++ newunwantedHero }
 
 
 spawnEnemies : List Class -> List Pos -> Board -> Board
