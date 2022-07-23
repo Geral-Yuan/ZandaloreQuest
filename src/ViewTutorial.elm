@@ -36,6 +36,9 @@ viewTutorialScene k model =
         5 ->
             viewTutorial5 model
 
+        6 ->
+            viewTutorial6 model
+
         _ ->
             viewTutorial3 model
 
@@ -66,6 +69,7 @@ viewTutorial1 model =
 
 viewTutorial2 : Model -> Html Msg
 viewTutorial2 model =
+    -- Select warrior
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -156,9 +160,28 @@ viewTutorial5 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper 100 100 780 370 "blue" ( 2, 7 )
+            [ shapeHelper 100 100 645 350 "blue" ( 0, 0 )
             ]
-        , dialogHelper 400 20 580 250 50 "blue" "Now left click on archer."
+        , dialogHelper 400 20 580 200 50 "blue" "Now left click on archer."
+        ]
+
+
+viewTutorial6 : Model -> Html Msg
+viewTutorial6 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 100 1010 345 "blue" ( 5, 4 )
+            ]
+        , dialogHelper 700 20 580 150 50 "blue" "Right click on the crate to attack. A random item (health/energy potion or gold) will be dropped."
         ]
 
 
