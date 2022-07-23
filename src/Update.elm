@@ -192,6 +192,54 @@ updateTutorial msg k model =
                 _ ->
                     ( model, Cmd.none )
 
+        8 ->
+            case msg of
+                Select hero ->
+                    if hero.class == Warrior then
+                        { model | mode = Tutorial 3, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        9 ->
+            case msg of
+                Move pos ->
+                    if pos == ( 4, 5 ) then
+                        { model | mode = Tutorial 10, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        10 ->
+            case msg of
+                Move pos ->
+                    if pos == ( 5, 4 ) then
+                        { model | mode = Tutorial 11, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
                 |> checkMouseMove msg

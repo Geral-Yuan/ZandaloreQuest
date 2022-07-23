@@ -42,8 +42,17 @@ viewTutorialScene k model =
         7 ->
             viewTutorial7 model
 
+        8 ->
+            viewTutorial8 model
+
+        9 ->
+            viewTutorial9 model
+
+        10 ->
+            viewTutorial10 model
+
         _ ->
-            viewTutorial3 model
+            viewTutorial11 model
 
 
 viewTutorial1 : Model -> Html Msg
@@ -204,6 +213,81 @@ viewTutorial7 model =
             [ shapeHelper 100 190 1690 595 "blue" ( 0, 0 )
             ]
         , dialogHelper 700 20 580 150 50 "blue" "There is a chance that critical damage will be dealt. Click the end turn button to end your turn."
+        ]
+
+
+viewTutorial8 : Model -> Html Msg
+viewTutorial8 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 100 830 450 "blue" ( 4, 6 )
+            ]
+        , dialogHelper 700 20 580 150 50 "blue" "Now it is your turn, click on the warrior"
+        ]
+
+
+viewTutorial9 : Model -> Html Msg
+viewTutorial9 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 190 1690 595 "blue" ( 0, 0 )
+            ]
+        , dialogHelper 700 20 580 150 50 "blue" "Now move it here"
+        ]
+
+
+viewTutorial10 : Model -> Html Msg
+viewTutorial10 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 190 1690 595 "blue" ( 0, 0 )
+            ]
+        , dialogHelper 700 20 580 150 50 "blue" "Move the warrior onto the item and it will receive +10 health/energy."
+        ]
+
+
+viewTutorial11 : Model -> Html Msg
+viewTutorial11 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            []
+        , dialogHelper 700 30 580 150 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero!"
         ]
 
 
