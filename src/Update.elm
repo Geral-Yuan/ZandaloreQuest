@@ -79,6 +79,13 @@ updateDialog msg task model =
             else
                 ( model, Cmd.none )
 
+        FinishTutorial ->
+            if msg == Enter False then
+                ( { model | mode = Castle, cntTask = GoToShop }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
         --To be changed when it's other tasks
         _ ->
             if msg == Enter False then
@@ -134,6 +141,17 @@ followTutorial msg k =
             msg == Move ( 5, 4 )
 
         11 ->
+            case msg of
+                Select hero ->
+                    hero.class == Archer
+
+                _ ->
+                    False
+
+        12 ->
+            msg == Hit ( 7, 2 )
+
+        13 ->
             msg == Enter False
 
         _ ->
@@ -150,7 +168,7 @@ updateTutorial msg k model =
             else
                 ( model, Cmd.none )
 
-        12 ->
+        14 ->
             ( { model | mode = BoardGame }, Cmd.none )
 
         _ ->
@@ -701,7 +719,16 @@ checkEnd ( model, cmd ) =
         nmodel =
             case model.mode of
                 BoardGame ->
-                    if List.isEmpty finalboard.enemies && finalboard.spawn == 0 then
+                    if List.isEmpty finalboard.enemies && finalboard.spawn == 0 && (model.level == 0) then
+                        { model
+                            | mode = Dialog FinishTutorial
+                            , level = model.level + 1
+                            , cntTask = nextTask model.cntTask
+                            , bag = addCoin model.bag wincoins
+                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                        }
+
+                    else if List.isEmpty finalboard.enemies && finalboard.spawn == 0 && model.level /= 0 then
                         { model
                             | mode = model.previousMode
                             , level = model.level + 1

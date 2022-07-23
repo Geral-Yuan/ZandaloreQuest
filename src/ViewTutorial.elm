@@ -48,8 +48,14 @@ viewTutorialScene model k =
             10 ->
                 [ viewTutorial10 ]
 
-            _ ->
+            11 ->
                 [ viewTutorial11 ]
+
+            12 ->
+                [ viewTutorial12 ]
+
+            _ ->
+                [ viewTutorial13 ]
 
     else
         []
@@ -211,7 +217,7 @@ viewTutorial7 =
             , SvgAttr.height "100%"
             ]
             []
-        , dialogHelper 700 20 580 50 50 "blue" "There is a chance that critical damage will be dealt. Click the end turn button to end your turn."
+        , dialogHelper 700 20 580 50 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
         ]
 
 
@@ -230,7 +236,7 @@ viewTutorial8 =
             ]
             [ shapeHelper ( 100, 100 ) (findPos ( 4, 6 )) "blue" ( 4, 6 )
             ]
-        , dialogHelper 700 20 580 50 50 "blue" "Now it is your turn, click on the warrior"
+        , dialogHelper 700 20 580 50 50 "blue" "Now it is your turn, left click on the warrior"
         ]
 
 
@@ -285,8 +291,46 @@ viewTutorial11 =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
+            [ shapeHelper ( 100, 100 ) (findPos ( 2, 7 )) "blue" ( 2, 7 )
+            ]
+        , dialogHelper 400 20 580 50 50 "blue" "Now left click on archer."
+        ]
+
+
+viewTutorial12 : Html Msg
+viewTutorial12 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper ( 100, 100 ) (findPos ( 7, 2 )) "blue" ( 7, 2 )
+            ]
+        , dialogHelper 600 20 580 50 50 "blue" "Now right click on the enemy hero to attack it. Crticial damage may be dealt."
+        ]
+
+
+viewTutorial13 : Html Msg
+viewTutorial13 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
             []
-        , dialogHelper 700 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero!"
+        , dialogHelper 750 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
         ]
 
 
