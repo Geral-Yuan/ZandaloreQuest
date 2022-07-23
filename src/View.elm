@@ -107,8 +107,48 @@ viewDialogMatch task =
         MeetElder ->
             viewDialogElder
 
+        FinishTutorial ->
+            viewFinishTutorial
+
         _ ->
             viewDialogGeneral
+
+
+viewFinishTutorial : Html Msg
+viewFinishTutorial =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "350px"
+            ]
+            [ img [ src "./assets/image/MainCharacter.png", height 400, width 480 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "1180px"
+            , HtmlAttr.style "transform" "scaleX(-1)"
+            ]
+            [ img [ src "./assets/image/EvilNPC.png", height 400, width 480 ] []
+            ]
+        , div
+            [ HtmlAttr.style "width" "1300px"
+            , HtmlAttr.style "height" "450px"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "370px"
+            , HtmlAttr.style "top" "560px"
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-size" "50px"
+            ]
+            [ text "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click Enter to countinue." ]
+        ]
 
 
 viewDialogElder : Html Msg
