@@ -11,7 +11,7 @@ import NPC exposing (npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
-import UpdateBoard exposing (updateBoard, turnTurret, checkCurrentTurret, updateTurretAttackable)
+import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoard, updateTurretAttackable)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
@@ -49,6 +49,7 @@ update msg model =
                         |> checkConfirm msg
                     , Cmd.none
                     )
+
                 BuyingItems ->
                     updateShop msg model
 
@@ -72,7 +73,8 @@ updateDialog msg task model =
 
             else
                 ( model, Cmd.none )
---To be changed when it's other tasks
+
+        --To be changed when it's other tasks
         _ ->
             if msg == Enter False then
                 ( { model | mode = HeroChoose }, Cmd.none )
@@ -86,7 +88,7 @@ updateTutorial msg k model =
     case k of
         1 ->
             if msg == Enter False then
-                ( { model | mode = BoardGame }, Cmd.none )
+                ( { model | mode = Tutorial 2 }, Cmd.none )
                 -- { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
                 --     |> checkMouseMove msg
                 --     |> checkSelectedClick msg
@@ -98,8 +100,59 @@ updateTutorial msg k model =
             else
                 ( model, Cmd.none )
 
+        2 ->
+            case msg of
+                Select hero ->
+                    if hero.class == Warrior then
+                        { model | mode = Tutorial 3, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomCrate msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        3 ->
+            case msg of
+                Select hero ->
+                    if hero.class == Warrior then
+                        { model | mode = Tutorial 4, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomCrate msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        4 ->
+            case msg of
+                Select hero ->
+                    if hero.class == Warrior then
+                        { model | mode = Tutorial 4, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                            |> checkMouseMove msg
+                            |> checkHit msg
+                            |> randomCrate msg
+                            |> randomEnemies
+                            |> checkEnd
+
+                    else
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         _ ->
-            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget|> checkCurrentTurret |> updateTurretAttackable }
+            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
                 |> checkMouseMove msg
                 |> checkHit msg
                 |> randomCrate msg
@@ -611,9 +664,12 @@ checkEnd ( model, cmd ) =
     let
         myboard =
             model.board
-        finalboard = {myboard | heroes = List.filter (\x -> x.health > 0) model.board.heroes
-                                , enemies = List.filter (\x -> x.health > 0) model.board.enemies
-                                }
+
+        finalboard =
+            { myboard
+                | heroes = List.filter (\x -> x.health > 0) model.board.heroes
+                , enemies = List.filter (\x -> x.health > 0) model.board.enemies
+            }
 
         wincoins =
             myboard.coins + 50

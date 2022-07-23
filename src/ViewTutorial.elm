@@ -13,9 +13,9 @@ import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
 import ViewChoose exposing (viewHeroChoose)
-import ViewShop exposing (viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
+import ViewShop exposing (viewShopChoose)
 
 
 viewTutorialScene : Int -> Model -> Html Msg
@@ -24,8 +24,11 @@ viewTutorialScene k model =
         1 ->
             viewTutorial1 model
 
-        _ ->
+        2 ->
             viewTutorial2 model
+
+        _ ->
+            viewTutorial3 model
 
 
 viewTutorial1 : Model -> Html Msg
@@ -41,77 +44,14 @@ viewTutorial1 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ Svg.rect
-                [ SvgAttr.stroke "blue"
-                , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "145"
-                , SvgAttr.width "430"
-                , SvgAttr.fillOpacity "0"
-                , SvgAttr.x "15"
-                , SvgAttr.y "15"
-                ]
-                []
-            , Svg.rect
-                [ SvgAttr.stroke "blue"
-                , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "450"
-                , SvgAttr.width "440"
-                , SvgAttr.fillOpacity "0"
-                , SvgAttr.x "1555"
-                , SvgAttr.y "15"
-                ]
-                []
-            , Svg.rect
-                [ SvgAttr.stroke "blue"
-                , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "100"
-                , SvgAttr.width "100"
-                , SvgAttr.fillOpacity "0"
-                , SvgAttr.x "950"
-                , SvgAttr.y "450"
-                ]
-                []
+            [ shapeHelper 145 430 15 15 "blue"
+            , shapeHelper 450 440 1555 15 "blue"
+            , shapeHelper 100 100 950 450 "blue"
             ]
-        , div
-            [ HtmlAttr.style "width" "600px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "20px"
-            , HtmlAttr.style "top" "170px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Enemies Information (Red)" ]
-        , div
-            [ HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "1150px"
-            , HtmlAttr.style "top" "50px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Your heroes' Information (Blue)" ]
-        , div
-            [ HtmlAttr.style "width" "600px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "950px"
-            , HtmlAttr.style "top" "700px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Brown obstacle: mystery box that drops gold and potions (black means unbreakable)" ]
-        , div
-            [ HtmlAttr.style "width" "600px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "20px"
-            , HtmlAttr.style "top" "900px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Click enter to continue" ]
+        , dialogHelper 600 20 20 170 50 "blue" "Enemies Information (Red)"
+        , dialogHelper 400 20 1150 50 50 "blue" "Your heroes' Information (Blue)"
+        , dialogHelper 600 20 950 700 50 "blue" "Brown obstacle: mystery box that drops gold and potions (black means unbreakable)"
+        , dialogHelper 600 20 20 900 50 "blue" "Click enter to continue"
         ]
 
 
@@ -128,27 +68,50 @@ viewTutorial2 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ Svg.rect
-                [ SvgAttr.stroke "blue"
-                , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "145"
-                , SvgAttr.width "440"
-                , SvgAttr.fillOpacity "0"
-                , SvgAttr.x "1555"
-                , SvgAttr.y "15"
-                ]
-                []
+            [ shapeHelper 100 100 585 450 "blue"
+
+            -- , Svg.rect
+            --     [ SvgAttr.stroke "blue"
+            --     , SvgAttr.strokeWidth "5"
+            --     , SvgAttr.height "100"
+            --     , SvgAttr.width "100"
+            --     , SvgAttr.fillOpacity "0"
+            --     , SvgAttr.x "950"
+            --     , SvgAttr.y "450"
+            --     ]
+            --     []
             ]
-        , div
-            [ HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "height" "20px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "1150px"
-            , HtmlAttr.style "top" "50px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
+        , dialogHelper 400 20 500 200 50 "blue" "Left click on Warrior to control it"
+
+        -- , div
+        -- [ HtmlAttr.style "width" "400px"
+        -- , HtmlAttr.style "height" "20px"
+        -- , HtmlAttr.style "position" "fixed"
+        -- , HtmlAttr.style "left" "1150px"
+        -- , HtmlAttr.style "top" "50px"
+        -- , HtmlAttr.style "color" "blue"
+        -- , HtmlAttr.style "font-size" "50px"
+        -- ]
+        -- [ text "Your heroes' Information (Blue)" ]
+        ]
+
+
+viewTutorial3 : Model -> Html Msg
+viewTutorial3 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
             ]
-            [ text "Click on Warrior to control it" ]
+            [ shapeHelper 100 100 420 450 "blue"
+            ]
+        , dialogHelper 400 20 500 250 50 "blue" "Left click on Warrior to control it"
         ]
 
 

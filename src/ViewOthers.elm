@@ -11,6 +11,34 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
+dialogHelper : Float -> Float -> Float -> Float -> Float -> String -> String -> Html Msg
+dialogHelper width height left top fontSize color textIn =
+    div
+        [ HtmlAttr.style "width" (toString width ++ "px")
+        , HtmlAttr.style "height" (toString height ++ "px")
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" (toString left ++ "px")
+        , HtmlAttr.style "top" (toString top ++ "px")
+        , HtmlAttr.style "color" color
+        , HtmlAttr.style "font-size" (toString fontSize ++ "px")
+        ]
+        [ text textIn ]
+
+
+shapeHelper : Float -> Float -> Float -> Float -> String -> Svg Msg
+shapeHelper height width x y color =
+    Svg.rect
+        [ SvgAttr.stroke color
+        , SvgAttr.strokeWidth "5"
+        , SvgAttr.height (toString height)
+        , SvgAttr.width (toString width)
+        , SvgAttr.fillOpacity "0"
+        , SvgAttr.x (toString x)
+        , SvgAttr.y (toString y)
+        ]
+        []
+
+
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
