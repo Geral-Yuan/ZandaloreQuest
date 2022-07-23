@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - dialogHelper and shapeHelper functions to help with the tutorial system
 - more scenes for the live tutorial 
+- all the scenes for the tutorial system
+- added a new task to accompany the dialog at the end of the tutorial
 
 
 
