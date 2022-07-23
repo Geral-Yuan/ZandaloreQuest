@@ -5,7 +5,7 @@ import Data exposing (..)
 import Debug exposing (toString)
 import DetectMouse exposing (..)
 import Html exposing (Html, button, div)
-import Html.Attributes as HtmlAttr
+import Html.Attributes as HtmlAttr exposing (height, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (..)
@@ -26,16 +26,16 @@ dialogHelper width height left top fontSize color textIn =
         [ text textIn ]
 
 
-shapeHelper : Float -> Float -> Float -> Float -> String -> Pos -> Svg Msg
-shapeHelper height width x y color pos =
+shapeHelper : ( Float, Float ) -> ( Float, Float ) -> String -> Pos -> Svg Msg
+shapeHelper ( height, width ) ( x, y ) color pos =
     Svg.rect
         [ SvgAttr.stroke color
         , SvgAttr.strokeWidth "5"
         , SvgAttr.height (toString height)
         , SvgAttr.width (toString width)
         , SvgAttr.fillOpacity "0"
-        , SvgAttr.x (toString x)
-        , SvgAttr.y (toString y)
+        , SvgAttr.x (toString (x - width / 2))
+        , SvgAttr.y (toString (y - height / 2))
         , onClick (Move pos)
         , onContentMenu (Hit pos)
         ]

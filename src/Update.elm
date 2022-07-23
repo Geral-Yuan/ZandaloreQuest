@@ -11,7 +11,7 @@ import NPC exposing (npcDarkKnight1, npcDarkKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
-import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoard, updateTurretAttackable)
+import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
@@ -25,17 +25,7 @@ update msg model =
                     updateTutorial msg k model
 
                 BoardGame ->
-                    case msg of
-                        ViewTutorial ->
-                            ( { model | mode = Tutorial 1 }, Cmd.none )
-
-                        _ ->
-                            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
-                                |> checkMouseMove msg
-                                |> checkHit msg
-                                |> randomCrate msg
-                                |> randomEnemies
-                                |> checkEnd
+                    updateBoardGame msg model
 
                 Logo ->
                     ( updateScene msg model, Cmd.none )
@@ -64,6 +54,21 @@ update msg model =
     )
 
 
+updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
+updateBoardGame msg model =
+    case msg of
+        ViewTutorial ->
+            ( { model | mode = Tutorial 1 }, Cmd.none )
+
+        _ ->
+            { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+                |> checkMouseMove msg
+                |> checkHit msg
+                |> randomCrate msg
+                |> randomEnemies
+                |> checkEnd
+
+
 updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
 updateDialog msg task model =
     case task of
@@ -83,170 +88,85 @@ updateDialog msg task model =
                 ( model, Cmd.none )
 
 
+followTutorial : Msg -> Int -> Bool
+followTutorial msg k =
+    case k of
+        2 ->
+            case msg of
+                Select hero ->
+                    hero.class == Warrior
+
+                _ ->
+                    False
+
+        3 ->
+            msg == Move ( 3, 7 )
+
+        4 ->
+            msg == Move ( 4, 6 )
+
+        5 ->
+            case msg of
+                Select hero ->
+                    hero.class == Archer
+
+                _ ->
+                    False
+
+        6 ->
+            msg == Hit ( 5, 4 )
+
+        7 ->
+            msg == EndTurn
+
+        8 ->
+            case msg of
+                Select hero ->
+                    hero.class == Warrior
+
+                _ ->
+                    False
+
+        9 ->
+            msg == Move ( 4, 5 )
+
+        10 ->
+            msg == Move ( 5, 4 )
+
+        11 ->
+            msg == Enter False
+
+        _ ->
+            False
+
+
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
 updateTutorial msg k model =
     case k of
         1 ->
             if msg == Enter False then
                 ( { model | mode = Tutorial 2 }, Cmd.none )
-                -- { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                --     |> checkMouseMove msg
-                --     |> checkSelectedClick msg
-                --     |> checkAttackClick msg
-                --     |> randomCrate msg
-                --     |> randomEnemies
-                --     |> checkEnd
 
             else
                 ( model, Cmd.none )
 
-        2 ->
-            case msg of
-                Select hero ->
-                    if hero.class == Warrior then
-                        { model | mode = Tutorial 3, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        3 ->
-            case msg of
-                Move pos ->
-                    if pos == ( 3, 7 ) then
-                        { model | mode = Tutorial 4, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        4 ->
-            case msg of
-                Move pos ->
-                    if pos == ( 4, 6 ) then
-                        { model | mode = Tutorial 5, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        5 ->
-            case msg of
-                Select hero ->
-                    if hero.class == Archer then
-                        { model | mode = Tutorial 6, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        6 ->
-            case msg of
-                Hit pos ->
-                    if pos == ( 5, 4 ) then
-                        { model | mode = Tutorial 7, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        7 ->
-            case msg of
-                EndTurn ->
-                    { model | mode = Tutorial 8, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                        |> checkMouseMove msg
-                        |> checkHit msg
-                        |> randomEnemies
-                        |> checkEnd
-
-                _ ->
-                    ( model, Cmd.none )
-
-        8 ->
-            case msg of
-                Select hero ->
-                    if hero.class == Warrior then
-                        { model | mode = Tutorial 3, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        9 ->
-            case msg of
-                Move pos ->
-                    if pos == ( 4, 5 ) then
-                        { model | mode = Tutorial 10, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        10 ->
-            case msg of
-                Move pos ->
-                    if pos == ( 5, 4 ) then
-                        { model | mode = Tutorial 11, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
-                            |> checkMouseMove msg
-                            |> checkHit msg
-                            |> randomEnemies
-                            |> checkEnd
-
-                    else
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+        12 ->
+            ( { model | mode = BoardGame }, Cmd.none )
 
         _ ->
-            { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
-                |> checkMouseMove msg
-                |> checkHit msg
-                |> randomCrate msg
-                |> randomEnemies
-                |> checkEnd
+            case msg of
+                Tick _ ->
+                    updateBoardGame msg model
+
+                Attack _ _ ->
+                    updateBoardGame msg model
+
+                _ ->
+                    if followTutorial msg k && model.board.boardState == NoActions then
+                        { model | mode = Tutorial (k + 1) } |> updateBoardGame msg
+
+                    else
+                        ( model, Cmd.none )
 
 
 checkChooseClick : Msg -> Model -> Model
@@ -575,7 +495,19 @@ checkHit : Msg -> Model -> ( Model, Cmd Msg )
 checkHit msg model =
     case msg of
         Hit pos ->
-            ( model, generateDamage pos )
+            case model.board.turn of
+                PlayerTurn ->
+                    if model.board.boardState == NoActions then
+                        ( model, generateDamage pos )
+
+                    else
+                        ( model, Cmd.none )
+
+                TurretTurn ->
+                    ( model, Cmd.none )
+
+                EnemyTurn ->
+                    ( model, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

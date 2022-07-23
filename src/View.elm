@@ -203,7 +203,7 @@ viewTutorial k model =
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
         ]
-        ([ Svg.svg
+        (Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
@@ -221,16 +221,16 @@ viewTutorial k model =
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
             )
-         , endTurnButton
-         , viewCritical model.board
-         , viewBoardCoin model.board
-         , viewLevel model.level
-         , viewTurn model
-         , viewTutorialScene k model
+            :: viewTutorialScene model k
+            ++ [ endTurnButton
+               , viewCritical model.board
+               , viewBoardCoin model.board
+               , viewLevel model.level
+               , viewTurn model
 
-         --  , viewClickPosition model
-         --  , viewTips
-         ]
+               --  , viewClickPosition model
+               --  , viewTips
+               ]
             ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
             ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
@@ -268,7 +268,7 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                --                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
