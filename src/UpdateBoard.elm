@@ -48,7 +48,7 @@ updateBoard msg board =
                         { nBoard | enemies = nBoard.enemies |> List.map checkEnemyDone }
 
                     else if board.timeTurn > 0.5 && board.turn == TurretTurn then
-                        nBoard
+                        { nBoard | heroes = nBoard.heroes |> List.map checkTurretDone }
 
                     else
                         nBoard
@@ -196,7 +196,7 @@ checkTurn board =
     if List.all (\enemy -> enemy.done) board.enemies then
         { board | turn = PlayerTurn }
 
-    else if List.all (\turret -> turret.energy < 0) (List.filter (\x -> x.class == Turret) board.heroes) then
+    else if List.all (\turret -> turret.energy == -6) (List.filter (\x -> x.class == Turret) board.heroes) then
         { board | turn = EnemyTurn } 
     else
         board
@@ -394,7 +394,7 @@ actionTurret board =
                             }
                             
                         else
-                            {board | heroes = {turret| energy = -4, state = Waiting} :: (listDifference board.heroes [turret])
+                            {board | heroes = {turret| energy = -3, state = Waiting} :: (listDifference board.heroes [turret])
                             , attackable = attackedByHeroArcherRange board turret.pos}
     in
     selectboard
@@ -404,7 +404,7 @@ checkCurrentTurret : Board -> Board
 checkCurrentTurret board =
     let
         undoneTurret =
-            List.filter (\turret -> ((turret.class == Turret) && (turret.energy == 0))) board.heroes
+            List.filter (\turret -> ((turret.class == Turret) && (turret.energy /= -6))) board.heroes
     in
     case undoneTurret of
         [] ->
@@ -433,3 +433,11 @@ updateTurretAttackable board =
 
     else
         board
+
+
+checkTurretDone : Hero -> Hero
+checkTurretDone turret =
+    if turret.energy == -3 && turret.state == Waiting && turret.class == Turret then
+        { turret | energy = -6 }
+    else
+        turret
