@@ -8,10 +8,13 @@ type Msg
     = Key Dir Bool
     | Choose Pos
     | Enter Bool
-      --    | Select Class Bool
     | Resize Int Int
     | Tick Float
     | Attack Pos Critical
+    | Hit Pos
+--    | Skill Pos
+    | Select Hero
+    | Move Pos
     | EndTurn
     | Confirm
     | Click Float Float

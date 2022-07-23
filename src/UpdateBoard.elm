@@ -1,57 +1,61 @@
 module UpdateBoard exposing (..)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unselectedHero)
+import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable, attackedByHeroArcherRange)
 import Board exposing (Board)
 import Data exposing (..)
-import EnemyAction exposing (actionEnemy)
-import HeroAttack exposing (checkAttack)
+import EnemyAction exposing (actionEnemy, checkEnemyDone)
+import HeroAttack exposing (checkAttack, heroTurretAttack)
 import Message exposing (Msg(..))
 
 
 updateBoard : Msg -> Board -> Board
 updateBoard msg board =
     case msg of
-        Key dir False ->
-            case board.turn of
-                EnemyTurn ->
-                    board
-
-                _ ->
-                    moveHero board dir
-
-        --        Select class False ->
-        --            case board.turn of
-        --                HeroTurn ->
-        --                    selectHero board class
-        --
-        --                EnemyTurn ->
-        --                    board
         Tick elapsed ->
             let
-                nboard =
+                nBoard =
                     case board.turn of
                         PlayerTurn ->
-                            board
+                            case board.boardState of
+                                NoActions ->
+                                    board
 
-                        AttackInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
 
-                        EnemyTurn ->
-                            { board | time = board.time + elapsed / 1000 }
+                        _ ->
+                            case board.boardState of
+                                NoActions ->
+                                    { board | timeTurn = board.timeTurn + elapsed / 1000 }
 
-                        MovingInProgress ->
-                            { board | time = board.time + elapsed / 1000 }
+                                _ ->
+                                    { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
+
+                updatedBoard =
+                    if board.boardState /= NoActions && nBoard.timeBoardState > 1.0 then
+                        { nBoard | heroes = List.map returnHeroToWaiting nBoard.heroes, enemies = nBoard.enemies |> List.map returnEnemyToWaiting |> List.map checkEnemyDone, boardState = NoActions, timeBoardState = 0 }
+
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 && board.turn == EnemyTurn then
+                        { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
+                            |> actionEnemy
+
+
+                    else if board.boardState == NoActions && nBoard.timeTurn > 1.0 && board.turn == TurretTurn then
+                        { nBoard | timeTurn = 0 }
+                            |> actionTurret
+
+                    else if board.timeTurn > 0.5 && board.turn == EnemyTurn then
+                        { nBoard | enemies = nBoard.enemies |> List.map checkEnemyDone }
+
+                    else if board.timeTurn > 0.5 && board.turn == TurretTurn then
+                        { nBoard | heroes = nBoard.heroes |> List.map checkTurretDone }
+
+                    else
+                        nBoard
             in
-            if nboard.time > 0.5 && board.turn == EnemyTurn then
-                { nboard | time = 0 }
-                    |> actionEnemy
-                    |> checkTurn
+            updatedBoard |> checkCurrentEnemy |> updateEnemyAttackable |> checkTurn
 
-            else if nboard.time > 1 && board.turn == AttackInProgress || nboard.time > 1 && board.turn == MovingInProgress then
-                { nboard | heroes = List.map returnHeroToWaiting board.heroes, enemies = List.map returnEnemyToWaiting board.enemies, turn = PlayerTurn, time = 0 }
-
-            else
-                nboard
+                
 
         Attack pos critical ->
             checkAttack board pos critical
@@ -65,6 +69,24 @@ updateBoard msg board =
         Kill False ->
             { board | enemies = [] }
 
+        Select hero ->
+            case board.turn of
+                PlayerTurn ->
+                    if board.boardState == NoActions then
+                        selectHero board hero
+
+                    else
+                        board
+
+                TurretTurn ->
+                    board
+
+                EnemyTurn ->
+                    board
+
+        Move pos ->
+            moveHero board pos
+
         _ ->
             board
 
@@ -72,42 +94,40 @@ updateBoard msg board =
 returnHeroToWaiting : Hero -> Hero
 returnHeroToWaiting hero =
     case hero.state of
-        Attacked _ ->
-            { hero | state = Waiting }
-
-        Attacking ->
-            { hero | state = Waiting }
-
-        Moving ->
-            { hero | state = Waiting }
+        Waiting ->
+            hero
 
         _ ->
-            hero
+            { hero | state = Waiting }
 
 
 returnEnemyToWaiting : Enemy -> Enemy
 returnEnemyToWaiting enemy =
     case enemy.state of
-        Attacked _ ->
-            { enemy | state = Waiting }
-
-        Attacking ->
-            { enemy | state = Waiting }
-
-        Moving ->
-            { enemy | state = Waiting }
+        Waiting ->
+            enemy
 
         _ ->
-            enemy
+            { enemy | state = Waiting }
 
 
 turnEnemy : Board -> Board
 turnEnemy board =
     { board
         | turn = EnemyTurn
-        , enemies = List.map resetSteps board.enemies
+        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
         , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
-        , time = 0
+        , timeTurn = 0
+    }
+
+
+turnTurret : Board -> Board
+turnTurret board =
+    { board
+        | turn = TurretTurn
+        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
+        , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
+        , timeTurn = 0
     }
 
 
@@ -149,9 +169,26 @@ resetEnergy hero =
         Engineer ->
             { hero | energy = 5 }
 
+        Turret ->
+            { hero | energy = 0 }
+
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
     { hero | selected = False }
+
+
+checkCurrentEnemy : Board -> Board
+checkCurrentEnemy board =
+    let
+        ( _, undoneEnemy ) =
+            List.partition .done board.enemies
+    in
+    case undoneEnemy of
+        [] ->
+            { board | cntEnemy = 0 }
+
+        enemy :: _ ->
+            { board | cntEnemy = enemy.indexOnBoard }
 
 
 checkTurn : Board -> Board
@@ -159,58 +196,30 @@ checkTurn board =
     if List.all (\enemy -> enemy.done) board.enemies then
         { board | turn = PlayerTurn }
 
+    else if List.all (\turret -> turret.energy == -6) (List.filter (\x -> x.class == Turret) board.heroes) then
+        { board | turn = EnemyTurn } 
     else
         board
 
 
-moveHero : Board -> Dir -> Board
-moveHero board dir =
+moveHero : Board -> Pos -> Board
+moveHero board clickpos =
     let
-        dr =
-            case dir of
-                W ->
-                    ( -1, 0 )
-
-                E ->
-                    ( 0, -1 )
-
-                D ->
-                    ( 1, -1 )
-
-                X ->
-                    ( 1, 0 )
-
-                Z ->
-                    ( 0, 1 )
-
-                A ->
-                    ( -1, 1 )
-
-                _ ->
-                    ( 0, 0 )
-
-        ( nboard, ind ) =
+        ( nboard, index ) =
             case selectedHero board.heroes of
                 Nothing ->
                     ( board, Nothing )
 
                 Just hero ->
-                    let
-                        currEnergy =
-                            hero.energy
-
-                        newPos =
-                            vecAdd hero.pos dr
-                    in
-                    if legalHeroMove board hero dr && hero.energy > 1 then
-                        ( { board | heroes = { hero | pos = newPos, energy = currEnergy - 2, state = Moving } :: unselectedHero board.heroes, turn = MovingInProgress }
+                    if distance clickpos hero.pos == 1 && not (List.member clickpos (unMoveable board)) && hero.energy >= 2 then
+                        ( { board | heroes = { hero | pos = clickpos, energy = hero.energy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
                         , Just hero.indexOnBoard
                         )
 
                     else
-                        ( board, Just hero.indexOnBoard )
+                        ( board, Nothing )
     in
-    case ind of
+    case index of
         Nothing ->
             board
 
@@ -233,9 +242,17 @@ checkHeroItem hero board =
     in
     case chosenItem.itemType of
         HealthPotion ->
+            let
+                nhealth =
+                    min (hero.health + 10) hero.maxHealth
+
+                healthDif =
+                    nhealth - hero.maxHealth
+            in
             { board
-                | heroes = { hero | health = hero.health + 10 } :: otherHeroes
+                | heroes = { hero | health = nhealth, state = TakingHealth healthDif } :: otherHeroes
                 , item = otherItems
+                , boardState = HeroHealth
             }
 
         Gold n ->
@@ -246,8 +263,9 @@ checkHeroItem hero board =
 
         EnergyPotion ->
             { board
-                | heroes = { hero | energy = hero.energy + 2 } :: otherHeroes
+                | heroes = { hero | energy = hero.energy + 2, state = TakingEnergy } :: otherHeroes
                 , item = otherItems
+                , boardState = HeroEnergy
             }
 
         Buff ->
@@ -259,14 +277,6 @@ checkHeroItem hero board =
 
 
 -- To be rewritten later
-
-
-legalHeroMove : Board -> Hero -> Pos -> Bool
-legalHeroMove board hero dr =
-    List.member (vecAdd hero.pos dr) board.map && not (List.member (vecAdd hero.pos dr) (List.map .pos board.obstacles ++ List.map .pos board.heroes ++ List.map .pos board.enemies))
-
-
-
 {-
    legalEnemyMove : Board -> List Hero -> Enemy -> Bool
    legalEnemyMove board hero_list enemy =
@@ -274,11 +284,11 @@ legalHeroMove board hero dr =
 -}
 
 
-selectHero : Board -> Int -> Board
-selectHero board index =
+selectHero : Board -> Hero -> Board
+selectHero board clickedhero =
     let
         ( wantedHero, unwantedHero ) =
-            List.partition (\hero -> hero.indexOnBoard == index) board.heroes
+            List.partition ((==) clickedhero) board.heroes
 
         newwantedHero =
             List.map (\hero -> { hero | selected = True }) wantedHero
@@ -286,7 +296,12 @@ selectHero board index =
         newunwantedHero =
             List.map (\hero -> { hero | selected = False }) unwantedHero
     in
-    { board | heroes = newwantedHero ++ newunwantedHero }
+    case clickedhero.class of
+        Turret ->
+            board
+        
+        _ ->
+            { board | heroes = newwantedHero ++ newunwantedHero }
 
 
 spawnEnemies : List Class -> List Pos -> Board -> Board
@@ -354,3 +369,75 @@ spawnCrate pos itype board =
        else
            model
 -}
+
+actionTurret : Board -> Board
+actionTurret board =
+    let
+        undoneTurret =
+            List.filter (\turret -> ((turret.class == Turret) && (turret.energy == 0))) board.heroes
+
+        selectboard =
+            case undoneTurret of
+                [] ->
+                    board
+
+                turret :: _ ->
+                    let 
+                        attackedenemy =  heroTurretAttack turret board
+
+                        in
+                        if (attackedenemy /= board.enemies) then
+                            {board | enemies = attackedenemy |> List.filter (\x -> x.health > 0)
+                            , heroes = {turret| energy = -3, state = Attacking} :: (listDifference board.heroes [turret])
+                            , boardState = HeroAttack
+                            , attackable = attackedByHeroArcherRange board turret.pos
+                            }
+                            
+                        else
+                            {board | heroes = {turret| energy = -3, state = Waiting} :: (listDifference board.heroes [turret])
+                            , attackable = attackedByHeroArcherRange board turret.pos}
+    in
+    selectboard
+
+
+checkCurrentTurret : Board -> Board
+checkCurrentTurret board =
+    let
+        undoneTurret =
+            List.filter (\turret -> ((turret.class == Turret) && (turret.energy /= -6))) board.heroes
+    in
+    case undoneTurret of
+        [] ->
+            { board | cntTurret = 0 }
+
+        enemy :: _ ->
+            { board | cntTurret = enemy.indexOnBoard }
+
+updateTurretAttackable : Board -> Board
+updateTurretAttackable board =
+    let
+        maybeTurret =
+            List.head (List.filter (\x -> x.indexOnBoard == board.cntTurret) board.heroes)
+    in
+    if board.turn == TurretTurn then
+        case maybeTurret of
+            Nothing ->
+                { board | attackable = [] }
+
+            Just turret ->
+                let
+                    realattackRange =
+                        attackedByHeroArcherRange board turret.pos
+                in
+                { board | attackable = realattackRange }
+
+    else
+        board
+
+
+checkTurretDone : Hero -> Hero
+checkTurretDone turret =
+    if turret.energy == -3 && turret.state == Waiting && turret.class == Turret then
+        { turret | energy = -6 }
+    else
+        turret

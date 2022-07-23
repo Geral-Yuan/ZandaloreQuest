@@ -20,6 +20,22 @@ type GameMode
     | BoardGame
     | Logo
     | Tutorial Int
+    | Dialog Task
+
+
+type Task
+    = MeetElder
+    | GoToShop
+    | Level Int
+      -- | Beaten (to be added later)
+    | GoToDungeon
+
+
+type Scene
+    = CastleScene
+    | ShopScene
+    | DungeonScene
+    | Dungeon2Scene
 
 
 type alias Pos =
@@ -36,9 +52,19 @@ type Critical
 
 type Turn
     = PlayerTurn
+    | TurretTurn
     | EnemyTurn
-    | AttackInProgress
-    | MovingInProgress
+
+
+type BoardState
+    = NoActions
+    | EnemyAttack
+    | TurretAttack
+    | HeroAttack
+    | HeroMoving
+    | HeroHealth
+    | HeroEnergy
+    | Healing
 
 
 
@@ -52,6 +78,7 @@ type Class
     | Healer
     | Mage
     | Engineer
+    | Turret
 
 
 type ObstacleType
@@ -72,6 +99,9 @@ type HeroState
     | Attacking
     | Attacked Int
     | Moving
+    | TakingHealth Int
+    | TakingEnergy
+    | GettingHealed Int
 
 
 type alias Obstacle =
@@ -90,6 +120,7 @@ type alias Item =
 type alias Hero =
     { class : Class
     , pos : Pos
+    , maxHealth : Int
     , health : Int
     , damage : Int
     , energy : Int
@@ -102,12 +133,27 @@ type alias Hero =
 type alias Enemy =
     { class : Class
     , pos : Pos
+    , maxHealth : Int
     , health : Int
     , damage : Int
     , steps : Int
     , done : Bool
     , state : HeroState
+    , justAttack : Bool
     , indexOnBoard : Int --give an index to the enemies on the board
+    }
+
+
+type alias NPC =
+    { scene : Scene
+    , name : String
+    , dialogue : List String
+    , image : String
+    , faceDir : Dir
+    , position : ( Float, Float )
+    , size : ( Float, Float )
+    , beaten : Bool
+    , talkRange : ( ( Float, Float ), ( Float, Float ) )
     }
 
 
@@ -174,38 +220,60 @@ subsubneighbour =
         |> unionList
 
 
-map : List Pos
-map =
-    List.concat
-        (List.map2 pairRange
-            (List.range 1 9)
-            [ ( 5, 9 )
-            , ( 4, 9 )
-            , ( 3, 9 )
-            , ( 2, 9 )
-            , ( 1, 9 )
-            , ( 1, 8 )
-            , ( 1, 7 )
-            , ( 1, 6 )
-            , ( 1, 5 )
-            ]
-        )
+map : Int -> List Pos
+map level =
+    case level of
+        0 ->
+            List.concat
+                (List.map2 pairRange
+                    (List.range 1 9)
+                    [ ( 5, 9 )
+                    , ( 4, 9 )
+                    , ( 3, 9 )
+                    , ( 2, 9 )
+                    , ( 1, 9 )
+                    , ( 1, 8 )
+                    , ( 1, 7 )
+                    , ( 1, 6 )
+                    , ( 1, 5 )
+                    ]
+                )
+                |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
+
+        _ ->
+            List.concat
+                (List.map2 pairRange
+                    (List.range 1 9)
+                    [ ( 5, 9 )
+                    , ( 4, 9 )
+                    , ( 3, 9 )
+                    , ( 2, 9 )
+                    , ( 1, 9 )
+                    , ( 1, 8 )
+                    , ( 1, 7 )
+                    , ( 1, 6 )
+                    , ( 1, 5 )
+                    ]
+                )
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 8 0 True Waiting index
+            Enemy Warrior pos 80 80 8 0 True Waiting False index
 
         Archer ->
-            Enemy Archer pos 40 10 0 True Waiting index
+            Enemy Archer pos 40 40 10 0 True Waiting False index
 
         Assassin ->
-            Enemy Assassin pos 40 10 0 True Waiting index
+            Enemy Assassin pos 40 40 10 0 True Waiting False index
+
+        Healer ->
+            Enemy Healer pos 50 50 5 0 True Waiting False index
 
         _ ->
-            Enemy Mage pos 50 6 0 True Waiting index
+            Enemy Mage pos 50 50 6 0 True Waiting False index
 
 
 
@@ -351,27 +419,8 @@ findChosenHero ( x, y ) =
         (row - 1) * 3 + column
 
 
-findInfoBoard : ( Float, Float ) -> Int
-findInfoBoard ( x, y ) =
-    if x > 1580 && x < 1980 then
-        if y > 25 && y < 145 then
-            1
-
-        else if y > 175 && y < 295 then
-            2
-
-        else if y > 325 && y < 445 then
-            3
-
-        else
-            0
-
-    else
-        0
-
-
-offset : Hero -> Float
-offset hero =
+offsetHero : Hero -> Float
+offsetHero hero =
     if hero.selected then
         50
 
@@ -379,9 +428,18 @@ offset hero =
         0
 
 
-findHexagon : ( Float, Float ) -> Maybe Pos
-findHexagon targetPos =
-    List.head (List.filter (inHexagon targetPos) map)
+offsetEnemy : Bool -> Float
+offsetEnemy selected =
+    if selected then
+        50
+
+    else
+        0
+
+
+findHexagon : ( Float, Float ) -> Int -> Maybe Pos
+findHexagon targetPos level =
+    List.head (List.filter (inHexagon targetPos) (map level))
 
 
 inHexagon : ( Float, Float ) -> Pos -> Bool
@@ -405,25 +463,3 @@ distance ( x1, y1 ) ( x2, y2 ) =
 leastdistance : List Pos -> Pos -> Maybe Int
 leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
-
-
-isWarriorAttackRange : Pos -> Pos -> Bool
-isWarriorAttackRange attacked me =
-    let
-        ( x, y ) =
-            attacked
-    in
-    if
-        List.member me
-            [ ( x + 1, y )
-            , ( x, y + 1 )
-            , ( x + 1, y - 1 )
-            , ( x, y - 1 )
-            , ( x - 1, y )
-            , ( x - 1, y + 1 )
-            ]
-    then
-        True
-
-    else
-        False

@@ -7,6 +7,101 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+
+## [m1.45] -- 2022-7-23
+
+### Added
+
+- Turret class for hero, it's similar to a fixed and automatic archer
+
+### Changed
+
+- change the engineer skill from placing boxes to turret
+- separate shop-related functions
+
+### Fixed
+
+- fix health exceeding maxhealth
+- fix different time interval of attack range display of turret and enemy
+## [m1.44] -- 2022-7-22
+
+### Changed
+
+- Left click hero on the board to select hero
+- Left click hexagon in movable range to move hero
+- Right click hexagon in attackable range to attack
+- Right click hexagon in skillable range to use skill
+- Adjust the message of left and right click to simplify it
+
+## [m1.43] -- 2022-7-22 
+### Added 
+- update Tutorial 
+- viewTutorial.elm file 
+- changed viewTutorial function 
+- dialogbox.png
+- dialog scene
+
+### Changed 
+- Tutorial in update.elm 
+
+## [m1.42] -- 2022-7-21
+
+### Added
+
+- Task system with task board and current task shown on the board
+
+- Tutorial level
+
+- Define NPC Type and write functions for view of NPCs
+
+- Extend the reachable range of the RPG character
+
+- Add many new NPCs on the different scenes
+
+## [m1.41] -- 2022-7-18
+
+### Added
+
+- Add healer enemy will try to find the nearest position to heal another enemy. Otherwise, it will have the same action like the enemy warrior. (i.e. find the nearest hero and move to attack)
+## [m1.40] -- 2022-7-18
+
+### Added
+
+- Add the attackable range for enemies
+
+- Add health bar over the head of heroes and enemies on the board.
+
+### Changed
+
+- Improve the display of the information board of heroes in the board game
+
+- Improve the display of the information board of enemies in the board game
+
+- Adjust the position of the EndTurn button and Turn information
+
+- Adjust the duration of the enemy animation
+
+## [m1.39] -- 2022-7-17
+
+### Added
+- Animation for healing
+- Animation for items like picking up the health or energy potions
+- Animation when heroes or enemies are getting attacked 
+- Animation for the game board
+
+### Fixed
+- viewBug for tutorial system
+- formatting
+- bug for turn and time 
+- 4 heroes in a list bug for smartmage function 
+
+## [m1.38] -- 2022-7-17
+
+### Fixed
+
+- image lost in NoItem
+
+
 ## [m1.37] -- 2022-7-16
 
 ### Changed

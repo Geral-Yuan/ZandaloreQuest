@@ -1,4 +1,4 @@
-module ShortestPath exposing (leastArcherPath, leastWarriorPath, leastMagePath)
+module ShortestPath exposing (leastArcherPath, leastMagePath, leastWarriorPath, leastHealerPath)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange)
 import Board exposing (Board)
@@ -13,6 +13,7 @@ type alias Spa_row =
     }
 
 
+
 {- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
    Remark : the output path does not include the begin Pos
 
@@ -25,7 +26,8 @@ type alias Spa_row =
 
 leastWarriorPath : Enemy -> Board -> List Pos
 leastWarriorPath my_enemy board =
-    leastPathHelper my_enemy board ( unionList (List.map (\hero -> List.map (vecAdd hero.pos) neighbour) board.heroes))
+    leastPathHelper my_enemy board (unionList (List.map (\hero -> List.map (vecAdd hero.pos) neighbour) board.heroes))
+
 
 
 {- Output the archer shortest path towards the nearest hero in the form of (List Pos).
@@ -40,7 +42,8 @@ leastWarriorPath my_enemy board =
 
 leastArcherPath : Enemy -> Board -> List Pos
 leastArcherPath my_enemy board =
-    leastPathHelper my_enemy board ( unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)))
+    leastPathHelper my_enemy board (unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)))
+
 
 
 {- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
@@ -55,14 +58,19 @@ leastArcherPath my_enemy board =
 
 leastMagePath : Enemy -> Board -> List Pos
 leastMagePath my_enemy board =
-    leastPathHelper my_enemy board ( unionList (List.map (attackedByMageRange) (List.map .pos board.heroes)))
+    leastPathHelper my_enemy board (unionList (List.map attackedByMageRange (List.map .pos board.heroes)))
+
+
+leastHealerPath : Enemy -> Board -> List Pos
+leastHealerPath my_enemy board =
+    leastPathHelper my_enemy board (unionList (List.map (\enemy -> List.map (vecAdd enemy.pos) neighbour) (listDifference board.enemies [my_enemy])))
 
 
 {- A useful helper to find the shortest path from my_enemy's position towards a list of end positions
 
-    "my_enemy" is the enemy that is to move
+   "my_enemy" is the enemy that is to move
 
-    "board" is the current board
+   "board" is the current board
 
 -}
 
@@ -70,15 +78,23 @@ leastMagePath my_enemy board =
 leastPathHelper : Enemy -> Board -> List Pos -> List Pos
 leastPathHelper my_enemy board tgt_list =
     let
-        enemy_list = board.enemies
-        hero_list = board.heroes
-        barrier_list = board.obstacles
-        whole_map = board.map
-        unmoveable = List.map .pos (enemy_list)
-                    ++ List.map .pos (hero_list)
-                    ++ List.map .pos (barrier_list)
+        enemy_list =
+            board.enemies
+
+        hero_list =
+            board.heroes
+
+        barrier_list =
+            board.obstacles
+
+        whole_map =
+            board.map
+
+        unmoveable =
+            List.map .pos enemy_list
+                ++ List.map .pos hero_list
+                ++ List.map .pos barrier_list
     in
-    
     if List.member my_enemy.pos tgt_list then
         []
 
@@ -89,7 +105,8 @@ leastPathHelper my_enemy board tgt_list =
 
             _ ->
                 shortestPath whole_map unmoveable my_enemy.pos tgt_list
-                
+
+
 
 {- Output the shortest path in the form of (List Pos).
    Remark : the output path does not include the begin Pos
@@ -131,8 +148,9 @@ shortPathFind unmoveable begin end_list ( ( visited, table ), path ) =
         ( n_table, n_visited ) =
             updateTable unmoveable visited chosen table
 
-        found_list = List.filter (\x -> (isFindEndList end_list x)) table
-                    |> List.map .pos
+        found_list =
+            List.filter (\x -> isFindEndList end_list x) table
+                |> List.map .pos
     in
     if not (List.isEmpty found_list) then
         case found_list of
@@ -315,4 +333,3 @@ pathLength2Spa_row leng table visited =
 
         Nothing ->
             { pos = ( 999, 999 ), pre_pos = Nothing, path_length = 999 }
-
