@@ -180,6 +180,18 @@ updateTutorial msg k model =
                 _ ->
                     ( model, Cmd.none )
 
+        7 ->
+            case msg of
+                EndTurn ->
+                    { model | mode = Tutorial 8, board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget }
+                        |> checkMouseMove msg
+                        |> checkHit msg
+                        |> randomEnemies
+                        |> checkEnd
+
+                _ ->
+                    ( model, Cmd.none )
+
         _ ->
             { model | board = updateBoard msg model.board |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
                 |> checkMouseMove msg

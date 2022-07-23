@@ -39,6 +39,9 @@ viewTutorialScene k model =
         6 ->
             viewTutorial6 model
 
+        7 ->
+            viewTutorial7 model
+
         _ ->
             viewTutorial3 model
 
@@ -182,6 +185,25 @@ viewTutorial6 model =
             [ shapeHelper 100 100 1010 345 "blue" ( 5, 4 )
             ]
         , dialogHelper 700 20 580 150 50 "blue" "Right click on the crate to attack. A random item (health/energy potion or gold) will be dropped."
+        ]
+
+
+viewTutorial7 : Model -> Html Msg
+viewTutorial7 model =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ shapeHelper 100 190 1690 595 "blue" ( 0, 0 )
+            ]
+        , dialogHelper 700 20 580 150 50 "blue" "There is a chance that critical damage will be dealt. Click the end turn button to end your turn."
         ]
 
 
