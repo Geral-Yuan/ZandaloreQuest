@@ -3,6 +3,7 @@ module ViewOthers exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
+import DetectMouse exposing (..)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
@@ -25,8 +26,8 @@ dialogHelper width height left top fontSize color textIn =
         [ text textIn ]
 
 
-shapeHelper : Float -> Float -> Float -> Float -> String -> Svg Msg
-shapeHelper height width x y color =
+shapeHelper : Float -> Float -> Float -> Float -> String -> Pos -> Svg Msg
+shapeHelper height width x y color pos =
     Svg.rect
         [ SvgAttr.stroke color
         , SvgAttr.strokeWidth "5"
@@ -35,6 +36,8 @@ shapeHelper height width x y color =
         , SvgAttr.fillOpacity "0"
         , SvgAttr.x (toString x)
         , SvgAttr.y (toString y)
+        , onClick (Move pos)
+        , onContentMenu (Hit pos)
         ]
         []
 

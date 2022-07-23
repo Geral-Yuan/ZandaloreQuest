@@ -27,6 +27,9 @@ viewTutorialScene k model =
         2 ->
             viewTutorial2 model
 
+        3 ->
+            viewTutorial3 model
+
         _ ->
             viewTutorial3 model
 
@@ -44,9 +47,9 @@ viewTutorial1 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper 145 430 15 15 "blue"
-            , shapeHelper 450 440 1555 15 "blue"
-            , shapeHelper 100 100 950 450 "blue"
+            [ shapeHelper 145 430 15 15 "blue" ( 0, 0 )
+            , shapeHelper 450 440 1555 15 "blue" ( 0, 0 )
+            , shapeHelper 100 100 950 450 "blue" ( 0, 0 )
             ]
         , dialogHelper 600 20 20 170 50 "blue" "Enemies Information (Red)"
         , dialogHelper 400 20 1150 50 50 "blue" "Your heroes' Information (Blue)"
@@ -68,7 +71,7 @@ viewTutorial2 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper 100 100 585 450 "blue"
+            [ shapeHelper 100 100 585 450 "blue" ( 0, 0 )
 
             -- , Svg.rect
             --     [ SvgAttr.stroke "blue"
@@ -109,9 +112,9 @@ viewTutorial3 model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper 100 100 420 450 "blue"
+            [ shapeHelper 100 100 705 450 "blue" ( 3, 7 )
             ]
-        , dialogHelper 400 20 500 250 50 "blue" "Left click on Warrior to control it"
+        , dialogHelper 700 30 500 150 50 "blue" "Blue hexagons denote the movable range of the hero. Left click to move into the rectangle."
         ]
 
 

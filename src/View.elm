@@ -14,11 +14,10 @@ import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
 import ViewChoose exposing (viewHeroChoose)
-import ViewShop exposing (viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
+import ViewShop exposing (viewShop, viewShopChoose)
 import ViewTutorial exposing (..)
-import ViewShop exposing (viewShop)
 
 
 view : Model -> Html Msg
@@ -209,7 +208,7 @@ viewTutorial k model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                --                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -429,6 +428,7 @@ viewCell board pos =
                 , onContentMenu (Hit pos)
                 ]
                 []
+
         else
             Svg.polygon
                 [ SvgAttr.fill "rgb(132,112,255)"
