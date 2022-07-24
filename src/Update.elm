@@ -52,6 +52,8 @@ update msg model =
                 BuyingItems ->
                     updateShop msg model
 
+                UpgradePage ->
+                    updateShop msg model
                 _ ->
                     updateRPG msg model
                         |> updateCharacter msg
@@ -326,6 +328,9 @@ updateRPG msg model =
                 Shop ->
                     if x > 740 && x < 930 && y > 830 then
                         ( { model | mode = Castle, character = { character | width = 64, height = 64, pos = ( 1632, 802 ), speed = 500 } }, Cmd.none )
+
+                    else if y < 628 then
+                        ( { model | mode = BuyingItems}, Cmd.none )
 
                     else
                         ( model, Cmd.none )

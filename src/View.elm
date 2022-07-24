@@ -19,6 +19,7 @@ import ViewOthers exposing (..)
 import ViewScenes exposing (..)
 import ViewTutorial exposing (..)
 import ViewShop exposing (viewShop)
+import ViewShop exposing (viewUpgradePage)
 
 
 view : Model -> Html Msg
@@ -43,6 +44,9 @@ view model =
 
                 BuyingItems ->
                     viewShopChoose model
+
+                UpgradePage ->
+                    viewUpgradePage model    --to be revised
 
                 Dungeon ->
                     viewDungeon model

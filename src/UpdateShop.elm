@@ -3,7 +3,7 @@ module UpdateShop exposing (updateShop)
 import Data exposing (..)
 import Message exposing (Msg(..))
 import Model exposing (Model)
---import Random exposing (Generator)
+import Random 
 
 updateShop : Msg -> Model -> ( Model, Cmd Msg )
 updateShop msg model =
@@ -33,8 +33,47 @@ updateShop msg model =
             else
                 ( model, Cmd.none )
 
+        LuckyDraw ->
+            if model.bag.coins > 99 then
+                ( { model | bag = { newBag | coins = currCoins - 100 }}, Random.generate GetNewHero (drawHero model) )
+
+            else
+                ( model, Cmd.none )
+
+        GetNewHero newclass ->
+            let
+                newhero = 
+                    case newclass of
+                        Turret -> 
+                            model.indexedheroes
+
+                        _ ->
+                            List.filter (\(hero, _) -> hero.class == newclass ) allSampleHeroes
+
+            in
+            ( { model | indexedheroes = newhero ++ model.indexedheroes}, Cmd.none )
+            
+        EnterUpgrade ->
+            ( { model | mode = UpgradePage }, Cmd.none )
+
+        LevelUp hero->
+            ( { model | bag = { newBag | coins = currCoins - 50 }
+            , indexedheroes = (hero |> updateDamage |> updateHealth) :: (listDifference model.indexedheroes [hero]) }, Cmd.none )
+
+
         ExitShop ->
-            ( { model | mode = Shop }, Cmd.none )
+            case model.mode of 
+                UpgradePage ->
+                    ( { model | mode = BuyingItems }, Cmd.none )
+
+                _ ->
+                    ( { model | mode = Shop }, Cmd.none )
+
+        Key Left False -> 
+            ( { model | upgradePageIndex = (modBy 6 (model.upgradePageIndex - 2)) + 1 }, Cmd.none )
+
+        Key Right False ->
+            ( { model | upgradePageIndex = (modBy 6 (model.upgradePageIndex)) + 1 }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -68,3 +107,17 @@ updateDamage hero =
             currHero.damage
     in
     ( { currHero | damage = currDamage + 2 }, index )
+
+
+
+drawHero : Model -> Random.Generator Class
+drawHero model=
+    let
+        (_, nothave) = List.partition (\x -> List.member x (List.map (\(hero, _) -> hero.class) model.indexedheroes) ) [Warrior, Archer, Mage, Assassin, Healer, Engineer]
+    in
+    case nothave of
+            [] ->
+                Random.uniform Turret []
+            
+            class :: others ->
+                Random.uniform class others

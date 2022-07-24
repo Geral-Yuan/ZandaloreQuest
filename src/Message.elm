@@ -27,5 +27,9 @@ type Msg
     | Talk Bool
     | UpgradeHealth
     | UpgradeDamage
+    | LuckyDraw
+    | GetNewHero Class
+    | EnterUpgrade
+    | LevelUp (Hero, Int)
     | ExitShop
     | ViewTutorial
