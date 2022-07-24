@@ -26,6 +26,7 @@ type GameMode
 
 type Task
     = MeetElder
+    | FinishTutorial
     | GoToShop
     | Level Int
       -- | Beaten (to be added later)

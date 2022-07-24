@@ -1,6 +1,6 @@
-module UpdateBoard exposing (..)
+module UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
 
-import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable, attackedByHeroArcherRange)
+import Action exposing (attackedByHeroArcherRange, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
 import Board exposing (Board)
 import Data exposing (..)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
@@ -8,8 +8,8 @@ import HeroAttack exposing (checkAttack, heroTurretAttack)
 import Message exposing (Msg(..))
 
 
-updateBoard : Msg -> Board -> Board
-updateBoard msg board =
+updateBoardAnimation : Msg -> Board -> Board
+updateBoardAnimation msg board =
     case msg of
         Tick elapsed ->
             let
@@ -39,7 +39,6 @@ updateBoard msg board =
                         { nBoard | timeTurn = 0, enemies = nBoard.enemies |> List.map checkEnemyDone }
                             |> actionEnemy
 
-
                     else if board.boardState == NoActions && nBoard.timeTurn > 1.0 && board.turn == TurretTurn then
                         { nBoard | timeTurn = 0 }
                             |> actionTurret
@@ -55,8 +54,13 @@ updateBoard msg board =
             in
             updatedBoard |> checkCurrentEnemy |> updateEnemyAttackable |> checkTurn
 
-                
+        _ ->
+            board
 
+
+updateBoardOthers : Msg -> Board -> Board
+updateBoardOthers msg board =
+    case msg of
         Attack pos critical ->
             checkAttack board pos critical
 
@@ -85,7 +89,19 @@ updateBoard msg board =
                     board
 
         Move pos ->
-            moveHero board pos
+            case board.turn of
+                PlayerTurn ->
+                    if board.boardState == NoActions then
+                        moveHero board pos
+
+                    else
+                        board
+
+                TurretTurn ->
+                    board
+
+                EnemyTurn ->
+                    board
 
         _ ->
             board
@@ -109,16 +125,6 @@ returnEnemyToWaiting enemy =
 
         _ ->
             { enemy | state = Waiting }
-
-
-turnEnemy : Board -> Board
-turnEnemy board =
-    { board
-        | turn = EnemyTurn
-        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
-        , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
-        , timeTurn = 0
-    }
 
 
 turnTurret : Board -> Board
@@ -172,6 +178,7 @@ resetEnergy hero =
         Turret ->
             { hero | energy = 0 }
 
+
 deselectHeroes : Hero -> Hero
 deselectHeroes hero =
     { hero | selected = False }
@@ -197,7 +204,8 @@ checkTurn board =
         { board | turn = PlayerTurn }
 
     else if List.all (\turret -> turret.energy == -6) (List.filter (\x -> x.class == Turret) board.heroes) then
-        { board | turn = EnemyTurn } 
+        { board | turn = EnemyTurn }
+
     else
         board
 
@@ -299,7 +307,7 @@ selectHero board clickedhero =
     case clickedhero.class of
         Turret ->
             board
-        
+
         _ ->
             { board | heroes = newwantedHero ++ newunwantedHero }
 
@@ -370,11 +378,12 @@ spawnCrate pos itype board =
            model
 -}
 
+
 actionTurret : Board -> Board
 actionTurret board =
     let
         undoneTurret =
-            List.filter (\turret -> ((turret.class == Turret) && (turret.energy == 0))) board.heroes
+            List.filter (\turret -> (turret.class == Turret) && (turret.energy == 0)) board.heroes
 
         selectboard =
             case undoneTurret of
@@ -382,20 +391,23 @@ actionTurret board =
                     board
 
                 turret :: _ ->
-                    let 
-                        attackedenemy =  heroTurretAttack turret board
-
-                        in
-                        if (attackedenemy /= board.enemies) then
-                            {board | enemies = attackedenemy |> List.filter (\x -> x.health > 0)
-                            , heroes = {turret| energy = -3, state = Attacking} :: (listDifference board.heroes [turret])
+                    let
+                        attackedenemy =
+                            heroTurretAttack turret board
+                    in
+                    if attackedenemy /= board.enemies then
+                        { board
+                            | enemies = attackedenemy |> List.filter (\x -> x.health > 0)
+                            , heroes = { turret | energy = -3, state = Attacking } :: listDifference board.heroes [ turret ]
                             , boardState = HeroAttack
                             , attackable = attackedByHeroArcherRange board turret.pos
-                            }
-                            
-                        else
-                            {board | heroes = {turret| energy = -3, state = Waiting} :: (listDifference board.heroes [turret])
-                            , attackable = attackedByHeroArcherRange board turret.pos}
+                        }
+
+                    else
+                        { board
+                            | heroes = { turret | energy = -3, state = Waiting } :: listDifference board.heroes [ turret ]
+                            , attackable = attackedByHeroArcherRange board turret.pos
+                        }
     in
     selectboard
 
@@ -404,7 +416,7 @@ checkCurrentTurret : Board -> Board
 checkCurrentTurret board =
     let
         undoneTurret =
-            List.filter (\turret -> ((turret.class == Turret) && (turret.energy /= -6))) board.heroes
+            List.filter (\turret -> (turret.class == Turret) && (turret.energy /= -6)) board.heroes
     in
     case undoneTurret of
         [] ->
@@ -412,6 +424,7 @@ checkCurrentTurret board =
 
         enemy :: _ ->
             { board | cntTurret = enemy.indexOnBoard }
+
 
 updateTurretAttackable : Board -> Board
 updateTurretAttackable board =
@@ -439,5 +452,6 @@ checkTurretDone : Hero -> Hero
 checkTurretDone turret =
     if turret.energy == -3 && turret.state == Waiting && turret.class == Turret then
         { turret | energy = -6 }
+
     else
         turret
