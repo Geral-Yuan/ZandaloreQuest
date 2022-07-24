@@ -100,7 +100,7 @@ textTask model =
             "Go to the shop and get the free Mage!"
 
         Level k ->
-            "Go to talk with NPC " ++ toString k ++ " and beat him!"
+            "Talk to a skull knight " ++ toString k ++ " and destroy him!"
 
         -- Maybe a name for each NPC later
         _ ->

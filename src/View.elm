@@ -14,11 +14,10 @@ import Svg.Attributes as SvgAttr
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (..)
 import ViewChoose exposing (viewHeroChoose)
-import ViewShop exposing (viewShopChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
+import ViewShop exposing (viewShop, viewShopChoose)
 import ViewTutorial exposing (..)
-import ViewShop exposing (viewShop)
 
 
 view : Model -> Html Msg
@@ -108,8 +107,48 @@ viewDialogMatch task =
         MeetElder ->
             viewDialogElder
 
+        FinishTutorial ->
+            viewFinishTutorial
+
         _ ->
             viewDialogGeneral
+
+
+viewFinishTutorial : Html Msg
+viewFinishTutorial =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "350px"
+            ]
+            [ img [ src "./assets/image/MainCharacter.png", height 400, width 480 ] []
+            ]
+        , div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "1180px"
+            , HtmlAttr.style "transform" "scaleX(-1)"
+            ]
+            [ img [ src "./assets/image/EvilNPC.png", height 400, width 480 ] []
+            ]
+        , div
+            [ HtmlAttr.style "width" "1300px"
+            , HtmlAttr.style "height" "450px"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "370px"
+            , HtmlAttr.style "top" "560px"
+            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "font-size" "50px"
+            ]
+            [ text "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click Enter to countinue." ]
+        ]
 
 
 viewDialogElder : Html Msg
@@ -204,12 +243,12 @@ viewTutorial k model =
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
         ]
-        ([ Svg.svg
+        (Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                --                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -222,16 +261,16 @@ viewTutorial k model =
                 ++ List.concatMap viewItem model.board.item
              --++ viewLines model.board
             )
-         , endTurnButton
-         , viewCritical model.board
-         , viewBoardCoin model.board
-         , viewLevel model.level
-         , viewTurn model
-         , viewTutorialScene k model
+            :: viewTutorialScene model k
+            ++ [ endTurnButton
+               , viewCritical model.board
+               , viewBoardCoin model.board
+               , viewLevel model.level
+               , viewTurn model
 
-         --  , viewClickPosition model
-         --  , viewTips
-         ]
+               --  , viewClickPosition model
+               --  , viewTips
+               ]
             ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
             ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
@@ -269,7 +308,7 @@ viewBoard model =
             , SvgAttr.height "100%"
             ]
             (viewMap model.board
-                --                ++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
@@ -429,6 +468,7 @@ viewCell board pos =
                 , onContentMenu (Hit pos)
                 ]
                 []
+
         else
             Svg.polygon
                 [ SvgAttr.fill "rgb(132,112,255)"
