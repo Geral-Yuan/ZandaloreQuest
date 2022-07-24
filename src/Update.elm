@@ -127,7 +127,7 @@ checkChooseClick msg model =
                 index =
                     findChosenHero clickpos
             in
-            if index > 0 && index <= List.length model.indexedheroes then
+            if index > 0 && index <= 6 then
                 if List.member index model.chosenHero then
                     { model | chosenHero = List.filter (\heroindex -> heroindex /= index) model.chosenHero }
 
