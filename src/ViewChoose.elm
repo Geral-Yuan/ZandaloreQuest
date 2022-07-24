@@ -45,7 +45,6 @@ viewHeroChoose model =
         ]
 
 
-
 viewFrame : Int -> Svg Msg
 viewFrame index =
     let
