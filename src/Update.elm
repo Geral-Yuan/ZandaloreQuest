@@ -459,7 +459,7 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
             else
-                ( { model | mode = BuyingItems }, Cmd.none )
+                ( model |> checkTalkRange, Cmd.none )
 
         Key Left on ->
             ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
@@ -737,7 +737,12 @@ checkEnd ( model, cmd ) =
         nmodel =
             case model.mode of
                 BoardGame ->
-                    if List.isEmpty finalboard.enemies && finalboard.spawn == 0 && (model.level == 0) then
+                    if
+                        List.isEmpty finalboard.enemies
+                            && (finalboard.spawn == 0)
+                            && (model.level == 0)
+                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                    then
                         { model
                             | mode = Dialog FinishTutorial
                             , level = model.level + 1
@@ -746,7 +751,12 @@ checkEnd ( model, cmd ) =
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                         }
 
-                    else if List.isEmpty finalboard.enemies && finalboard.spawn == 0 && model.level /= 0 then
+                    else if
+                        List.isEmpty finalboard.enemies
+                            && (finalboard.spawn == 0)
+                            && (model.level /= 0)
+                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                    then
                         { model
                             | mode = model.previousMode
                             , level = model.level + 1
@@ -755,7 +765,10 @@ checkEnd ( model, cmd ) =
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                         }
 
-                    else if List.isEmpty finalboard.heroes then
+                    else if
+                        List.isEmpty finalboard.heroes
+                            && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
+                    then
                         { model
                             | mode = model.previousMode
                             , bag = addCoin model.bag losecoins

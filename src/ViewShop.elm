@@ -422,7 +422,8 @@ viewDrawnHero model class =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ Svg.image
+            [ viewBuySvg
+            , Svg.image
                 [ SvgAttr.width "400"
                 , SvgAttr.height "400"
                 , SvgAttr.x "800"
@@ -431,7 +432,6 @@ viewDrawnHero model class =
                 , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Blue.png")
                 ]
                 []
-            , viewBuySvg
             ]
         , exitButton
         ]
