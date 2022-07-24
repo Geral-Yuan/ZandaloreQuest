@@ -204,7 +204,7 @@ viewHero hero =
 
         class =
             toString hero.class
-            
+
         fimage =
             "./assets/image/" ++ class
 
@@ -263,5 +263,5 @@ viewHero hero =
                 , onClick (Select hero)
                 , onContentMenu (Hit hero.pos)
                 ]
-                [ img [ src (fimage ++ class ++ "Blue.png"), height 80, width 80 ] []
+                [ img [ src (fimage ++ "Blue.png"), height 80, width 80 ] []
                 ]

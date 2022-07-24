@@ -50,32 +50,47 @@ updateShop msg model =
                         _ ->
                             List.filter (\( hero, _ ) -> hero.class == newclass) allSampleHeroes
             in
-            ( { model | indexedheroes = newhero ++ model.indexedheroes }, Cmd.none )
+            ( { model | indexedheroes = newhero ++ model.indexedheroes, mode = DrawHero newclass }, Cmd.none )
 
         EnterUpgrade ->
             ( { model | mode = UpgradePage }, Cmd.none )
 
         LevelUp hero ->
-            ( { model
-                | bag = { newBag | coins = currCoins - 50 }
-                , indexedheroes = (hero |> updateDamage |> updateHealth) :: listDifference model.indexedheroes [ hero ]
-              }
-            , Cmd.none
-            )
+            if model.bag.coins > 49 then
+                ( { model
+                    | bag = { newBag | coins = currCoins - 50 }
+                    , indexedheroes = (hero |> updateDamage |> updateHealth) :: listDifference model.indexedheroes [ hero ]
+                  }
+                , Cmd.none
+                )
+
+            else
+                ( model, Cmd.none )
 
         ExitShop ->
             case model.mode of
                 UpgradePage ->
                     ( { model | mode = BuyingItems }, Cmd.none )
 
+                DrawHero _ ->
+                    ( { model | mode = BuyingItems }, Cmd.none )
+
                 _ ->
                     ( { model | mode = Shop }, Cmd.none )
 
         Key Left False ->
-            ( { model | upgradePageIndex = modBy 6 (model.upgradePageIndex - 2) + 1 }, Cmd.none )
+            if model.mode == UpgradePage then
+                ( { model | upgradePageIndex = modBy 6 (model.upgradePageIndex - 2) + 1 }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
         Key Right False ->
-            ( { model | upgradePageIndex = modBy 6 model.upgradePageIndex + 1 }, Cmd.none )
+            if model.mode == UpgradePage then
+                ( { model | upgradePageIndex = modBy 6 model.upgradePageIndex + 1 }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

@@ -205,8 +205,15 @@ checkChooseClick msg model =
                     else
                         ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight )
 
-                index =
+                chosenidx =
                     findChosenHero clickpos
+
+                index =
+                    if List.map Tuple.second model.indexedheroes |> List.member chosenidx then
+                        chosenidx
+
+                    else
+                        0
             in
             if index > 0 && index <= 6 then
                 if List.member index model.chosenHero then
@@ -410,9 +417,6 @@ updateRPG msg model =
                     if x > 740 && x < 930 && y > 830 then
                         ( { model | mode = Castle, character = { character | width = 64, height = 64, pos = ( 1632, 802 ), speed = 500 } }, Cmd.none )
 
-                    else if y < 628 then
-                        ( { model | mode = BuyingItems }, Cmd.none )
-
                     else
                         ( model, Cmd.none )
 
@@ -447,7 +451,15 @@ updateRPG msg model =
                     ( model, Cmd.none )
 
         Talk False ->
-            ( model |> checkTalkRange, Cmd.none )
+            if model.mode == Shop then
+                if x > 600 && x < 1000 then
+                    ( { model | mode = BuyingItems }, Cmd.none )
+
+                else
+                    ( model, Cmd.none )
+
+            else
+                ( { model | mode = BuyingItems }, Cmd.none )
 
         Key Left on ->
             ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
