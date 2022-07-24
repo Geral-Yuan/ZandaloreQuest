@@ -6,6 +6,15 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.47] -- 2022-7-23
+
+### Added
+
+- spend gold coins upgrading heroes
+- draw heroes
+- use black hero pictures to represent locked heroes
+- use ← and → to switch heroes
+
 
 ## [m1.46] -- 2022-7-23
 

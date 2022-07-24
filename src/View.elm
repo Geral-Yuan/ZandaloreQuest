@@ -16,7 +16,7 @@ import ViewAllHero exposing (..)
 import ViewChoose exposing (viewHeroChoose)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
-import ViewShop exposing (viewShop, viewShopChoose)
+import ViewShop exposing (viewShop, viewShopChoose, viewUpgradePage)
 import ViewTutorial exposing (..)
 
 
@@ -42,6 +42,9 @@ view model =
 
                 BuyingItems ->
                     viewShopChoose model
+
+                UpgradePage ->
+                    viewUpgradePage model    --to be revised
 
                 Dungeon ->
                     viewDungeon model

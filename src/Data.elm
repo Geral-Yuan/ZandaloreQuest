@@ -13,6 +13,7 @@ type GameMode
     | Dungeon
     | Dungeon2
     | BuyingItems
+    | UpgradePage
     | HeroChoose
       -- | Starting
       -- | ClearLevel Int
@@ -464,3 +465,16 @@ distance ( x1, y1 ) ( x2, y2 ) =
 leastdistance : List Pos -> Pos -> Maybe Int
 leastdistance pos_list pos =
     List.minimum (List.map (distance pos) pos_list)
+
+
+allSampleHeroes : List (Hero, Int)
+allSampleHeroes =
+    [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
+        , ( Hero Archer ( 0, 0 ) 40 40 20 5 False Waiting 0, 2 )
+        , ( Hero Assassin ( 0, 0 ) 40 40 20 6 False Waiting 0, 3 )
+        , ( Hero Mage ( 0, 0 ) 50 50 12 3 False Waiting 0, 4 )
+        , ( Hero Healer ( 0, 0 ) 50 50 5 5 False Waiting 0, 5 )
+        , ( Hero Engineer ( 0, 0 ) 50 50 5 5 False Waiting 0, 6 )
+        ]
+
+        

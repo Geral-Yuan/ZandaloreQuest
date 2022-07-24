@@ -43,6 +43,8 @@ update msg model =
                 BuyingItems ->
                     updateShop msg model
 
+                UpgradePage ->
+                    updateShop msg model
                 _ ->
                     updateRPG msg model
                         |> updateCharacter msg
@@ -205,7 +207,7 @@ checkChooseClick msg model =
                 index =
                     findChosenHero clickpos
             in
-            if index > 0 && index <= List.length model.indexedheroes then
+            if index > 0 && index <= 6 then
                 if List.member index model.chosenHero then
                     { model | chosenHero = List.filter (\heroindex -> heroindex /= index) model.chosenHero }
 
@@ -406,6 +408,9 @@ updateRPG msg model =
                 Shop ->
                     if x > 740 && x < 930 && y > 830 then
                         ( { model | mode = Castle, character = { character | width = 64, height = 64, pos = ( 1632, 802 ), speed = 500 } }, Cmd.none )
+
+                    else if y < 628 then
+                        ( { model | mode = BuyingItems}, Cmd.none )
 
                     else
                         ( model, Cmd.none )
