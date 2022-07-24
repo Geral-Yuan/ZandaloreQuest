@@ -2,7 +2,7 @@ module ViewScenes exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, div, img)
+import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (..)
 import Model exposing (Model)
@@ -178,6 +178,15 @@ viewCastle model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , audio
+                    [ HtmlAttr.autoplay True
+                    , HtmlAttr.loop True
+                    , HtmlAttr.preload "True"
+                    , HtmlAttr.controls True
+                    , HtmlAttr.src "./assets/audio/CastleThemeSong.mp3"
+                    , HtmlAttr.id "CastleThemeSong"
+                    ]
+                    []
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
             ++ [ viewRpgCharacter model.character ]

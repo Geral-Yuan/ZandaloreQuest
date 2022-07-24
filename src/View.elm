@@ -4,7 +4,7 @@ import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import DetectMouse exposing (..)
-import Html exposing (Html, div, img)
+import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
@@ -178,6 +178,15 @@ viewBoard model =
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
+         , audio
+            [ HtmlAttr.autoplay True
+            , HtmlAttr.loop True
+            , HtmlAttr.preload "True"
+            , HtmlAttr.controls True
+            , HtmlAttr.src "./assets/audio/BoardGameThemeSong.mp3"
+            , HtmlAttr.id "BoardGameThemeSong"
+            ]
+            []
 
          --  , viewClickPosition model
          --  , viewTips
