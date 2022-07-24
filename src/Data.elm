@@ -14,11 +14,13 @@ type GameMode
     | Dungeon2
     | BuyingItems
     | UpgradePage
+    | DrawHero Class
     | HeroChoose
       -- | Starting
       -- | ClearLevel Int
       -- | Gameover Int
     | BoardGame
+    | Summary
     | Logo
     | Tutorial Int
     | Dialog Task

@@ -4,7 +4,7 @@ import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import DetectMouse exposing (..)
-import Html exposing (Html, div, img)
+import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
@@ -19,6 +19,20 @@ viewEnemy enemy =
 
         class =
             toString enemy.class
+        
+        fimage =
+            "./assets/image/" ++ class
+
+        faudio =
+            "./assets/audio/"
+                ++ (case class of
+                        "Turret" ->
+                            "Archer"
+
+                        a ->
+                            a
+                   )
+                ++ "SFX.mp3"
     in
     case enemy.state of
         Attacking ->
@@ -27,7 +41,15 @@ viewEnemy enemy =
                 , HtmlAttr.style "top" (toString (y - 45) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
                 ]
-                [ img [ src ("./assets/image/" ++ class ++ "RedGIF.gif"), height 85, width 115 ] []
+                [ img [ src (fimage ++ "RedGIF.gif"), height 85, width 115 ] []
+                , audio
+                    [ HtmlAttr.autoplay True
+                    , HtmlAttr.loop False
+                    , HtmlAttr.preload "True"
+                    , HtmlAttr.src faudio
+                    , HtmlAttr.id faudio
+                    ]
+                    []
                 ]
 
         Attacked _ ->
@@ -36,7 +58,7 @@ viewEnemy enemy =
                 , HtmlAttr.style "top" (toString (y - 40) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
                 ]
-                [ img [ src ("./assets/image/" ++ class ++ "GotHit.png"), height 80, width 80 ] []
+                [ img [ src (fimage ++ "GotHit.png"), height 80, width 80 ] []
                 ]
 
         _ ->
@@ -46,7 +68,7 @@ viewEnemy enemy =
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
                 , onContentMenu (Hit enemy.pos)
                 ]
-                [ img [ src ("./assets/image/" ++ class ++ "Red.png"), height 80, width 80 ] []
+                [ img [ src (fimage ++ "Red.png"), height 80, width 80 ] []
                 ]
 
 

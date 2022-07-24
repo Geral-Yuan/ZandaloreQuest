@@ -4,8 +4,8 @@ import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import DetectMouse exposing (..)
-import Html exposing (Html, div, img)
-import Html.Attributes as HtmlAttr exposing (height, src, width)
+import Html exposing (Html, audio, div)
+import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Model exposing (Model)
@@ -17,7 +17,7 @@ import ViewChoose exposing (viewHeroChoose)
 import ViewDialog exposing (..)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
-import ViewShop exposing (viewShop, viewShopChoose, viewUpgradePage)
+import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
 import ViewTutorial exposing (..)
 
 
@@ -32,6 +32,9 @@ view model =
                 BoardGame ->
                     viewBoard model
 
+                Summary ->
+                    viewSummary model
+
                 Castle ->
                     viewCastle model
 
@@ -43,6 +46,9 @@ view model =
 
                 BuyingItems ->
                     viewShopChoose model
+
+                DrawHero class ->
+                    viewDrawnHero model class
 
                 UpgradePage ->
                     viewUpgradePage model
@@ -159,7 +165,9 @@ viewBoard model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewMap model.board
+            (viewBoardGameBackGround model 100
+                -- TODO: make the board game looks nicer
+                :: viewMap model.board
                 ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
@@ -178,6 +186,15 @@ viewBoard model =
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
+         , audio
+            [ HtmlAttr.autoplay True
+            , HtmlAttr.loop True
+            , HtmlAttr.preload "True"
+            , HtmlAttr.controls True
+            , HtmlAttr.src "./assets/audio/BoardGameThemeSong.mp3"
+            , HtmlAttr.id "BoardGameThemeSong"
+            ]
+            []
 
          --  , viewClickPosition model
          --  , viewTips
@@ -345,6 +362,7 @@ viewCell board pos =
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
+            , SvgAttr.opacity "50%"
             , onClick (Move pos)
             , onContentMenu (Hit pos)
             ]

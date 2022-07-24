@@ -300,7 +300,7 @@ upgradeButton model =
                     ]
                     [ text
                         ("50 coins to upgrade "
-                            ++ Debug.toString hero.class
+                            ++ toString hero.class
                         )
                     ]
                 ]
@@ -321,7 +321,7 @@ upgradeButton model =
                     ]
                     [ text
                         ("You haven't obtained "
-                            ++ Debug.toString hero.class
+                            ++ toString hero.class
                         )
                     ]
                 ]
@@ -374,8 +374,8 @@ viewShopHeroes model ( hero, index ) =
     in
     if isClassHave ( hero, index ) model then
         Svg.image
-            [ SvgAttr.width (Debug.toString mywidth)
-            , SvgAttr.height (Debug.toString mywidth)
+            [ SvgAttr.width (toString mywidth)
+            , SvgAttr.height (toString mywidth)
             , SvgAttr.x (toString x)
             , SvgAttr.y (toString y)
             , SvgAttr.preserveAspectRatio "none"
@@ -385,14 +385,56 @@ viewShopHeroes model ( hero, index ) =
 
     else
         Svg.image
-            [ SvgAttr.width (Debug.toString mywidth)
-            , SvgAttr.height (Debug.toString mywidth)
+            [ SvgAttr.width (toString mywidth)
+            , SvgAttr.height (toString mywidth)
             , SvgAttr.x (toString x)
             , SvgAttr.y (toString y)
             , SvgAttr.preserveAspectRatio "none"
             , SvgAttr.xlinkHref "./assets/image/Locked.png"
             ]
             []
+
+
+viewDrawnHero : Model -> Class -> Html Msg
+viewDrawnHero model class =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
+
+            else
+                Basics.min 1 (w / pixelWidth)
+    in
+    div
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        , HtmlAttr.style "background" "black"
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ viewBuySvg
+            , Svg.image
+                [ SvgAttr.width "400"
+                , SvgAttr.height "400"
+                , SvgAttr.x "800"
+                , SvgAttr.y "400"
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Blue.png")
+                ]
+                []
+            ]
+        , exitButton
+        ]
 
 
 isClassHave : ( Hero, Int ) -> Model -> Bool

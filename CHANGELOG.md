@@ -6,6 +6,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.49] -- 2022-7-24
+
+### Added
+- added SFXs for every character
+- added theme songs for both rpg mode and board game mode
+- added display obtained character scene
+- added board game summarize scene
+- added board game background images
+
+### Fixed
+- fixed select nonplayable character
+
 
 ## [m1.48] -- 2022-7-24
 
