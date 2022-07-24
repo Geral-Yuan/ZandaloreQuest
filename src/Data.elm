@@ -20,6 +20,7 @@ type GameMode
       -- | ClearLevel Int
       -- | Gameover Int
     | BoardGame
+    | Summary
     | Logo
     | Tutorial Int
     | Dialog Task

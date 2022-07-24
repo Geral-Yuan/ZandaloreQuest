@@ -27,6 +27,9 @@ update msg model =
                 BoardGame ->
                     updateBoardGame msg model
 
+                Summary ->
+                    updateSummary msg model
+
                 Logo ->
                     ( updateScene msg model, Cmd.none )
 
@@ -70,6 +73,16 @@ updateBoardGame msg model =
                 |> randomCrate msg
                 |> randomEnemies
                 |> checkEnd
+
+
+updateSummary : Msg -> Model -> ( Model, Cmd Msg )
+updateSummary msg model =
+    case msg of
+        Click _ _ ->
+            ( { model | mode = model.previousMode, level = model.level + 1 }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
@@ -181,6 +194,17 @@ updateTutorial msg k model =
 
                 Attack _ _ ->
                     updateBoardGame msg model
+
+                Kill False ->
+                    ( { model
+                        | mode = Dialog FinishTutorial
+                        , level = model.level + 1
+                        , cntTask = nextTask model.cntTask
+                        , bag = addCoin model.bag 100
+                        , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                      }
+                    , Cmd.none
+                    )
 
                 _ ->
                     if followTutorial msg k && model.board.boardState == NoActions then
@@ -758,8 +782,7 @@ checkEnd ( model, cmd ) =
                             && List.all (\hero -> hero.state == Waiting) model.board.heroes
                     then
                         { model
-                            | mode = model.previousMode
-                            , level = model.level + 1
+                            | mode = Summary
                             , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask

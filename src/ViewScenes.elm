@@ -471,3 +471,83 @@ viewBagCoin model =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text ("Coins: " ++ toString model.bag.coins) ]
+
+
+viewSummary : Model -> Html Msg
+viewSummary model =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > startWidth / startHeight then
+                Basics.min 1 (h / startHeight)
+
+            else
+                Basics.min 1 (w / startWidth)
+    in
+    div
+        [ HtmlAttr.style "width" (String.fromFloat startWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat startHeight ++ "px")
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (String.fromFloat ((w - startWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            [ viewBoardGameBackGround model 20 ]
+        , div
+            [ HtmlAttr.style "top" "100px"
+            , HtmlAttr.style "left" "1000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center" -- align text seems to not working
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text "Great Battle!" ]
+        , div
+            [ HtmlAttr.style "top" "300px"
+            , HtmlAttr.style "left" "1000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text ("Gold: +" ++ toString (model.board.coins + 50)) ]
+        , div
+            [ HtmlAttr.style "top" "500px"
+            , HtmlAttr.style "left" "1000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text "Click Anywhere To Continue" ]
+        ]
+
+
+viewBoardGameBackGround : Model -> Int -> Svg Msg
+viewBoardGameBackGround model opac =
+    Svg.image
+        [ SvgAttr.width "1600"
+        , SvgAttr.height "1000"
+        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.y (toString (pixelHeight / 2 - 500))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.opacity (toString opac ++ "%")
+        , SvgAttr.xlinkHref ("./assets/image/Board" ++ toString model.level ++ ".jpg")
+        ]
+        []
