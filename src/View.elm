@@ -4,8 +4,8 @@ import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
 import DetectMouse exposing (..)
-import Html exposing (Html, audio, div, img)
-import Html.Attributes as HtmlAttr exposing (height, src, width)
+import Html exposing (Html, audio, div)
+import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Model exposing (Model)
@@ -31,6 +31,9 @@ view model =
 
                 BoardGame ->
                     viewBoard model
+
+                Summary ->
+                    viewSummary model
 
                 Castle ->
                     viewCastle model
@@ -156,13 +159,15 @@ viewBoard model =
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "background" "white"
         ]
         ([ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewMap model.board
+            (viewBoardGameBackGround model 100
+                -- TODO: make the board game looks nicer
+                :: viewMap model.board
                 ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroFrame model.board.heroes)
@@ -357,6 +362,7 @@ viewCell board pos =
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
+            , SvgAttr.opacity "50%"
             , onClick (Move pos)
             , onContentMenu (Hit pos)
             ]
