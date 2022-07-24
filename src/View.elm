@@ -159,7 +159,7 @@ viewBoard model =
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "white"
+        , HtmlAttr.style "background" "grey"
         ]
         ([ Svg.svg
             [ SvgAttr.width "100%"
