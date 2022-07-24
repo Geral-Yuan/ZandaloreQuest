@@ -17,7 +17,7 @@ import ViewChoose exposing (viewHeroChoose)
 import ViewDialog exposing (..)
 import ViewOthers exposing (..)
 import ViewScenes exposing (..)
-import ViewShop exposing (viewShop, viewShopChoose, viewUpgradePage)
+import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
 import ViewTutorial exposing (..)
 
 
@@ -43,6 +43,9 @@ view model =
 
                 BuyingItems ->
                     viewShopChoose model
+
+                DrawHero class ->
+                    viewDrawnHero model class
 
                 UpgradePage ->
                     viewUpgradePage model

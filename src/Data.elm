@@ -14,6 +14,7 @@ type GameMode
     | Dungeon2
     | BuyingItems
     | UpgradePage
+    | DrawHero Class
     | HeroChoose
       -- | Starting
       -- | ClearLevel Int
