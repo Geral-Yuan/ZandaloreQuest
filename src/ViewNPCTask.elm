@@ -97,7 +97,7 @@ textTask model =
             "Go to meet Elder and have the Tutorial Level!"
 
         GoToShop ->
-            "Go to the shop and get the free Mage!"
+            "Go to the shop and get a free random hero!"
 
         Level k ->
             "Talk to a skull knight " ++ toString k ++ " and destroy him!"
