@@ -6,6 +6,14 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.48] -- 2022-7-24
+
+### Changed
+- changed some of the formmatting for tutorial
+- corrected some typos in tutorial 
+
+
 ## [m1.47] -- 2022-7-23
 
 ### Added
