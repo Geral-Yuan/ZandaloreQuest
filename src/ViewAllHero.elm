@@ -19,8 +19,9 @@ viewHeroImage hero =
     in
     if hero.class == Turret then
         []
+
     else
-        [Svg.image
+        [ Svg.image
             [ SvgAttr.width "70"
             , SvgAttr.height "70"
             , SvgAttr.x (toString (1600 - offsetHero hero))
@@ -36,6 +37,7 @@ viewHeroFrame : Hero -> List (Svg msg)
 viewHeroFrame hero =
     if hero.class == Turret then
         []
+
     else
         [ Svg.rect
             [ SvgAttr.width "400"
@@ -49,10 +51,12 @@ viewHeroFrame hero =
             []
         ]
 
+
 viewHeroCondition : Hero -> List (Svg msg)
 viewHeroCondition hero =
     if hero.class == Turret then
         []
+
     else
         [ Svg.image
             [ SvgAttr.width "30"
@@ -96,9 +100,10 @@ viewHeroHealth hero =
         healthBarlen2 =
             100 * toFloat hero.health / toFloat hero.maxHealth
 
-        rightInfo = 
+        rightInfo =
             if hero.class == Turret then
                 []
+
             else
                 [ Svg.rect
                     [ SvgAttr.width "200"
@@ -121,36 +126,36 @@ viewHeroHealth hero =
                     ]
                     []
                 ]
-            
     in
-    rightInfo 
-    ++  [ Svg.rect
-        [ SvgAttr.width "100"
-        , SvgAttr.height "10"
-        , SvgAttr.x (toString (x - 50))
-        , SvgAttr.y (toString (y - 60))
-        , SvgAttr.fill "transparent"
-        , SvgAttr.stroke "red"
-        , SvgAttr.rx "5"
-        ]
-        []
-    , Svg.rect
-        [ SvgAttr.width (toString healthBarlen2)
-        , SvgAttr.height "10"
-        , SvgAttr.x (toString (x - 50))
-        , SvgAttr.y (toString (y - 60))
-        , SvgAttr.fill "red"
-        , SvgAttr.stroke "red"
-        , SvgAttr.rx "5"
-        ]
-        []
-    ]
+    rightInfo
+        ++ [ Svg.rect
+                [ SvgAttr.width "100"
+                , SvgAttr.height "10"
+                , SvgAttr.x (toString (x - 50))
+                , SvgAttr.y (toString (y - 60))
+                , SvgAttr.fill "transparent"
+                , SvgAttr.stroke "red"
+                , SvgAttr.rx "5"
+                ]
+                []
+           , Svg.rect
+                [ SvgAttr.width (toString healthBarlen2)
+                , SvgAttr.height "10"
+                , SvgAttr.x (toString (x - 50))
+                , SvgAttr.y (toString (y - 60))
+                , SvgAttr.fill "red"
+                , SvgAttr.stroke "red"
+                , SvgAttr.rx "5"
+                ]
+                []
+           ]
 
 
 viewHeroInfo : Hero -> List (Html Msg)
 viewHeroInfo hero =
     if hero.class == Turret then
         []
+
     else
         [ div
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")

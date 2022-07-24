@@ -12,7 +12,7 @@ type Msg
     | Tick Float
     | Attack Pos Critical
     | Hit Pos
---    | Skill Pos
+      --    | Skill Pos
     | Select Hero
     | Move Pos
     | EndTurn
@@ -30,6 +30,6 @@ type Msg
     | LuckyDraw
     | GetNewHero Class
     | EnterUpgrade
-    | LevelUp (Hero, Int)
+    | LevelUp ( Hero, Int )
     | ExitShop
     | ViewTutorial

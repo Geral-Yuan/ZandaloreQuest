@@ -405,7 +405,6 @@ viewCastleSvg =
         []
 
 
-
 startWidth : Float
 startWidth =
     2000

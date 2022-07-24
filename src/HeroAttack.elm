@@ -1,6 +1,6 @@
 module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
-import Action exposing (checkAttackObstacle, checkBuildTurret, checkHeal, selectedHero, unselectedHero, attackedByHeroArcherRange, maxTurret)
+import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, maxTurret, selectedHero, unselectedHero)
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
@@ -105,7 +105,8 @@ meaningfulTarget board class =
                         ++ List.map .pos board.heroes
                         ++ List.map .pos board.item
                     )
-                ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
+                    ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
+
             else
                 List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
 
@@ -217,7 +218,6 @@ damageEnemy damage critical enemy =
        else
            hero
 -}
-
 
 
 heroTurretAttack : Hero -> Board -> List Enemy

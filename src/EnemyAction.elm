@@ -1,6 +1,6 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
-import Action exposing (attackedByArcherRange, attackedByMageRange, checkAttackObstacle, pos2Item, calculateHeal)
+import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
 import Board exposing (..)
 import Data exposing (..)
 import ShortestPath exposing (..)
@@ -224,17 +224,21 @@ actionSmartHealer board enemy =
         route =
             if isOnlyEnemyHealer board || isAllMaxHealth board then
                 leastWarriorPath enemy board
+
             else
                 leastHealerPath enemy board
 
         otherenemies =
             listDifference board.enemies [ enemy ]
 
-        healedenemies = enemyHeal enemy otherenemies
+        healedenemies =
+            enemyHeal enemy otherenemies
+
         atkboard =
             if isOnlyEnemyHealer board || isAllMaxHealth board then
-                {board| heroes = enemyWarriorAttack enemy board.heroes}
-            else 
+                { board | heroes = enemyWarriorAttack enemy board.heroes }
+
+            else
                 board
 
         atkedheroes =
@@ -270,11 +274,17 @@ enemyHeal enemy healed =
 
                 chosen :: othernothealed ->
                     ( [ chosen ], othernothealed ++ others )
-        
     in
     -- fix 0 for critical now
-    List.map (\hdenemy -> { hdenemy | health = hdenemy.health + (addhealth enemy hdenemy)
-                                     , state = GettingHealed (addhealth enemy hdenemy) }) targetHealed ++ newothers
+    List.map
+        (\hdenemy ->
+            { hdenemy
+                | health = hdenemy.health + addhealth enemy hdenemy
+                , state = GettingHealed (addhealth enemy hdenemy)
+            }
+        )
+        targetHealed
+        ++ newothers
 
 
 isOnlyEnemyHealer : Board -> Bool
@@ -288,7 +298,7 @@ isAllMaxHealth board =
 
 
 addhealth : Enemy -> Enemy -> Int
-addhealth enemy hdenemy = 
+addhealth enemy hdenemy =
     min (hdenemy.maxHealth - hdenemy.health) (calculateHeal enemy.damage)
 
 

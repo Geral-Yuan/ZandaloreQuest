@@ -216,7 +216,17 @@ viewTutorial7 =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            []
+            [ Svg.rect
+                [ SvgAttr.stroke "blue"
+                , SvgAttr.strokeWidth "5"
+                , SvgAttr.height "10"
+                , SvgAttr.width "170"
+                , SvgAttr.fill "blue"
+                , SvgAttr.x "1700"
+                , SvgAttr.y "700"
+                ]
+                []
+            ]
         , dialogHelper 700 20 580 50 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
         ]
 
@@ -274,7 +284,7 @@ viewTutorial10 =
             ]
             [ shapeHelper ( 100, 100 ) (findPos ( 5, 4 )) "blue" ( 5, 4 )
             ]
-        , dialogHelper 700 20 580 50 50 "blue" "Move the warrior onto the item and it will receive +10 health/energy."
+        , dialogHelper 700 20 580 50 50 "blue" "Move the warrior onto the item and it will receive +10 health/+2 energy."
         ]
 
 
@@ -330,7 +340,7 @@ viewTutorial13 =
             , SvgAttr.height "100%"
             ]
             []
-        , dialogHelper 750 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
+        , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
         ]
 
 

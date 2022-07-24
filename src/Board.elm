@@ -132,10 +132,10 @@ spawnTimes k =
 
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
-    { map = (map k)
-    , obstacles = (initObstacles k)
-    , enemies = (initenemy k)
-    , heroes = (inithero heroes k)
+    { map = map k
+    , obstacles = initObstacles k
+    , enemies = initenemy k
+    , heroes = inithero heroes k
     , totalHeroNumber = 3
     , turn = PlayerTurn
     , cntEnemy = 0
@@ -150,8 +150,8 @@ initBoard heroes k =
     , item = []
     , timeTurn = 0
     , timeBoardState = 0
-    , spawn = (spawnTimes k)
-    , index = (List.length (initenemy k))
+    , spawn = spawnTimes k
+    , index = List.length (initenemy k)
     , pointPos = ( 0, 0 )
     , coins = 0
     , level = k
