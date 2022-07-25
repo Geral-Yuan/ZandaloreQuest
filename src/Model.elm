@@ -24,6 +24,9 @@ type alias Model =
     , time : Float
     , cntTask : Task
     , npclist : List NPC
+    , unlockShop : Bool
+    , unlockDungeon : Bool
+    , unlockDungeon2 : Bool
 
     -- , time : Float
     }
@@ -80,6 +83,9 @@ initModel =
     , time = 0
     , cntTask = MeetElder
     , npclist = [ npcElder, npcWarrior, npcArcher, npcAssassin, npcMage, npcHealer, npcEngineer ]
+    , unlockShop = False
+    , unlockDungeon = False
+    , unlockDungeon2 = False
 
     -- , time = 0
     }

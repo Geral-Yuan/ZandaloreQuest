@@ -12,6 +12,7 @@ import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
+import UpdateScene exposing (..)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
@@ -97,7 +98,7 @@ updateDialog msg task model =
 
         FinishTutorial ->
             if msg == Enter False then
-                ( { model | mode = Castle, cntTask = GoToShop }, Cmd.none )
+                ( { model | mode = Castle }, Cmd.none )
 
             else
                 ( model, Cmd.none )
@@ -200,7 +201,7 @@ updateTutorial msg k model =
                         | mode = Dialog FinishTutorial
                         , level = model.level + 1
                         , cntTask = nextTask model.cntTask
-                        , bag = addCoin model.bag 100
+                        , bag = addCoin model.bag 50
                         , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                       }
                     , Cmd.none
@@ -428,7 +429,7 @@ updateRPG msg model =
         currCoins =
             model.bag.coins
 
-        newBag =
+        bag =
             model.bag
 
         currHeroes =
@@ -438,45 +439,23 @@ updateRPG msg model =
         Enter False ->
             case model.mode of
                 Shop ->
-                    if x > 740 && x < 930 && y > 830 then
-                        ( { model | mode = Castle, character = { character | width = 64, height = 64, pos = ( 1632, 802 ), speed = 500 } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveShop, Cmd.none )
 
                 Castle ->
-                    if x > 1530 && x < 1690 && y < 810 && y > 780 then
-                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 782, 882 ), speed = 800 } }, Cmd.none )
-
-                    else if x > 930 && x < 1080 && y <= 430 && y > 380 then
-                        ( { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
-
-                    else if x > 320 && x < 440 && y < 810 && y > 780 then
-                        ( { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    model |> checkLeaveCastle
 
                 Dungeon ->
-                    if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 1007, 407 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveDungeon, Cmd.none )
 
                 Dungeon2 ->
-                    if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 377, 802 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveDungeon2, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
         Talk False ->
             if model.mode == Shop then
-                if x > 600 && x < 1000 then
+                if x > 600 && x < 1000 && y > 650 then
                     ( { model | mode = BuyingItems }, Cmd.none )
 
                 else
@@ -499,14 +478,14 @@ updateRPG msg model =
 
         UpgradeHealth ->
             if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
+                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
 
             else
                 ( model, Cmd.none )
 
         UpgradeDamage ->
             if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
+                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
 
             else
                 ( model, Cmd.none )
@@ -773,6 +752,7 @@ checkEnd ( model, cmd ) =
                             , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                            , unlockShop = True
                         }
 
                     else if
@@ -814,13 +794,16 @@ nextTask : Task -> Task
 nextTask task =
     case task of
         MeetElder ->
+            GoToShop
+
+        GoToShop ->
             Level 1
 
         Level k ->
             Level (k + 1)
 
         _ ->
-            GoToDungeon
+            BeatBoss
 
 
 nextNPC : Task -> List NPC

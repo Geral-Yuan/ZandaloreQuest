@@ -31,8 +31,7 @@ type Task
     | FinishTutorial
     | GoToShop
     | Level Int
-      -- | Beaten (to be added later)
-    | GoToDungeon
+    | BeatBoss
 
 
 type Scene
