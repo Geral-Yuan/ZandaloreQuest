@@ -10,6 +10,7 @@ import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (..)
+import ViewOthers exposing (viewUIFrame)
 
 
 logoWidth : Float
@@ -505,10 +506,13 @@ viewSummary model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewBoardGameBackGround 20 ]
+            (viewBoardGameBackGround 20
+                :: viewUIFrame 800 900 600 50
+            )
         , div
-            [ HtmlAttr.style "top" "100px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "200px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
@@ -519,8 +523,9 @@ viewSummary model =
             ]
             [ text "Great Battle!" ]
         , div
-            [ HtmlAttr.style "top" "300px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "350px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
@@ -531,8 +536,9 @@ viewSummary model =
             ]
             [ text ("Gold: +" ++ toString (model.board.coins + 50)) ]
         , div
-            [ HtmlAttr.style "top" "500px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "750px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
