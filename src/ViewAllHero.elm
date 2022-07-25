@@ -33,8 +33,27 @@ viewHeroImage hero =
         ]
 
 
-viewHeroFrame : Hero -> List (Svg msg)
-viewHeroFrame hero =
+viewHeroOuterFrame : Hero -> List (Svg msg)
+viewHeroOuterFrame hero =
+    if hero.class == Turret then
+        []
+
+    else
+        [ Svg.rect
+            [ SvgAttr.width "420"
+            , SvgAttr.height "140"
+            , SvgAttr.x (toString (1570 - offsetHero hero))
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 130))
+            , SvgAttr.fill "rgb(184,111,80)"
+            , SvgAttr.stroke "black"
+            , SvgAttr.strokeWidth "2"
+            ]
+            []
+        ]
+
+
+viewHeroInnerFrame : Hero -> List (Svg msg)
+viewHeroInnerFrame hero =
     if hero.class == Turret then
         []
 
@@ -43,10 +62,10 @@ viewHeroFrame hero =
             [ SvgAttr.width "400"
             , SvgAttr.height "120"
             , SvgAttr.x (toString (1580 - offsetHero hero))
-            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 125))
-            , SvgAttr.fill "transparent"
+            , SvgAttr.y (toString (hero.indexOnBoard * 150 - 120))
+            , SvgAttr.fill "rgb(63,40,50)"
             , SvgAttr.stroke "black"
-            , SvgAttr.rx "20"
+            , SvgAttr.strokeWidth "2"
             ]
             []
         ]
@@ -160,7 +179,7 @@ viewHeroInfo hero =
         [ div
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
             , HtmlAttr.style "left" (toString (1800 - offsetHero hero) ++ "px")
-            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
@@ -172,7 +191,7 @@ viewHeroInfo hero =
         , div
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1750 - offsetHero hero) ++ "px")
-            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
@@ -184,7 +203,7 @@ viewHeroInfo hero =
         , div
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
-            , HtmlAttr.style "color" "blue"
+            , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"

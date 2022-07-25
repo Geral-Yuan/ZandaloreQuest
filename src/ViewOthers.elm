@@ -45,13 +45,14 @@ shapeHelper ( height, width ) ( x, y ) color pos =
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
-        [ HtmlAttr.style "bottom" "60px"
-        , HtmlAttr.style "right" "100px"
+        [ HtmlAttr.style "top" "740px"
+        , HtmlAttr.style "left" "1590px"
+        , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "text-align" "left"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
@@ -61,17 +62,28 @@ viewCritical board =
 viewBoardCoin : Board -> Html Msg
 viewBoardCoin board =
     div
-        [ HtmlAttr.style "bottom" "120px"
-        , HtmlAttr.style "right" "100px"
+        [ HtmlAttr.style "top" "800px"
+        , HtmlAttr.style "left" "1892px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Coins: " ++ toString board.coins) ]
+        [ text (": " ++ toString board.coins) ]
+
+
+viewCoinSVG : Svg Msg
+viewCoinSVG =
+    Svg.image
+        [ SvgAttr.width "80"
+        , SvgAttr.height "80"
+        , SvgAttr.x "1800"
+        , SvgAttr.y "790"
+        , SvgAttr.xlinkHref "./assets/image/Gold.png"
+        ]
+        []
 
 
 viewLevel : Int -> Html Msg
@@ -86,9 +98,10 @@ viewLevel level =
                     "Level " ++ toString k
     in
     div
-        [ HtmlAttr.style "bottom" "180px"
-        , HtmlAttr.style "right" "100px"
-        , HtmlAttr.style "color" "purple"
+        [ HtmlAttr.style "top" "540px"
+        , HtmlAttr.style "left" "1580px"
+        , HtmlAttr.style "width" "400px"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
@@ -140,7 +153,7 @@ endTurnButton : Html Msg
 endTurnButton =
     button
         [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "600px"
+        , HtmlAttr.style "top" "900px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
@@ -153,3 +166,31 @@ endTurnButton =
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
+
+
+viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)
+viewUIFrame w h x y =
+    -- outer
+    [ Svg.rect
+        [ SvgAttr.width (toString w)
+        , SvgAttr.height (toString h)
+        , SvgAttr.x (toString x)
+        , SvgAttr.y (toString y)
+        , SvgAttr.fill "rgb(184,111,80)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+
+    -- inner
+    , Svg.rect
+        [ SvgAttr.width (toString (w - 20))
+        , SvgAttr.height (toString (h - 20))
+        , SvgAttr.x (toString (x + 10))
+        , SvgAttr.y (toString (y + 10))
+        , SvgAttr.fill "rgb(63,40,50)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+    ]
