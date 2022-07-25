@@ -1,6 +1,6 @@
-module UpdateScene exposing (..)
+module UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 
-import Data exposing (..)
+import Data exposing (FailToDo(..), GameMode(..), Scene(..))
 import Message exposing (Msg(..))
 import Model exposing (Model)
 
@@ -21,7 +21,7 @@ checkLeaveShop model =
         model
 
 
-checkLeaveCastle : Model -> ( Model, Cmd Msg )
+checkLeaveCastle : Model -> Model
 checkLeaveCastle model =
     let
         character =
@@ -32,27 +32,36 @@ checkLeaveCastle model =
     in
     if x > 1530 && x < 1690 && y < 810 && y > 780 then
         if model.unlockShop then
-            ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 782, 882 ), speed = 800 } }, Cmd.none )
+            { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 782, 882 ), speed = 800 } }
+
+        else if Tuple.first model.popUpHint == Noop then
+            model
 
         else
-            ( model, Cmd.none )
+            { model | popUpHint = ( FailtoEnter ShopScene, 0 ) }
 
     else if x > 930 && x < 1080 && y <= 430 && y > 380 then
         if model.unlockDungeon then
-            ( { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
+            { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }
+
+        else if Tuple.first model.popUpHint == Noop then
+            model
 
         else
-            ( model, Cmd.none )
+            { model | popUpHint = ( FailtoEnter DungeonScene, 0 ) }
 
     else if x > 320 && x < 440 && y < 810 && y > 780 then
         if model.unlockDungeon2 then
-            ( { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
+            { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }
+
+        else if Tuple.first model.popUpHint == Noop then
+            model
 
         else
-            ( model, Cmd.none )
+            { model | popUpHint = ( FailtoEnter Dungeon2Scene, 0 ) }
 
     else
-        ( model, Cmd.none )
+        model
 
 
 checkLeaveDungeon : Model -> Model

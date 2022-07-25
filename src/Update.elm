@@ -12,7 +12,7 @@ import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
-import UpdateScene exposing (..)
+import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
@@ -203,6 +203,7 @@ updateTutorial msg k model =
                         , cntTask = nextTask model.cntTask
                         , bag = addCoin model.bag 50
                         , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                        , unlockShop = True
                       }
                     , Cmd.none
                     )
@@ -359,34 +360,6 @@ npcCollisionRange ( x, y ) npc =
     x > nx - nw + 20 && x < nx + nw - 20 && y > ny - nh && y < ny + nh - 30
 
 
-
--- updateShop : Msg -> Model -> ( Model, Cmd Msg )
--- updateShop msg model =
---     let
---         currCoins =
---             model.bag.coins
---         newBag =
---             model.bag
---         currHeroes =
---             model.indexedheroes
---     in
---     case msg of
---         UpgradeHealth ->
---             if model.bag.coins > 49 then
---                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
---             else
---                 ( model, Cmd.none )
---         UpgradeDamage ->
---             if model.bag.coins > 49 then
---                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
---             else
---                 ( model, Cmd.none )
---         ExitShop ->
---             ( { model | mode = Shop }, Task.perform GetViewport getViewport )
---         _ ->
---             ( model, Cmd.none )
-
-
 updateHealth : ( Hero, Int ) -> ( Hero, Int )
 updateHealth hero =
     let
@@ -442,7 +415,7 @@ updateRPG msg model =
                     ( model |> checkLeaveShop, Cmd.none )
 
                 Castle ->
-                    model |> checkLeaveCastle
+                    ( model |> checkLeaveCastle, Cmd.none )
 
                 Dungeon ->
                     ( model |> checkLeaveDungeon, Cmd.none )

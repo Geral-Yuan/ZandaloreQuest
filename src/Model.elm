@@ -27,6 +27,7 @@ type alias Model =
     , unlockShop : Bool
     , unlockDungeon : Bool
     , unlockDungeon2 : Bool
+    , popUpHint : ( FailToDo, Float )
 
     -- , time : Float
     }
@@ -86,6 +87,7 @@ initModel =
     , unlockShop = False
     , unlockDungeon = False
     , unlockDungeon2 = False
+    , popUpHint = ( Noop, 0 )
 
     -- , time = 0
     }

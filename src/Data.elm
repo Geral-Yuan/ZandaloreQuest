@@ -69,6 +69,11 @@ type BoardState
     | HeroEnergy
     | Healing
 
+type FailToDo
+    = FailtoEnter Scene
+    | FailtoTalk NPC
+    | LackEnergy
+    | Noop
 
 
 -- | GettingAttacked
