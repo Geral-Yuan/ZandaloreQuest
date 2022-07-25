@@ -45,8 +45,8 @@ shapeHelper ( height, width ) ( x, y ) color pos =
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
-        [ HtmlAttr.style "top" "740px"
-        , HtmlAttr.style "left" "1590px"
+        [ HtmlAttr.style "top" "720px"
+        , HtmlAttr.style "left" "1600px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"

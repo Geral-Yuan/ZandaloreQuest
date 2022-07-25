@@ -128,18 +128,6 @@ checkAttackTarget class pos board =
         |> checkHeal class pos
 
 
-
-{-
-   checkAttackTarget : Pos -> Board -> Board
-   checkAttackTarget pos board =
-       if List.member MysteryBox (List.map (checkObstacleType pos) board.obstacles) || List.member Unbreakable (List.map (checkObstacleType pos) board.obstacles) then
-           checkAttackObstacle board pos
-
-       else
-           checkAttackEnemy board pos
--}
-
-
 checkAttackEnemy : Pos -> Board -> Board
 checkAttackEnemy pos board =
     case selectedHero board.heroes of
@@ -157,67 +145,6 @@ checkAttackEnemy pos board =
 damageEnemy : Int -> Int -> Enemy -> Enemy
 damageEnemy damage critical enemy =
     { enemy | health = enemy.health - damage - critical, state = Attacked (critical + damage) }
-
-
-
-{-
-               case hero.class of
-                   Warrior ->
-                       { board
-                           | enemies =
-                               List.map (checkMelee hero.pos hero.damage board.critical) board.enemies
-                                   |> List.filter (\{ health } -> health > 0)
-                       }
-
-                   Assassin ->
-                       { board
-                           | enemies =
-                               List.map (checkMelee hero.pos hero.damage board.critical) board.enemies
-                                   |> List.filter (\{ health } -> health > 0)
-                       }
-
-                   Healer ->
-                       { board
-                           | heroes =
-                               List.map (checkHeal hero.pos hero.damage board.critical) board.heroes
-                                   |> List.filter (\{ health } -> health > 0)
-                       }
-
-                   _ ->
-                       board
-
-
-   checkMelee : Pos -> Int -> Int -> Enemy -> Enemy
-   checkMelee ( x, y ) damage critical enemy =
-       -- for warriors and assassins classes
-       -- if there are enemies within the 6 hexagons around their current location
-       -- the enemies will receive the damage
-       let
-           newHealth =
-               enemy.health - damage - critical
-       in
-       if isWarriorAttackRange enemy.pos ( x, y ) then
-           { enemy | health = newHealth }
-
-       else
-           enemy
-
-
-   checkHeal : Pos -> Int -> Int -> Hero -> Hero
-   checkHeal ( x, y ) heal critical hero =
-       -- for warriors and assassins classes
-       -- if there are enemies within the 6 hexagons around their current location
-       -- the enemies will receive the damage
-       let
-           newHealth =
-               hero.health + heal + critical
-       in
-       if isWarriorAttackRange hero.pos ( x, y ) then
-           { hero | health = newHealth }
-
-       else
-           hero
--}
 
 
 heroTurretAttack : Hero -> Board -> List Enemy
