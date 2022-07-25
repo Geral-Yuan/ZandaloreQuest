@@ -428,7 +428,7 @@ updateRPG msg model =
 
         Talk False ->
             if model.mode == Shop then
-                if x > 600 && x < 1000 && y > 650 then
+                if x > 600 && x < 1000 && y <= 650 then
                     ( { model | mode = BuyingItems }, Cmd.none )
 
                 else

@@ -283,7 +283,10 @@ animateHeroVisuals hero =
                 text ("+" ++ toString h2)
 
             Attacking ->
-                text "-3 Energy"
+                if hero.class /= Turret then
+                    text "-3 Energy"
+                else
+                    text ""
 
             Attacked k ->
                 text ("-" ++ toString k)

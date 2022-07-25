@@ -219,16 +219,16 @@ viewTutorial7 =
             [ Svg.rect
                 [ SvgAttr.stroke "blue"
                 , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "120"
+                , SvgAttr.height "110"
                 , SvgAttr.width "210"
                 , SvgAttr.fill "blue"
                 , SvgAttr.x "1680"
-                , SvgAttr.y "580"
+                , SvgAttr.y "880"
                 , SvgAttr.fill "transparent"
                 ]
                 []
             ]
-        , dialogHelper 700 20 1000 700 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
+        , dialogHelper 700 20 850 800 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
         ]
 
 
