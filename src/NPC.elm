@@ -9,6 +9,7 @@ allNPC =
     , npcDarkKnight1
     , npcDarkKnight2
     , npcSkullKnight1
+    , npcSkullKnight2
     , npcWarrior
     , npcArcher
     , npcAssassin

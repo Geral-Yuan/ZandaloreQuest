@@ -244,6 +244,10 @@ map level =
             )
                 ++ [ ( 6, 1 ), ( 1, 8 ), ( 9, 2 ), ( 4, 9 ) ]
 
+        4 ->
+            basicMap
+                |> List.filter (\( x, y ) -> not (List.member ( x, y ) hollow))
+
         _ ->
             basicMap
 
@@ -264,6 +268,29 @@ basicMap =
             , ( 1, 5 )
             ]
         )
+
+
+hollow : List Pos
+hollow =
+    [ ( 3, 4 )
+    , ( 4, 3 )
+    , ( 4, 4 )
+    , ( 2, 7 )
+    , ( 2, 6 )
+    , ( 3, 6 )
+    , ( 4, 8 )
+    , ( 3, 8 )
+    , ( 4, 7 )
+    , ( 7, 6 )
+    , ( 6, 7 )
+    , ( 6, 6 )
+    , ( 8, 3 )
+    , ( 8, 4 )
+    , ( 7, 4 )
+    , ( 6, 2 )
+    , ( 7, 2 )
+    , ( 6, 3 )
+    ]
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy

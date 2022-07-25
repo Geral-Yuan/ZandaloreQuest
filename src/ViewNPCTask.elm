@@ -122,7 +122,7 @@ textTask model =
         Level 3 ->
             "Enter Dungeon and destroy Skull Knight 1!"
 
-        Level _ ->
+        Level 4 ->
             "Skull Knight 2 appears! Kill him!"
 
         -- Maybe a name for each NPC later

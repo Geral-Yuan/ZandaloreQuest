@@ -56,8 +56,11 @@ initObstacles k =
                    , Obstacle MysteryBox ( 8, 2 ) (Gold 3)
                    ]
 
-        _ ->
+        3 ->
             []
+
+        _ ->
+            [ Obstacle Unbreakable ( 5, 5 ) NoItem ]
 
 
 initenemy : Int -> List Enemy
@@ -78,10 +81,16 @@ initenemy k =
             , sampleEnemy Warrior ( 5, 1 ) 3
             ]
 
-        _ ->
+        3 ->
             [ sampleEnemy Archer ( 2, 4 ) 1
             , sampleEnemy Archer ( 3, 3 ) 2
             , sampleEnemy Archer ( 4, 2 ) 3
+            ]
+
+        _ ->
+            [ sampleEnemy Assassin ( 1, 9 ) 1
+            , sampleEnemy Assassin ( 9, 5 ) 2
+            , sampleEnemy Assassin ( 5, 1 ) 3
             ]
 
 
@@ -126,7 +135,7 @@ initPosition k hero =
                 _ ->
                     { hero | pos = ( 9, 5 ) }
 
-        _ ->
+        3 ->
             case hero.indexOnBoard of
                 1 ->
                     { hero | pos = ( 6, 8 ) }
@@ -136,6 +145,17 @@ initPosition k hero =
 
                 _ ->
                     { hero | pos = ( 8, 6 ) }
+
+        _ ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 1, 5 ) }
+
+                2 ->
+                    { hero | pos = ( 5, 9 ) }
+
+                _ ->
+                    { hero | pos = ( 9, 1 ) }
 
 
 spawnTimes : Int -> Int

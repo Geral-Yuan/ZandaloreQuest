@@ -7,7 +7,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1)
+import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
@@ -837,6 +837,9 @@ nextNPC task =
 
         Level 2 ->
             [ npcSkullKnight1 ]
+
+        Level 3 ->
+            [ npcSkullKnight2 ]
 
         _ ->
             []
