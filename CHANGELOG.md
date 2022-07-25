@@ -6,6 +6,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.50] -- 2022
+### Added
+- added UI for board game
+
+### Fixed
+- fixed volume adjust tab position
+
+### Changed
+- changed board game background to have simpler color
+- changed formatting issues such as text alignment
+
 ## [m1.49] -- 2022-7-24
 
 ### Added
