@@ -45,6 +45,34 @@ npcDarkKnight2 =
     }
 
 
+npcSkullKnight1 : NPC
+npcSkullKnight1 =
+    { scene = DungeonScene
+    , name = "SkullKnight 1"
+    , dialogue = []
+    , image = "SkullKnight"
+    , faceDir = Right
+    , position = ( 900, 350 )
+    , size = ( 64, 64 )
+    , beaten = False
+    , talkRange = ( ( 800, 1000 ), ( 250, 450 ) )
+    }
+
+
+npcSkullKnight2 : NPC
+npcSkullKnight2 =
+    { scene = DungeonScene
+    , name = "SkullKnight 2"
+    , dialogue = []
+    , image = "SkullKnight"
+    , faceDir = Left
+    , position = ( 1100, 350 )
+    , size = ( 64, 64 )
+    , beaten = False
+    , talkRange = ( ( 1000, 1200 ), ( 250, 450 ) )
+    }
+
+
 npcWarrior : NPC
 npcWarrior =
     { scene = CastleScene

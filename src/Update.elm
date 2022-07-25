@@ -15,6 +15,7 @@ import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimatio
 import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
+import NPC exposing (npcSkullKnight1)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -203,7 +204,7 @@ updateTutorial msg k model =
                         , cntTask = nextTask model.cntTask
                         , bag = addCoin model.bag 50
                         , unlockShop = True
-                        , npclist = (model.npclist |> updateBeaten)
+                        , npclist = model.npclist |> updateBeaten
                       }
                     , Cmd.none
                     )
@@ -725,13 +726,12 @@ checkEnd ( model, cmd ) =
                             , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
                             , unlockShop = True
-                            , npclist = (model.npclist |> updateBeaten)
+                            , npclist = model.npclist |> updateBeaten
                         }
 
                     else if
                         List.isEmpty finalboard.enemies
                             && (finalboard.spawn == 0)
-                            && (model.level /= 0)
                             && List.all (\hero -> hero.state == Waiting) model.board.heroes
                     then
                         { model
@@ -739,6 +739,8 @@ checkEnd ( model, cmd ) =
                             , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
                             , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                            , unlockDungeon = model.unlockDungeon || (model.level == 2)
+                            , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
                         }
 
                     else if
@@ -787,6 +789,9 @@ nextNPC task =
 
         Level 1 ->
             [ npcDarkKnight2 ]
+
+        Level 2 ->
+            [ npcSkullKnight1 ]
 
         _ ->
             []

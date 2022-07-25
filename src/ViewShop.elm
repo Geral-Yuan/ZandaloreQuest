@@ -153,7 +153,7 @@ exitButton =
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "50px"
-        , HtmlAttr.style "left" "1500px"
+        , HtmlAttr.style "left" "1400px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"

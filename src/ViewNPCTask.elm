@@ -63,7 +63,7 @@ viewChatBox ( x, y ) scaleFactor =
 
 viewTaskBoard : List (Svg msg)
 viewTaskBoard =
-    [Svg.rect
+    [ Svg.rect
         -- outer frame
         [ SvgAttr.width "270"
         , SvgAttr.height "200"
@@ -86,6 +86,7 @@ viewTaskBoard =
         ]
         []
     ]
+
 
 viewTask : Model -> Html Msg
 viewTask model =
@@ -112,8 +113,17 @@ textTask model =
         GoToShop ->
             "Go to the shop and get a free random hero!"
 
-        Level k ->
-            "Talk to a skull knight " ++ toString k ++ " and destroy him!"
+        Level 1 ->
+            "Talk to a Dark Knight 1 and defeat him!"
+
+        Level 2 ->
+            "Talk to a Dark Knight 2 and defeat him!"
+        
+        Level 3 ->
+            "Enter Dungeon and destroy Skull Knight 1!"
+
+        Level _ ->
+            "Skull Knight 2 appears! Kill him!"
 
         -- Maybe a name for each NPC later
         _ ->
@@ -152,11 +162,14 @@ checkNPCTalk model npclist =
 
         Just npc ->
             if npc.beaten then
-                model
-                -- To be modified
+                if Tuple.first model.popUpHint /= Noop then
+                    { model | popUpHint = ( FailtoTalk npc, 0 ) }
+
+                else
+                    model
 
             else
-                { model | mode = Dialog model.cntTask, previousMode = Castle }
+                { model | mode = Dialog model.cntTask, previousMode = model.mode }
 
 
 checkInTalkRange : ( Float, Float ) -> NPC -> Bool

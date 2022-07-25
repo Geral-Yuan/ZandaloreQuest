@@ -69,11 +69,13 @@ type BoardState
     | HeroEnergy
     | Healing
 
+
 type FailToDo
     = FailtoEnter Scene
     | FailtoTalk NPC
     | LackEnergy
     | Noop
+
 
 
 -- | GettingAttacked
@@ -232,37 +234,35 @@ map : Int -> List Pos
 map level =
     case level of
         0 ->
-            List.concat
-                (List.map2 pairRange
-                    (List.range 1 9)
-                    [ ( 5, 9 )
-                    , ( 4, 9 )
-                    , ( 3, 9 )
-                    , ( 2, 9 )
-                    , ( 1, 9 )
-                    , ( 1, 8 )
-                    , ( 1, 7 )
-                    , ( 1, 6 )
-                    , ( 1, 5 )
-                    ]
-                )
+            basicMap
                 |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
 
+        3 ->
+            (basicMap
+                |> List.filter (\( x, y ) -> modBy 2 (x + y) == 0)
+            )
+                ++ [ ( 6, 1 ), ( 1, 8 ), ( 9, 2 ), ( 4, 9 ) ]
+
         _ ->
-            List.concat
-                (List.map2 pairRange
-                    (List.range 1 9)
-                    [ ( 5, 9 )
-                    , ( 4, 9 )
-                    , ( 3, 9 )
-                    , ( 2, 9 )
-                    , ( 1, 9 )
-                    , ( 1, 8 )
-                    , ( 1, 7 )
-                    , ( 1, 6 )
-                    , ( 1, 5 )
-                    ]
-                )
+            basicMap
+
+
+basicMap : List Pos
+basicMap =
+    List.concat
+        (List.map2 pairRange
+            (List.range 1 9)
+            [ ( 5, 9 )
+            , ( 4, 9 )
+            , ( 3, 9 )
+            , ( 2, 9 )
+            , ( 1, 9 )
+            , ( 1, 8 )
+            , ( 1, 7 )
+            , ( 1, 6 )
+            , ( 1, 5 )
+            ]
+        )
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy

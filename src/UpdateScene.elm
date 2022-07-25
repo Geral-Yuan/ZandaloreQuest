@@ -40,7 +40,7 @@ checkLeaveCastle model =
         else
             { model | popUpHint = ( FailtoEnter ShopScene, 0 ) }
 
-    else if x > 930 && x < 1080 && y <= 430 && y > 380 then
+    else if x > 320 && x < 440 && y < 810 && y > 780 then
         if model.unlockDungeon then
             { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }
 
@@ -50,7 +50,7 @@ checkLeaveCastle model =
         else
             { model | popUpHint = ( FailtoEnter DungeonScene, 0 ) }
 
-    else if x > 320 && x < 440 && y < 810 && y > 780 then
+    else if x > 930 && x < 1080 && y <= 430 && y > 380 then
         if model.unlockDungeon2 then
             { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }
 
@@ -74,7 +74,7 @@ checkLeaveDungeon model =
             character.pos
     in
     if y > 850 && x > 900 && x < 1100 then
-        { model | mode = Castle, character = { character | pos = ( 1007, 407 ) } }
+        { model | mode = Castle, character = { character | pos = ( 377, 802 ) } }
 
     else
         model
@@ -90,7 +90,7 @@ checkLeaveDungeon2 model =
             character.pos
     in
     if y > 850 && x > 900 && x < 1100 then
-        { model | mode = Castle, character = { character | pos = ( 377, 802 ) } }
+        { model | mode = Castle, character = { character | pos = ( 1007, 407 ) } }
 
     else
         model
