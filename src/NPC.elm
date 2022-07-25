@@ -3,6 +3,21 @@ module NPC exposing (..)
 import Data exposing (..)
 
 
+allNPC : List NPC
+allNPC =
+    [ npcElder
+    , npcDarkKnight1
+    , npcDarkKnight2
+    , npcSkullKnight1
+    , npcWarrior
+    , npcArcher
+    , npcAssassin
+    , npcMage
+    , npcHealer
+    , npcEngineer
+    ]
+
+
 npcElder : NPC
 npcElder =
     { scene = CastleScene
@@ -14,6 +29,7 @@ npcElder =
     , size = ( 64, 64 )
     , beaten = False
     , talkRange = ( ( 1200, 1427 ), ( 500, 720 ) )
+    , level = 0
     }
 
 
@@ -28,6 +44,7 @@ npcDarkKnight1 =
     , size = ( 64, 64 )
     , beaten = False
     , talkRange = ( ( 572, 667 ), ( 260, 390 ) )
+    , level = 1
     }
 
 
@@ -42,6 +59,7 @@ npcDarkKnight2 =
     , size = ( 64, 64 )
     , beaten = False
     , talkRange = ( ( 315, 415 ), ( 750, 850 ) )
+    , level = 2
     }
 
 
@@ -56,6 +74,7 @@ npcSkullKnight1 =
     , size = ( 64, 64 )
     , beaten = False
     , talkRange = ( ( 800, 1000 ), ( 250, 450 ) )
+    , level = 3
     }
 
 
@@ -70,6 +89,7 @@ npcSkullKnight2 =
     , size = ( 64, 64 )
     , beaten = False
     , talkRange = ( ( 1000, 1200 ), ( 250, 450 ) )
+    , level = 4
     }
 
 
@@ -84,6 +104,7 @@ npcWarrior =
     , size = ( 64, 64 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }
 
 
@@ -98,6 +119,7 @@ npcArcher =
     , size = ( 64, 64 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }
 
 
@@ -112,6 +134,7 @@ npcAssassin =
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }
 
 
@@ -126,6 +149,7 @@ npcMage =
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }
 
 
@@ -140,6 +164,7 @@ npcHealer =
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }
 
 
@@ -154,4 +179,5 @@ npcEngineer =
     , size = ( 100, 100 )
     , beaten = True
     , talkRange = ( ( 0, 0 ), ( 0, 0 ) )
+    , level = 0
     }

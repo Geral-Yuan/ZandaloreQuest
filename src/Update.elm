@@ -7,7 +7,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (npcDarkKnight1, npcDarkKnight2)
+import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
@@ -15,7 +15,6 @@ import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimatio
 import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
-import NPC exposing (npcSkullKnight1)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -340,10 +339,26 @@ isReachable mode ( x, y ) npclist =
                 || (x > 392 && x < 462 && y >= 410 && y < 582)
 
         Dungeon ->
-            y > 241 && y < 974 && x > 502 && x < 1542
+            y
+                > 241
+                && y
+                < 974
+                && x
+                > 502
+                && x
+                < 1542
+                && not (List.foldr (||) False (List.map (npcCollisionRange ( x, y )) (npclist |> List.filter (\npc -> npc.scene == DungeonScene))))
 
         Dungeon2 ->
-            y > 241 && y < 974 && x > 502 && x < 1542
+            y
+                > 241
+                && y
+                < 974
+                && x
+                > 502
+                && x
+                < 1542
+                && not (List.foldr (||) False (List.map (npcCollisionRange ( x, y )) (npclist |> List.filter (\npc -> npc.scene == Dungeon2Scene))))
 
         _ ->
             True
@@ -466,6 +481,26 @@ updateRPG msg model =
 
         ExitShop ->
             ( { model | mode = Shop }, Cmd.none )
+
+        Test ->
+            ( { model
+                | test = True
+                , npclist = allNPC
+                , unlockShop = True
+                , unlockDungeon = True
+                , unlockDungeon2 = True
+                , cntTask = BeatBoss
+                , indexedheroes =
+                    [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
+                    , ( Hero Archer ( 0, 0 ) 40 40 20 5 False Waiting 0, 2 )
+                    , ( Hero Assassin ( 0, 0 ) 40 40 20 6 False Waiting 0, 3 )
+                    , ( Hero Mage ( 0, 0 ) 50 50 12 3 False Waiting 0, 4 )
+                    , ( Hero Healer ( 0, 0 ) 50 50 5 5 False Waiting 0, 5 )
+                    , ( Hero Engineer ( 0, 0 ) 50 50 5 5 False Waiting 0, 6 )
+                    ]
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -712,51 +747,61 @@ checkEnd ( model, cmd ) =
             myboard.coins
 
         nmodel =
-            case model.mode of
-                BoardGame ->
-                    if
-                        List.isEmpty finalboard.enemies
-                            && (finalboard.spawn == 0)
-                            && (model.level == 0)
-                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
-                    then
-                        { model
-                            | mode = Dialog FinishTutorial
-                            , level = model.level + 1
-                            , cntTask = nextTask model.cntTask
-                            , bag = addCoin model.bag wincoins
-                            , unlockShop = True
-                            , npclist = model.npclist |> updateBeaten
-                        }
+            if
+                model.test
+                    && List.isEmpty finalboard.enemies
+                    && (finalboard.spawn == 0)
+                    && (model.level == 0)
+                    && List.all (\hero -> hero.state == Waiting) model.board.heroes
+            then
+                { model | mode = model.previousMode }
 
-                    else if
-                        List.isEmpty finalboard.enemies
-                            && (finalboard.spawn == 0)
-                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
-                    then
-                        { model
-                            | mode = Summary
-                            , cntTask = nextTask model.cntTask
-                            , bag = addCoin model.bag wincoins
-                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
-                            , unlockDungeon = model.unlockDungeon || (model.level == 2)
-                            , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
-                        }
+            else
+                case model.mode of
+                    BoardGame ->
+                        if
+                            List.isEmpty finalboard.enemies
+                                && (finalboard.spawn == 0)
+                                && (model.level == 0)
+                                && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                        then
+                            { model
+                                | mode = Dialog FinishTutorial
+                                , level = model.level + 1
+                                , cntTask = nextTask model.cntTask
+                                , bag = addCoin model.bag wincoins
+                                , unlockShop = True
+                                , npclist = model.npclist |> updateBeaten
+                            }
 
-                    else if
-                        List.isEmpty finalboard.heroes
-                            && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
-                    then
-                        { model
-                            | mode = model.previousMode
-                            , bag = addCoin model.bag losecoins
-                        }
+                        else if
+                            List.isEmpty finalboard.enemies
+                                && (finalboard.spawn == 0)
+                                && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                        then
+                            { model
+                                | mode = Summary
+                                , cntTask = nextTask model.cntTask
+                                , bag = addCoin model.bag wincoins
+                                , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                                , unlockDungeon = model.unlockDungeon || (model.level == 2)
+                                , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
+                            }
 
-                    else
+                        else if
+                            List.isEmpty finalboard.heroes
+                                && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
+                        then
+                            { model
+                                | mode = model.previousMode
+                                , bag = addCoin model.bag losecoins
+                            }
+
+                        else
+                            model
+
+                    _ ->
                         model
-
-                _ ->
-                    model
     in
     ( nmodel, cmd )
 

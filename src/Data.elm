@@ -164,6 +164,7 @@ type alias NPC =
     , size : ( Float, Float )
     , beaten : Bool
     , talkRange : ( ( Float, Float ), ( Float, Float ) )
+    , level : Int
     }
 
 

@@ -33,3 +33,4 @@ type Msg
     | LevelUp ( Hero, Int )
     | ExitShop
     | ViewTutorial
+    | Test

@@ -118,7 +118,7 @@ textTask model =
 
         Level 2 ->
             "Talk to a Dark Knight 2 and defeat him!"
-        
+
         Level 3 ->
             "Enter Dungeon and destroy Skull Knight 1!"
 
@@ -161,7 +161,10 @@ checkNPCTalk model npclist =
             model
 
         Just npc ->
-            if npc.beaten then
+            if model.test then
+                { model | level = npc.level, mode = HeroChoose, previousMode = model.mode }
+
+            else if npc.beaten then
                 if Tuple.first model.popUpHint /= Noop then
                     { model | popUpHint = ( FailtoTalk npc, 0 ) }
 
