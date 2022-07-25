@@ -1,18 +1,15 @@
-module ViewDialog exposing (..)
+module ViewDialog exposing (viewDialog)
 
-import Data exposing (..)
+import Data exposing (Task(..), pixelHeight, pixelWidth)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewAllEnemy exposing (..)
-import ViewAllHero exposing (..)
-import ViewOthers exposing (..)
-import ViewScenes exposing (..)
+import ViewOthers exposing (dialogHelper)
+import ViewScenes exposing (viewDungeonSvg)
 
 
 viewDialog : Task -> Model -> Html Msg

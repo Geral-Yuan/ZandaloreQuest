@@ -1,6 +1,6 @@
 module UpdateShop exposing (updateShop)
 
-import Data exposing (..)
+import Data exposing (Class(..), Dir(..), GameMode(..), Hero, Task(..), allSampleHeroes, listDifference)
 import Message exposing (Msg(..))
 import Model exposing (Model)
 import NPC exposing (npcDarkKnight1)

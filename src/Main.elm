@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
-import Data exposing (..)
+import Data exposing (Dir(..))
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
 import Message exposing (Msg(..))

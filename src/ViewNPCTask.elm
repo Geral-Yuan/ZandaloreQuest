@@ -1,4 +1,4 @@
-module ViewNPCTask exposing (..)
+module ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard,checkTalkRange)
 
 import Data exposing (..)
 import Debug exposing (toString)

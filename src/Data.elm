@@ -16,9 +16,6 @@ type GameMode
     | UpgradePage
     | DrawHero Class
     | HeroChoose
-      -- | Starting
-      -- | ClearLevel Int
-      -- | Gameover Int
     | BoardGame
     | Summary
     | Logo
@@ -185,15 +182,6 @@ type Dir
 type Side
     = Hostile
     | Friend
-
-
-
--- type RpgDir
---     = Left
---     | Right
---     | Up
---     | Down
--- Basic values
 
 
 pixelWidth : Float

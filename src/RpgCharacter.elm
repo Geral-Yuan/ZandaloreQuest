@@ -1,14 +1,7 @@
-module RpgCharacter exposing (..)
+module RpgCharacter exposing (RpgCharacter, moveCharacter, moveCharacterDir)
 
 import Data exposing (Dir(..))
 import Html.Events exposing (on)
-
-
-
--- type CharacterState
---     = Still
---     | MovingLeft
---     | MovingRight
 
 
 type alias RpgCharacter =

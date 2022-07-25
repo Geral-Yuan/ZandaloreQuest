@@ -3,12 +3,12 @@ module ViewOthers exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
+import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr exposing (height, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 

@@ -3,10 +3,10 @@ module Model exposing (..)
 import Bag exposing (Bag, initBag)
 import Board exposing (Board, sampleBoard)
 import Browser.Dom exposing (getViewport)
-import Data exposing (..)
+import Data exposing (Class(..), Dir(..), FailToDo(..), GameMode(..), Hero, HeroState(..), NPC, Task(..), pixelHeight, pixelWidth)
 import Message exposing (Msg(..))
 import NPC exposing (npcArcher, npcAssassin, npcElder, npcEngineer, npcHealer, npcMage, npcWarrior)
-import RpgCharacter exposing (..)
+import RpgCharacter exposing (RpgCharacter)
 import Task
 
 

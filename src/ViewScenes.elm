@@ -4,12 +4,12 @@ import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
-import Message exposing (..)
+import Message exposing (Msg)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewNPCTask exposing (..)
+import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIFrame)
 
 

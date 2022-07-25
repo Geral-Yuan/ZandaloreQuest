@@ -1,17 +1,13 @@
-module ViewTutorial exposing (..)
+module ViewTutorial exposing (viewTutorialScene)
 
 import Data exposing (..)
-import Html exposing (Html, button, div)
+import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
-import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import Svg exposing (..)
+import Svg
 import Svg.Attributes as SvgAttr
-import ViewAllEnemy exposing (..)
-import ViewAllHero exposing (..)
-import ViewOthers exposing (..)
-import ViewScenes exposing (..)
+import ViewOthers exposing (dialogHelper, shapeHelper)
 
 
 viewTutorialScene : Model -> Int -> List (Html Msg)
@@ -343,22 +339,3 @@ viewTutorial13 =
             []
         , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
         ]
-
-
-tutorialButton : Html Msg
-tutorialButton =
-    button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "900px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "20px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "170px"
-        , onClick ViewTutorial
-        ]
-        [ text "How to play" ]

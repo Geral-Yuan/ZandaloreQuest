@@ -4,7 +4,7 @@ import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBui
 import Board exposing (Board)
 import Data exposing (..)
 import Message exposing (Msg(..))
-import Random exposing (..)
+import Random exposing (Generator)
 
 
 randomDamage : Generator Critical

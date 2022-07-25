@@ -1,13 +1,13 @@
-module ViewAllHero exposing (..)
+module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 
-import Data exposing (..)
+import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
+import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 

@@ -1,6 +1,6 @@
 module NPC exposing (..)
 
-import Data exposing (..)
+import Data exposing (NPC, Scene(..), Dir(..), Task(..))
 
 
 allNPC : List NPC
