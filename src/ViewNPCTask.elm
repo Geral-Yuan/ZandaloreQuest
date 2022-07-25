@@ -162,7 +162,7 @@ checkNPCTalk model npclist =
 
         Just npc ->
             if model.test then
-                { model | level = npc.level, mode = HeroChoose, previousMode = model.mode }
+                { model | level = npc.level, mode = Dialog npc.task, previousMode = model.mode }
 
             else if npc.beaten then
                 if Tuple.first model.popUpHint /= Noop then
