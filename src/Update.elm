@@ -202,8 +202,8 @@ updateTutorial msg k model =
                         , level = model.level + 1
                         , cntTask = nextTask model.cntTask
                         , bag = addCoin model.bag 50
-                        , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                         , unlockShop = True
+                        , npclist = (model.npclist |> updateBeaten)
                       }
                     , Cmd.none
                     )
@@ -724,8 +724,8 @@ checkEnd ( model, cmd ) =
                             , level = model.level + 1
                             , cntTask = nextTask model.cntTask
                             , bag = addCoin model.bag wincoins
-                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
                             , unlockShop = True
+                            , npclist = (model.npclist |> updateBeaten)
                         }
 
                     else if

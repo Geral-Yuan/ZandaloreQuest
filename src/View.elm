@@ -121,7 +121,7 @@ viewTutorial k model =
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
                 ++ viewUIFrame 420 500 1570 500
-                ++ [ viewCoinSVG ]
+                ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
             :: viewTutorialScene model k
@@ -187,7 +187,7 @@ viewBoard model =
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
                 ++ viewUIFrame 420 500 1570 500
-                ++ [ viewCoinSVG ]
+                ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
          , endTurnButton
@@ -285,6 +285,7 @@ animateHeroVisuals hero =
             Attacking ->
                 if hero.class /= Turret then
                     text "-3 Energy"
+
                 else
                     text ""
 

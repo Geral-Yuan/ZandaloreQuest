@@ -10,6 +10,7 @@ import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (..)
+import ViewOthers exposing (viewCoinSVG)
 import ViewScenes exposing (..)
 
 
@@ -42,13 +43,16 @@ viewShop model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewShopSvg
-                    , viewTaskBoard
-                    ]
+                    ([ viewShopSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
                , viewCharacterPos model.character
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewBagCoin model
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
             ++ [ viewRpgCharacter model.character ]
@@ -110,9 +114,7 @@ viewShopChoose model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewBuySvg
-            , viewTaskBoard
-            ]
+            (viewBuySvg :: viewTaskBoard)
 
         -- , healthButton
         -- , damageButton
@@ -244,9 +246,8 @@ viewUpgradePage model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            ([ viewBuySvg
-             , viewTaskBoard
-             ]
+            (viewBuySvg
+                :: viewTaskBoard
                 ++ List.map (\hero -> viewShopHeroes model hero) (idealAllHeroes model)
             )
          , exitButton

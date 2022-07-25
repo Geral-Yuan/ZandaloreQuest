@@ -63,7 +63,7 @@ viewBoardCoin : Board -> Html Msg
 viewBoardCoin board =
     div
         [ HtmlAttr.style "top" "800px"
-        , HtmlAttr.style "left" "1892px"
+        , HtmlAttr.style "left" "1800px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -71,16 +71,16 @@ viewBoardCoin board =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text (": " ++ toString board.coins) ]
+        [ text (toString board.coins) ]
 
 
-viewCoinSVG : Svg Msg
-viewCoinSVG =
+viewCoinSVG : ( Float, Float ) -> Svg Msg
+viewCoinSVG ( x, y ) =
     Svg.image
         [ SvgAttr.width "80"
         , SvgAttr.height "80"
-        , SvgAttr.x "1800"
-        , SvgAttr.y "790"
+        , SvgAttr.x (toString x)
+        , SvgAttr.y (toString y)
         , SvgAttr.xlinkHref "./assets/image/Gold.png"
         ]
         []

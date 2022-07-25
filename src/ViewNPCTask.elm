@@ -61,29 +61,42 @@ viewChatBox ( x, y ) scaleFactor =
         ]
 
 
-viewTaskBoard : Svg msg
+viewTaskBoard : List (Svg msg)
 viewTaskBoard =
-    Svg.rect
+    [Svg.rect
+        -- outer frame
         [ SvgAttr.width "270"
         , SvgAttr.height "200"
         , SvgAttr.x "1730"
-        , SvgAttr.y "100"
-        , SvgAttr.rx "20"
-        , SvgAttr.fill "rgb(255,218,185)"
+        , SvgAttr.y "30"
+        , SvgAttr.fill "rgb(184,111,80)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
         ]
         []
-
+    , Svg.rect
+        -- inner frame
+        [ SvgAttr.width "250"
+        , SvgAttr.height "180"
+        , SvgAttr.x "1740"
+        , SvgAttr.y "40"
+        , SvgAttr.fill "rgb(63,40,50)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+    ]
 
 viewTask : Model -> Html Msg
 viewTask model =
     div
-        [ HtmlAttr.style "top" "110px"
-        , HtmlAttr.style "left" "1730px"
-        , HtmlAttr.style "color" "blue"
+        [ HtmlAttr.style "top" "40px"
+        , HtmlAttr.style "left" "1745px"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "20px"
         , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "text-align" "left"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]

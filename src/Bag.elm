@@ -11,7 +11,7 @@ type alias Bag =
 
 initBag : Bag
 initBag =
-    { coins = 100
+    { coins = 0
     }
 
 
