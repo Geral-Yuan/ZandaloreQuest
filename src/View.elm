@@ -105,18 +105,23 @@ viewTutorial k model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewMap model.board
+            (viewBoardGameBackGround 100
+                :: viewMap model.board
                 ++ List.map viewCoordinate model.board.map
+                ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
+                ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
-                ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
                 ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
+                ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
-                ++ List.map (viewEnemyFrame model.board) model.board.enemies
                 ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
                 ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
+                ++ viewUIFrame 420 500 1570 500
+                ++ [ viewCoinSVG ]
              --++ viewLines model.board
             )
             :: viewTutorialScene model k
@@ -165,20 +170,24 @@ viewBoard model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (viewBoardGameBackGround model 100
+            (viewBoardGameBackGround 100
                 -- TODO: make the board game looks nicer
                 :: viewMap model.board
                 ++ List.map viewCoordinate model.board.map
+                ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
+                ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
-                ++ List.concat (List.map viewHeroFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
                 ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
+                ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
-                ++ List.map (viewEnemyFrame model.board) model.board.enemies
                 ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
                 ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
+                ++ viewUIFrame 420 500 1570 500
+                ++ [ viewCoinSVG ]
              --++ viewLines model.board
             )
          , endTurnButton
@@ -186,15 +195,21 @@ viewBoard model =
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
-         , audio
-            [ HtmlAttr.autoplay True
-            , HtmlAttr.loop True
-            , HtmlAttr.preload "True"
-            , HtmlAttr.controls True
-            , HtmlAttr.src "./assets/audio/BoardGameThemeSong.mp3"
-            , HtmlAttr.id "BoardGameThemeSong"
+         , div
+            [ HtmlAttr.style "bottom" "20px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "position" "absolute"
             ]
-            []
+            [ audio
+                [ HtmlAttr.autoplay True
+                , HtmlAttr.loop True
+                , HtmlAttr.preload "True"
+                , HtmlAttr.controls True
+                , HtmlAttr.src "./assets/audio/BoardGameThemeSong.mp3"
+                , HtmlAttr.id "BoardGameThemeSong"
+                ]
+                []
+            ]
 
          --  , viewClickPosition model
          --  , viewTips
@@ -362,7 +377,7 @@ viewCell board pos =
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
             , SvgAttr.points (detPoints (findPos pos))
-            , SvgAttr.opacity "50%"
+            , SvgAttr.opacity "75%"
             , onClick (Move pos)
             , onContentMenu (Hit pos)
             ]
@@ -372,8 +387,9 @@ viewCell board pos =
 viewTurn : Model -> Html Msg
 viewTurn model =
     div
-        [ HtmlAttr.style "left" "1690px"
-        , HtmlAttr.style "top" "500px"
+        [ HtmlAttr.style "left" "1580px"
+        , HtmlAttr.style "top" "640px"
+        , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
