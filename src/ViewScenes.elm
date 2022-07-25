@@ -10,6 +10,7 @@ import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (..)
+import ViewOthers exposing (viewUIFrame)
 
 
 logoWidth : Float
@@ -128,7 +129,7 @@ viewCharacterPos character =
             character.pos
     in
     div
-        [ HtmlAttr.style "bottom" "30px"
+        [ HtmlAttr.style "bottom" "100px"
         , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -178,15 +179,21 @@ viewCastle model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
-               , audio
-                    [ HtmlAttr.autoplay True
-                    , HtmlAttr.loop True
-                    , HtmlAttr.preload "True"
-                    , HtmlAttr.controls True
-                    , HtmlAttr.src "./assets/audio/CastleThemeSong.mp3"
-                    , HtmlAttr.id "CastleThemeSong"
+               , div
+                    [ HtmlAttr.style "bottom" "20px"
+                    , HtmlAttr.style "left" "0px"
+                    , HtmlAttr.style "position" "absolute"
                     ]
-                    []
+                    [ audio
+                        [ HtmlAttr.autoplay True
+                        , HtmlAttr.loop True
+                        , HtmlAttr.preload "True"
+                        , HtmlAttr.controls True
+                        , HtmlAttr.src "./assets/audio/CastleThemeSong.mp3"
+                        , HtmlAttr.id "CastleThemeSong"
+                        ]
+                        []
+                    ]
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
             ++ [ viewRpgCharacter model.character ]
@@ -499,10 +506,13 @@ viewSummary model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewBoardGameBackGround model 20 ]
+            (viewBoardGameBackGround 20
+                :: viewUIFrame 800 900 600 50
+            )
         , div
-            [ HtmlAttr.style "top" "100px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "200px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
@@ -513,8 +523,9 @@ viewSummary model =
             ]
             [ text "Great Battle!" ]
         , div
-            [ HtmlAttr.style "top" "300px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "350px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
@@ -525,8 +536,9 @@ viewSummary model =
             ]
             [ text ("Gold: +" ++ toString (model.board.coins + 50)) ]
         , div
-            [ HtmlAttr.style "top" "500px"
-            , HtmlAttr.style "left" "1000px"
+            [ HtmlAttr.style "top" "750px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
             , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
             , HtmlAttr.style "font-size" "40px"
@@ -539,15 +551,15 @@ viewSummary model =
         ]
 
 
-viewBoardGameBackGround : Model -> Int -> Svg Msg
-viewBoardGameBackGround model opac =
+viewBoardGameBackGround : Int -> Svg Msg
+viewBoardGameBackGround opac =
     Svg.image
-        [ SvgAttr.width "1600"
+        [ SvgAttr.width "2000"
         , SvgAttr.height "1000"
-        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.x "0"
         , SvgAttr.y (toString (pixelHeight / 2 - 500))
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.opacity (toString opac ++ "%")
-        , SvgAttr.xlinkHref ("./assets/image/Board" ++ toString model.level ++ ".jpg")
+        , SvgAttr.xlinkHref "./assets/image/BoardGameBG.png"
         ]
         []

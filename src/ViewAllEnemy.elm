@@ -19,7 +19,7 @@ viewEnemy enemy =
 
         class =
             toString enemy.class
-        
+
         fimage =
             "./assets/image/" ++ class
 
@@ -97,8 +97,8 @@ viewEnemyImage board enemy =
         []
 
 
-viewEnemyFrame : Board -> Enemy -> Svg msg
-viewEnemyFrame board enemy =
+viewEnemyOuterFrame : Board -> Enemy -> Svg msg
+viewEnemyOuterFrame board enemy =
     let
         minIdx =
             List.map .indexOnBoard board.enemies
@@ -109,13 +109,38 @@ viewEnemyFrame board enemy =
             enemy.indexOnBoard - minIdx + 1
     in
     Svg.rect
+        -- outer frame
+        [ SvgAttr.width "420"
+        , SvgAttr.height "140"
+        , SvgAttr.x (toString (20 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 130))
+        , SvgAttr.fill "rgb(184,111,80)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+
+
+viewEnemyInnerFrame : Board -> Enemy -> Svg msg
+viewEnemyInnerFrame board enemy =
+    let
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
+    in
+    Svg.rect
+        -- inner frame
         [ SvgAttr.width "400"
         , SvgAttr.height "120"
         , SvgAttr.x (toString (30 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (idxOnBoard * 150 - 125))
-        , SvgAttr.fill "transparent"
+        , SvgAttr.y (toString (idxOnBoard * 150 - 120))
+        , SvgAttr.fill "rgb(63,40,50)"
         , SvgAttr.stroke "black"
-        , SvgAttr.rx "20"
+        , SvgAttr.strokeWidth "2"
         ]
         []
 
@@ -239,7 +264,7 @@ viewEnemyInfo board enemy =
     [ div
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 115) ++ "px")
         , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
-        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
@@ -251,7 +276,7 @@ viewEnemyInfo board enemy =
     , div
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 75) ++ "px")
         , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
-        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
