@@ -21,6 +21,7 @@ type GameMode
     | Logo
     | Tutorial Int
     | Dialog Task
+    | Encyclopedia Class
 
 
 type Task
