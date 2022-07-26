@@ -11,7 +11,7 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
-import ViewOthers exposing (viewCoinSVG, viewUIFrame)
+import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
 
 
 logoWidth : Float
@@ -186,6 +186,7 @@ viewCastle model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
+                        ++ viewUIButton 170 80 50 800
                     )
                , viewCharacterPos model.character
                , viewBagCoin model

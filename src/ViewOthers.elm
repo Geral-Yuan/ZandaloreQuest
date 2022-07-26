@@ -152,17 +152,18 @@ detPoints ( x, y ) =
 endTurnButton : Html Msg
 endTurnButton =
     button
-        [ HtmlAttr.style "background" "#34495f"
+        [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "900px"
-        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
+        , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "height" "80px"
         , HtmlAttr.style "left" "1700px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
+        , HtmlAttr.style "border" "transparent"
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
@@ -191,6 +192,34 @@ viewUIFrame w h x y =
         , SvgAttr.fill "rgb(63,40,50)"
         , SvgAttr.stroke "black"
         , SvgAttr.strokeWidth "2"
+        ]
+        []
+    ]
+
+
+viewUIButton : Int -> Int -> Int -> Int -> List (Svg msg)
+viewUIButton w h x y =
+    -- outer
+    [ Svg.rect
+        [ SvgAttr.width (toString w)
+        , SvgAttr.height (toString h)
+        , SvgAttr.x (toString x)
+        , SvgAttr.y (toString y)
+        , SvgAttr.fill "rgb(189,133,96)"
+        , SvgAttr.stroke "rgb(61,43,31)"
+        , SvgAttr.strokeWidth "2px"
+        , SvgAttr.rx "10px"
+        ]
+        []
+
+    -- inner
+    , Svg.rect
+        [ SvgAttr.width (toString (w - 4))
+        , SvgAttr.height (toString (h - 10))
+        , SvgAttr.x (toString (x + 2))
+        , SvgAttr.y (toString (y + 2))
+        , SvgAttr.fill "rgb(234,212,170)"
+        , SvgAttr.rx "10px"
         ]
         []
     ]
