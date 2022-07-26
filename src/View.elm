@@ -16,6 +16,7 @@ import ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHe
 import ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 import ViewChoose exposing (viewHeroChoose)
 import ViewDialog exposing (viewDialog)
+import ViewEncyclopedia exposing (..)
 import ViewOthers exposing (..)
 import ViewScenes exposing (viewBoardGameBackGround, viewCastle, viewDungeon, viewDungeon2, viewScene0, viewSummary)
 import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
@@ -66,6 +67,9 @@ view model =
 
                 Dialog task ->
                     viewDialog task model
+
+                Encyclopedia hero ->
+                    viewEncyclopedia hero model
     in
     div
         [ HtmlAttr.style "width" "100%"
@@ -74,6 +78,7 @@ view model =
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "url('./assets/PixelOperator-Bold.ttf') format('truetype')"
         ]
         [ viewAll
         ]
@@ -196,6 +201,7 @@ viewBoard model =
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
+         , viewEncyclopediaButton
          , div
             [ HtmlAttr.style "bottom" "20px"
             , HtmlAttr.style "left" "0px"

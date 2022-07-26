@@ -24,7 +24,7 @@ npcElder : NPC
 npcElder =
     { scene = CastleScene
     , name = "Elder"
-    , dialogue = "Elder: Welcome to the tutorial! The warrior and archer will help you on this arduous journey, choose one more hero to join you in this tutorial. Click anywhere to countinue."
+    , dialogue = "Elder: Welcome to the tutorial! The warrior and archer will help you on this arduous journey, choose one more hero to join you in this tutorial. Click anywhere to continue."
     , image = "ElderNPC"
     , faceDir = Left
     , position = ( 1300, 610 )

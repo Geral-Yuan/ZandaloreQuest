@@ -207,12 +207,12 @@ viewMainCharacterDialog =
 viewDialogContent : String -> Html Msg
 viewDialogContent string =
     div
-        [ HtmlAttr.style "width" "1300px"
+        [ HtmlAttr.style "width" "1290px"
         , HtmlAttr.style "height" "450px"
         , HtmlAttr.style "position" "fixed"
-        , HtmlAttr.style "left" "370px"
-        , HtmlAttr.style "top" "560px"
-        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "left" "365px"
+        , HtmlAttr.style "top" "570px"
+        , HtmlAttr.style "color" "black"
         , HtmlAttr.style "font-size" "50px"
         ]
         [ text string ]
@@ -276,12 +276,12 @@ viewDialogGeneral =
 viewDialogBox : Svg Msg
 viewDialogBox =
     Svg.image
-        [ SvgAttr.width "1500"
-        , SvgAttr.height "500"
-        , SvgAttr.x (toString (pixelWidth / 2 - 750))
-        , SvgAttr.y (toString (pixelHeight / 2))
+        [ SvgAttr.width "1600"
+        , SvgAttr.height "700"
+        , SvgAttr.x (toString (pixelWidth / 2 - 800))
+        , SvgAttr.y (toString (pixelHeight / 2 - 100))
         , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/DialogBox.png"
+        , SvgAttr.xlinkHref "./assets/image/dialogBox.png"
         ]
         []
 

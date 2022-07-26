@@ -44,6 +44,9 @@ update msg model =
                     , Cmd.none
                     )
 
+                Encyclopedia _ ->
+                    updateEncyclopedia msg model
+
                 BuyingItems ->
                     updateShop msg model
 
@@ -59,6 +62,56 @@ update msg model =
         |> getviewport msg
     , ncmd
     )
+
+
+updateEncyclopedia : Msg -> Model -> ( Model, Cmd Msg )
+updateEncyclopedia msg model =
+    case msg of
+        Back ->
+            ( { model | mode = model.previousMode }, Cmd.none )
+
+        RightEncyclopedia ->
+            case model.mode of
+                Encyclopedia Warrior ->
+                    ( { model | mode = Encyclopedia Archer }, Cmd.none )
+
+                Encyclopedia Archer ->
+                    ( { model | mode = Encyclopedia Assassin }, Cmd.none )
+
+                Encyclopedia Assassin ->
+                    ( { model | mode = Encyclopedia Mage }, Cmd.none )
+
+                Encyclopedia Mage ->
+                    ( { model | mode = Encyclopedia Healer }, Cmd.none )
+
+                Encyclopedia Healer ->
+                    ( { model | mode = Encyclopedia Engineer }, Cmd.none )
+
+                _ ->
+                    ( { model | mode = Encyclopedia Warrior }, Cmd.none )
+
+        LeftEncyclopedia ->
+            case model.mode of
+                Encyclopedia Warrior ->
+                    ( { model | mode = Encyclopedia Engineer }, Cmd.none )
+
+                Encyclopedia Archer ->
+                    ( { model | mode = Encyclopedia Warrior }, Cmd.none )
+
+                Encyclopedia Assassin ->
+                    ( { model | mode = Encyclopedia Archer }, Cmd.none )
+
+                Encyclopedia Mage ->
+                    ( { model | mode = Encyclopedia Assassin }, Cmd.none )
+
+                Encyclopedia Healer ->
+                    ( { model | mode = Encyclopedia Mage }, Cmd.none )
+
+                _ ->
+                    ( { model | mode = Encyclopedia Healer }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
@@ -498,6 +551,9 @@ updateRPG msg model =
               }
             , Cmd.none
             )
+
+        SeeEncyclopedia ->
+            ( { model | previousMode = model.mode, mode = Encyclopedia Warrior }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
