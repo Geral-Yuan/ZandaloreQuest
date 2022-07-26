@@ -4,13 +4,13 @@ import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
-import Message exposing (..)
+import Message exposing (Msg)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewNPCTask exposing (..)
-import ViewOthers exposing (viewUIFrame)
+import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
+import ViewOthers exposing (viewCoinSVG, viewUIFrame)
 
 
 logoWidth : Float
@@ -21,6 +21,16 @@ logoWidth =
 logoHeight : Float
 logoHeight =
     600
+
+
+startWidth : Float
+startWidth =
+    2000
+
+
+startHeight : Float
+startHeight =
+    1000
 
 
 viewScene0 : Model -> Html Msg
@@ -171,9 +181,11 @@ viewCastle model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewCastleSvg
-                    , viewTaskBoard
-                    ]
+                    ([ viewCastleSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
                , viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
@@ -229,11 +241,11 @@ viewDungeon model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewDungeonSvg
-
-                    -- , viewExit
-                    , viewTaskBoard
-                    ]
+                    ([ viewDungeonSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
                , viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
@@ -274,11 +286,11 @@ viewDungeon2 model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewDungeonSvg
-
-                    -- , viewExit
-                    , viewTaskBoard
-                    ]
+                    ([ viewDungeonSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
                , viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
@@ -421,16 +433,6 @@ viewCastleSvg =
         []
 
 
-startWidth : Float
-startWidth =
-    2000
-
-
-startHeight : Float
-startHeight =
-    1000
-
-
 viewStarting : Model -> Html Msg
 viewStarting model =
     -- Add this when the homepage has been designed
@@ -467,8 +469,8 @@ viewStarting model =
 viewBagCoin : Model -> Html Msg
 viewBagCoin model =
     div
-        [ HtmlAttr.style "bottom" "50px"
-        , HtmlAttr.style "right" "100px"
+        [ HtmlAttr.style "left" "1600px"
+        , HtmlAttr.style "top" "910px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -477,7 +479,7 @@ viewBagCoin model =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Coins: " ++ toString model.bag.coins) ]
+        [ text (toString model.bag.coins) ]
 
 
 viewSummary : Model -> Html Msg

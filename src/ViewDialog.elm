@@ -1,18 +1,16 @@
-module ViewDialog exposing (..)
+module ViewDialog exposing (viewDialog)
 
-import Data exposing (..)
+import Data exposing (Task(..), pixelHeight, pixelWidth)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import Svg exposing (..)
+import NPC exposing (npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewAllEnemy exposing (..)
-import ViewAllHero exposing (..)
-import ViewOthers exposing (..)
-import ViewScenes exposing (..)
+import ViewOthers exposing (dialogHelper)
+import ViewScenes exposing (viewCastleSvg, viewDungeonSvg)
 
 
 viewDialog : Task -> Model -> Html Msg
@@ -42,7 +40,7 @@ viewDialog task model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewDungeonSvg
+            [ viewDialogBackground task
             , viewDialogBox
             ]
         , viewDialogMatch task
@@ -57,6 +55,21 @@ viewDialogMatch task =
 
         FinishTutorial ->
             viewFinishTutorial
+
+        Level 1 ->
+            viewDialogDarkKnight1
+
+        Level 2 ->
+            viewDialogDarkKnight2
+
+        Level 3 ->
+            viewDialogSkullKnight1
+
+        Level 4 ->
+            viewDialogSkullKnight2
+
+        Level 5 ->
+            viewDialogSkullKnight3
 
         _ ->
             viewDialogGeneral
@@ -86,7 +99,7 @@ viewFinishTutorial =
             ]
             [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []
             ]
-        , dialogHelper 1300 450 370 560 50 "blue" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click Enter to continue."
+        , dialogHelper 1300 450 370 560 50 "blue" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue."
         ]
 
 
@@ -99,31 +112,145 @@ viewDialogElder =
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
         ]
-        [ div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" "100px"
-            , HtmlAttr.style "left" "350px"
-            ]
-            [ img [ src "./assets/image/MainCharacter.png", height 400, width 480 ] []
-            ]
-        , div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" "100px"
-            , HtmlAttr.style "left" "1180px"
-            , HtmlAttr.style "transform" "scaleX(-1)"
-            ]
-            [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []
-            ]
-        , div
-            [ HtmlAttr.style "width" "1300px"
-            , HtmlAttr.style "height" "450px"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "370px"
-            , HtmlAttr.style "top" "560px"
-            , HtmlAttr.style "color" "blue"
-            , HtmlAttr.style "font-size" "50px"
-            ]
-            [ text "Elder: Welcome to the tutorial! The warrior and archer will help you on this arduous journey, choose one more hero to join you in this tutorial. Click Enter to countinue." ]
+        [ viewMainCharacterDialog
+        , viewElderDialog
+        , viewDialogContent npcElder.dialogue
+        ]
+
+
+viewDialogDarkKnight1 : Html Msg
+viewDialogDarkKnight1 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewDarkKnightDialog
+        , viewDialogContent npcDarkKnight1.dialogue
+        ]
+
+
+viewDialogDarkKnight2 : Html Msg
+viewDialogDarkKnight2 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewDarkKnightDialog
+        , viewDialogContent npcDarkKnight2.dialogue
+        ]
+
+
+viewDialogSkullKnight1 : Html Msg
+viewDialogSkullKnight1 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewSkullKnightDialog
+        , viewDialogContent npcSkullKnight1.dialogue
+        ]
+
+
+viewDialogSkullKnight2 : Html Msg
+viewDialogSkullKnight2 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewSkullKnightDialog
+        , viewDialogContent npcSkullKnight2.dialogue
+        ]
+
+
+viewDialogSkullKnight3 : Html Msg
+viewDialogSkullKnight3 =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewSkullKnightDialog
+        , viewDialogContent npcSkullKnight3.dialogue
+        ]
+
+
+viewMainCharacterDialog : Html Msg
+viewMainCharacterDialog =
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" "100px"
+        , HtmlAttr.style "left" "350px"
+        ]
+        [ img [ src "./assets/image/MainCharacter.png", height 400, width 480 ] []
+        ]
+
+
+viewDialogContent : String -> Html Msg
+viewDialogContent string =
+    div
+        [ HtmlAttr.style "width" "1300px"
+        , HtmlAttr.style "height" "450px"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "370px"
+        , HtmlAttr.style "top" "560px"
+        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "font-size" "50px"
+        ]
+        [ text string ]
+
+
+viewElderDialog : Html Msg
+viewElderDialog =
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" "100px"
+        , HtmlAttr.style "left" "1180px"
+        , HtmlAttr.style "transform" "scaleX(-1)"
+        ]
+        [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []
+        ]
+
+
+viewDarkKnightDialog : Html Msg
+viewDarkKnightDialog =
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" "100px"
+        , HtmlAttr.style "left" "1180px"
+        , HtmlAttr.style "transform" "scaleX(-1)"
+        ]
+        [ img [ src "./assets/image/EvilNPC.png", height 400, width 480 ] []
+        ]
+
+
+viewSkullKnightDialog : Html Msg
+viewSkullKnightDialog =
+    div
+        [ HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "top" "100px"
+        , HtmlAttr.style "left" "1180px"
+        , HtmlAttr.style "transform" "scaleX(-1)"
+        ]
+        [ img [ src "./assets/image/SkullKnight.png", height 400, width 480 ] []
         ]
 
 
@@ -157,3 +284,19 @@ viewDialogBox =
         , SvgAttr.xlinkHref "./assets/image/DialogBox.png"
         ]
         []
+
+
+viewDialogBackground : Task -> Svg Msg
+viewDialogBackground task =
+    case task of
+        MeetElder ->
+            viewCastleSvg
+
+        Level 1 ->
+            viewCastleSvg
+
+        Level 2 ->
+            viewCastleSvg
+
+        _ ->
+            viewDungeonSvg

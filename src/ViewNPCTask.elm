@@ -1,4 +1,4 @@
-module ViewNPCTask exposing (..)
+module ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard,checkTalkRange)
 
 import Data exposing (..)
 import Debug exposing (toString)
@@ -61,29 +61,43 @@ viewChatBox ( x, y ) scaleFactor =
         ]
 
 
-viewTaskBoard : Svg msg
+viewTaskBoard : List (Svg msg)
 viewTaskBoard =
-    Svg.rect
+    [ Svg.rect
+        -- outer frame
         [ SvgAttr.width "270"
         , SvgAttr.height "200"
         , SvgAttr.x "1730"
-        , SvgAttr.y "100"
-        , SvgAttr.rx "20"
-        , SvgAttr.fill "rgb(255,218,185)"
+        , SvgAttr.y "30"
+        , SvgAttr.fill "rgb(184,111,80)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
         ]
         []
+    , Svg.rect
+        -- inner frame
+        [ SvgAttr.width "250"
+        , SvgAttr.height "180"
+        , SvgAttr.x "1740"
+        , SvgAttr.y "40"
+        , SvgAttr.fill "rgb(63,40,50)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+    ]
 
 
 viewTask : Model -> Html Msg
 viewTask model =
     div
-        [ HtmlAttr.style "top" "110px"
-        , HtmlAttr.style "left" "1730px"
-        , HtmlAttr.style "color" "blue"
+        [ HtmlAttr.style "top" "40px"
+        , HtmlAttr.style "left" "1745px"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "20px"
         , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "text-align" "left"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
@@ -99,8 +113,20 @@ textTask model =
         GoToShop ->
             "Go to the shop and get a free random hero!"
 
-        Level k ->
-            "Talk to a skull knight " ++ toString k ++ " and destroy him!"
+        Level 1 ->
+            "Talk to a Dark Knight 1 and defeat him!"
+
+        Level 2 ->
+            "Talk to a Dark Knight 2 and defeat him!"
+
+        Level 3 ->
+            "Enter Dungeon and destroy Skull Knight 1!"
+
+        Level 4 ->
+            "Skull Knight 2 appears! Kill him!"
+
+        Level 5 ->
+            "Enter Dungeon2 and battle with Skull Knight 3"
 
         -- Maybe a name for each NPC later
         _ ->
@@ -138,12 +164,18 @@ checkNPCTalk model npclist =
             model
 
         Just npc ->
-            if npc.beaten then
-                model
-                -- To be modified
+            if model.test then
+                { model | level = npc.level, mode = Dialog npc.task, previousMode = model.mode }
+
+            else if npc.beaten then
+                if Tuple.first model.popUpHint /= Noop then
+                    { model | popUpHint = ( FailtoTalk npc, 0 ) }
+
+                else
+                    model
 
             else
-                { model | mode = Dialog model.cntTask, previousMode = Castle }
+                { model | mode = Dialog model.cntTask, previousMode = model.mode }
 
 
 checkInTalkRange : ( Float, Float ) -> NPC -> Bool

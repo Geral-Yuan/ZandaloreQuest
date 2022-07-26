@@ -1,7 +1,7 @@
 module Message exposing (Msg(..))
 
 import Browser.Dom exposing (Viewport)
-import Data exposing (..)
+import Data exposing (Pos, Dir, Critical, Hero, Class, ItemType)
 
 
 type Msg
@@ -33,3 +33,4 @@ type Msg
     | LevelUp ( Hero, Int )
     | ExitShop
     | ViewTutorial
+    | Test

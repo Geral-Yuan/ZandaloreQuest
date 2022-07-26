@@ -37,18 +37,24 @@ updateAttackable board =
         Just hero ->
             let
                 realattackRange =
-                    List.map (vecAdd hero.pos) (attackRange board hero)
+                    if hero.energy >= 3 && hero.class /= Turret then
+                        List.map (vecAdd hero.pos) (attackRange board hero)
+                    else
+                        []
 
                 realskillRange =
-                    case hero.class of
-                        Healer ->
-                            List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
+                    if hero.energy >= 3 && hero.class /= Turret then
+                        case hero.class of
+                            Healer ->
+                                List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
 
-                        Engineer ->
-                            List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> isEngineerSkillGrid x board)
+                            Engineer ->
+                                List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> isEngineerSkillGrid x board)
 
-                        _ ->
-                            []
+                            _ ->
+                                []
+                    else
+                        []
             in
             { board | attackable = realattackRange, skillable = realskillRange }
 

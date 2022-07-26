@@ -1,9 +1,9 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
-import Board exposing (..)
+import Board exposing (Board)
 import Data exposing (..)
-import ShortestPath exposing (..)
+import ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 
 
 actionEnemy : Board -> Board
@@ -35,7 +35,7 @@ actionSmartEnemy board enemy =
                     actionSmartMage board enemy
 
                 Assassin ->
-                    board
+                    actionSmartWarrior board enemy
 
                 Healer ->
                     actionSmartHealer board enemy

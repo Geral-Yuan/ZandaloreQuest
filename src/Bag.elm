@@ -1,7 +1,4 @@
-module Bag exposing (..)
-
-import Data exposing (..)
-import RpgCharacter exposing (..)
+module Bag exposing (Bag, addCoin, initBag)
 
 
 type alias Bag =
@@ -11,7 +8,7 @@ type alias Bag =
 
 initBag : Bag
 initBag =
-    { coins = 100
+    { coins = 0
     }
 
 

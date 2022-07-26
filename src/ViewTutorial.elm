@@ -1,23 +1,22 @@
-module ViewTutorial exposing (..)
+module ViewTutorial exposing (viewTutorialScene)
 
 import Data exposing (..)
-import Html exposing (Html, button, div)
+import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
-import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import Svg exposing (..)
+import Svg
 import Svg.Attributes as SvgAttr
-import ViewAllEnemy exposing (..)
-import ViewAllHero exposing (..)
-import ViewOthers exposing (..)
-import ViewScenes exposing (..)
+import ViewOthers exposing (dialogHelper, shapeHelper)
 
 
 viewTutorialScene : Model -> Int -> List (Html Msg)
 viewTutorialScene model k =
     if model.board.boardState == NoActions && model.board.turn == PlayerTurn then
         case k of
+            0 ->
+                [ viewTutorial1 ]
+
             1 ->
                 [ viewTutorial1 ]
 
@@ -81,7 +80,7 @@ viewTutorial1 =
         , dialogHelper 600 20 20 170 50 "blue" "Enemies Information (Red)"
         , dialogHelper 400 20 1150 50 50 "blue" "Your heroes' Information (Blue)"
         , dialogHelper 600 20 950 700 50 "blue" "Brown obstacle: mystery box that drops gold and potions (black means unbreakable)"
-        , dialogHelper 600 20 20 900 50 "blue" "Click enter to continue"
+        , dialogHelper 800 20 20 900 50 "blue" "Click anywhere to continue"
         ]
 
 
@@ -99,31 +98,8 @@ viewTutorial2 =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper ( 100, 100 ) (findPos ( 2, 8 )) "blue" ( 0, 0 )
-
-            -- , Svg.rect
-            --     [ SvgAttr.stroke "blue"
-            --     , SvgAttr.strokeWidth "5"
-            --     , SvgAttr.height "100"
-            --     , SvgAttr.width "100"
-            --     , SvgAttr.fillOpacity "0"
-            --     , SvgAttr.x "950"
-            --     , SvgAttr.y "450"
-            --     ]
-            --     []
-            ]
+            [ shapeHelper ( 100, 100 ) (findPos ( 2, 8 )) "blue" ( 0, 0 ) ]
         , dialogHelper 500 20 500 50 50 "blue" "Left click on Warrior to control it"
-
-        -- , div
-        -- [ HtmlAttr.style "width" "400px"
-        -- , HtmlAttr.style "height" "20px"
-        -- , HtmlAttr.style "position" "fixed"
-        -- , HtmlAttr.style "left" "1150px"
-        -- , HtmlAttr.style "top" "50px"
-        -- , HtmlAttr.style "color" "blue"
-        -- , HtmlAttr.style "font-size" "50px"
-        -- ]
-        -- [ text "Your heroes' Information (Blue)" ]
         ]
 
 
@@ -219,15 +195,16 @@ viewTutorial7 =
             [ Svg.rect
                 [ SvgAttr.stroke "blue"
                 , SvgAttr.strokeWidth "5"
-                , SvgAttr.height "10"
-                , SvgAttr.width "170"
+                , SvgAttr.height "110"
+                , SvgAttr.width "210"
                 , SvgAttr.fill "blue"
-                , SvgAttr.x "1700"
-                , SvgAttr.y "700"
+                , SvgAttr.x "1680"
+                , SvgAttr.y "880"
+                , SvgAttr.fill "transparent"
                 ]
                 []
             ]
-        , dialogHelper 700 20 580 50 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
+        , dialogHelper 700 20 850 800 50 "blue" "Click the end turn button to end your turn wait till the enemy turn is over."
         ]
 
 
@@ -340,24 +317,5 @@ viewTutorial13 =
             , SvgAttr.height "100%"
             ]
             []
-        , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
+        , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click anywhere to continue."
         ]
-
-
-tutorialButton : Html Msg
-tutorialButton =
-    button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "900px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "20px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "170px"
-        , onClick ViewTutorial
-        ]
-        [ text "How to play" ]

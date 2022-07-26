@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
-import Data exposing (..)
+import Data exposing (Dir(..))
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
 import Message exposing (Msg(..))
@@ -70,22 +70,10 @@ key on keycode =
             -- Key K
             Kill on
 
-        --        49 ->
-        --            -- Key 1
-        --            -- This might have to change because players can select 3 heroes from their inventory
-        --            Select Warrior on
-        --        50 ->
-        --            -- Key 2
-        --            Select Archer on
-        --        51 ->
-        --            -- Key 3
-        --            Select Assassin on
-        --        52 ->
-        --            -- Key 4
-        --            Select Mage on
-        --        53 ->
-        --            -- Key 5
-        --            Select Healer on
+        84 ->
+            -- Key T
+            Test
+
         _ ->
             Key_None
 

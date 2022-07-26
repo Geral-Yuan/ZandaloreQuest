@@ -1,13 +1,13 @@
-module ViewAllHero exposing (..)
+module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 
-import Data exposing (..)
+import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
+import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 
@@ -130,7 +130,7 @@ viewHeroHealth hero =
                     , SvgAttr.x (toString (1740 - offsetHero hero))
                     , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
                     , SvgAttr.fill "transparent"
-                    , SvgAttr.stroke "red"
+                    , SvgAttr.stroke "blue"
                     , SvgAttr.rx "5"
                     ]
                     []
@@ -139,8 +139,8 @@ viewHeroHealth hero =
                     , SvgAttr.height "20"
                     , SvgAttr.x (toString (1740 - offsetHero hero))
                     , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
-                    , SvgAttr.fill "red"
-                    , SvgAttr.stroke "red"
+                    , SvgAttr.fill "blue"
+                    , SvgAttr.stroke "blue"
                     , SvgAttr.rx "5"
                     ]
                     []
@@ -153,7 +153,7 @@ viewHeroHealth hero =
                 , SvgAttr.x (toString (x - 50))
                 , SvgAttr.y (toString (y - 60))
                 , SvgAttr.fill "transparent"
-                , SvgAttr.stroke "red"
+                , SvgAttr.stroke "blue"
                 , SvgAttr.rx "5"
                 ]
                 []
@@ -162,8 +162,8 @@ viewHeroHealth hero =
                 , SvgAttr.height "10"
                 , SvgAttr.x (toString (x - 50))
                 , SvgAttr.y (toString (y - 60))
-                , SvgAttr.fill "red"
-                , SvgAttr.stroke "red"
+                , SvgAttr.fill "blue"
+                , SvgAttr.stroke "blue"
                 , SvgAttr.rx "5"
                 ]
                 []

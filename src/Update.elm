@@ -7,11 +7,12 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (npcDarkKnight1, npcDarkKnight2)
+import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
 import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
+import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
 
@@ -62,17 +63,12 @@ update msg model =
 
 updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
 updateBoardGame msg model =
-    case msg of
-        ViewTutorial ->
-            ( { model | mode = Tutorial 1 }, Cmd.none )
-
-        _ ->
-            { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
-                |> checkMouseMove msg
-                |> checkHit msg
-                |> randomCrate msg
-                |> randomEnemies
-                |> checkEnd
+    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+        |> checkMouseMove msg
+        |> checkHit msg
+        |> randomCrate msg
+        |> randomEnemies
+        |> checkEnd
 
 
 updateSummary : Msg -> Model -> ( Model, Cmd Msg )
@@ -88,27 +84,22 @@ updateSummary msg model =
 updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
 updateDialog msg task model =
     case task of
-        MeetElder ->
-            if msg == Enter False then
-                ( { model | mode = HeroChoose }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
         FinishTutorial ->
-            if msg == Enter False then
-                ( { model | mode = Castle, cntTask = GoToShop }, Cmd.none )
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Castle }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
         --To be changed when it's other tasks
         _ ->
-            if msg == Enter False then
-                ( { model | mode = HeroChoose }, Cmd.none )
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = HeroChoose }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
 
 followTutorial : Msg -> Int -> Bool
@@ -168,7 +159,12 @@ followTutorial msg k =
             msg == Hit ( 7, 2 )
 
         13 ->
-            msg == Enter False
+            case msg of
+                Click _ _ ->
+                    True
+
+                _ ->
+                    False
 
         _ ->
             False
@@ -177,12 +173,21 @@ followTutorial msg k =
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
 updateTutorial msg k model =
     case k of
-        1 ->
-            if msg == Enter False then
-                ( { model | mode = Tutorial 2 }, Cmd.none )
+        0 ->
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Tutorial 1 }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
+
+        1 ->
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Tutorial 2 }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         14 ->
             ( { model | mode = BoardGame }, Cmd.none )
@@ -200,8 +205,9 @@ updateTutorial msg k model =
                         | mode = Dialog FinishTutorial
                         , level = model.level + 1
                         , cntTask = nextTask model.cntTask
-                        , bag = addCoin model.bag 100
-                        , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                        , bag = addCoin model.bag 50
+                        , unlockShop = True
+                        , npclist = model.npclist |> updateBeaten
                       }
                     , Cmd.none
                     )
@@ -265,7 +271,7 @@ checkConfirm msg model =
     case msg of
         Confirm ->
             if List.length model.chosenHero == 3 && model.level == 0 then
-                { model | mode = Tutorial 1, board = initBoard (confirmHeroes model) level, chosenHero = [] }
+                { model | mode = Tutorial 0, board = initBoard (confirmHeroes model) level, chosenHero = [] }
 
             else if List.length model.chosenHero == 3 then
                 { model | mode = BoardGame, board = initBoard (confirmHeroes model) level, chosenHero = [] }
@@ -337,10 +343,26 @@ isReachable mode ( x, y ) npclist =
                 || (x > 392 && x < 462 && y >= 410 && y < 582)
 
         Dungeon ->
-            y > 241 && y < 974 && x > 502 && x < 1542
+            y
+                > 241
+                && y
+                < 974
+                && x
+                > 502
+                && x
+                < 1542
+                && not (List.foldr (||) False (List.map (npcCollisionRange ( x, y )) (npclist |> List.filter (\npc -> npc.scene == DungeonScene))))
 
         Dungeon2 ->
-            y > 241 && y < 974 && x > 502 && x < 1542
+            y
+                > 241
+                && y
+                < 974
+                && x
+                > 502
+                && x
+                < 1542
+                && not (List.foldr (||) False (List.map (npcCollisionRange ( x, y )) (npclist |> List.filter (\npc -> npc.scene == Dungeon2Scene))))
 
         _ ->
             True
@@ -356,34 +378,6 @@ npcCollisionRange ( x, y ) npc =
             npc.size
     in
     x > nx - nw + 20 && x < nx + nw - 20 && y > ny - nh && y < ny + nh - 30
-
-
-
--- updateShop : Msg -> Model -> ( Model, Cmd Msg )
--- updateShop msg model =
---     let
---         currCoins =
---             model.bag.coins
---         newBag =
---             model.bag
---         currHeroes =
---             model.indexedheroes
---     in
---     case msg of
---         UpgradeHealth ->
---             if model.bag.coins > 49 then
---                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
---             else
---                 ( model, Cmd.none )
---         UpgradeDamage ->
---             if model.bag.coins > 49 then
---                 ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
---             else
---                 ( model, Cmd.none )
---         ExitShop ->
---             ( { model | mode = Shop }, Task.perform GetViewport getViewport )
---         _ ->
---             ( model, Cmd.none )
 
 
 updateHealth : ( Hero, Int ) -> ( Hero, Int )
@@ -428,7 +422,7 @@ updateRPG msg model =
         currCoins =
             model.bag.coins
 
-        newBag =
+        bag =
             model.bag
 
         currHeroes =
@@ -438,45 +432,23 @@ updateRPG msg model =
         Enter False ->
             case model.mode of
                 Shop ->
-                    if x > 740 && x < 930 && y > 830 then
-                        ( { model | mode = Castle, character = { character | width = 64, height = 64, pos = ( 1632, 802 ), speed = 500 } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveShop, Cmd.none )
 
                 Castle ->
-                    if x > 1530 && x < 1690 && y < 810 && y > 780 then
-                        ( { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 782, 882 ), speed = 800 } }, Cmd.none )
-
-                    else if x > 930 && x < 1080 && y <= 430 && y > 380 then
-                        ( { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
-
-                    else if x > 320 && x < 440 && y < 810 && y > 780 then
-                        ( { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveCastle, Cmd.none )
 
                 Dungeon ->
-                    if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 1007, 407 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveDungeon, Cmd.none )
 
                 Dungeon2 ->
-                    if y > 850 then
-                        ( { model | mode = Castle, character = { character | pos = ( 377, 802 ) } }, Cmd.none )
-
-                    else
-                        ( model, Cmd.none )
+                    ( model |> checkLeaveDungeon2, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
         Talk False ->
             if model.mode == Shop then
-                if x > 600 && x < 1000 then
+                if x > 600 && x < 1000 && y <= 650 then
                     ( { model | mode = BuyingItems }, Cmd.none )
 
                 else
@@ -499,20 +471,33 @@ updateRPG msg model =
 
         UpgradeHealth ->
             if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
+                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
 
             else
                 ( model, Cmd.none )
 
         UpgradeDamage ->
             if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
+                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
 
             else
                 ( model, Cmd.none )
 
         ExitShop ->
             ( { model | mode = Shop }, Cmd.none )
+
+        Test ->
+            ( { model
+                | test = True
+                , npclist = allNPC
+                , unlockShop = True
+                , unlockDungeon = True
+                , unlockDungeon2 = True
+                , cntTask = BeatBoss
+                , indexedheroes = allSampleHeroes
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -759,49 +744,61 @@ checkEnd ( model, cmd ) =
             myboard.coins
 
         nmodel =
-            case model.mode of
-                BoardGame ->
-                    if
-                        List.isEmpty finalboard.enemies
-                            && (finalboard.spawn == 0)
-                            && (model.level == 0)
-                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
-                    then
-                        { model
-                            | mode = Dialog FinishTutorial
-                            , level = model.level + 1
-                            , cntTask = nextTask model.cntTask
-                            , bag = addCoin model.bag wincoins
-                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
-                        }
+            if
+                model.test
+                    && List.isEmpty finalboard.enemies
+                    && (finalboard.spawn == 0)
+                    && (model.level == 0)
+                    && List.all (\hero -> hero.state == Waiting) model.board.heroes
+            then
+                { model | mode = model.previousMode }
 
-                    else if
-                        List.isEmpty finalboard.enemies
-                            && (finalboard.spawn == 0)
-                            && (model.level /= 0)
-                            && List.all (\hero -> hero.state == Waiting) model.board.heroes
-                    then
-                        { model
-                            | mode = Summary
-                            , cntTask = nextTask model.cntTask
-                            , bag = addCoin model.bag wincoins
-                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
-                        }
+            else
+                case model.mode of
+                    BoardGame ->
+                        if
+                            List.isEmpty finalboard.enemies
+                                && (finalboard.spawn == 0)
+                                && (model.level == 0)
+                                && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                        then
+                            { model
+                                | mode = Dialog FinishTutorial
+                                , level = model.level + 1
+                                , cntTask = nextTask model.cntTask
+                                , bag = addCoin model.bag wincoins
+                                , unlockShop = True
+                                , npclist = model.npclist |> updateBeaten
+                            }
 
-                    else if
-                        List.isEmpty finalboard.heroes
-                            && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
-                    then
-                        { model
-                            | mode = model.previousMode
-                            , bag = addCoin model.bag losecoins
-                        }
+                        else if
+                            List.isEmpty finalboard.enemies
+                                && (finalboard.spawn == 0)
+                                && List.all (\hero -> hero.state == Waiting) model.board.heroes
+                        then
+                            { model
+                                | mode = Summary
+                                , cntTask = nextTask model.cntTask
+                                , bag = addCoin model.bag wincoins
+                                , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                                , unlockDungeon = model.unlockDungeon || (model.level == 2)
+                                , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
+                            }
 
-                    else
+                        else if
+                            List.isEmpty finalboard.heroes
+                                && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
+                        then
+                            { model
+                                | mode = model.previousMode
+                                , bag = addCoin model.bag losecoins
+                            }
+
+                        else
+                            model
+
+                    _ ->
                         model
-
-                _ ->
-                    model
     in
     ( nmodel, cmd )
 
@@ -814,13 +811,16 @@ nextTask : Task -> Task
 nextTask task =
     case task of
         MeetElder ->
+            GoToShop
+
+        GoToShop ->
             Level 1
 
         Level k ->
             Level (k + 1)
 
         _ ->
-            GoToDungeon
+            BeatBoss
 
 
 nextNPC : Task -> List NPC
@@ -831,6 +831,15 @@ nextNPC task =
 
         Level 1 ->
             [ npcDarkKnight2 ]
+
+        Level 2 ->
+            [ npcSkullKnight1 ]
+
+        Level 3 ->
+            [ npcSkullKnight2 ]
+
+        Level 4 ->
+            [ npcSkullKnight3 ]
 
         _ ->
             []

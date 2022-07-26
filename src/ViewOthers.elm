@@ -3,12 +3,12 @@ module ViewOthers exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
+import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr exposing (height, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
 
@@ -45,8 +45,8 @@ shapeHelper ( height, width ) ( x, y ) color pos =
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
-        [ HtmlAttr.style "top" "740px"
-        , HtmlAttr.style "left" "1590px"
+        [ HtmlAttr.style "top" "720px"
+        , HtmlAttr.style "left" "1600px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -63,7 +63,7 @@ viewBoardCoin : Board -> Html Msg
 viewBoardCoin board =
     div
         [ HtmlAttr.style "top" "800px"
-        , HtmlAttr.style "left" "1892px"
+        , HtmlAttr.style "left" "1800px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -71,16 +71,16 @@ viewBoardCoin board =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text (": " ++ toString board.coins) ]
+        [ text (toString board.coins) ]
 
 
-viewCoinSVG : Svg Msg
-viewCoinSVG =
+viewCoinSVG : ( Float, Float ) -> Svg Msg
+viewCoinSVG ( x, y ) =
     Svg.image
         [ SvgAttr.width "80"
         , SvgAttr.height "80"
-        , SvgAttr.x "1800"
-        , SvgAttr.y "790"
+        , SvgAttr.x (toString x)
+        , SvgAttr.y (toString y)
         , SvgAttr.xlinkHref "./assets/image/Gold.png"
         ]
         []

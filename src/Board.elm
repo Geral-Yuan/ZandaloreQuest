@@ -2,6 +2,7 @@ module Board exposing (Board, initBoard, sampleBoard)
 
 import Data exposing (..)
 import Message exposing (Msg(..))
+import Time exposing (ZoneName(..))
 
 
 type alias Board =
@@ -47,13 +48,22 @@ initObstacles k =
                    , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
                    ]
 
-        _ ->
+        2 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 1, 9 ), ( 3, 7 ), ( 5, 5 ), ( 7, 3 ), ( 9, 1 ) ]
                 ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 3)
                    , Obstacle MysteryBox ( 4, 6 ) EnergyPotion
                    , Obstacle MysteryBox ( 6, 4 ) HealthPotion
                    , Obstacle MysteryBox ( 8, 2 ) (Gold 3)
                    ]
+
+        3 ->
+            []
+
+        4 ->
+            [ Obstacle Unbreakable ( 5, 5 ) NoItem ]
+
+        _ ->
+            []
 
 
 initenemy : Int -> List Enemy
@@ -68,10 +78,28 @@ initenemy k =
             , sampleEnemy Warrior ( 5, 2 ) 3
             ]
 
-        _ ->
+        2 ->
             [ sampleEnemy Archer ( 1, 5 ) 1
             , sampleEnemy Mage ( 3, 3 ) 2
             , sampleEnemy Warrior ( 5, 1 ) 3
+            ]
+
+        3 ->
+            [ sampleEnemy Archer ( 2, 4 ) 1
+            , sampleEnemy Archer ( 3, 3 ) 2
+            , sampleEnemy Archer ( 4, 2 ) 3
+            ]
+
+        4 ->
+            [ sampleEnemy Assassin ( 1, 9 ) 1
+            , sampleEnemy Assassin ( 9, 5 ) 2
+            , sampleEnemy Assassin ( 5, 1 ) 3
+            ]
+
+        _ ->
+            [ sampleEnemy Archer ( 1, 9 ) 1
+            , sampleEnemy Archer ( 9, 5 ) 2
+            , sampleEnemy Archer ( 5, 1 ) 3
             ]
 
 
@@ -105,7 +133,7 @@ initPosition k hero =
                 _ ->
                     { hero | pos = ( 8, 5 ) }
 
-        _ ->
+        2 ->
             case hero.indexOnBoard of
                 1 ->
                     { hero | pos = ( 5, 9 ) }
@@ -115,6 +143,39 @@ initPosition k hero =
 
                 _ ->
                     { hero | pos = ( 9, 5 ) }
+
+        3 ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 6, 8 ) }
+
+                2 ->
+                    { hero | pos = ( 7, 7 ) }
+
+                _ ->
+                    { hero | pos = ( 8, 6 ) }
+
+        4 ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 1, 5 ) }
+
+                2 ->
+                    { hero | pos = ( 5, 9 ) }
+
+                _ ->
+                    { hero | pos = ( 9, 1 ) }
+
+        _ ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 3, 7 ) }
+
+                2 ->
+                    { hero | pos = ( 7, 5 ) }
+
+                _ ->
+                    { hero | pos = ( 5, 3 ) }
 
 
 spawnTimes : Int -> Int
@@ -126,8 +187,11 @@ spawnTimes k =
         1 ->
             0
 
-        _ ->
+        2 ->
             1
+
+        _ ->
+            2
 
 
 initBoard : List Hero -> Int -> Board

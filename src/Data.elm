@@ -1,6 +1,6 @@
 module Data exposing (..)
 
-import Svg.Attributes exposing (x2, y2)
+import Svg.Attributes exposing (cy, x2, y2)
 
 
 
@@ -16,9 +16,6 @@ type GameMode
     | UpgradePage
     | DrawHero Class
     | HeroChoose
-      -- | Starting
-      -- | ClearLevel Int
-      -- | Gameover Int
     | BoardGame
     | Summary
     | Logo
@@ -31,8 +28,7 @@ type Task
     | FinishTutorial
     | GoToShop
     | Level Int
-      -- | Beaten (to be added later)
-    | GoToDungeon
+    | BeatBoss
 
 
 type Scene
@@ -69,6 +65,13 @@ type BoardState
     | HeroHealth
     | HeroEnergy
     | Healing
+
+
+type FailToDo
+    = FailtoEnter Scene
+    | FailtoTalk NPC
+    | LackEnergy
+    | Noop
 
 
 
@@ -151,13 +154,15 @@ type alias Enemy =
 type alias NPC =
     { scene : Scene
     , name : String
-    , dialogue : List String
+    , dialogue : String
     , image : String
     , faceDir : Dir
     , position : ( Float, Float )
     , size : ( Float, Float )
     , beaten : Bool
     , talkRange : ( ( Float, Float ), ( Float, Float ) )
+    , task : Task
+    , level : Int
     }
 
 
@@ -177,15 +182,6 @@ type Dir
 type Side
     = Hostile
     | Friend
-
-
-
--- type RpgDir
---     = Left
---     | Right
---     | Up
---     | Down
--- Basic values
 
 
 pixelWidth : Float
@@ -228,37 +224,109 @@ map : Int -> List Pos
 map level =
     case level of
         0 ->
-            List.concat
-                (List.map2 pairRange
-                    (List.range 1 9)
-                    [ ( 5, 9 )
-                    , ( 4, 9 )
-                    , ( 3, 9 )
-                    , ( 2, 9 )
-                    , ( 1, 9 )
-                    , ( 1, 8 )
-                    , ( 1, 7 )
-                    , ( 1, 6 )
-                    , ( 1, 5 )
-                    ]
-                )
+            basicMap
                 |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
 
+        3 ->
+            (basicMap
+                |> List.filter (\( x, y ) -> modBy 2 (x + y) == 0)
+            )
+                ++ [ ( 6, 1 ), ( 1, 8 ), ( 9, 2 ), ( 4, 9 ) ]
+
+        4 ->
+            basicMap
+                |> List.filter (\( x, y ) -> not (List.member ( x, y ) hollow))
+
+        5 ->
+            (basicMap
+                |> List.filter (\( x, y ) -> modBy 2 (distance ( 5, 5 ) ( x, y )) == 0)
+            )
+                ++ [ ( 2, 5 ), ( 8, 5 ) ]
+
         _ ->
-            List.concat
-                (List.map2 pairRange
-                    (List.range 1 9)
-                    [ ( 5, 9 )
-                    , ( 4, 9 )
-                    , ( 3, 9 )
-                    , ( 2, 9 )
-                    , ( 1, 9 )
-                    , ( 1, 8 )
-                    , ( 1, 7 )
-                    , ( 1, 6 )
-                    , ( 1, 5 )
-                    ]
-                )
+            basicMap
+
+
+basicMap : List Pos
+basicMap =
+    List.concat
+        (List.map2 pairRange
+            (List.range 1 9)
+            [ ( 5, 9 )
+            , ( 4, 9 )
+            , ( 3, 9 )
+            , ( 2, 9 )
+            , ( 1, 9 )
+            , ( 1, 8 )
+            , ( 1, 7 )
+            , ( 1, 6 )
+            , ( 1, 5 )
+            ]
+        )
+
+
+hollow : List Pos
+hollow =
+    [ ( 3, 4 )
+    , ( 4, 3 )
+    , ( 4, 4 )
+    , ( 2, 7 )
+    , ( 2, 6 )
+    , ( 3, 6 )
+    , ( 4, 8 )
+    , ( 3, 8 )
+    , ( 4, 7 )
+    , ( 7, 6 )
+    , ( 6, 7 )
+    , ( 6, 6 )
+    , ( 8, 3 )
+    , ( 8, 4 )
+    , ( 7, 4 )
+    , ( 6, 2 )
+    , ( 7, 2 )
+    , ( 6, 3 )
+    ]
+
+
+rotateHexagon : Bool -> Pos -> Pos -> Pos
+rotateHexagon clockwise ( cx, cy ) ( xi, yi ) =
+    let
+        deltaX =
+            xi - cx
+
+        deltaY =
+            yi - cy
+
+        deltaXY =
+            deltaX + deltaY
+    in
+    if clockwise then
+        ( cx - deltaY, cy + deltaXY )
+
+    else
+        ( cx + deltaXY, cy - deltaX )
+
+
+rotateStuff : Bool -> Pos -> { a | pos : Pos } -> { a | pos : Pos }
+rotateStuff clockwise ( cx, cy ) stuff =
+    let
+        ( xi, yi ) =
+            stuff.pos
+
+        deltaX =
+            xi - cx
+
+        deltaY =
+            yi - cy
+
+        deltaXY =
+            deltaX + deltaY
+    in
+    if clockwise then
+        { stuff | pos = ( cx - deltaY, cy + deltaXY ) }
+
+    else
+        { stuff | pos = ( cx + deltaXY, cy - deltaX ) }
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy
@@ -268,13 +336,13 @@ sampleEnemy class pos index =
             Enemy Warrior pos 80 80 8 0 True Waiting False index
 
         Archer ->
-            Enemy Archer pos 40 40 10 0 True Waiting False index
+            Enemy Archer pos 30 30 10 0 True Waiting False index
 
         Assassin ->
-            Enemy Assassin pos 40 40 10 0 True Waiting False index
+            Enemy Assassin pos 35 35 10 0 True Waiting False index
 
         Healer ->
-            Enemy Healer pos 50 50 5 0 True Waiting False index
+            Enemy Healer pos 40 40 5 0 True Waiting False index
 
         _ ->
             Enemy Mage pos 50 50 6 0 True Waiting False index
@@ -472,9 +540,9 @@ leastdistance pos_list pos =
 allSampleHeroes : List ( Hero, Int )
 allSampleHeroes =
     [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
-    , ( Hero Archer ( 0, 0 ) 40 40 20 5 False Waiting 0, 2 )
-    , ( Hero Assassin ( 0, 0 ) 40 40 20 6 False Waiting 0, 3 )
+    , ( Hero Archer ( 0, 0 ) 30 30 20 5 False Waiting 0, 2 )
+    , ( Hero Assassin ( 0, 0 ) 35 35 20 6 False Waiting 0, 3 )
     , ( Hero Mage ( 0, 0 ) 50 50 12 3 False Waiting 0, 4 )
-    , ( Hero Healer ( 0, 0 ) 50 50 5 5 False Waiting 0, 5 )
-    , ( Hero Engineer ( 0, 0 ) 50 50 5 5 False Waiting 0, 6 )
+    , ( Hero Healer ( 0, 0 ) 40 40 5 5 False Waiting 0, 5 )
+    , ( Hero Engineer ( 0, 0 ) 30 30 5 5 False Waiting 0, 6 )
     ]
