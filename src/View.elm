@@ -127,6 +127,10 @@ viewTutorial k model =
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
                 ++ viewUIFrame 420 500 1570 500
+                ++ viewUIButton 170 80 1700 900
+                -- UI for end turn button
+                ++ viewUIButton 170 80 50 800
+                -- UI for encyclopedia button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
@@ -193,6 +197,10 @@ viewBoard model =
                 ++ List.map viewCrate model.board.obstacles
                 ++ List.concatMap viewItem model.board.item
                 ++ viewUIFrame 420 500 1570 500
+                ++ viewUIButton 170 80 1700 900
+                -- UI for end turn button
+                ++ viewUIButton 170 80 50 800
+                -- UI for encyclopedia button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
