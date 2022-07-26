@@ -6,6 +6,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.52] -- 2022-7-26 
+
+### Added
+- Encyclopedia messages and gameMode
+- Encyclopedia function where players can find out more about each hero
+- new assets
+- ViewEncyclopedia.elm file
+
+### Changed
+- some typos
 ## [m1.51] -- 2022-7-26
 
 ### Added
