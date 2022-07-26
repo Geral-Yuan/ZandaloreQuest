@@ -463,23 +463,23 @@ findChosenHero : ( Float, Float ) -> Int
 findChosenHero ( x, y ) =
     let
         row =
-            if y > 100 && y < 400 then
+            if y > 200 && y < 500 then
                 1
 
-            else if y > 500 && y < 900 then
+            else if y > 525 && y < 825 then
                 2
 
             else
                 0
 
         column =
-            if x > 250 && x < 550 then
+            if x > 400 && x < 700 then
                 1
 
             else if x > 850 && x < 1150 then
                 2
 
-            else if x > 1450 && x < 1750 then
+            else if x > 1300 && x < 1600 then
                 3
 
             else
