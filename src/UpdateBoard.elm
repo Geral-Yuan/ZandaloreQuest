@@ -234,11 +234,15 @@ rotate dis clockwise board =
 
         ( targetObstacles, restObstacles ) =
             List.partition (\hero -> distance ( 5, 5 ) hero.pos == dis) board.obstacles
+
+        ( targetItems, restItems ) =
+            List.partition (\hero -> distance ( 5, 5 ) hero.pos == dis) board.item
     in
     { board
         | heroes = List.map (rotateStuff clockwise ( 5, 5 )) targetHeroes ++ restHeroes
         , enemies = List.map (rotateStuff clockwise ( 5, 5 )) targetEnemies ++ restEnemies
         , obstacles = List.map (rotateStuff clockwise ( 5, 5 )) targetObstacles ++ restObstacles
+        , item = List.map (rotateStuff clockwise ( 5, 5 )) targetItems ++ restItems
     }
 
 
