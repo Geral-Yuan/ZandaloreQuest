@@ -15,6 +15,7 @@ import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimatio
 import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
+import NPC exposing (npcSkullKnight3)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -844,6 +845,9 @@ nextNPC task =
 
         Level 3 ->
             [ npcSkullKnight2 ]
+
+        Level 4 ->
+            [ npcSkullKnight3 ]
 
         _ ->
             []
