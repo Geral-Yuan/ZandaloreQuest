@@ -3,7 +3,7 @@ module Model exposing (..)
 import Bag exposing (Bag, initBag)
 import Board exposing (Board, sampleBoard)
 import Browser.Dom exposing (getViewport)
-import Data exposing (Class(..), Dir(..), FailToDo(..), GameMode(..), Hero, HeroState(..), NPC, Task(..), pixelHeight, pixelWidth)
+import Data exposing (Class(..), Dir(..), FailToDo(..), GameMode(..), Hero, HeroState(..), NPC, Task(..), allSampleHeroes, pixelHeight, pixelWidth)
 import Message exposing (Msg(..))
 import NPC exposing (npcArcher, npcAssassin, npcElder, npcEngineer, npcHealer, npcMage, npcWarrior)
 import RpgCharacter exposing (RpgCharacter)
@@ -66,14 +66,7 @@ initModel : Model
 initModel =
     { mode = Logo
     , indexedheroes =
-        [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
-        , ( Hero Archer ( 0, 0 ) 40 40 20 5 False Waiting 0, 2 )
-        , ( Hero Assassin ( 0, 0 ) 40 40 20 6 False Waiting 0, 3 )
-
-        -- , ( Hero Mage ( 0, 0 ) 50 50 12 3 False Waiting 0, 4 )
-        -- , ( Hero Healer ( 0, 0 ) 50 50 5 5 False Waiting 0, 5 )
-        -- , ( Hero Engineer ( 0, 0 ) 50 50 5 5 False Waiting 0, 6 )
-        ]
+        allSampleHeroes |> List.filter (\( x, _ ) -> List.member x.class [ Warrior, Archer, Assassin ])
     , upgradePageIndex = 1
     , board = sampleBoard
     , size = ( 1500, 1000 )

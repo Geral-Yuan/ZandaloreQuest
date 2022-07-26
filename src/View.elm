@@ -264,7 +264,7 @@ viewCell board pos =
             ]
             []
 
-    else if List.member pos board.target then
+    else if List.member pos board.target && board.boardState == NoActions then
         if List.member pos board.skillable then
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
@@ -294,7 +294,7 @@ viewCell board pos =
                 ]
                 []
 
-    else if List.member pos (listUnion board.attackable board.skillable ++ board.enemyAttackable) then
+    else if List.member pos (listUnion board.attackable board.skillable ++ board.enemyAttackable) && board.boardState == NoActions then
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"

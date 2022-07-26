@@ -1,6 +1,6 @@
 module NPC exposing (..)
 
-import Data exposing (NPC, Scene(..), Dir(..), Task(..))
+import Data exposing (Dir(..), NPC, Scene(..), Task(..))
 
 
 allNPC : List NPC
@@ -10,6 +10,7 @@ allNPC =
     , npcDarkKnight2
     , npcSkullKnight1
     , npcSkullKnight2
+    , npcSkullKnight3
     , npcWarrior
     , npcArcher
     , npcAssassin
@@ -96,6 +97,38 @@ npcSkullKnight2 =
     , talkRange = ( ( 1000, 1200 ), ( 250, 450 ) )
     , task = Level 4
     , level = 4
+    }
+
+
+npcSkullKnight3 : NPC
+npcSkullKnight3 =
+    { scene = Dungeon2Scene
+    , name = "SkullKnight 3"
+    , dialogue = []
+    , image = "SkullKnight"
+    , faceDir = Right
+    , position = ( 900, 350 )
+    , size = ( 64, 64 )
+    , beaten = False
+    , talkRange = ( ( 800, 1000 ), ( 250, 450 ) )
+    , task = Level 5
+    , level = 5
+    }
+
+
+npcSkullKnight4 : NPC
+npcSkullKnight4 =
+    { scene = Dungeon2Scene
+    , name = "SkullKnight 4"
+    , dialogue = []
+    , image = "SkullKnight"
+    , faceDir = Left
+    , position = ( 1100, 350 )
+    , size = ( 64, 64 )
+    , beaten = False
+    , talkRange = ( ( 1000, 1200 ), ( 250, 450 ) )
+    , task = Level 6
+    , level = 6
     }
 
 

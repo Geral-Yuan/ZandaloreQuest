@@ -35,7 +35,7 @@ actionSmartEnemy board enemy =
                     actionSmartMage board enemy
 
                 Assassin ->
-                    board
+                    actionSmartWarrior board enemy
 
                 Healer ->
                     actionSmartHealer board enemy

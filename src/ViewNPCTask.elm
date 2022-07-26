@@ -125,6 +125,9 @@ textTask model =
         Level 4 ->
             "Skull Knight 2 appears! Kill him!"
 
+        Level 5 ->
+            "Enter Dungeon2 and battle with Skull Knight 3"
+
         -- Maybe a name for each NPC later
         _ ->
             ""

@@ -6,6 +6,7 @@ import Data exposing (..)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
 import HeroAttack exposing (checkAttack, heroTurretAttack)
 import Message exposing (Msg(..))
+import Svg.Attributes exposing (rotate)
 
 
 updateBoardAnimation : Msg -> Board -> Board
@@ -131,8 +132,8 @@ turnTurret : Board -> Board
 turnTurret board =
     { board
         | turn = TurretTurn
-        , enemies = List.sortBy .indexOnBoard (List.map resetSteps board.enemies)
-        , heroes = List.map deselectHeroes (List.map resetEnergy board.heroes)
+        , enemies = List.sortBy .indexOnBoard board.enemies
+        , heroes = List.map deselectHeroes board.heroes
         , timeTurn = 0
     }
 
@@ -200,14 +201,45 @@ checkCurrentEnemy board =
 
 checkTurn : Board -> Board
 checkTurn board =
-    if List.all (\enemy -> enemy.done) board.enemies then
-        { board | turn = PlayerTurn }
+    if List.all (\enemy -> enemy.done) board.enemies && board.turn == EnemyTurn then
+        { board | turn = PlayerTurn, heroes = List.map resetEnergy board.heroes } |> updateMap board.level
 
-    else if List.all (\turret -> turret.energy == -6) (List.filter (\x -> x.class == Turret) board.heroes) then
-        { board | turn = EnemyTurn }
+    else if List.all (\turret -> turret.energy == -6) (List.filter (\x -> x.class == Turret) board.heroes) && board.turn == TurretTurn then
+        { board | turn = EnemyTurn, enemies = List.map resetSteps board.enemies }
 
     else
         board
+
+
+updateMap : Int -> Board -> Board
+updateMap level board =
+    case level of
+        5 ->
+            board
+                |> rotate 4 False
+                |> rotate 2 True
+
+        _ ->
+            board
+
+
+rotate : Int -> Bool -> Board -> Board
+rotate dis clockwise board =
+    let
+        ( targetHeroes, restHeroes ) =
+            List.partition (\hero -> distance ( 5, 5 ) hero.pos == dis) board.heroes
+
+        ( targetEnemies, restEnemies ) =
+            List.partition (\hero -> distance ( 5, 5 ) hero.pos == dis) board.enemies
+
+        ( targetObstacles, restObstacles ) =
+            List.partition (\hero -> distance ( 5, 5 ) hero.pos == dis) board.obstacles
+    in
+    { board
+        | heroes = List.map (rotateStuff clockwise ( 5, 5 )) targetHeroes ++ restHeroes
+        , enemies = List.map (rotateStuff clockwise ( 5, 5 )) targetEnemies ++ restEnemies
+        , obstacles = List.map (rotateStuff clockwise ( 5, 5 )) targetObstacles ++ restObstacles
+    }
 
 
 moveHero : Board -> Pos -> Board
