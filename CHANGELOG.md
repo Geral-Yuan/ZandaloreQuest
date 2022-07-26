@@ -6,6 +6,28 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [m1.51] -- 2022-7-26
+
+### Added
+
+- Add Level 3, Level 4, and Level 5
+- Add three new maps: snake map, hollow map, and dynamic map
+- Connect the levels, NPCs, and the task system.
+- Test mode that can unlock any NPCs, heroes, and scenes to better test/debug the game
+
+### Changed
+
+- Only show attackable range when hero's energy is enough
+- Adjust the dialogue and tutorial system
+- Change the color of hero's health bar to blue
+- Adjust the task board to make it looks better
+- Make the first hero lucky draw free
+
+### Fixed
+
+- Not to show energy use for turret
+- Improve the module exposing and import clear and concrete
+
 ## [m1.50] -- 2022
 ### Added
 - added UI for board game
