@@ -212,7 +212,7 @@ viewEnemyHealth board enemy =
         , SvgAttr.height "20"
         , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
         , SvgAttr.y (toString (idxOnBoard * 150 - 95))
-        , SvgAttr.fill "transparent"
+        , SvgAttr.fill "black"
         , SvgAttr.stroke "red"
         , SvgAttr.rx "5"
         ]
