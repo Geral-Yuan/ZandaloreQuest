@@ -7,7 +7,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2)
+import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
@@ -15,7 +15,6 @@ import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimatio
 import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
 import ViewNPCTask exposing (checkTalkRange)
-import NPC exposing (npcSkullKnight3)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -85,14 +84,6 @@ updateSummary msg model =
 updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
 updateDialog msg task model =
     case task of
-        MeetElder ->
-            case msg of
-                Click _ _ ->
-                    ( { model | mode = HeroChoose }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
         FinishTutorial ->
             case msg of
                 Click _ _ ->
@@ -103,11 +94,12 @@ updateDialog msg task model =
 
         --To be changed when it's other tasks
         _ ->
-            if msg == Enter False then
-                ( { model | mode = HeroChoose }, Cmd.none )
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = HeroChoose }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
 
 followTutorial : Msg -> Int -> Bool
