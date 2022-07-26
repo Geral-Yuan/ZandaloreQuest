@@ -9,6 +9,7 @@ import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIFrame)
 
@@ -191,6 +192,7 @@ viewCastle model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
                , div
                     [ HtmlAttr.style "bottom" "20px"
                     , HtmlAttr.style "left" "0px"
@@ -251,6 +253,7 @@ viewDungeon model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == DungeonScene)))
             ++ [ viewRpgCharacter model.character ]
@@ -296,6 +299,7 @@ viewDungeon2 model =
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == Dungeon2Scene)))
             ++ [ viewRpgCharacter model.character ]
