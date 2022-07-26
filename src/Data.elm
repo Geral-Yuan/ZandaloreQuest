@@ -154,7 +154,7 @@ type alias Enemy =
 type alias NPC =
     { scene : Scene
     , name : String
-    , dialogue : List String
+    , dialogue : String
     , image : String
     , faceDir : Dir
     , position : ( Float, Float )

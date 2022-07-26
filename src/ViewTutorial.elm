@@ -14,6 +14,9 @@ viewTutorialScene : Model -> Int -> List (Html Msg)
 viewTutorialScene model k =
     if model.board.boardState == NoActions && model.board.turn == PlayerTurn then
         case k of
+            0 ->
+                [ viewTutorial1 ]
+
             1 ->
                 [ viewTutorial1 ]
 
@@ -77,7 +80,7 @@ viewTutorial1 =
         , dialogHelper 600 20 20 170 50 "blue" "Enemies Information (Red)"
         , dialogHelper 400 20 1150 50 50 "blue" "Your heroes' Information (Blue)"
         , dialogHelper 600 20 950 700 50 "blue" "Brown obstacle: mystery box that drops gold and potions (black means unbreakable)"
-        , dialogHelper 600 20 20 900 50 "blue" "Click enter to continue"
+        , dialogHelper 800 20 20 900 50 "blue" "Click anywhere to continue"
         ]
 
 
@@ -95,31 +98,8 @@ viewTutorial2 =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper ( 100, 100 ) (findPos ( 2, 8 )) "blue" ( 0, 0 )
-
-            -- , Svg.rect
-            --     [ SvgAttr.stroke "blue"
-            --     , SvgAttr.strokeWidth "5"
-            --     , SvgAttr.height "100"
-            --     , SvgAttr.width "100"
-            --     , SvgAttr.fillOpacity "0"
-            --     , SvgAttr.x "950"
-            --     , SvgAttr.y "450"
-            --     ]
-            --     []
-            ]
+            [ shapeHelper ( 100, 100 ) (findPos ( 2, 8 )) "blue" ( 0, 0 ) ]
         , dialogHelper 500 20 500 50 50 "blue" "Left click on Warrior to control it"
-
-        -- , div
-        -- [ HtmlAttr.style "width" "400px"
-        -- , HtmlAttr.style "height" "20px"
-        -- , HtmlAttr.style "position" "fixed"
-        -- , HtmlAttr.style "left" "1150px"
-        -- , HtmlAttr.style "top" "50px"
-        -- , HtmlAttr.style "color" "blue"
-        -- , HtmlAttr.style "font-size" "50px"
-        -- ]
-        -- [ text "Your heroes' Information (Blue)" ]
         ]
 
 
@@ -337,5 +317,5 @@ viewTutorial13 =
             , SvgAttr.height "100%"
             ]
             []
-        , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click Enter to continue."
+        , dialogHelper 850 30 580 50 50 "blue" "I have been guiding you and now it is time for you to destroy the enemy by yourself. Good luck hero! Click anywhere to continue."
         ]

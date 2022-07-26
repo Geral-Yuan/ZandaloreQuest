@@ -63,17 +63,12 @@ update msg model =
 
 updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
 updateBoardGame msg model =
-    case msg of
-        ViewTutorial ->
-            ( { model | mode = Tutorial 1 }, Cmd.none )
-
-        _ ->
-            { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
-                |> checkMouseMove msg
-                |> checkHit msg
-                |> randomCrate msg
-                |> randomEnemies
-                |> checkEnd
+    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+        |> checkMouseMove msg
+        |> checkHit msg
+        |> randomCrate msg
+        |> randomEnemies
+        |> checkEnd
 
 
 updateSummary : Msg -> Model -> ( Model, Cmd Msg )
@@ -90,18 +85,20 @@ updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
 updateDialog msg task model =
     case task of
         MeetElder ->
-            if msg == Enter False then
-                ( { model | mode = HeroChoose }, Cmd.none )
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = HeroChoose }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
         FinishTutorial ->
-            if msg == Enter False then
-                ( { model | mode = Castle }, Cmd.none )
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Castle }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
 
         --To be changed when it's other tasks
         _ ->
@@ -169,7 +166,12 @@ followTutorial msg k =
             msg == Hit ( 7, 2 )
 
         13 ->
-            msg == Enter False
+            case msg of
+                Click _ _ ->
+                    True
+
+                _ ->
+                    False
 
         _ ->
             False
@@ -178,12 +180,21 @@ followTutorial msg k =
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
 updateTutorial msg k model =
     case k of
-        1 ->
-            if msg == Enter False then
-                ( { model | mode = Tutorial 2 }, Cmd.none )
+        0 ->
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Tutorial 1 }, Cmd.none )
 
-            else
-                ( model, Cmd.none )
+                _ ->
+                    ( model, Cmd.none )
+
+        1 ->
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Tutorial 2 }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         14 ->
             ( { model | mode = BoardGame }, Cmd.none )
@@ -267,7 +278,7 @@ checkConfirm msg model =
     case msg of
         Confirm ->
             if List.length model.chosenHero == 3 && model.level == 0 then
-                { model | mode = Tutorial 1, board = initBoard (confirmHeroes model) level, chosenHero = [] }
+                { model | mode = Tutorial 0, board = initBoard (confirmHeroes model) level, chosenHero = [] }
 
             else if List.length model.chosenHero == 3 then
                 { model | mode = BoardGame, board = initBoard (confirmHeroes model) level, chosenHero = [] }

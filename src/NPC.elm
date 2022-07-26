@@ -24,7 +24,7 @@ npcElder : NPC
 npcElder =
     { scene = CastleScene
     , name = "Elder"
-    , dialogue = []
+    , dialogue = "Elder: Welcome to the tutorial! The warrior and archer will help you on this arduous journey, choose one more hero to join you in this tutorial. Click anywhere to countinue."
     , image = "ElderNPC"
     , faceDir = Left
     , position = ( 1300, 610 )
@@ -40,7 +40,7 @@ npcDarkKnight1 : NPC
 npcDarkKnight1 =
     { scene = CastleScene
     , name = "DarkKnight 1"
-    , dialogue = []
+    , dialogue = ""
     , image = "EvilNPC"
     , faceDir = Right
     , position = ( 630, 320 )
@@ -56,7 +56,7 @@ npcDarkKnight2 : NPC
 npcDarkKnight2 =
     { scene = CastleScene
     , name = "DarkKnight 2"
-    , dialogue = []
+    , dialogue = ""
     , image = "EvilNPC"
     , faceDir = Right
     , position = ( 315, 810 )
@@ -72,7 +72,7 @@ npcSkullKnight1 : NPC
 npcSkullKnight1 =
     { scene = DungeonScene
     , name = "SkullKnight 1"
-    , dialogue = []
+    , dialogue = ""
     , image = "SkullKnight"
     , faceDir = Right
     , position = ( 900, 350 )
@@ -88,7 +88,7 @@ npcSkullKnight2 : NPC
 npcSkullKnight2 =
     { scene = DungeonScene
     , name = "SkullKnight 2"
-    , dialogue = []
+    , dialogue = ""
     , image = "SkullKnight"
     , faceDir = Left
     , position = ( 1100, 350 )
@@ -104,7 +104,7 @@ npcSkullKnight3 : NPC
 npcSkullKnight3 =
     { scene = Dungeon2Scene
     , name = "SkullKnight 3"
-    , dialogue = []
+    , dialogue = ""
     , image = "SkullKnight"
     , faceDir = Right
     , position = ( 900, 350 )
@@ -120,7 +120,7 @@ npcSkullKnight4 : NPC
 npcSkullKnight4 =
     { scene = Dungeon2Scene
     , name = "SkullKnight 4"
-    , dialogue = []
+    , dialogue = ""
     , image = "SkullKnight"
     , faceDir = Left
     , position = ( 1100, 350 )
@@ -136,7 +136,7 @@ npcWarrior : NPC
 npcWarrior =
     { scene = CastleScene
     , name = "Warrior"
-    , dialogue = []
+    , dialogue = ""
     , image = "WarriorBlue"
     , faceDir = Left
     , position = ( 1350, 550 )
@@ -152,7 +152,7 @@ npcArcher : NPC
 npcArcher =
     { scene = CastleScene
     , name = "Archer"
-    , dialogue = []
+    , dialogue = ""
     , image = "ArcherBlue"
     , faceDir = Left
     , position = ( 1350, 670 )
@@ -168,7 +168,7 @@ npcAssassin : NPC
 npcAssassin =
     { scene = ShopScene
     , name = "Assassin"
-    , dialogue = []
+    , dialogue = ""
     , image = "AssassinBlue"
     , faceDir = Left
     , position = ( 920, 370 )
@@ -184,7 +184,7 @@ npcMage : NPC
 npcMage =
     { scene = ShopScene
     , name = "Mage"
-    , dialogue = []
+    , dialogue = ""
     , image = "MageBlue"
     , faceDir = Left
     , position = ( 830, 430 )
@@ -200,7 +200,7 @@ npcHealer : NPC
 npcHealer =
     { scene = ShopScene
     , name = "Healer"
-    , dialogue = []
+    , dialogue = ""
     , image = "HealerBlue"
     , faceDir = Right
     , position = ( 740, 370 )
@@ -216,7 +216,7 @@ npcEngineer : NPC
 npcEngineer =
     { scene = ShopScene
     , name = "Engineer"
-    , dialogue = []
+    , dialogue = ""
     , image = "EngineerBlue"
     , faceDir = Right
     , position = ( 650, 430 )
