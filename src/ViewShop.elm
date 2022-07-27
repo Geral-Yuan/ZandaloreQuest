@@ -10,7 +10,7 @@ import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
-import ViewOthers exposing (viewCoinSVG)
+import ViewOthers exposing (viewCoinSVG, viewUIButton)
 import ViewScenes exposing (..)
 
 
@@ -114,8 +114,14 @@ viewShopChoose model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
+            (
             (viewBuySvg :: viewTaskBoard)
+            ++ (viewUIButton 100 50 1400 920) --for exit
+            ++ (viewUIButton 400 200 1000 400) -- for draw
+            ++ (viewUIButton 400 200 500 400) -- for upgrade
+            )
 
+            
         -- , healthButton
         -- , damageButton
         , drawButton model
@@ -131,7 +137,7 @@ healthButton =
         [ HtmlAttr.style "background" "#34495f"
         , HtmlAttr.style "top" "400px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "200px"
         , HtmlAttr.style "left" "1000px"
@@ -147,11 +153,13 @@ healthButton =
 exitButton : Html Msg
 exitButton =
     button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "920px"
-        , HtmlAttr.style "color" "white"
+        [ HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "border" "transparent"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
+
+        , HtmlAttr.style "top" "920px"
         , HtmlAttr.style "height" "50px"
         , HtmlAttr.style "left" "1400px"
         , HtmlAttr.style "line-height" "60px"
@@ -163,25 +171,6 @@ exitButton =
         [ text "Exit" ]
 
 
-damageButton : Html Msg
-damageButton =
-    button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "400px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "200px"
-        , HtmlAttr.style "left" "500px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "400px"
-        , onClick UpgradeDamage
-        ]
-        [ text "50 coins to upgrade (+2) damage of all heroes" ]
-
-
 drawButton : Model -> Html Msg
 drawButton model =
     if List.length model.indexedheroes >= 6 then
@@ -189,7 +178,7 @@ drawButton model =
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-size" "18px"
+            , HtmlAttr.style "font-size" "24px"
             , HtmlAttr.style "font-weight" "500"
             , HtmlAttr.style "height" "200px"
             , HtmlAttr.style "left" "1000px"
@@ -197,6 +186,11 @@ drawButton model =
             , HtmlAttr.style "outline" "none"
             , HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "width" "400px"
+            , HtmlAttr.style "background" "transparent"
+            , HtmlAttr.style "border" "transparent"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "color" "rgb(61,43,31)"
+            , HtmlAttr.style "font-size" "24px"
             ]
             [ text "You have obtained all heroes!" ]
 
@@ -205,7 +199,7 @@ drawButton model =
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-size" "18px"
+            , HtmlAttr.style "font-size" "24px"
             , HtmlAttr.style "font-weight" "500"
             , HtmlAttr.style "height" "200px"
             , HtmlAttr.style "left" "1000px"
@@ -213,6 +207,11 @@ drawButton model =
             , HtmlAttr.style "outline" "none"
             , HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "width" "400px"
+            , HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "border" "transparent"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
+        , HtmlAttr.style "font-size" "24px"
             , onClick LuckyDraw
             ]
             [ text "100 coins to draw a powerful hero!" ]
@@ -249,6 +248,8 @@ viewUpgradePage model =
             (viewBuySvg
                 :: viewTaskBoard
                 ++ List.map (\hero -> viewShopHeroes model hero) (idealAllHeroes model)
+                ++ (viewUIButton 100 50 1400 920) --for exit
+            ++ (viewUIButton 400 200 800 750) -- for upgrade
             )
          , exitButton
          , viewBagCoin model
@@ -263,7 +264,7 @@ enterUpgradeButton =
         [ HtmlAttr.style "background" "#34495f"
         , HtmlAttr.style "top" "400px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "500"
         , HtmlAttr.style "height" "200px"
         , HtmlAttr.style "left" "500px"
@@ -271,6 +272,11 @@ enterUpgradeButton =
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "400px"
+        , HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "border" "transparent"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
+        , HtmlAttr.style "font-size" "24px"
         , onClick EnterUpgrade
         ]
         [ text "go to upgrade your heroes" ]
@@ -286,10 +292,9 @@ upgradeButton model =
         Just ( hero, ind ) ->
             if isClassHave ( hero, ind ) model then
                 [ button
-                    [ HtmlAttr.style "background" "#34495f"
-                    , HtmlAttr.style "top" "750px"
+                    [ HtmlAttr.style "top" "750px"
                     , HtmlAttr.style "color" "white"
-                    , HtmlAttr.style "font-size" "18px"
+                    , HtmlAttr.style "font-size" "24px"
                     , HtmlAttr.style "font-weight" "500"
                     , HtmlAttr.style "height" "200px"
                     , HtmlAttr.style "left" "800px"
@@ -297,6 +302,11 @@ upgradeButton model =
                     , HtmlAttr.style "outline" "none"
                     , HtmlAttr.style "position" "absolute"
                     , HtmlAttr.style "width" "400px"
+                    , HtmlAttr.style "background" "transparent"
+                    , HtmlAttr.style "border" "transparent"
+                    , HtmlAttr.style "font-weight" "bold"
+                    , HtmlAttr.style "color" "rgb(61,43,31)"
+                    , HtmlAttr.style "font-size" "24px"
                     , onClick (LevelUp ( hero, ind ))
                     ]
                     [ text
@@ -311,7 +321,7 @@ upgradeButton model =
                     [ HtmlAttr.style "background" "#34495f"
                     , HtmlAttr.style "top" "750px"
                     , HtmlAttr.style "color" "white"
-                    , HtmlAttr.style "font-size" "18px"
+                    , HtmlAttr.style "font-size" "24px"
                     , HtmlAttr.style "font-weight" "500"
                     , HtmlAttr.style "height" "200px"
                     , HtmlAttr.style "left" "800px"
@@ -319,6 +329,11 @@ upgradeButton model =
                     , HtmlAttr.style "outline" "none"
                     , HtmlAttr.style "position" "absolute"
                     , HtmlAttr.style "width" "400px"
+                    , HtmlAttr.style "background" "transparent"
+                    , HtmlAttr.style "border" "transparent"
+                    , HtmlAttr.style "font-weight" "bold"
+                    , HtmlAttr.style "color" "rgb(61,43,31)"
+                    , HtmlAttr.style "font-size" "24px"
                     ]
                     [ text
                         ("You haven't obtained "
@@ -423,7 +438,7 @@ viewDrawnHero model class =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ viewBuySvg
+            ([ viewBuySvg
             , Svg.image
                 [ SvgAttr.width "400"
                 , SvgAttr.height "400"
@@ -433,7 +448,7 @@ viewDrawnHero model class =
                 , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Blue.png")
                 ]
                 []
-            ]
+            ] ++ (viewUIButton 100 50 1400 920)) --for exit
         , exitButton
         ]
 
