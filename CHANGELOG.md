@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - actions for enemy healer
 
+- appearance for buttons in the shop
+
 
 # [m1.53] -- 2022-7-27
 
