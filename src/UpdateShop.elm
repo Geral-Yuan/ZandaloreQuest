@@ -96,6 +96,9 @@ updateShop msg model =
             else
                 ( model, Cmd.none )
 
+        DisplayUpgrade on ->
+            ({model | isDisplayUpgrade = on}, Cmd.none)
+
         _ ->
             ( model, Cmd.none )
 
@@ -111,8 +114,11 @@ updateHealth hero =
 
         currHealth =
             currHero.health
+
+        adhealth =
+            Data.upgradeHealth currHero.class
     in
-    ( { currHero | health = currHealth + 5, maxHealth = currHealth + 5 }, index )
+    ( { currHero | health = currHealth + adhealth, maxHealth = currHealth + adhealth }, index )
 
 
 updateDamage : ( Hero, Int ) -> ( Hero, Int )
@@ -126,8 +132,10 @@ updateDamage hero =
 
         currDamage =
             currHero.damage
+
+        adddmg = Data.upgradeDamage currHero.class
     in
-    ( { currHero | damage = currDamage + 2 }, index )
+    ( { currHero | damage = currDamage + adddmg }, index )
 
 
 drawHero : Model -> Random.Generator Class

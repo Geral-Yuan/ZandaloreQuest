@@ -113,7 +113,7 @@ viewTutorial k model =
             ]
             (viewBoardGameBackGround 100
                 :: viewMap model.board
-                ++ List.map viewCoordinate model.board.map
+                --++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
@@ -183,7 +183,7 @@ viewBoard model =
             (viewBoardGameBackGround 100
                 -- TODO: make the board game looks nicer
                 :: viewMap model.board
-                ++ List.map viewCoordinate model.board.map
+                --++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)

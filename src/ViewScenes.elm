@@ -188,7 +188,7 @@ viewCastle model =
                         ++ viewTaskBoard
                         ++ viewUIButton 170 80 50 800
                     )
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC
@@ -249,7 +249,7 @@ viewDungeon model =
                      ]
                         ++ viewTaskBoard
                     )
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC
@@ -295,7 +295,7 @@ viewDungeon2 model =
                      ]
                         ++ viewTaskBoard
                     )
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC

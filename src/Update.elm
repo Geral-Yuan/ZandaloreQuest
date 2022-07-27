@@ -52,7 +52,7 @@ update msg model =
 
                 UpgradePage ->
                     updateShop msg model
-
+                    
                 _ ->
                     updateRPG msg model
                         |> updateCharacter msg
