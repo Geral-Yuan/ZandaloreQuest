@@ -111,8 +111,18 @@ updateHealth hero =
 
         currHealth =
             currHero.health
+
+        adhealth =
+            case currHero.class of
+                Warrior -> 20
+                Archer -> 10
+                Assassin -> 10
+                Mage -> 10
+                Healer -> 15
+                Engineer -> 10
+                Turret -> 0
     in
-    ( { currHero | health = currHealth + 5, maxHealth = currHealth + 5 }, index )
+    ( { currHero | health = currHealth + adhealth, maxHealth = currHealth + adhealth }, index )
 
 
 updateDamage : ( Hero, Int ) -> ( Hero, Int )
@@ -126,8 +136,18 @@ updateDamage hero =
 
         currDamage =
             currHero.damage
+
+        adddmg =
+            case currHero.class of
+                Warrior -> 2
+                Archer -> 4
+                Assassin -> 5
+                Mage -> 2
+                Healer -> 2
+                Engineer -> 2
+                Turret -> 0
     in
-    ( { currHero | damage = currDamage + 2 }, index )
+    ( { currHero | damage = currDamage + adddmg }, index )
 
 
 drawHero : Model -> Random.Generator Class
