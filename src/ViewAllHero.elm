@@ -129,8 +129,8 @@ viewHeroHealth hero =
                     , SvgAttr.height "20"
                     , SvgAttr.x (toString (1740 - offsetHero hero))
                     , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
-                    , SvgAttr.fill "transparent"
-                    , SvgAttr.stroke "blue"
+                    , SvgAttr.fill "black"
+                    , SvgAttr.stroke "rgb(5,124,196)"
                     , SvgAttr.rx "5"
                     ]
                     []
@@ -139,8 +139,8 @@ viewHeroHealth hero =
                     , SvgAttr.height "20"
                     , SvgAttr.x (toString (1740 - offsetHero hero))
                     , SvgAttr.y (toString (hero.indexOnBoard * 150 - 95))
-                    , SvgAttr.fill "blue"
-                    , SvgAttr.stroke "blue"
+                    , SvgAttr.fill "rgb(5,124,196)"
+                    , SvgAttr.stroke "rgb(5,124,196)"
                     , SvgAttr.rx "5"
                     ]
                     []
@@ -153,7 +153,7 @@ viewHeroHealth hero =
                 , SvgAttr.x (toString (x - 50))
                 , SvgAttr.y (toString (y - 60))
                 , SvgAttr.fill "transparent"
-                , SvgAttr.stroke "blue"
+                , SvgAttr.stroke "rgb(5,124,196)"
                 , SvgAttr.rx "5"
                 ]
                 []
@@ -162,8 +162,8 @@ viewHeroHealth hero =
                 , SvgAttr.height "10"
                 , SvgAttr.x (toString (x - 50))
                 , SvgAttr.y (toString (y - 60))
-                , SvgAttr.fill "blue"
-                , SvgAttr.stroke "blue"
+                , SvgAttr.fill "rgb(5,124,196)"
+                , SvgAttr.stroke "rgb(5,124,196)"
                 , SvgAttr.rx "5"
                 ]
                 []

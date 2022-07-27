@@ -41,11 +41,11 @@ viewEncyclopedia class model =
             ]
             ([]
                 ++ viewUIFrame 1200 800 400 200
-                ++ viewHeroInformation class
+                ++ viewHeroInformation
             )
          , rightEncyclopediaButton
          , leftEncyclopediaButton
-         , cancelEncyclopediaButton
+         , exitEncyclopediaButton
          , encyclopediaHero class
          ]
             ++ viewDescription class
@@ -67,10 +67,13 @@ viewHeroInfo class =
                 Assassin ->
                     35
 
+                Mage ->
+                    50
+
                 Healer ->
                     40
 
-                Mage ->
+                Engineer ->
                     30
 
                 _ ->
@@ -87,11 +90,14 @@ viewHeroInfo class =
                 Assassin ->
                     20
 
+                Mage ->
+                    12
+
                 Healer ->
                     5
 
-                Mage ->
-                    30
+                Engineer ->
+                    5
 
                 _ ->
                     50
@@ -109,7 +115,7 @@ viewHeroInfo class =
     in
     [ div
         [ HtmlAttr.style "top" "300px"
-        , HtmlAttr.style "left" "1250px"
+        , HtmlAttr.style "left" "1350px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "50px"
@@ -121,7 +127,7 @@ viewHeroInfo class =
         [ text (toString health) ]
     , div
         [ HtmlAttr.style "top" "400px"
-        , HtmlAttr.style "left" "1250px"
+        , HtmlAttr.style "left" "1350px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "50px"
@@ -133,7 +139,7 @@ viewHeroInfo class =
         [ text (toString damage) ]
     , div
         [ HtmlAttr.style "top" "500px"
-        , HtmlAttr.style "left" "1250px"
+        , HtmlAttr.style "left" "1350px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "50px"
@@ -186,12 +192,12 @@ viewDescription class =
             ]
 
 
-viewHeroInformation : Class -> List (Svg Msg)
-viewHeroInformation hero =
+viewHeroInformation : List (Svg Msg)
+viewHeroInformation =
     [ Svg.image
         [ SvgAttr.width "80"
         , SvgAttr.height "80"
-        , SvgAttr.x "1050"
+        , SvgAttr.x "1150"
         , SvgAttr.y "300"
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref "./assets/image/Heart.png"
@@ -200,7 +206,7 @@ viewHeroInformation hero =
     , Svg.image
         [ SvgAttr.width "80"
         , SvgAttr.height "80"
-        , SvgAttr.x "1050"
+        , SvgAttr.x "1150"
         , SvgAttr.y "400"
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref "./assets/image/Sword.png"
@@ -209,7 +215,7 @@ viewHeroInformation hero =
     , Svg.image
         [ SvgAttr.width "80"
         , SvgAttr.height "80"
-        , SvgAttr.x "1050"
+        , SvgAttr.x "1150"
         , SvgAttr.y "500"
         , SvgAttr.preserveAspectRatio "none"
         , SvgAttr.xlinkHref "./assets/image/Energy.png"
@@ -229,7 +235,7 @@ encyclopediaHero class =
         , HtmlAttr.style "top" "250px"
         , HtmlAttr.style "left" "500px"
         ]
-        [ img [ src (fimage ++ "BlueGIF.gif"), height 420, width 500 ] []
+        [ img [ src (fimage ++ "BlueGIF.gif"), height 400, width 575 ] []
         ]
 
 
@@ -237,7 +243,7 @@ rightEncyclopediaButton : Html Msg
 rightEncyclopediaButton =
     button
         [ HtmlAttr.style "background" "url('./assets/image/rightArrow.png')"
-        , HtmlAttr.style "top" "420px"
+        , HtmlAttr.style "top" "520px"
 
         -- , HtmlAttr.style "color" "white"
         , HtmlAttr.style "height" "160px"
@@ -245,6 +251,7 @@ rightEncyclopediaButton =
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "100px"
+        , HtmlAttr.style "border" "transparent"
         , onClick RightEncyclopedia
         ]
         []
@@ -254,7 +261,7 @@ leftEncyclopediaButton : Html Msg
 leftEncyclopediaButton =
     button
         [ HtmlAttr.style "background" "url('./assets/image/rightArrow.png')"
-        , HtmlAttr.style "top" "420px"
+        , HtmlAttr.style "top" "520px"
         , HtmlAttr.style "transform" "scaleX(-1)"
 
         -- , HtmlAttr.style "color" "white"
@@ -263,13 +270,14 @@ leftEncyclopediaButton =
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "100px"
+        , HtmlAttr.style "border" "transparent"
         , onClick LeftEncyclopedia
         ]
         []
 
 
-cancelEncyclopediaButton : Html Msg
-cancelEncyclopediaButton =
+exitEncyclopediaButton : Html Msg
+exitEncyclopediaButton =
     button
         [ HtmlAttr.style "background" "url('./assets/image/cancel.png') no-repeat fixed"
         , HtmlAttr.style "object-fit" "cover"
@@ -281,6 +289,7 @@ cancelEncyclopediaButton =
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "100px"
+        , HtmlAttr.style "border" "transparent"
         , onClick Back
         ]
         []
@@ -289,17 +298,18 @@ cancelEncyclopediaButton =
 viewEncyclopediaButton : Html Msg
 viewEncyclopediaButton =
     button
-        [ HtmlAttr.style "background" "#34495f"
+        [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "800px"
-        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-weight" "500"
+        , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "height" "80px"
         , HtmlAttr.style "left" "50px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
+        , HtmlAttr.style "border" "transparent"
         , onClick SeeEncyclopedia
         ]
         [ text "Encyclopedia" ]

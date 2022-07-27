@@ -7,6 +7,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+# [m1.53] -- 2022-7-27
+
+### Added
+- added UI for button
+
+### Changed
+- changed health bar color
+- heroes selection scene format
+
+### Fixed
+- fixed wrong information in encyclopedia
+
+
 ## [m1.52] -- 2022-7-26 
 
 ### Added
