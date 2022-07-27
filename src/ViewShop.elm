@@ -1,4 +1,4 @@
-module ViewShop exposing (..)
+module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
 
 import Data exposing (Class(..), Hero, HeroState(..), Scene(..), pixelHeight, pixelWidth)
 import Debug exposing (toString)
@@ -11,9 +11,9 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton)
-import ViewScenes exposing (..)
+import ViewScenes exposing (viewKeyGif, viewTipForDir, viewCharacterPos, viewTipForC, viewTipForEnter, viewBagCoin, viewRpgCharacter)
 
-
+{-| view the shop where the rpg character can move -}
 viewShop : Model -> Html Msg
 viewShop model =
     let
@@ -86,6 +86,7 @@ viewBuySvg =
         []
 
 
+{-| view the first page where players can draw a hero and enter upgrade page -}
 viewShopChoose : Model -> Html Msg
 viewShopChoose model =
     let
@@ -115,39 +116,16 @@ viewShopChoose model =
             , SvgAttr.height "100%"
             ]
             (
-            (viewBuySvg :: viewTaskBoard)
-            ++ (viewUIButton 100 50 1400 920) --for exit
-            ++ (viewUIButton 400 200 1000 400) -- for draw
-            ++ (viewUIButton 400 200 500 400) -- for upgrade
+                (viewBuySvg :: viewTaskBoard)
+                ++ (viewUIButton 100 50 1400 920) --for exit
+                ++ (viewUIButton 400 200 1000 400) -- for draw
+                ++ (viewUIButton 400 200 500 400) -- for upgrade
             )
-
-            
-        -- , healthButton
-        -- , damageButton
         , drawButton model
         , exitButton
         , enterUpgradeButton
         , viewBagCoin model
         ]
-
-
-healthButton : Html Msg
-healthButton =
-    button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "400px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "24px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "200px"
-        , HtmlAttr.style "left" "1000px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "400px"
-        , onClick UpgradeHealth
-        ]
-        [ text "50 coins to upgrade (+5) health of all heroes" ]
 
 
 exitButton : Html Msg
@@ -217,6 +195,7 @@ drawButton model =
             [ text "100 coins to draw a powerful hero!" ]
 
 
+{-| view the page where the player can upgrade heroes -}
 viewUpgradePage : Model -> Html Msg
 viewUpgradePage model =
     let
@@ -293,9 +272,7 @@ upgradeButton model =
             if isClassHave ( hero, ind ) model then
                 [ button
                     [ HtmlAttr.style "top" "750px"
-                    , HtmlAttr.style "color" "white"
                     , HtmlAttr.style "font-size" "24px"
-                    , HtmlAttr.style "font-weight" "500"
                     , HtmlAttr.style "height" "200px"
                     , HtmlAttr.style "left" "800px"
                     , HtmlAttr.style "line-height" "60px"
@@ -306,7 +283,6 @@ upgradeButton model =
                     , HtmlAttr.style "border" "transparent"
                     , HtmlAttr.style "font-weight" "bold"
                     , HtmlAttr.style "color" "rgb(61,43,31)"
-                    , HtmlAttr.style "font-size" "24px"
                     , onClick (LevelUp ( hero, ind ))
                     ]
                     [ text
@@ -318,11 +294,7 @@ upgradeButton model =
 
             else
                 [ button
-                    [ HtmlAttr.style "background" "#34495f"
-                    , HtmlAttr.style "top" "750px"
-                    , HtmlAttr.style "color" "white"
-                    , HtmlAttr.style "font-size" "24px"
-                    , HtmlAttr.style "font-weight" "500"
+                    [ HtmlAttr.style "top" "750px"
                     , HtmlAttr.style "height" "200px"
                     , HtmlAttr.style "left" "800px"
                     , HtmlAttr.style "line-height" "60px"
@@ -411,6 +383,7 @@ viewShopHeroes model ( hero, index ) =
             []
 
 
+{-| view the hero that the player has just drawn -}
 viewDrawnHero : Model -> Class -> Html Msg
 viewDrawnHero model class =
     let
