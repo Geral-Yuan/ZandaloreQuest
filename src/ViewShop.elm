@@ -1,5 +1,12 @@
 module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
 
+{-| This file fills pages in the shop.
+
+# Functions 
+@docs viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage
+
+-}
+
 import Data exposing (Class(..), Hero, HeroState(..), Scene(..), pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
