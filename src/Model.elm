@@ -29,6 +29,7 @@ type alias Model =
     , unlockDungeon2 : Bool
     , popUpHint : ( FailToDo, Float )
     , test : Bool
+    , isDisplayUpgrade : Bool
 
     -- , time : Float
     }
@@ -83,6 +84,7 @@ initModel =
     , unlockDungeon2 = False
     , popUpHint = ( Noop, 0 )
     , test = False
+    , isDisplayUpgrade = False
 
     -- , time = 0
     }

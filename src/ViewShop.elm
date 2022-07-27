@@ -17,8 +17,10 @@ import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
-import ViewOthers exposing (viewCoinSVG, viewUIButton)
+import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
 import ViewScenes exposing (viewKeyGif, viewTipForDir, viewCharacterPos, viewTipForC, viewTipForEnter, viewBagCoin, viewRpgCharacter)
+import Data exposing (upgradeHealth)
+import Data exposing (upgradeDamage)
 
 {-| view the shop where the rpg character can move -}
 viewShop : Model -> Html Msg
@@ -333,6 +335,7 @@ viewUpgradePage model =
                 ++ viewTaskBoard
                 ++ viewHighlightHero
                 ++ List.map (\hero -> viewShopHeroes model hero) (idealAllHeroes model)
+                ++ viewHeroAttr model
                 ++ (viewUIButton 100 50 1400 920) --for exit
             ++ (viewUIButton 300 150 850 775) -- for upgrade
             
@@ -391,6 +394,8 @@ upgradeButton model =
                     , HtmlAttr.style "font-weight" "bold"
                     , HtmlAttr.style "color" "rgb(61,43,31)"
                     , onClick (LevelUp ( hero, ind ))
+                    , Html.Events.onMouseOver (DisplayUpgrade True)
+                    , Html.Events.onMouseOut (DisplayUpgrade False)
                     ]
                     [ text
                         ("50 coins to upgrade "
@@ -546,3 +551,100 @@ idealAllHeroes model =
             List.filter (\( _, index ) -> not (List.member index (List.map (\( _, yindex ) -> yindex) model.indexedheroes))) Data.allSampleHeroes
     in
     model.indexedheroes ++ donthave
+
+
+viewHeroAttr : Model -> List (Svg Msg)
+viewHeroAttr model =
+    let
+        maybeChosen = List.filter (\x -> isClassHave x model) model.indexedheroes
+                      |> List.filter (\(_, index) -> index == model.upgradePageIndex ) 
+                      |> List.head
+
+        shealth =
+            case maybeChosen of
+                Nothing ->
+                    "???"
+
+                Just (hero, _) ->
+                    if isdplup then
+                        toString (hero.maxHealth) ++ " + " ++ toString (upgradeHealth hero.class)
+                    else
+                        toString (hero.maxHealth)
+
+        sdmg =
+            case maybeChosen of
+                Nothing ->
+                    "???"
+
+                Just (hero, _) ->
+                    if isdplup then
+                        toString (hero.damage) ++ " + " ++ toString (upgradeDamage hero.class)
+                    else
+                        toString (hero.damage)
+        senergy =
+            case maybeChosen of
+                Nothing ->
+                    "???"
+
+                Just (hero, _) ->
+                    toString (hero.energy)
+
+        isdplup = model.isDisplayUpgrade
+    in
+    viewUIFrame  400 240 800 20
+    ++ [ Svg.image
+        [ SvgAttr.width "55"
+        , SvgAttr.height "55"
+        , SvgAttr.x "850"
+        , SvgAttr.y "40"
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Heart.png"
+        ]
+        []
+    , Svg.image
+        [ SvgAttr.width "55"
+        , SvgAttr.height "55"
+        , SvgAttr.x "850"
+        , SvgAttr.y "110"
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Sword.png"
+        ]
+        []
+    , Svg.image
+        [ SvgAttr.width "55"
+        , SvgAttr.height "55"
+        , SvgAttr.x "850"
+        , SvgAttr.y "180"
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.xlinkHref "./assets/image/Energy.png"
+        ]
+        []
+    , Svg.text_
+        [ SvgAttr.x "950"
+        , SvgAttr.y "67.5"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "white"
+        , SvgAttr.fontSize "50"
+        ]
+        [ Svg.text shealth
+        ]
+    , Svg.text_
+        [ SvgAttr.x "950"
+        , SvgAttr.y "137.5"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "white"
+        , SvgAttr.fontSize "50"
+        ]
+        [ Svg.text sdmg
+        ]
+    , Svg.text_
+        [ SvgAttr.x "950"
+        , SvgAttr.y "208"
+        , SvgAttr.dominantBaseline "middle"
+        , SvgAttr.fill "white"
+        , SvgAttr.fontSize "50"
+        ]
+        [ Svg.text senergy
+        ]
+    
+    ]

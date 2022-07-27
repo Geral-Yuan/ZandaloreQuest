@@ -547,3 +547,41 @@ allSampleHeroes =
     , ( Hero Healer ( 0, 0 ) 40 40 5 5 False Waiting 0, 5 )
     , ( Hero Engineer ( 0, 0 ) 30 30 5 5 False Waiting 0, 6 )
     ]
+
+
+upgradeDamage : Class -> Int
+upgradeDamage class =
+    case class of
+        Warrior -> 
+            2
+        Archer -> 
+            4
+        Assassin -> 
+            5
+        Mage -> 
+            2
+        Healer -> 
+            2
+        Engineer -> 
+            2
+        Turret -> 
+            0
+
+
+upgradeHealth : Class -> Int
+upgradeHealth class =
+    case class of
+        Warrior -> 
+            20
+        Archer -> 
+            10
+        Assassin -> 
+            10
+        Mage -> 
+            10
+        Healer -> 
+            15
+        Engineer -> 
+            10
+        Turret -> 
+            0
