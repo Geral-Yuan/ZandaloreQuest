@@ -57,7 +57,7 @@ viewShop model =
                         :: viewShopSvg
                         ++ viewTaskBoard
                     )
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
