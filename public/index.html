@@ -5,16 +5,7 @@
   <title>Main</title>
   <style>body { padding: 0; margin: 0; }</style>
 </head>
-<style>
-@font-face {
-	font-family: myfont;
-	src: url(assets/PixelOperator-Bold.ttf);
-	font-weight: bold;
-	}
-	body {
-	font-family: myfont;
-	}
-</style> 
+
 <body>
 
 <pre id="elm"></pre>
@@ -9842,16 +9833,17 @@ var $author$project$Action$pos2Hero = F2(
 			return $elm$core$Maybe$Just(chosen);
 		}
 	});
-var $author$project$Action$sampleTurret = F2(
-	function (pos, board) {
-		return A9($author$project$Data$Hero, $author$project$Data$Turret, pos, 30, 30, 10, 0, false, $author$project$Data$Waiting, board.totalHeroNumber + 1);
+var $author$project$Action$sampleTurret = F4(
+	function (health, dmg, pos, board) {
+		return A9($author$project$Data$Hero, $author$project$Data$Turret, pos, health - 10, health - 10, 2 * dmg, 0, false, $author$project$Data$Waiting, board.totalHeroNumber + 1);
 	});
 var $author$project$Action$checkBuildTurret = F3(
-	function (_class, pos, board) {
-		if (_class.$ === 'Engineer') {
+	function (myhero, pos, board) {
+		var _v0 = myhero._class;
+		if (_v0.$ === 'Engineer') {
 			var newherolist = A2($author$project$Action$isGridEmpty, pos, board) ? A2(
 				$elm$core$List$cons,
-				A2($author$project$Action$sampleTurret, pos, board),
+				A4($author$project$Action$sampleTurret, myhero.maxHealth, myhero.damage, pos, board),
 				board.heroes) : board.heroes;
 			var _v1 = A2($author$project$Action$pos2Hero, board.heroes, pos);
 			if (_v1.$ === 'Nothing') {
@@ -9926,14 +9918,14 @@ var $author$project$Action$checkHeal = F3(
 		}
 	});
 var $author$project$HeroAttack$checkAttackTarget = F3(
-	function (_class, pos, board) {
+	function (hero, pos, board) {
 		return A3(
 			$author$project$Action$checkHeal,
-			_class,
+			hero._class,
 			pos,
 			A3(
 				$author$project$Action$checkBuildTurret,
-				_class,
+				hero,
 				pos,
 				A2(
 					$author$project$HeroAttack$checkAttackEnemy,
@@ -10157,7 +10149,6 @@ var $author$project$HeroAttack$checkAttack = F3(
 							return 0;
 					}
 				}();
-				var chosenclass = hero._class;
 				var attackedPoslist = function () {
 					var _v1 = hero._class;
 					if (_v1.$ === 'Mage') {
@@ -10175,7 +10166,7 @@ var $author$project$HeroAttack$checkAttack = F3(
 				}();
 				return A3(
 					$elm$core$List$foldl,
-					$author$project$HeroAttack$checkAttackTarget(chosenclass),
+					$author$project$HeroAttack$checkAttackTarget(hero),
 					_Utils_update(
 						board,
 						{boardState: $author$project$Data$HeroAttack, critical: newcritical, heroes: newheroes}),
