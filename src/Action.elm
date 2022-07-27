@@ -224,19 +224,19 @@ maxTurret =
     2
 
 
-sampleTurret : Pos -> Board -> Hero
-sampleTurret pos board =
-    Hero Turret pos 30 30 10 0 False Waiting (board.totalHeroNumber + 1)
+sampleTurret : Int -> Int -> Pos -> Board -> Hero
+sampleTurret health dmg pos board =
+    Hero Turret pos (health - 10) (health - 10) (2 * dmg) 0 False Waiting (board.totalHeroNumber + 1)
 
 
-checkBuildTurret : Class -> Pos -> Board -> Board
-checkBuildTurret class pos board =
-    case class of
+checkBuildTurret : Hero -> Pos -> Board -> Board
+checkBuildTurret myhero pos board =
+    case myhero.class of
         Engineer ->
             let
                 newherolist =
                     if isGridEmpty pos board then
-                        sampleTurret pos board :: board.heroes
+                        sampleTurret myhero.maxHealth myhero.damage pos board :: board.heroes
 
                     else
                         board.heroes

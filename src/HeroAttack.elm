@@ -34,8 +34,6 @@ checkAttack board pos critical =
             if hero.energy > 2 && isMeaningfulAttack board hero.class pos then
                 --    if hero.energy > 2 && List.member pos (listIntersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
                 let
-                    chosenclass =
-                        hero.class
 
                     newheroes =
                         { hero | energy = hero.energy - 3, state = Attacking } :: unselectedHero board.heroes
@@ -65,7 +63,7 @@ checkAttack board pos critical =
                             _ ->
                                 [ pos ]
                 in
-                List.foldl (checkAttackTarget chosenclass) { board | critical = newcritical, heroes = newheroes, boardState = HeroAttack } attackedPoslist
+                List.foldl (checkAttackTarget hero) { board | critical = newcritical, heroes = newheroes, boardState = HeroAttack } attackedPoslist
 
             else
                 board
@@ -119,13 +117,13 @@ meaningfulTarget board class =
             List.map .pos board.enemies ++ List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == MysteryBox) board.obstacles)
 
 
-checkAttackTarget : Class -> Pos -> Board -> Board
-checkAttackTarget class pos board =
+checkAttackTarget : Hero -> Pos -> Board -> Board
+checkAttackTarget hero pos board =
     board
         |> checkAttackObstacle [ pos ]
         |> checkAttackEnemy pos
-        |> checkBuildTurret class pos
-        |> checkHeal class pos
+        |> checkBuildTurret hero pos
+        |> checkHeal hero.class pos
 
 
 checkAttackEnemy : Pos -> Board -> Board
