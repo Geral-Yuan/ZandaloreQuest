@@ -29,6 +29,7 @@ type alias Board =
     , pointPos : ( Float, Float )
     , coins : Int
     , level : Int
+    , mapRotating : ( Bool, Float )
     }
 
 
@@ -62,8 +63,11 @@ initObstacles k =
         4 ->
             [ Obstacle Unbreakable ( 5, 5 ) NoItem ]
 
-        _ ->
+        5 ->
             []
+
+        _ ->
+            List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 5 ), ( 2, 8 ), ( 5, 8 ), ( 8, 5 ), ( 8, 2 ), ( 5, 2 ) ]
 
 
 initenemy : Int -> List Enemy
@@ -96,11 +100,14 @@ initenemy k =
             , sampleEnemy Assassin ( 5, 1 ) 3
             ]
 
-        _ ->
+        5 ->
             [ sampleEnemy Archer ( 1, 9 ) 1
             , sampleEnemy Archer ( 9, 5 ) 2
             , sampleEnemy Archer ( 5, 1 ) 3
             ]
+        
+        _ ->
+            [initBoss]
 
 
 inithero : List Hero -> Int -> List Hero
@@ -166,7 +173,7 @@ initPosition k hero =
                 _ ->
                     { hero | pos = ( 9, 1 ) }
 
-        _ ->
+        5 ->
             case hero.indexOnBoard of
                 1 ->
                     { hero | pos = ( 3, 7 ) }
@@ -176,6 +183,17 @@ initPosition k hero =
 
                 _ ->
                     { hero | pos = ( 5, 3 ) }
+
+        _ ->
+            case hero.indexOnBoard of
+                1 ->
+                    { hero | pos = ( 1, 5 ) }
+
+                2 ->
+                    { hero | pos = ( 5, 9 ) }
+
+                _ ->
+                    { hero | pos = ( 9, 1 ) }
 
 
 spawnTimes : Int -> Int
@@ -189,6 +207,9 @@ spawnTimes k =
 
         2 ->
             1
+
+        6 ->
+            0
 
         _ ->
             2
@@ -219,6 +240,7 @@ initBoard heroes k =
     , pointPos = ( 0, 0 )
     , coins = 0
     , level = k
+    , mapRotating = ( False, 0 )
     }
 
 
@@ -247,4 +269,5 @@ sampleBoard =
     , pointPos = ( 0, 0 )
     , coins = 0
     , level = 0
+    , mapRotating = ( False, 0 )
     }

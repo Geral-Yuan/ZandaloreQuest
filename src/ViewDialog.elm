@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
+import NPC exposing (npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3, npcBoss)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewOthers exposing (dialogHelper)
@@ -70,6 +70,9 @@ viewDialogMatch task =
 
         Level 5 ->
             viewDialogSkullKnight3
+
+        Level 6 ->
+            viewDialogBoss
 
         _ ->
             viewDialogGeneral
@@ -190,6 +193,20 @@ viewDialogSkullKnight3 =
         [ viewMainCharacterDialog
         , viewSkullKnightDialog
         , viewDialogContent npcSkullKnight3.dialogue
+        ]
+
+viewDialogBoss : Html Msg
+viewDialogBoss =
+    div
+        [ HtmlAttr.style "width" "100%"
+        , HtmlAttr.style "height" "100%"
+        , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "left" "0"
+        , HtmlAttr.style "top" "0"
+        ]
+        [ viewMainCharacterDialog
+        , viewSkullKnightDialog
+        , viewDialogContent npcBoss.dialogue
         ]
 
 

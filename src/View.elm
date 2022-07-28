@@ -113,19 +113,19 @@ viewTutorial k model =
             ]
             (viewBoardGameBackGround 100
                 :: viewMap model.board
-                --++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
-                ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.concat (List.map (viewHeroHealth model.board) model.board.heroes)
                 ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
                 ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
                 ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
-                ++ List.map viewCrate model.board.obstacles
-                ++ List.concatMap viewItem model.board.item
+                ++ List.map (viewCrate model.board) model.board.obstacles
+                ++ List.concatMap (viewItem model.board) model.board.item
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
@@ -144,9 +144,9 @@ viewTutorial k model =
                --  , viewClickPosition model
                --  , viewTips
                ]
-            ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
+            ++ List.map (viewHero model.board) (List.sortBy .indexOnBoard model.board.heroes)
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
-            ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
+            ++ List.map (viewEnemy model.board) (List.sortBy .indexOnBoard model.board.enemies)
             ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
@@ -183,19 +183,19 @@ viewBoard model =
             (viewBoardGameBackGround 100
                 -- TODO: make the board game looks nicer
                 :: viewMap model.board
-                --++ List.map viewCoordinate model.board.map
+                ++ List.map viewCoordinate model.board.map
                 ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
                 ++ List.concat (List.map viewHeroImage model.board.heroes)
                 ++ List.concat (List.map viewHeroCondition model.board.heroes)
-                ++ List.concat (List.map viewHeroHealth model.board.heroes)
+                ++ List.concat (List.map (viewHeroHealth model.board) model.board.heroes)
                 ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
                 ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
                 ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
-                ++ List.map viewCrate model.board.obstacles
-                ++ List.concatMap viewItem model.board.item
+                ++ List.map (viewCrate model.board) model.board.obstacles
+                ++ List.concatMap (viewItem model.board) model.board.item
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
@@ -229,9 +229,9 @@ viewBoard model =
          --  , viewClickPosition model
          --  , viewTips
          ]
-            ++ List.map viewHero (List.sortBy .indexOnBoard model.board.heroes)
+            ++ List.map (viewHero model.board) (List.sortBy .indexOnBoard model.board.heroes)
             ++ List.concat (List.map viewHeroInfo model.board.heroes)
-            ++ List.map viewEnemy (List.sortBy .indexOnBoard model.board.enemies)
+            ++ List.map (viewEnemy model.board) (List.sortBy .indexOnBoard model.board.enemies)
             ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
@@ -269,11 +269,15 @@ viewMap board =
 
 viewCell : Board -> Pos -> Svg Msg
 viewCell board pos =
+    let
+        ( rotating, time ) =
+            board.mapRotating
+    in
     if List.member pos (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)) then
         Svg.polygon
             [ SvgAttr.fill "black"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos pos))
+            , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
             , onContentMenu (Hit pos)
             ]
             []
@@ -283,7 +287,7 @@ viewCell board pos =
             Svg.polygon
                 [ SvgAttr.fill "rgb(154,205,50)"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos pos))
+                , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
                 , onClick (Move pos)
                 , onContentMenu (Hit pos)
                 ]
@@ -293,7 +297,7 @@ viewCell board pos =
             Svg.polygon
                 [ SvgAttr.fill "yellow"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos pos))
+                , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
                 , onContentMenu (Hit pos)
                 ]
                 []
@@ -302,7 +306,7 @@ viewCell board pos =
             Svg.polygon
                 [ SvgAttr.fill "rgb(132,112,255)"
                 , SvgAttr.stroke "blue"
-                , SvgAttr.points (detPoints (findPos pos))
+                , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
                 , onClick (Move pos)
                 , onContentMenu (Hit pos)
                 ]
@@ -312,7 +316,7 @@ viewCell board pos =
         Svg.polygon
             [ SvgAttr.fill "rgb(173,216,230)"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos pos))
+            , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
             , onContentMenu (Hit pos)
             ]
             []
@@ -321,7 +325,7 @@ viewCell board pos =
         Svg.polygon
             [ SvgAttr.fill "white"
             , SvgAttr.stroke "blue"
-            , SvgAttr.points (detPoints (findPos pos))
+            , SvgAttr.points (detPoints board pos (findPos rotating board.level time pos))
             , SvgAttr.opacity "75%"
             , onClick (Move pos)
             , onContentMenu (Hit pos)
@@ -355,11 +359,14 @@ viewTurn model =
         ]
 
 
-viewCrate : Obstacle -> Svg Msg
-viewCrate obs =
+viewCrate : Board -> Obstacle -> Svg Msg
+viewCrate board obs =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos obs.pos
+            findPos rotating board.level time obs.pos
     in
     if obs.obstacleType == MysteryBox then
         Svg.image
@@ -378,11 +385,14 @@ viewCrate obs =
         Svg.rect [] []
 
 
-viewItem : Item -> List (Svg Msg)
-viewItem item =
+viewItem : Board -> Item -> List (Svg Msg)
+viewItem board item =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos item.pos
+            findPos rotating board.level time item.pos
 
         itemtype =
             toString item.itemType

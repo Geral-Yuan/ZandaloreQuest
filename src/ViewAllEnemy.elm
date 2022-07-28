@@ -11,11 +11,14 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewEnemy : Enemy -> Svg Msg
-viewEnemy enemy =
+viewEnemy : Board -> Enemy -> Svg Msg
+viewEnemy board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         class =
             toString enemy.class
@@ -34,42 +37,53 @@ viewEnemy enemy =
                    )
                 ++ "SFX.mp3"
     in
-    case enemy.state of
-        Attacking ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 45) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                ]
-                [ img [ src (fimage ++ "RedGIF.gif"), height 85, width 115 ] []
-                , audio
-                    [ HtmlAttr.autoplay True
-                    , HtmlAttr.loop False
-                    , HtmlAttr.preload "True"
-                    , HtmlAttr.src faudio
-                    , HtmlAttr.id faudio
+    if not enemy.boss then
+        case enemy.state of
+            Attacking ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 45) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
                     ]
-                    []
-                ]
+                    [ img [ src (fimage ++ "RedGIF.gif"), height 85, width 115 ] []
+                    , audio
+                        [ HtmlAttr.autoplay True
+                        , HtmlAttr.loop False
+                        , HtmlAttr.preload "True"
+                        , HtmlAttr.src faudio
+                        , HtmlAttr.id faudio
+                        ]
+                        []
+                    ]
 
-        Attacked _ ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                ]
-                [ img [ src (fimage ++ "GotHit.png"), height 80, width 80 ] []
-                ]
+            Attacked _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    ]
+                    [ img [ src (fimage ++ "GotHit.png"), height 80, width 80 ] []
+                    ]
 
-        _ ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                , onContentMenu (Hit enemy.pos)
-                ]
-                [ img [ src (fimage ++ "Red.png"), height 80, width 80 ] []
-                ]
+            _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src (fimage ++ "Red.png"), height 80, width 80 ] []
+                    ]
+
+    else
+        div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+            , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+            , onContentMenu (Hit enemy.pos)
+            ]
+            [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
+            ]
 
 
 viewEnemyImage : Board -> Enemy -> Svg msg
@@ -86,15 +100,26 @@ viewEnemyImage board enemy =
         idxOnBoard =
             enemy.indexOnBoard - minIdx + 1
     in
-    Svg.image
-        [ SvgAttr.width "70"
-        , SvgAttr.height "70"
-        , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (idxOnBoard * 150 - 100))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
-        ]
-        []
+    if not enemy.boss then
+        Svg.image
+            [ SvgAttr.width "70"
+            , SvgAttr.height "70"
+            , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+            , SvgAttr.y (toString (idxOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
+            ]
+            []
+    else
+        Svg.image
+            [ SvgAttr.width "70"
+            , SvgAttr.height "70"
+            , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+            , SvgAttr.y (toString (idxOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/SkullKnight.png")
+            ]
+            []
 
 
 viewEnemyOuterFrame : Board -> Enemy -> Svg msg
@@ -190,8 +215,11 @@ viewEnemyCondition board enemy =
 viewEnemyHealth : Board -> Enemy -> List (Svg msg)
 viewEnemyHealth board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         healthBarlen1 =
             200 * toFloat enemy.health / toFloat enemy.maxHealth

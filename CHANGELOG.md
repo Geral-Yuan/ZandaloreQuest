@@ -6,7 +6,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-# [m1.54] -- 2022-7-27
+## [m1.55] -- 2022-7-28
+
+### Added
+
+- Map of Boss level
+
+- Animation of map rotation
+
+- The boss with skills of any classes
+
+## [m1.54] -- 2022-7-27
 
 ### Changed
 
@@ -23,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - change turret generation attribute
 
 
-# [m1.53] -- 2022-7-27
+## [m1.53] -- 2022-7-27
 
 ### Added
 - added UI for button

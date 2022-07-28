@@ -149,6 +149,8 @@ type alias Enemy =
     , state : HeroState
     , justAttack : Bool
     , indexOnBoard : Int --give an index to the enemies on the board
+    , boss : Bool
+    , bossState : Int
     }
 
 
@@ -244,6 +246,12 @@ map level =
             )
                 ++ [ ( 2, 5 ), ( 8, 5 ) ]
 
+        6 ->
+            (basicMap
+                |> List.filter (\( x, y ) -> x /= y && x + 2 * y /= 15 && 2 * x + y /= 15)
+            )
+                ++ [ ( 5, 5 ) ]
+
         _ ->
             basicMap
 
@@ -334,19 +342,24 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 80 8 0 True Waiting False index
+            Enemy Warrior pos 80 80 8 0 True Waiting False index False 0
 
         Archer ->
-            Enemy Archer pos 30 30 10 0 True Waiting False index
+            Enemy Archer pos 30 30 10 0 True Waiting False index False 0
 
         Assassin ->
-            Enemy Assassin pos 35 35 10 0 True Waiting False index
+            Enemy Assassin pos 35 35 10 0 True Waiting False index False 0
 
         Healer ->
-            Enemy Healer pos 40 40 5 0 True Waiting False index
+            Enemy Healer pos 40 40 5 0 True Waiting False index False 0
 
         _ ->
-            Enemy Mage pos 50 50 6 0 True Waiting False index
+            Enemy Mage pos 50 50 6 0 True Waiting False index False 0
+
+
+initBoss : Enemy
+initBoss =
+    Enemy Turret ( 5, 5 ) 200 200 10 0 True Waiting False 1 True 1
 
 
 
@@ -444,6 +457,11 @@ vecAdd ( x1, y1 ) ( x2, y2 ) =
     ( x1 + x2, y1 + y2 )
 
 
+vecAddFloat : ( Float, Float ) -> ( Float, Float ) -> ( Float, Float )
+vecAddFloat ( x1, y1 ) ( x2, y2 ) =
+    ( x1 + x2, y1 + y2 )
+
+
 vecScale : Int -> Pos -> Pos
 vecScale a ( x, y ) =
     ( a * x, a * y )
@@ -454,9 +472,77 @@ cartesianProduct f x y =
     List.concatMap (\x_ -> List.map (f x_) y) x
 
 
-findPos : ( Int, Int ) -> ( Float, Float )
-findPos ( row, column ) =
+findPos : Bool -> Int -> Float -> ( Int, Int ) -> ( Float, Float )
+findPos rotating level time ( row, column ) =
+    let
+        fixedPos =
+            findFixedPos ( row, column )
+    in
+    if rotating then
+        let
+            theta =
+                pi / 3 * (1 - time)
+        in
+        case level of
+            5 ->
+                if distance ( 5, 5 ) ( row, column ) == 4 then
+                    rotatePos (findFixedPos ( 5, 5 )) theta fixedPos
+
+                else if distance ( 5, 5 ) ( row, column ) == 2 then
+                    rotatePos (findFixedPos ( 5, 5 )) (0 - theta) fixedPos
+
+                else
+                    fixedPos
+
+            _ ->
+                let
+                    ( newX, newY ) =
+                        if distance ( 5, 5 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 5, 5 )) theta fixedPos
+
+                        else if distance ( 2, 5 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 2, 5 )) (0 - theta) fixedPos
+
+                        else if distance ( 2, 8 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 2, 8 )) theta fixedPos
+
+                        else if distance ( 5, 8 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 5, 8 )) (0 - theta) fixedPos
+
+                        else if distance ( 8, 5 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 8, 5 )) theta fixedPos
+
+                        else if distance ( 8, 2 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 8, 2 )) (0 - theta) fixedPos
+
+                        else if distance ( 5, 2 ) ( row, column ) == 1 then
+                            rotatePos (findFixedPos ( 5, 2 )) theta fixedPos
+
+                        else
+                            fixedPos
+                in
+                if distance ( 5, 5 ) ( row, column ) > 1 then
+                    rotatePos (findFixedPos ( 5, 5 )) (0 - theta) ( newX, newY )
+
+                else
+                    ( newX, newY )
+
+    else
+        fixedPos
+
+
+findFixedPos : ( Int, Int ) -> ( Float, Float )
+findFixedPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
+
+
+rotatePos : ( Float, Float ) -> Float -> ( Float, Float ) -> ( Float, Float )
+rotatePos ( cx, cy ) theta ( ix, iy ) =
+    let
+        ( deltaX, deltaY ) =
+            ( ix - cx, iy - cy )
+    in
+    ( cx + deltaX * cos theta - deltaY * sin theta, cy + deltaX * sin theta + deltaY * cos theta )
 
 
 findChosenHero : ( Float, Float ) -> Int
@@ -519,7 +605,7 @@ inHexagon : ( Float, Float ) -> Pos -> Bool
 inHexagon ( x, y ) pos =
     let
         ( cx, cy ) =
-            findPos pos
+            findFixedPos pos
     in
     abs (x - cx) < halfWid && abs (x - cx) + sqrt 3 * abs (y - cy) < sqrt 3 * sideLen
 
@@ -577,7 +663,7 @@ upgradeDamage class =
         Engineer ->
             2
 
-        Turret ->
+        _ ->
             0
 
 
@@ -602,5 +688,5 @@ upgradeHealth class =
         Engineer ->
             10
 
-        Turret ->
+        _ ->
             0

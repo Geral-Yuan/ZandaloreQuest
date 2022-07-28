@@ -9,6 +9,7 @@ import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Board exposing (Board)
 
 
 viewHeroImage : Hero -> List (Svg msg)
@@ -107,11 +108,14 @@ viewHeroCondition hero =
         ]
 
 
-viewHeroHealth : Hero -> List (Svg msg)
-viewHeroHealth hero =
+viewHeroHealth : Board -> Hero -> List (Svg msg)
+viewHeroHealth board hero =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos hero.pos
+            findPos rotating board.level time hero.pos
 
         healthBarlen1 =
             200 * toFloat hero.health / toFloat hero.maxHealth
@@ -215,11 +219,14 @@ viewHeroInfo hero =
         ]
 
 
-viewHero : Hero -> Html Msg
-viewHero hero =
+viewHero : Board -> Hero -> Html Msg
+viewHero board hero =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos hero.pos
+            findPos rotating board.level time hero.pos
 
         class =
             toString hero.class

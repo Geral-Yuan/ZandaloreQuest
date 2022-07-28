@@ -40,6 +40,20 @@ actionSmartEnemy board enemy =
                 Healer ->
                     actionSmartHealer board enemy
 
+                Turret ->
+                    case enemy.bossState of
+                        1 ->
+                            actionSmartWarrior { board | enemies = [ { enemy | bossState = 2 } ] } { enemy | bossState = 2 }
+
+                        2 ->
+                            actionSmartArcher { board | enemies = [ { enemy | bossState = 3 } ] } { enemy | bossState = 3 }
+
+                        3 ->
+                            actionSmartMage { board | enemies = [ { enemy | bossState = 4 } ] } { enemy | bossState = 4 }
+
+                        _ ->
+                            actionSmartHealer { board | enemies = [ { enemy | bossState = 1 } ] } { enemy | bossState = 1 }
+
                 _ ->
                     board
     in
@@ -231,7 +245,7 @@ actionSmartHealer board enemy =
         otherenemies =
             listDifference board.enemies [ enemy ]
 
-        (healedhealer ,healedenemies) =
+        ( healedhealer, healedenemies ) =
             enemyHeal enemy otherenemies
 
         atkboard =
@@ -247,15 +261,18 @@ actionSmartHealer board enemy =
     case route of
         [] ->
             { board
-                | enemies = { healedhealer | justAttack = True
-                                            , state = 
-                                            case healedhealer.state of 
-                                                GettingHealed _ ->
-                                                    healedhealer.state
+                | enemies =
+                    { healedhealer
+                        | justAttack = True
+                        , state =
+                            case healedhealer.state of
+                                GettingHealed _ ->
+                                    healedhealer.state
 
-                                                _ -> 
-                                                    Attacking
-                                            } :: healedenemies
+                                _ ->
+                                    Attacking
+                    }
+                        :: healedenemies
                 , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
                 , obstacles = atkboard.obstacles
                 , item = atkboard.item
@@ -266,11 +283,11 @@ actionSmartHealer board enemy =
             { board | enemies = { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies }
 
 
-enemyHeal : Enemy -> List Enemy -> (Enemy, List Enemy)
+enemyHeal : Enemy -> List Enemy -> ( Enemy, List Enemy )
 enemyHeal enemy healed =
     let
         ( healable, others ) =
-            List.partition (\hero -> ((List.member hero.pos (List.map (vecAdd enemy.pos) (neighbour))) && (hero.health /= hero.maxHealth))) healed
+            List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) neighbour) && (hero.health /= hero.maxHealth)) healed
 
         sortedAttackableHeroes =
             List.sortBy .health healable
@@ -283,13 +300,25 @@ enemyHeal enemy healed =
                 chosen :: othernothealed ->
                     ( [ chosen ], othernothealed ++ others )
     in
-    if (enemy.health /= enemy.maxHealth) && (List.all (\x -> (x.health > enemy.health)) targetHealed ) then
-        ({ enemy | health = enemy.health + addhealth enemy enemy
-        , state = GettingHealed (addhealth enemy enemy)}, healed)
+    if (enemy.health /= enemy.maxHealth) && List.all (\x -> x.health > enemy.health) targetHealed then
+        ( { enemy
+            | health = enemy.health + addhealth enemy enemy
+            , state = GettingHealed (addhealth enemy enemy)
+          }
+        , healed
+        )
+
     else
-        (enemy,
-        List.map (\hdenemy -> { hdenemy | health = hdenemy.health + addhealth enemy hdenemy
-        , state = GettingHealed (addhealth enemy hdenemy)}) targetHealed ++ newothers
+        ( enemy
+        , List.map
+            (\hdenemy ->
+                { hdenemy
+                    | health = hdenemy.health + addhealth enemy hdenemy
+                    , state = GettingHealed (addhealth enemy hdenemy)
+                }
+            )
+            targetHealed
+            ++ newothers
         )
 
 
@@ -307,8 +336,10 @@ addhealth : Enemy -> Enemy -> Int
 addhealth enemy hdenemy =
     if enemy == hdenemy then
         min (hdenemy.maxHealth - hdenemy.health) (calculateHeal enemy.damage + 5)
+
     else
         min (hdenemy.maxHealth - hdenemy.health) (calculateHeal enemy.damage)
+
 
 checkEnemyDone : Enemy -> Enemy
 checkEnemyDone enemy =
@@ -353,7 +384,7 @@ index2Enemy : Int -> List Enemy -> Enemy
 index2Enemy index l_enemy =
     case List.filter (\x -> index == x.indexOnBoard) l_enemy of
         [] ->
-            Enemy Warrior ( 0, 0 ) 80 -1 15 3 False Waiting False 0
+            Enemy Warrior ( 0, 0 ) 80 -1 15 3 False Waiting False 0 False 0
 
         chosen :: _ ->
             chosen

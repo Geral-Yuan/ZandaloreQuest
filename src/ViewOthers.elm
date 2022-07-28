@@ -94,6 +94,9 @@ viewLevel level =
                 0 ->
                     "Tutorial Level"
 
+                6 ->
+                    "Boss Level"
+
                 k ->
                     "Level " ++ toString k
     in
@@ -116,7 +119,7 @@ viewCoordinate : Pos -> Svg msg
 viewCoordinate ( row, column ) =
     let
         ( c_x, c_y ) =
-            findPos ( row, column )
+            findFixedPos ( row, column )
 
         s_row =
             toString row
@@ -135,18 +138,85 @@ viewCoordinate ( row, column ) =
         ]
 
 
-detPoints : ( Float, Float ) -> String
-detPoints ( x, y ) =
-    String.concat
-        (List.map posToString
-            [ ( x, y - 70 )
-            , ( x + halfWid, y - 35 )
-            , ( x + halfWid, y + 35 )
-            , ( x, y + 70 )
-            , ( x - halfWid, y + 35 )
-            , ( x - halfWid, y - 35 )
-            ]
+detPoints : Board -> Pos -> ( Float, Float ) -> String
+detPoints board ( row, column ) ( x, y ) =
+    let
+        ( rotating, time ) =
+            board.mapRotating
+    in
+    if rotating then
+        case board.level of
+            5 ->
+                let
+                    deltaTheta =
+                        if distance ( 5, 5 ) ( row, column ) == 4 then
+                            -pi / 3 * time
+
+                        else if distance ( 5, 5 ) ( row, column ) == 2 then
+                            pi / 3 * time
+
+                        else
+                            0
+                in
+                String.concat
+                    (List.map posToString
+                        (List.map (vecAddFloat ( x, y ))
+                            (List.map (rotateHexagonSelf ( 70, 0 ))
+                                (List.map ((+) deltaTheta)
+                                    [ -5 / 6 * pi, -1 / 2 * pi, -1 / 6 * pi, 1 / 6 * pi, 1 / 2 * pi, 5 / 6 * pi ]
+                                )
+                            )
+                        )
+                    )
+
+            _ ->
+                let
+                    deltaTheta1 =
+                        if distance ( 5, 5 ) ( row, column ) > 1 then
+                            pi / 3 * time
+
+                        else
+                            0
+
+                    deltaTheta2 =
+                        if List.member ( row, column ) (List.concat (List.map (\pos -> List.map (vecAdd pos) (( 0, 0 ) :: neighbour)) [ ( 2, 5 ), ( 5, 8 ), ( 8, 2 ) ])) then
+                            pi / 3 * time
+
+                        else if List.member ( row, column ) (List.concat (List.map (\pos -> List.map (vecAdd pos) (( 0, 0 ) :: neighbour)) [ ( 5, 5 ), ( 2, 8 ), ( 8, 5 ), ( 5, 2 ) ])) then
+                            -pi / 3 * time
+
+                        else
+                            0
+
+                    deltaTheta =
+                        deltaTheta1 + deltaTheta2
+                in
+                String.concat
+                    (List.map posToString
+                        (List.map (vecAddFloat ( x, y ))
+                            (List.map (rotateHexagonSelf ( 70, 0 ))
+                                (List.map ((+) deltaTheta)
+                                    [ -5 / 6 * pi, -1 / 2 * pi, -1 / 6 * pi, 1 / 6 * pi, 1 / 2 * pi, 5 / 6 * pi ]
+                                )
+                            )
+                        )
+                    )
+
+    else
+        String.concat (List.map posToString (fixedPoints ( x, y )))
+
+
+fixedPoints : ( Float, Float ) -> List ( Float, Float )
+fixedPoints ( x, y ) =
+    List.map (vecAddFloat ( x, y ))
+        (List.map (rotateHexagonSelf ( 70, 0 ))
+            [ -5 / 6 * pi, -1 / 2 * pi, -1 / 6 * pi, 1 / 6 * pi, 1 / 2 * pi, 5 / 6 * pi ]
         )
+
+
+rotateHexagonSelf : ( Float, Float ) -> Float -> ( Float, Float )
+rotateHexagonSelf ( x, y ) theta =
+    ( x * cos theta - y * sin theta, x * sin theta + y * cos theta )
 
 
 endTurnButton : Html Msg
