@@ -11,6 +11,7 @@ allNPC =
     , npcSkullKnight1
     , npcSkullKnight2
     , npcSkullKnight3
+    , npcBoss
     , npcWarrior
     , npcArcher
     , npcAssassin
@@ -116,10 +117,10 @@ npcSkullKnight3 =
     }
 
 
-npcSkullKnight4 : NPC
-npcSkullKnight4 =
+npcBoss : NPC
+npcBoss =
     { scene = Dungeon2Scene
-    , name = "SkullKnight 4"
+    , name = "Boss"
     , dialogue = ""
     , image = "SkullKnight"
     , faceDir = Left

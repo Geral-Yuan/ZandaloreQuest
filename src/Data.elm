@@ -87,6 +87,7 @@ type Class
     | Mage
     | Engineer
     | Turret
+    | Boss
 
 
 type ObstacleType
@@ -243,6 +244,12 @@ map level =
                 |> List.filter (\( x, y ) -> modBy 2 (distance ( 5, 5 ) ( x, y )) == 0)
             )
                 ++ [ ( 2, 5 ), ( 8, 5 ) ]
+
+        6 ->
+            (basicMap
+                |> List.filter (\( x, y ) -> x /= y && x + 2 * y /= 15 && 2 * x + y /= 15)
+            )
+                ++ [ ( 5, 5 ) ]
 
         _ ->
             basicMap
@@ -577,7 +584,7 @@ upgradeDamage class =
         Engineer ->
             2
 
-        Turret ->
+        _ ->
             0
 
 
@@ -602,5 +609,5 @@ upgradeHealth class =
         Engineer ->
             10
 
-        Turret ->
+        _ ->
             0

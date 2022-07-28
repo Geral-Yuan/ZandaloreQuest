@@ -94,6 +94,9 @@ viewLevel level =
                 0 ->
                     "Tutorial Level"
 
+                6 ->
+                    "Boss Level"
+
                 k ->
                     "Level " ++ toString k
     in
