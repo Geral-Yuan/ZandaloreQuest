@@ -100,11 +100,14 @@ initenemy k =
             , sampleEnemy Assassin ( 5, 1 ) 3
             ]
 
-        _ ->
+        5 ->
             [ sampleEnemy Archer ( 1, 9 ) 1
             , sampleEnemy Archer ( 9, 5 ) 2
             , sampleEnemy Archer ( 5, 1 ) 3
             ]
+        
+        _ ->
+            [initBoss]
 
 
 inithero : List Hero -> Int -> List Hero

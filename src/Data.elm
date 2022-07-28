@@ -87,7 +87,6 @@ type Class
     | Mage
     | Engineer
     | Turret
-    | Boss
 
 
 type ObstacleType
@@ -150,6 +149,8 @@ type alias Enemy =
     , state : HeroState
     , justAttack : Bool
     , indexOnBoard : Int --give an index to the enemies on the board
+    , boss : Bool
+    , bossState : Int
     }
 
 
@@ -341,19 +342,24 @@ sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
         Warrior ->
-            Enemy Warrior pos 80 80 8 0 True Waiting False index
+            Enemy Warrior pos 80 80 8 0 True Waiting False index False 0
 
         Archer ->
-            Enemy Archer pos 30 30 10 0 True Waiting False index
+            Enemy Archer pos 30 30 10 0 True Waiting False index False 0
 
         Assassin ->
-            Enemy Assassin pos 35 35 10 0 True Waiting False index
+            Enemy Assassin pos 35 35 10 0 True Waiting False index False 0
 
         Healer ->
-            Enemy Healer pos 40 40 5 0 True Waiting False index
+            Enemy Healer pos 40 40 5 0 True Waiting False index False 0
 
         _ ->
-            Enemy Mage pos 50 50 6 0 True Waiting False index
+            Enemy Mage pos 50 50 6 0 True Waiting False index False 0
+
+
+initBoss : Enemy
+initBoss =
+    Enemy Turret ( 5, 5 ) 200 200 10 0 True Waiting False 1 True 1
 
 
 

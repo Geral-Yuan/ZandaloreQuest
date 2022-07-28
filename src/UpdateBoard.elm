@@ -157,6 +157,9 @@ resetSteps enemy =
                 Assassin ->
                     3
 
+                Turret ->
+                    4
+
                 _ ->
                     2
     in

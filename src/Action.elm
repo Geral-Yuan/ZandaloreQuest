@@ -39,6 +39,7 @@ updateAttackable board =
                 realattackRange =
                     if hero.energy >= 3 && hero.class /= Turret then
                         List.map (vecAdd hero.pos) (attackRange board hero)
+
                     else
                         []
 
@@ -53,6 +54,7 @@ updateAttackable board =
 
                             _ ->
                                 []
+
                     else
                         []
             in
@@ -83,6 +85,23 @@ attackRangeEnemy board enemy =
 
         Mage ->
             subneighbour
+
+        Healer ->
+            ( 0, 0 ) :: neighbour
+
+        Turret ->
+            case enemy.bossState of
+                2 ->
+                    List.concat (List.map (stuckInWay board enemy.pos Hostile) neighbour)
+
+                3 ->
+                    subneighbour
+
+                4 ->
+                    ( 0, 0 ) :: neighbour
+
+                _ ->
+                    neighbour
 
         _ ->
             neighbour
