@@ -14,7 +14,7 @@
       body {
         font-family: myfont;
       }
-    </style>
+</style>
 <body>
 
 <pre id="elm"></pre>
@@ -10792,7 +10792,7 @@ var $author$project$Update$updateDialog = F3(
 							{
 								board: A2($author$project$Board$initBoard, $author$project$Data$initialHeroes, 0),
 								chosenHero: _List_Nil,
-								mode: $author$project$Data$Tutorial(0)
+								mode: $author$project$Data$Tutorial(1)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11704,18 +11704,6 @@ var $author$project$Update$followTutorial = F2(
 var $author$project$Update$updateTutorial = F3(
 	function (msg, k, model) {
 		switch (k) {
-			case 0:
-				if (msg.$ === 'Click') {
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								mode: $author$project$Data$Tutorial(1)
-							}),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
 			case 1:
 				if (msg.$ === 'Click') {
 					return _Utils_Tuple2(
@@ -11735,7 +11723,7 @@ var $author$project$Update$updateTutorial = F3(
 						{mode: $author$project$Data$BoardGame}),
 					$elm$core$Platform$Cmd$none);
 			default:
-				_v3$3:
+				_v2$3:
 				while (true) {
 					switch (msg.$) {
 						case 'Tick':
@@ -11757,10 +11745,10 @@ var $author$project$Update$updateTutorial = F3(
 										}),
 									$elm$core$Platform$Cmd$none);
 							} else {
-								break _v3$3;
+								break _v2$3;
 							}
 						default:
-							break _v3$3;
+							break _v2$3;
 					}
 				}
 				return (A2($author$project$Update$followTutorial, msg, k) && _Utils_eq(model.board.boardState, $author$project$Data$NoActions)) ? A2(
@@ -15643,14 +15631,14 @@ var $author$project$ViewTutorial$viewTutorial1 = A2(
 				[
 					A4(
 					$author$project$ViewOthers$shapeHelper,
-					_Utils_Tuple2(145, 430),
-					_Utils_Tuple2(230, 87.5),
+					_Utils_Tuple2(150, 430),
+					_Utils_Tuple2(230, 90),
 					'blue',
 					_Utils_Tuple2(0, 0)),
 					A4(
 					$author$project$ViewOthers$shapeHelper,
-					_Utils_Tuple2(450, 430),
-					_Utils_Tuple2(1780, 240),
+					_Utils_Tuple2(300, 430),
+					_Utils_Tuple2(1780, 165),
 					'blue',
 					_Utils_Tuple2(0, 0)),
 					A4(
@@ -15662,7 +15650,7 @@ var $author$project$ViewTutorial$viewTutorial1 = A2(
 					_Utils_Tuple2(0, 0))
 				])),
 			A7($author$project$ViewOthers$dialogHelper, 600, 20, 20, 170, 50, 'blue', 'Enemies Information (Red)'),
-			A7($author$project$ViewOthers$dialogHelper, 400, 20, 1150, 50, 50, 'blue', 'Your heroes\' Information (Blue)'),
+			A7($author$project$ViewOthers$dialogHelper, 400, 20, 1250, 50, 50, 'blue', 'Your heroes\' Information (Blue)'),
 			A7($author$project$ViewOthers$dialogHelper, 600, 20, 950, 700, 50, 'blue', 'Brown obstacle: mystery box that drops gold and potions (black means unbreakable)'),
 			A7($author$project$ViewOthers$dialogHelper, 800, 20, 20, 900, 50, 'blue', 'Click anywhere to continue')
 		]));
@@ -15841,7 +15829,7 @@ var $author$project$ViewTutorial$viewTutorial3 = A2(
 					'blue',
 					_Utils_Tuple2(3, 7))
 				])),
-			A7($author$project$ViewOthers$dialogHelper, 700, 30, 500, 50, 50, 'blue', 'Blue hexagons denote the movable range of the hero. Left click to move into the rectangle.')
+			A7($author$project$ViewOthers$dialogHelper, 700, 30, 500, 50, 50, 'blue', 'Blue hexagons denote the attackable range of the hero. Left click the adjacent hexagon to move.')
 		]));
 var $author$project$ViewTutorial$viewTutorial4 = A2(
 	$elm$html$Html$div,
@@ -16040,9 +16028,6 @@ var $author$project$ViewTutorial$viewTutorialScene = F2(
 	function (model, k) {
 		if (_Utils_eq(model.board.boardState, $author$project$Data$NoActions) && _Utils_eq(model.board.turn, $author$project$Data$PlayerTurn)) {
 			switch (k) {
-				case 0:
-					return _List_fromArray(
-						[$author$project$ViewTutorial$viewTutorial1]);
 				case 1:
 					return _List_fromArray(
 						[$author$project$ViewTutorial$viewTutorial1]);

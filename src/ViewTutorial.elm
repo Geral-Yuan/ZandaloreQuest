@@ -14,9 +14,6 @@ viewTutorialScene : Model -> Int -> List (Html Msg)
 viewTutorialScene model k =
     if model.board.boardState == NoActions && model.board.turn == PlayerTurn then
         case k of
-            0 ->
-                [ viewTutorial1 ]
-
             1 ->
                 [ viewTutorial1 ]
 
@@ -73,12 +70,12 @@ viewTutorial1 =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            [ shapeHelper ( 145, 430 ) ( 230, 87.5 ) "blue" ( 0, 0 )
-            , shapeHelper ( 450, 430 ) ( 1780, 240 ) "blue" ( 0, 0 )
+            [ shapeHelper ( 150, 430 ) ( 230, 90 ) "blue" ( 0, 0 )
+            , shapeHelper ( 300, 430 ) ( 1780, 165 ) "blue" ( 0, 0 )
             , shapeHelper ( 100, 100 ) (findPos ( 5, 5 )) "blue" ( 0, 0 )
             ]
         , dialogHelper 600 20 20 170 50 "blue" "Enemies Information (Red)"
-        , dialogHelper 400 20 1150 50 50 "blue" "Your heroes' Information (Blue)"
+        , dialogHelper 400 20 1250 50 50 "blue" "Your heroes' Information (Blue)"
         , dialogHelper 600 20 950 700 50 "blue" "Brown obstacle: mystery box that drops gold and potions (black means unbreakable)"
         , dialogHelper 800 20 20 900 50 "blue" "Click anywhere to continue"
         ]
@@ -118,7 +115,7 @@ viewTutorial3 =
             ]
             [ shapeHelper ( 100, 100 ) (findPos ( 3, 7 )) "blue" ( 3, 7 )
             ]
-        , dialogHelper 700 30 500 50 50 "blue" "Blue hexagons denote the movable range of the hero. Left click to move into the rectangle."
+        , dialogHelper 700 30 500 50 50 "blue" "Blue hexagons denote the attackable range of the hero. Left click the adjacent hexagon to move."
         ]
 
 

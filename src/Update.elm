@@ -140,7 +140,7 @@ updateDialog msg task model =
         MeetElder ->
             case msg of
                 Click _ _ ->
-                    ( { model | mode = Tutorial 0, board = initBoard initialHeroes 0, chosenHero = [] }, Cmd.none )
+                    ( { model | mode = Tutorial 1, board = initBoard initialHeroes 0, chosenHero = [] }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -234,14 +234,6 @@ followTutorial msg k =
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
 updateTutorial msg k model =
     case k of
-        0 ->
-            case msg of
-                Click _ _ ->
-                    ( { model | mode = Tutorial 1 }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
         1 ->
             case msg of
                 Click _ _ ->
