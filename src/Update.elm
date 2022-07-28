@@ -58,10 +58,46 @@ update msg model =
                         |> updateCharacter msg
     in
     ( nmodel
+        |> updatePopUpHint msg
         |> resize msg
         |> getviewport msg
     , ncmd
     )
+
+
+updatePopUpHint : Msg -> Model -> Model
+updatePopUpHint msg model =
+    let
+        ( hint, time ) =
+            model.popUpHint
+
+        board =
+            model.board
+
+        nmodel =
+            if Tuple.first board.popUpHint /= Noop then
+                if hint == Noop then
+                    { model | popUpHint = board.popUpHint, board = { board | popUpHint = ( Noop, 0 ) } }
+
+                else
+                    { model | board = { board | popUpHint = ( Noop, 0 ) } }
+
+            else
+                model
+    in
+    case msg of
+        Tick elapsed ->
+            if time > 2 then
+                { nmodel | popUpHint = ( Noop, 0 ) }
+
+            else if hint /= Noop then
+                { nmodel | popUpHint = ( hint, time + elapsed / 1000 ) }
+
+            else
+                nmodel
+
+        _ ->
+            nmodel
 
 
 updateEncyclopedia : Msg -> Model -> ( Model, Cmd Msg )

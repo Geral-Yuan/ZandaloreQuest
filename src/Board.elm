@@ -30,6 +30,7 @@ type alias Board =
     , coins : Int
     , level : Int
     , mapRotating : ( Bool, Float )
+    , popUpHint : ( FailToDo, Float )
     }
 
 
@@ -64,7 +65,7 @@ initObstacles k =
             [ Obstacle Unbreakable ( 5, 5 ) NoItem ]
 
         5 ->
-            []
+            List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 4, 5 ), ( 5, 6 ), ( 6, 4 ) ]
 
         _ ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 5 ), ( 2, 8 ), ( 5, 8 ), ( 8, 5 ), ( 8, 2 ), ( 5, 2 ) ]
@@ -105,9 +106,9 @@ initenemy k =
             , sampleEnemy Archer ( 9, 5 ) 2
             , sampleEnemy Archer ( 5, 1 ) 3
             ]
-        
+
         _ ->
-            [initBoss]
+            [ initBoss ]
 
 
 inithero : List Hero -> Int -> List Hero
@@ -241,6 +242,7 @@ initBoard heroes k =
     , coins = 0
     , level = k
     , mapRotating = ( False, 0 )
+    , popUpHint = (Noop, 0)
     }
 
 
@@ -270,4 +272,5 @@ sampleBoard =
     , coins = 0
     , level = 0
     , mapRotating = ( False, 0 )
+    , popUpHint = (Noop, 0)
     }

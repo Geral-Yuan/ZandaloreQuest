@@ -242,9 +242,9 @@ map level =
 
         5 ->
             (basicMap
-                |> List.filter (\( x, y ) -> modBy 2 (distance ( 5, 5 ) ( x, y )) == 0)
+                |> List.filter (\( x, y ) -> distance ( 5, 5 ) ( x, y ) /= 3)
             )
-                ++ [ ( 2, 5 ), ( 8, 5 ) ]
+                ++ [ ( 2, 5 ), ( 5, 8 ), ( 8, 2 ) ]
 
         6 ->
             (basicMap

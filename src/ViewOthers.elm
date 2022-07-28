@@ -8,6 +8,7 @@ import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr exposing (height, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
+import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 
@@ -293,3 +294,58 @@ viewUIButton w h x y =
         ]
         []
     ]
+
+
+viewPopUpHint : Model -> List (Html Msg)
+viewPopUpHint model =
+    let
+        ( hint, time ) =
+            model.popUpHint
+
+        hintText =
+            case hint of
+                FailtoEnter scene ->
+                    case scene of
+                        ShopScene ->
+                            "The door to shop is locked"
+
+                        DungeonScene ->
+                            "The door to dungeon is locked"
+
+                        _ ->
+                            "The door to dungeon2 is locked"
+
+                LackEnergy ->
+                    "Your energy is not enough"
+
+                FailtoTalk npc ->
+                    "You have defeated " ++ npc.name
+
+                _ ->
+                    ""
+    in
+    if hint == Noop then
+        []
+
+    else
+        [ div
+            [ HtmlAttr.style "width" "800px"
+            , HtmlAttr.style "height" "200px"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "600px"
+            , HtmlAttr.style "top" (toString (500 - 100 * time) ++ "px")
+            , HtmlAttr.style "color" "red"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "opacity" (toString (determineOpct time 2))
+            ]
+            [ text hintText ]
+        ]
+
+determineOpct : Float -> Float -> Float
+determineOpct t tMax =
+    if t <= tMax then
+        sin (t * pi / tMax) * 2 / 1.732
+
+    else
+        0

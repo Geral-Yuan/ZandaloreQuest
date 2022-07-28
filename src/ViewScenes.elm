@@ -11,7 +11,7 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
-import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
+import ViewOthers exposing (determineOpct, viewCoinSVG, viewPopUpHint, viewUIButton, viewUIFrame)
 
 
 logoWidth : Float
@@ -73,19 +73,10 @@ viewLogo t =
         , SvgAttr.x (toString (pixelWidth / 2 - logoWidth / 2))
         , SvgAttr.y (toString (pixelHeight / 2 - logoHeight / 2))
         , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.opacity (determineOpct t |> String.fromFloat)
+        , SvgAttr.opacity (determineOpct t 6 |> String.fromFloat)
         , SvgAttr.xlinkHref "./assets/image/logo.png"
         ]
         []
-
-
-determineOpct : Float -> Float
-determineOpct t =
-    if t <= 6 then
-        sin (t * pi / 6) * 2 / 1.732
-
-    else
-        0
 
 
 viewRpgCharacter : RpgCharacter -> Html Msg
@@ -188,6 +179,7 @@ viewCastle model =
                         ++ viewTaskBoard
                         ++ viewUIButton 170 80 50 800
                     )
+
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
@@ -211,7 +203,9 @@ viewCastle model =
                     ]
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
-            ++ [ viewRpgCharacter model.character ]
+            ++ (viewRpgCharacter model.character
+                    :: viewPopUpHint model
+               )
         )
 
 
@@ -249,6 +243,7 @@ viewDungeon model =
                      ]
                         ++ viewTaskBoard
                     )
+
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
@@ -295,6 +290,7 @@ viewDungeon2 model =
                      ]
                         ++ viewTaskBoard
                     )
+
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
