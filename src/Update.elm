@@ -267,7 +267,7 @@ updateTutorial msg k model =
                     )
 
                 _ ->
-                    if followTutorial msg k && model.board.boardState == NoActions then
+                    if followTutorial msg k && model.board.boardState == NoActions && model.board.turn == PlayerTurn then
                         { model | mode = Tutorial (k + 1) } |> updateBoardGame msg
 
                     else
