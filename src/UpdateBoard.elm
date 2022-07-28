@@ -19,7 +19,15 @@ updateBoardAnimation msg board =
                         PlayerTurn ->
                             case board.boardState of
                                 NoActions ->
-                                    board
+                                    let
+                                        ( rotating, time ) =
+                                            board.mapRotating
+                                    in
+                                    if rotating then
+                                        { board | mapRotating = ( rotating, time + elapsed / 1000 ) }
+
+                                    else
+                                        board
 
                                 _ ->
                                     { board | timeBoardState = board.timeBoardState + elapsed / 1000 }
@@ -77,7 +85,7 @@ updateBoardOthers msg board =
         Select hero ->
             case board.turn of
                 PlayerTurn ->
-                    if board.boardState == NoActions then
+                    if board.boardState == NoActions && not (Tuple.first board.mapRotating) then
                         selectHero board hero
 
                     else
@@ -215,12 +223,12 @@ updateMap : Int -> Board -> Board
 updateMap level board =
     case level of
         5 ->
-            board
+            { board | mapRotating = ( True, 0 ) }
                 |> rotate ( 5, 5 ) 4 False
                 |> rotate ( 5, 5 ) 2 True
 
         6 ->
-            board
+            { board | mapRotating = ( True, 0 ) }
                 |> rotate ( 5, 5 ) 3 True
                 |> rotate ( 5, 5 ) 1 False
                 |> rotate ( 2, 5 ) 1 True

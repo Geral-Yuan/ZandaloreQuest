@@ -11,11 +11,14 @@ import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewEnemy : Enemy -> Svg Msg
-viewEnemy enemy =
+viewEnemy : Board -> Enemy -> Svg Msg
+viewEnemy board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         class =
             toString enemy.class
@@ -190,8 +193,11 @@ viewEnemyCondition board enemy =
 viewEnemyHealth : Board -> Enemy -> List (Svg msg)
 viewEnemyHealth board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         healthBarlen1 =
             200 * toFloat enemy.health / toFloat enemy.maxHealth

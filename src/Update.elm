@@ -7,7 +7,7 @@ import Data exposing (..)
 import HeroAttack exposing (generateDamage)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (allNPC, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3, npcBoss)
+import NPC exposing (allNPC, npcBoss, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
@@ -121,6 +121,7 @@ updateBoardGame msg model =
         |> checkHit msg
         |> randomCrate msg
         |> randomEnemies
+        |> checkRotationDone
         |> checkEnd
 
 
@@ -729,7 +730,10 @@ randomCrate msg ( model, cmd ) =
         EndTurn ->
             case model.board.turn of
                 PlayerTurn ->
-                    if possibleCratePosition model /= [] then
+                    if Tuple.first model.board.mapRotating then
+                        ( model, cmd )
+
+                    else if possibleCratePosition model /= [] then
                         ( { model | board = turnTurret model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
 
                     else
@@ -776,6 +780,22 @@ possibleCratePosition model =
     in
     unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
         |> listDifference model.board.map
+
+
+checkRotationDone : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkRotationDone ( model, cmd ) =
+    let
+        board =
+            model.board
+
+        ( rotating, time ) =
+            board.mapRotating
+    in
+    if rotating && time > 1 then
+        ( { model | board = { board | mapRotating = ( False, 0 ) } }, cmd )
+
+    else
+        ( model, cmd )
 
 
 checkEnd : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )

@@ -1,6 +1,6 @@
 module ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 
-import Data exposing (Class(..), Enemy, Hero, HeroState(..), findPos)
+import Data exposing (Class(..), Enemy, Hero, HeroState(..), findFixedPos)
 import Debug exposing (toString)
 import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
@@ -12,7 +12,7 @@ animateEnemyVisuals : Enemy -> Html Msg
 animateEnemyVisuals enemy =
     let
         ( x, y ) =
-            findPos enemy.pos
+            findFixedPos enemy.pos
     in
     div
         [ HtmlAttr.style "left" (toString x ++ "px")
@@ -41,7 +41,7 @@ animateHeroVisuals : Hero -> Html Msg
 animateHeroVisuals hero =
     let
         ( x, y ) =
-            findPos hero.pos
+            findFixedPos hero.pos
     in
     div
         [ HtmlAttr.style "left" (toString (x + 40) ++ "px")

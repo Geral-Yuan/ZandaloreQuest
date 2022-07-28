@@ -29,6 +29,7 @@ type alias Board =
     , pointPos : ( Float, Float )
     , coins : Int
     , level : Int
+    , mapRotating : ( Bool, Float )
     }
 
 
@@ -236,6 +237,7 @@ initBoard heroes k =
     , pointPos = ( 0, 0 )
     , coins = 0
     , level = k
+    , mapRotating = ( False, 0 )
     }
 
 
@@ -264,4 +266,5 @@ sampleBoard =
     , pointPos = ( 0, 0 )
     , coins = 0
     , level = 0
+    , mapRotating = ( False, 0 )
     }
