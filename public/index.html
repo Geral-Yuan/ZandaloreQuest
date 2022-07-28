@@ -6,15 +6,15 @@
   <style>body { padding: 0; margin: 0; }</style>
 </head>
 <style>
-	@font-face {
-		font-family: myfont;
-		src: url(assets/PixelOperator-Bold.ttf);
-		font-weight: bold;
-	  }
-	  body {
-		font-family: myfont;
-	  }
-	</style> 
+    @font-face {
+        font-family: myfont;
+        src: url(assets/PixelOperator-Bold.ttf);
+        font-weight: bold;
+      }
+      body {
+        font-family: myfont;
+      }
+    </style>
 <body>
 
 <pre id="elm"></pre>
@@ -5270,12 +5270,12 @@ var $author$project$Message$GetViewport = function (a) {
 };
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
 var $author$project$Data$Archer = {$: 'Archer'};
-var $author$project$Data$Assassin = {$: 'Assassin'};
 var $author$project$Data$BoardGame = {$: 'BoardGame'};
 var $author$project$Data$Logo = {$: 'Logo'};
 var $author$project$Data$MeetElder = {$: 'MeetElder'};
 var $author$project$Data$Noop = {$: 'Noop'};
 var $author$project$Data$Warrior = {$: 'Warrior'};
+var $author$project$Data$Assassin = {$: 'Assassin'};
 var $author$project$Data$Engineer = {$: 'Engineer'};
 var $author$project$Data$Healer = {$: 'Healer'};
 var $author$project$Data$Hero = F9(
@@ -5572,7 +5572,7 @@ var $author$project$Model$initModel = {
 				$elm$core$List$member,
 				x._class,
 				_List_fromArray(
-					[$author$project$Data$Warrior, $author$project$Data$Archer, $author$project$Data$Assassin]));
+					[$author$project$Data$Warrior, $author$project$Data$Archer]));
 		},
 		$author$project$Data$allSampleHeroes),
 	isDisplayUpgrade: false,
@@ -6294,9 +6294,6 @@ var $author$project$Update$checkChooseClick = F2(
 			return model;
 		}
 	});
-var $author$project$Data$Tutorial = function (a) {
-	return {$: 'Tutorial', a: a};
-};
 var $author$project$Update$initIndexOnBoard = function (heroes) {
 	var _v0 = $elm$core$List$reverse(heroes);
 	if (!_v0.b) {
@@ -6949,16 +6946,7 @@ var $author$project$Update$checkConfirm = F2(
 	function (msg, model) {
 		var level = model.level;
 		if (msg.$ === 'Confirm') {
-			return (($elm$core$List$length(model.chosenHero) === 3) && (!model.level)) ? _Utils_update(
-				model,
-				{
-					board: A2(
-						$author$project$Board$initBoard,
-						$author$project$Update$confirmHeroes(model),
-						level),
-					chosenHero: _List_Nil,
-					mode: $author$project$Data$Tutorial(0)
-				}) : (($elm$core$List$length(model.chosenHero) === 3) ? _Utils_update(
+			return ($elm$core$List$length(model.chosenHero) === 3) ? _Utils_update(
 				model,
 				{
 					board: A2(
@@ -6967,7 +6955,7 @@ var $author$project$Update$checkConfirm = F2(
 						level),
 					chosenHero: _List_Nil,
 					mode: $author$project$Data$BoardGame
-				}) : model);
+				}) : model;
 		} else {
 			return model;
 		}
@@ -10765,28 +10753,71 @@ var $author$project$Update$updateCharacter = F2(
 	});
 var $author$project$Data$Castle = {$: 'Castle'};
 var $author$project$Data$HeroChoose = {$: 'HeroChoose'};
+var $author$project$Data$Tutorial = function (a) {
+	return {$: 'Tutorial', a: a};
+};
+var $author$project$Data$initialHeroes = _List_fromArray(
+	[
+		A9(
+		$author$project$Data$Hero,
+		$author$project$Data$Warrior,
+		_Utils_Tuple2(0, 0),
+		80,
+		80,
+		15,
+		5,
+		false,
+		$author$project$Data$Waiting,
+		1),
+		A9(
+		$author$project$Data$Hero,
+		$author$project$Data$Archer,
+		_Utils_Tuple2(0, 0),
+		30,
+		30,
+		20,
+		5,
+		false,
+		$author$project$Data$Waiting,
+		2)
+	]);
 var $author$project$Update$updateDialog = F3(
 	function (msg, task, model) {
-		if (task.$ === 'FinishTutorial') {
-			if (msg.$ === 'Click') {
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{mode: $author$project$Data$Castle}),
-					$elm$core$Platform$Cmd$none);
-			} else {
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			}
-		} else {
-			if (msg.$ === 'Click') {
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{mode: $author$project$Data$HeroChoose}),
-					$elm$core$Platform$Cmd$none);
-			} else {
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-			}
+		switch (task.$) {
+			case 'MeetElder':
+				if (msg.$ === 'Click') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								board: A2($author$project$Board$initBoard, $author$project$Data$initialHeroes, 0),
+								chosenHero: _List_Nil,
+								mode: $author$project$Data$Tutorial(0)
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 'FinishTutorial':
+				if (msg.$ === 'Click') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{mode: $author$project$Data$Castle}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			default:
+				if (msg.$ === 'Click') {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{mode: $author$project$Data$HeroChoose}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var $author$project$Data$Encyclopedia = function (a) {
