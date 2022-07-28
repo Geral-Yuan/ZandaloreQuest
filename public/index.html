@@ -5,7 +5,16 @@
   <title>Main</title>
   <style>body { padding: 0; margin: 0; }</style>
 </head>
-
+<style>
+	@font-face {
+		font-family: myfont;
+		src: url(assets/PixelOperator-Bold.ttf);
+		font-weight: bold;
+	  }
+	  body {
+		font-family: myfont;
+	  }
+	</style> 
 <body>
 
 <pre id="elm"></pre>
@@ -15247,11 +15256,15 @@ var $author$project$ViewShop$viewShop = function (model) {
 								$elm$svg$Svg$Attributes$width('100%'),
 								$elm$svg$Svg$Attributes$height('100%')
 							]),
-						A2(
-							$elm$core$List$cons,
-							$author$project$ViewOthers$viewCoinSVG(
-								_Utils_Tuple2(1500, 900)),
-							_Utils_ap($author$project$ViewShop$viewShopSvg, $author$project$ViewNPCTask$viewTaskBoard))),
+						_Utils_ap(
+							$author$project$ViewShop$viewShopSvg,
+							_Utils_ap(
+								$author$project$ViewNPCTask$viewTaskBoard,
+								_List_fromArray(
+									[
+										$author$project$ViewOthers$viewCoinSVG(
+										_Utils_Tuple2(1500, 900))
+									])))),
 						$author$project$ViewScenes$viewTipForDir,
 						$author$project$ViewScenes$viewTipForC,
 						$author$project$ViewScenes$viewTipForEnter,
@@ -15427,7 +15440,13 @@ var $author$project$ViewShop$viewShopChoose = function (model) {
 						A4($author$project$ViewOthers$viewUIButton, 100, 50, 1400, 920),
 						_Utils_ap(
 							A4($author$project$ViewOthers$viewUIButton, 400, 200, 1000, 400),
-							A4($author$project$ViewOthers$viewUIButton, 400, 200, 500, 400))))),
+							_Utils_ap(
+								A4($author$project$ViewOthers$viewUIButton, 400, 200, 500, 400),
+								_List_fromArray(
+									[
+										$author$project$ViewOthers$viewCoinSVG(
+										_Utils_Tuple2(1500, 900))
+									])))))),
 				$author$project$ViewShop$drawButton(model),
 				$author$project$ViewShop$exitButton,
 				$author$project$ViewShop$enterUpgradeButton,
@@ -16641,7 +16660,13 @@ var $author$project$ViewShop$viewUpgradePage = function (model) {
 										$author$project$ViewShop$viewHeroAttr(model),
 										_Utils_ap(
 											A4($author$project$ViewOthers$viewUIButton, 100, 50, 1400, 920),
-											A4($author$project$ViewOthers$viewUIButton, 300, 150, 850, 775)))))))),
+											_Utils_ap(
+												A4($author$project$ViewOthers$viewUIButton, 300, 150, 850, 775),
+												_List_fromArray(
+													[
+														$author$project$ViewOthers$viewCoinSVG(
+														_Utils_Tuple2(1500, 900))
+													]))))))))),
 					$author$project$ViewShop$exitButton,
 					$author$project$ViewScenes$viewBagCoin(model)
 				]),

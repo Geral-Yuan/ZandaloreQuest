@@ -53,9 +53,10 @@ viewShop model =
                     , SvgAttr.height "100%"
                     ]
                     (
-                        (viewCoinSVG ( 1500, 900 )) 
-                        :: viewShopSvg
+                        
+                        viewShopSvg
                         ++ viewTaskBoard
+                        ++ [viewCoinSVG ( 1500, 900 )]
                     )
                --, viewCharacterPos model.character
                , viewTipForDir
@@ -205,13 +206,13 @@ viewShopChoose model =
                 ++ (viewUIButton 100 50 1400 920) --for exit
                 ++ (viewUIButton 400 200 1000 400) -- for draw
                 ++ (viewUIButton 400 200 500 400) -- for upgrade
+                ++ [viewCoinSVG ( 1500, 900 )]
             )
         , drawButton model
         , exitButton
         , enterUpgradeButton
         , viewBagCoin model
         ]
-
 
 exitButton : Html Msg
 exitButton =
@@ -338,6 +339,7 @@ viewUpgradePage model =
                 ++ viewHeroAttr model
                 ++ (viewUIButton 100 50 1400 920) --for exit
             ++ (viewUIButton 300 150 850 775) -- for upgrade
+            ++ [viewCoinSVG ( 1500, 900 )]
             
             )
          , exitButton
