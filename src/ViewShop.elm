@@ -18,7 +18,7 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
-import ViewScenes exposing (viewKeyGif, viewTipForDir, viewCharacterPos, viewTipForC, viewTipForEnter, viewBagCoin, viewRpgCharacter)
+import ViewScenes exposing (viewKeyGif, viewTipForDir, viewTipForC, viewTipForEnter, viewBagCoin, viewRpgCharacter)
 import Data exposing (upgradeHealth)
 import Data exposing (upgradeDamage)
 

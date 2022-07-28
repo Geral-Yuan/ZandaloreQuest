@@ -549,39 +549,58 @@ allSampleHeroes =
     ]
 
 
+initialHeroes : List Hero
+initialHeroes =
+    [ Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 1
+    , Hero Archer ( 0, 0 ) 30 30 20 5 False Waiting 2
+    ]
+
+
 upgradeDamage : Class -> Int
 upgradeDamage class =
     case class of
-        Warrior -> 
+        Warrior ->
             2
-        Archer -> 
+
+        Archer ->
             4
-        Assassin -> 
+
+        Assassin ->
             5
-        Mage -> 
+
+        Mage ->
             2
-        Healer -> 
+
+        Healer ->
             2
-        Engineer -> 
+
+        Engineer ->
             2
-        Turret -> 
+
+        Turret ->
             0
 
 
 upgradeHealth : Class -> Int
 upgradeHealth class =
     case class of
-        Warrior -> 
+        Warrior ->
             20
-        Archer -> 
+
+        Archer ->
             10
-        Assassin -> 
+
+        Assassin ->
             10
-        Mage -> 
+
+        Mage ->
             10
-        Healer -> 
+
+        Healer ->
             15
-        Engineer -> 
+
+        Engineer ->
             10
-        Turret -> 
+
+        Turret ->
             0

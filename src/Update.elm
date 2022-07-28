@@ -52,7 +52,7 @@ update msg model =
 
                 UpgradePage ->
                     updateShop msg model
-                    
+
                 _ ->
                     updateRPG msg model
                         |> updateCharacter msg
@@ -137,6 +137,14 @@ updateSummary msg model =
 updateDialog : Msg -> Task -> Model -> ( Model, Cmd Msg )
 updateDialog msg task model =
     case task of
+        MeetElder ->
+            case msg of
+                Click _ _ ->
+                    ( { model | mode = Tutorial 0, board = initBoard initialHeroes 0, chosenHero = [] }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         FinishTutorial ->
             case msg of
                 Click _ _ ->
@@ -323,10 +331,7 @@ checkConfirm msg model =
     in
     case msg of
         Confirm ->
-            if List.length model.chosenHero == 3 && model.level == 0 then
-                { model | mode = Tutorial 0, board = initBoard (confirmHeroes model) level, chosenHero = [] }
-
-            else if List.length model.chosenHero == 3 then
+            if List.length model.chosenHero == 3 then
                 { model | mode = BoardGame, board = initBoard (confirmHeroes model) level, chosenHero = [] }
 
             else

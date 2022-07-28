@@ -67,7 +67,7 @@ initModel : Model
 initModel =
     { mode = Logo
     , indexedheroes =
-        allSampleHeroes |> List.filter (\( x, _ ) -> List.member x.class [ Warrior, Archer, Assassin ])
+        allSampleHeroes |> List.filter (\( x, _ ) -> List.member x.class [ Warrior, Archer ])
     , upgradePageIndex = 1
     , board = sampleBoard
     , size = ( 1500, 1000 )
