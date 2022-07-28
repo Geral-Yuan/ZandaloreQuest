@@ -168,7 +168,7 @@ checkNPCTalk model npclist =
                 { model | level = npc.level, mode = Dialog npc.task, previousMode = model.mode }
 
             else if npc.beaten then
-                if Tuple.first model.popUpHint /= Noop then
+                if Tuple.first model.popUpHint == Noop then
                     { model | popUpHint = ( FailtoTalk npc, 0 ) }
 
                 else
