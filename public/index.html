@@ -5547,6 +5547,7 @@ var $author$project$Board$sampleBoard = {
 	item: _List_Nil,
 	level: 0,
 	map: _List_Nil,
+	mapRotating: _Utils_Tuple2(false, 0),
 	moveable: _List_Nil,
 	obstacles: _List_Nil,
 	pointPos: _Utils_Tuple2(0, 0),
@@ -6458,8 +6459,23 @@ var $author$project$Board$initObstacles = function (k) {
 					_Utils_Tuple2(5, 5),
 					$author$project$Data$NoItem)
 				]);
-		default:
+		case 5:
 			return _List_Nil;
+		default:
+			return A2(
+				$elm$core$List$map,
+				function (pos) {
+					return A3($author$project$Data$Obstacle, $author$project$Data$Unbreakable, pos, $author$project$Data$NoItem);
+				},
+				_List_fromArray(
+					[
+						_Utils_Tuple2(2, 5),
+						_Utils_Tuple2(2, 8),
+						_Utils_Tuple2(5, 8),
+						_Utils_Tuple2(8, 5),
+						_Utils_Tuple2(8, 2),
+						_Utils_Tuple2(5, 2)
+					]));
 	}
 };
 var $author$project$Data$Enemy = function (_class) {
@@ -6472,7 +6488,11 @@ var $author$project$Data$Enemy = function (_class) {
 							return function (state) {
 								return function (justAttack) {
 									return function (indexOnBoard) {
-										return {_class: _class, damage: damage, done: done, health: health, indexOnBoard: indexOnBoard, justAttack: justAttack, maxHealth: maxHealth, pos: pos, state: state, steps: steps};
+										return function (boss) {
+											return function (bossState) {
+												return {boss: boss, bossState: bossState, _class: _class, damage: damage, done: done, health: health, indexOnBoard: indexOnBoard, justAttack: justAttack, maxHealth: maxHealth, pos: pos, state: state, steps: steps};
+											};
+										};
 									};
 								};
 							};
@@ -6483,19 +6503,22 @@ var $author$project$Data$Enemy = function (_class) {
 		};
 	};
 };
+var $author$project$Data$Turret = {$: 'Turret'};
+var $author$project$Data$initBoss = $author$project$Data$Enemy($author$project$Data$Turret)(
+	_Utils_Tuple2(5, 5))(200)(200)(10)(0)(true)($author$project$Data$Waiting)(false)(1)(true)(1);
 var $author$project$Data$sampleEnemy = F3(
 	function (_class, pos, index) {
 		switch (_class.$) {
 			case 'Warrior':
-				return $author$project$Data$Enemy($author$project$Data$Warrior)(pos)(80)(80)(8)(0)(true)($author$project$Data$Waiting)(false)(index);
+				return $author$project$Data$Enemy($author$project$Data$Warrior)(pos)(80)(80)(8)(0)(true)($author$project$Data$Waiting)(false)(index)(false)(0);
 			case 'Archer':
-				return $author$project$Data$Enemy($author$project$Data$Archer)(pos)(30)(30)(10)(0)(true)($author$project$Data$Waiting)(false)(index);
+				return $author$project$Data$Enemy($author$project$Data$Archer)(pos)(30)(30)(10)(0)(true)($author$project$Data$Waiting)(false)(index)(false)(0);
 			case 'Assassin':
-				return $author$project$Data$Enemy($author$project$Data$Assassin)(pos)(35)(35)(10)(0)(true)($author$project$Data$Waiting)(false)(index);
+				return $author$project$Data$Enemy($author$project$Data$Assassin)(pos)(35)(35)(10)(0)(true)($author$project$Data$Waiting)(false)(index)(false)(0);
 			case 'Healer':
-				return $author$project$Data$Enemy($author$project$Data$Healer)(pos)(40)(40)(5)(0)(true)($author$project$Data$Waiting)(false)(index);
+				return $author$project$Data$Enemy($author$project$Data$Healer)(pos)(40)(40)(5)(0)(true)($author$project$Data$Waiting)(false)(index)(false)(0);
 			default:
-				return $author$project$Data$Enemy($author$project$Data$Mage)(pos)(50)(50)(6)(0)(true)($author$project$Data$Waiting)(false)(index);
+				return $author$project$Data$Enemy($author$project$Data$Mage)(pos)(50)(50)(6)(0)(true)($author$project$Data$Waiting)(false)(index)(false)(0);
 		}
 	});
 var $author$project$Board$initenemy = function (k) {
@@ -6585,7 +6608,7 @@ var $author$project$Board$initenemy = function (k) {
 					_Utils_Tuple2(5, 1),
 					3)
 				]);
-		default:
+		case 5:
 			return _List_fromArray(
 				[
 					A3(
@@ -6604,6 +6627,9 @@ var $author$project$Board$initenemy = function (k) {
 					_Utils_Tuple2(5, 1),
 					3)
 				]);
+		default:
+			return _List_fromArray(
+				[$author$project$Data$initBoss]);
 	}
 };
 var $author$project$Board$initPosition = F2(
@@ -6719,7 +6745,7 @@ var $author$project$Board$initPosition = F2(
 								pos: _Utils_Tuple2(9, 1)
 							});
 				}
-			default:
+			case 5:
 				var _v6 = hero.indexOnBoard;
 				switch (_v6) {
 					case 1:
@@ -6739,6 +6765,28 @@ var $author$project$Board$initPosition = F2(
 							hero,
 							{
 								pos: _Utils_Tuple2(5, 3)
+							});
+				}
+			default:
+				var _v7 = hero.indexOnBoard;
+				switch (_v7) {
+					case 1:
+						return _Utils_update(
+							hero,
+							{
+								pos: _Utils_Tuple2(1, 5)
+							});
+					case 2:
+						return _Utils_update(
+							hero,
+							{
+								pos: _Utils_Tuple2(5, 9)
+							});
+					default:
+						return _Utils_update(
+							hero,
+							{
+								pos: _Utils_Tuple2(9, 1)
 							});
 				}
 		}
@@ -6897,6 +6945,20 @@ var $author$project$Data$map = function (level) {
 						_Utils_Tuple2(2, 5),
 						_Utils_Tuple2(8, 5)
 					]));
+		case 6:
+			return _Utils_ap(
+				A2(
+					$elm$core$List$filter,
+					function (_v5) {
+						var x = _v5.a;
+						var y = _v5.b;
+						return (!_Utils_eq(x, y)) && (((x + (2 * y)) !== 15) && (((2 * x) + y) !== 15));
+					},
+					$author$project$Data$basicMap),
+				_List_fromArray(
+					[
+						_Utils_Tuple2(5, 5)
+					]));
 		default:
 			return $author$project$Data$basicMap;
 	}
@@ -6909,6 +6971,8 @@ var $author$project$Board$spawnTimes = function (k) {
 			return 0;
 		case 2:
 			return 1;
+		case 6:
+			return 0;
 		default:
 			return 2;
 	}
@@ -6930,6 +6994,7 @@ var $author$project$Board$initBoard = F2(
 			item: _List_Nil,
 			level: k,
 			map: $author$project$Data$map(k),
+			mapRotating: _Utils_Tuple2(false, 0),
 			moveable: _List_Nil,
 			obstacles: $author$project$Board$initObstacles(k),
 			pointPos: _Utils_Tuple2(0, 0),
@@ -6989,7 +7054,6 @@ var $author$project$Update$resize = F2(
 			return model;
 		}
 	});
-var $author$project$Data$Turret = {$: 'Turret'};
 var $author$project$UpdateBoard$checkCurrentTurret = function (board) {
 	var undoneTurret = A2(
 		$elm$core$List$filter,
@@ -7033,8 +7097,24 @@ var $elm$core$List$isEmpty = function (xs) {
 		return false;
 	}
 };
+var $author$project$Data$Dungeon2Scene = {$: 'Dungeon2Scene'};
 var $author$project$Data$Level = function (a) {
 	return {$: 'Level', a: a};
+};
+var $author$project$NPC$npcBoss = {
+	beaten: false,
+	dialogue: '',
+	faceDir: $author$project$Data$Left,
+	image: 'SkullKnight',
+	level: 6,
+	name: 'Boss',
+	position: _Utils_Tuple2(1100, 350),
+	scene: $author$project$Data$Dungeon2Scene,
+	size: _Utils_Tuple2(64, 64),
+	talkRange: _Utils_Tuple2(
+		_Utils_Tuple2(1000, 1200),
+		_Utils_Tuple2(250, 450)),
+	task: $author$project$Data$Level(6)
 };
 var $author$project$NPC$npcDarkKnight1 = {
 	beaten: false,
@@ -7097,7 +7177,6 @@ var $author$project$NPC$npcSkullKnight2 = {
 		_Utils_Tuple2(250, 450)),
 	task: $author$project$Data$Level(4)
 };
-var $author$project$Data$Dungeon2Scene = {$: 'Dungeon2Scene'};
 var $author$project$NPC$npcSkullKnight3 = {
 	beaten: false,
 	dialogue: '',
@@ -7114,7 +7193,7 @@ var $author$project$NPC$npcSkullKnight3 = {
 	task: $author$project$Data$Level(5)
 };
 var $author$project$Update$nextNPC = function (task) {
-	_v0$5:
+	_v0$6:
 	while (true) {
 		switch (task.$) {
 			case 'MeetElder':
@@ -7134,11 +7213,14 @@ var $author$project$Update$nextNPC = function (task) {
 					case 4:
 						return _List_fromArray(
 							[$author$project$NPC$npcSkullKnight3]);
+					case 5:
+						return _List_fromArray(
+							[$author$project$NPC$npcBoss]);
 					default:
-						break _v0$5;
+						break _v0$6;
 				}
 			default:
-				break _v0$5;
+				break _v0$6;
 		}
 	}
 	return _List_Nil;
@@ -7494,6 +7576,25 @@ var $author$project$Update$checkMouseMove = F2(
 			return model;
 		}
 	});
+var $author$project$Update$checkRotationDone = function (_v0) {
+	var model = _v0.a;
+	var cmd = _v0.b;
+	var board = model.board;
+	var _v1 = board.mapRotating;
+	var rotating = _v1.a;
+	var time = _v1.b;
+	return (rotating && (time > 1)) ? _Utils_Tuple2(
+		_Utils_update(
+			model,
+			{
+				board: _Utils_update(
+					board,
+					{
+						mapRotating: _Utils_Tuple2(false, 0)
+					})
+			}),
+		cmd) : _Utils_Tuple2(model, cmd);
+};
 var $author$project$Message$SpawnCrate = function (a) {
 	return {$: 'SpawnCrate', a: a};
 };
@@ -7716,7 +7817,7 @@ var $author$project$Update$randomCrate = F2(
 		if (msg.$ === 'EndTurn') {
 			var _v2 = model.board.turn;
 			if (_v2.$ === 'PlayerTurn') {
-				return (!_Utils_eq(
+				return model.board.mapRotating.a ? _Utils_Tuple2(model, cmd) : ((!_Utils_eq(
 					$author$project$Update$possibleCratePosition(model),
 					_List_Nil)) ? _Utils_Tuple2(
 					_Utils_update(
@@ -7738,7 +7839,7 @@ var $author$project$Update$randomCrate = F2(
 						{
 							board: $author$project$UpdateBoard$turnTurret(model.board)
 						}),
-					cmd);
+					cmd));
 			} else {
 				return _Utils_Tuple2(model, cmd);
 			}
@@ -9218,7 +9319,7 @@ var $author$project$EnemyAction$index2Enemy = F2(
 			l_enemy);
 		if (!_v0.b) {
 			return $author$project$Data$Enemy($author$project$Data$Warrior)(
-				_Utils_Tuple2(0, 0))(80)(-1)(15)(3)(false)($author$project$Data$Waiting)(false)(0);
+				_Utils_Tuple2(0, 0))(80)(-1)(15)(3)(false)($author$project$Data$Waiting)(false)(0)(false)(0);
 		} else {
 			var chosen = _v0.a;
 			return chosen;
@@ -9239,6 +9340,74 @@ var $author$project$EnemyAction$actionSmartEnemy = F2(
 					return A2($author$project$EnemyAction$actionSmartWarrior, board, enemy);
 				case 'Healer':
 					return A2($author$project$EnemyAction$actionSmartHealer, board, enemy);
+				case 'Turret':
+					var _v1 = enemy.bossState;
+					switch (_v1) {
+						case 1:
+							return A2(
+								$author$project$EnemyAction$actionSmartWarrior,
+								_Utils_update(
+									board,
+									{
+										enemies: _List_fromArray(
+											[
+												_Utils_update(
+												enemy,
+												{bossState: 2})
+											])
+									}),
+								_Utils_update(
+									enemy,
+									{bossState: 2}));
+						case 2:
+							return A2(
+								$author$project$EnemyAction$actionSmartArcher,
+								_Utils_update(
+									board,
+									{
+										enemies: _List_fromArray(
+											[
+												_Utils_update(
+												enemy,
+												{bossState: 3})
+											])
+									}),
+								_Utils_update(
+									enemy,
+									{bossState: 3}));
+						case 3:
+							return A2(
+								$author$project$EnemyAction$actionSmartMage,
+								_Utils_update(
+									board,
+									{
+										enemies: _List_fromArray(
+											[
+												_Utils_update(
+												enemy,
+												{bossState: 4})
+											])
+									}),
+								_Utils_update(
+									enemy,
+									{bossState: 4}));
+						default:
+							return A2(
+								$author$project$EnemyAction$actionSmartHealer,
+								_Utils_update(
+									board,
+									{
+										enemies: _List_fromArray(
+											[
+												_Utils_update(
+												enemy,
+												{bossState: 1})
+											])
+									}),
+								_Utils_update(
+									enemy,
+									{bossState: 1}));
+					}
 				default:
 					return board;
 			}
@@ -9442,6 +9611,8 @@ var $author$project$UpdateBoard$resetSteps = function (enemy) {
 				return 1;
 			case 'Assassin':
 				return 3;
+			case 'Turret':
+				return 4;
 			default:
 				return 2;
 		}
@@ -9470,16 +9641,13 @@ var $author$project$Data$rotateStuff = F3(
 				pos: _Utils_Tuple2(cx + deltaXY, cy - deltaX)
 			});
 	});
-var $author$project$UpdateBoard$rotate = F3(
-	function (dis, clockwise, board) {
+var $author$project$UpdateBoard$rotate = F4(
+	function (center, dis, clockwise, board) {
 		var _v0 = A2(
 			$elm$core$List$partition,
 			function (hero) {
 				return _Utils_eq(
-					A2(
-						$author$project$Data$distance,
-						_Utils_Tuple2(5, 5),
-						hero.pos),
+					A2($author$project$Data$distance, center, hero.pos),
 					dis);
 			},
 			board.obstacles);
@@ -9489,10 +9657,7 @@ var $author$project$UpdateBoard$rotate = F3(
 			$elm$core$List$partition,
 			function (hero) {
 				return _Utils_eq(
-					A2(
-						$author$project$Data$distance,
-						_Utils_Tuple2(5, 5),
-						hero.pos),
+					A2($author$project$Data$distance, center, hero.pos),
 					dis);
 			},
 			board.item);
@@ -9502,10 +9667,7 @@ var $author$project$UpdateBoard$rotate = F3(
 			$elm$core$List$partition,
 			function (hero) {
 				return _Utils_eq(
-					A2(
-						$author$project$Data$distance,
-						_Utils_Tuple2(5, 5),
-						hero.pos),
+					A2($author$project$Data$distance, center, hero.pos),
 					dis);
 			},
 			board.heroes);
@@ -9515,10 +9677,7 @@ var $author$project$UpdateBoard$rotate = F3(
 			$elm$core$List$partition,
 			function (hero) {
 				return _Utils_eq(
-					A2(
-						$author$project$Data$distance,
-						_Utils_Tuple2(5, 5),
-						hero.pos),
+					A2($author$project$Data$distance, center, hero.pos),
 					dis);
 			},
 			board.enemies);
@@ -9530,51 +9689,96 @@ var $author$project$UpdateBoard$rotate = F3(
 				enemies: _Utils_ap(
 					A2(
 						$elm$core$List$map,
-						A2(
-							$author$project$Data$rotateStuff,
-							clockwise,
-							_Utils_Tuple2(5, 5)),
+						A2($author$project$Data$rotateStuff, clockwise, center),
 						targetEnemies),
 					restEnemies),
 				heroes: _Utils_ap(
 					A2(
 						$elm$core$List$map,
-						A2(
-							$author$project$Data$rotateStuff,
-							clockwise,
-							_Utils_Tuple2(5, 5)),
+						A2($author$project$Data$rotateStuff, clockwise, center),
 						targetHeroes),
 					restHeroes),
 				item: _Utils_ap(
 					A2(
 						$elm$core$List$map,
-						A2(
-							$author$project$Data$rotateStuff,
-							clockwise,
-							_Utils_Tuple2(5, 5)),
+						A2($author$project$Data$rotateStuff, clockwise, center),
 						targetItems),
 					restItems),
 				obstacles: _Utils_ap(
 					A2(
 						$elm$core$List$map,
-						A2(
-							$author$project$Data$rotateStuff,
-							clockwise,
-							_Utils_Tuple2(5, 5)),
+						A2($author$project$Data$rotateStuff, clockwise, center),
 						targetObstacles),
 					restObstacles)
 			});
 	});
 var $author$project$UpdateBoard$updateMap = F2(
 	function (level, board) {
-		if (level === 5) {
-			return A3(
-				$author$project$UpdateBoard$rotate,
-				2,
-				true,
-				A3($author$project$UpdateBoard$rotate, 4, false, board));
-		} else {
-			return board;
+		switch (level) {
+			case 5:
+				return A4(
+					$author$project$UpdateBoard$rotate,
+					_Utils_Tuple2(5, 5),
+					2,
+					true,
+					A4(
+						$author$project$UpdateBoard$rotate,
+						_Utils_Tuple2(5, 5),
+						4,
+						false,
+						_Utils_update(
+							board,
+							{
+								mapRotating: _Utils_Tuple2(true, 0)
+							})));
+			case 6:
+				return A4(
+					$author$project$UpdateBoard$rotate,
+					_Utils_Tuple2(5, 2),
+					1,
+					false,
+					A4(
+						$author$project$UpdateBoard$rotate,
+						_Utils_Tuple2(8, 2),
+						1,
+						true,
+						A4(
+							$author$project$UpdateBoard$rotate,
+							_Utils_Tuple2(8, 5),
+							1,
+							false,
+							A4(
+								$author$project$UpdateBoard$rotate,
+								_Utils_Tuple2(5, 8),
+								1,
+								true,
+								A4(
+									$author$project$UpdateBoard$rotate,
+									_Utils_Tuple2(2, 8),
+									1,
+									false,
+									A4(
+										$author$project$UpdateBoard$rotate,
+										_Utils_Tuple2(2, 5),
+										1,
+										true,
+										A4(
+											$author$project$UpdateBoard$rotate,
+											_Utils_Tuple2(5, 5),
+											1,
+											false,
+											A4(
+												$author$project$UpdateBoard$rotate,
+												_Utils_Tuple2(5, 5),
+												3,
+												true,
+												_Utils_update(
+													board,
+													{
+														mapRotating: _Utils_Tuple2(true, 0)
+													})))))))));
+			default:
+				return board;
 		}
 	});
 var $author$project$UpdateBoard$checkTurn = function (board) {
@@ -9645,6 +9849,30 @@ var $author$project$Action$attackRangeEnemy = F2(
 						$author$project$Data$neighbour));
 			case 'Mage':
 				return $author$project$Data$subneighbour;
+			case 'Healer':
+				return A2(
+					$elm$core$List$cons,
+					_Utils_Tuple2(0, 0),
+					$author$project$Data$neighbour);
+			case 'Turret':
+				var _v1 = enemy.bossState;
+				switch (_v1) {
+					case 2:
+						return $elm$core$List$concat(
+							A2(
+								$elm$core$List$map,
+								A3($author$project$Action$stuckInWay, board, enemy.pos, $author$project$Data$Hostile),
+								$author$project$Data$neighbour));
+					case 3:
+						return $author$project$Data$subneighbour;
+					case 4:
+						return A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(0, 0),
+							$author$project$Data$neighbour);
+					default:
+						return $author$project$Data$neighbour;
+				}
 			default:
 				return $author$project$Data$neighbour;
 		}
@@ -9685,15 +9913,22 @@ var $author$project$UpdateBoard$updateBoardAnimation = F2(
 				if (_v1.$ === 'PlayerTurn') {
 					var _v2 = board.boardState;
 					if (_v2.$ === 'NoActions') {
-						return board;
+						var _v3 = board.mapRotating;
+						var rotating = _v3.a;
+						var time = _v3.b;
+						return rotating ? _Utils_update(
+							board,
+							{
+								mapRotating: _Utils_Tuple2(rotating, time + (elapsed / 1000))
+							}) : board;
 					} else {
 						return _Utils_update(
 							board,
 							{timeBoardState: board.timeBoardState + (elapsed / 1000)});
 					}
 				} else {
-					var _v3 = board.boardState;
-					if (_v3.$ === 'NoActions') {
+					var _v4 = board.boardState;
+					if (_v4.$ === 'NoActions') {
 						return _Utils_update(
 							board,
 							{timeTurn: board.timeTurn + (elapsed / 1000)});
@@ -10415,7 +10650,7 @@ var $author$project$UpdateBoard$updateBoardOthers = F2(
 					var _v3 = board.turn;
 					switch (_v3.$) {
 						case 'PlayerTurn':
-							return _Utils_eq(board.boardState, $author$project$Data$NoActions) ? A2($author$project$UpdateBoard$selectHero, board, hero) : board;
+							return (_Utils_eq(board.boardState, $author$project$Data$NoActions) && (!board.mapRotating.a)) ? A2($author$project$UpdateBoard$selectHero, board, hero) : board;
 						case 'TurretTurn':
 							return board;
 						default:
@@ -10489,7 +10724,7 @@ var $author$project$Action$updateMoveable = function (board) {
 };
 var $elm$core$Basics$sqrt = _Basics_sqrt;
 var $author$project$Data$halfWid = 35 * $elm$core$Basics$sqrt(3);
-var $author$project$Data$findPos = function (_v0) {
+var $author$project$Data$findFixedPos = function (_v0) {
 	var row = _v0.a;
 	var column = _v0.b;
 	return _Utils_Tuple2(($author$project$Data$pixelWidth / 2) + ((row - column) * $author$project$Data$halfWid), 80 + (((row + column) - 6) * 105));
@@ -10499,7 +10734,7 @@ var $author$project$Data$inHexagon = F2(
 	function (_v0, pos) {
 		var x = _v0.a;
 		var y = _v0.b;
-		var _v1 = $author$project$Data$findPos(pos);
+		var _v1 = $author$project$Data$findFixedPos(pos);
 		var cx = _v1.a;
 		var cy = _v1.b;
 		return (_Utils_cmp(
@@ -10591,29 +10826,30 @@ var $author$project$UpdateBoard$updateTurretAttackable = function (board) {
 var $author$project$Update$updateBoardGame = F2(
 	function (msg, model) {
 		return $author$project$Update$checkEnd(
-			$author$project$Update$randomEnemies(
-				A2(
-					$author$project$Update$randomCrate,
-					msg,
+			$author$project$Update$checkRotationDone(
+				$author$project$Update$randomEnemies(
 					A2(
-						$author$project$Update$checkHit,
+						$author$project$Update$randomCrate,
 						msg,
 						A2(
-							$author$project$Update$checkMouseMove,
+							$author$project$Update$checkHit,
 							msg,
-							_Utils_update(
-								model,
-								{
-									board: $author$project$UpdateBoard$updateTurretAttackable(
-										$author$project$UpdateBoard$checkCurrentTurret(
-											$author$project$Action$updateTarget(
-												$author$project$Action$updateMoveable(
-													$author$project$Action$updateAttackable(
-														A2(
-															$author$project$UpdateBoard$updateBoardOthers,
-															msg,
-															A2($author$project$UpdateBoard$updateBoardAnimation, msg, model.board)))))))
-								}))))));
+							A2(
+								$author$project$Update$checkMouseMove,
+								msg,
+								_Utils_update(
+									model,
+									{
+										board: $author$project$UpdateBoard$updateTurretAttackable(
+											$author$project$UpdateBoard$checkCurrentTurret(
+												$author$project$Action$updateTarget(
+													$author$project$Action$updateMoveable(
+														$author$project$Action$updateAttackable(
+															A2(
+																$author$project$UpdateBoard$updateBoardOthers,
+																msg,
+																A2($author$project$UpdateBoard$updateBoardAnimation, msg, model.board)))))))
+									})))))));
 	});
 var $author$project$Update$npcCollisionRange = F2(
 	function (_v0, npc) {
@@ -10969,7 +11205,7 @@ var $author$project$Update$updateEncyclopedia = F2(
 var $author$project$Data$BuyingItems = {$: 'BuyingItems'};
 var $author$project$Data$Shop = {$: 'Shop'};
 var $author$project$NPC$allNPC = _List_fromArray(
-	[$author$project$NPC$npcElder, $author$project$NPC$npcDarkKnight1, $author$project$NPC$npcDarkKnight2, $author$project$NPC$npcSkullKnight1, $author$project$NPC$npcSkullKnight2, $author$project$NPC$npcSkullKnight3, $author$project$NPC$npcWarrior, $author$project$NPC$npcArcher, $author$project$NPC$npcAssassin, $author$project$NPC$npcMage, $author$project$NPC$npcHealer, $author$project$NPC$npcEngineer]);
+	[$author$project$NPC$npcElder, $author$project$NPC$npcDarkKnight1, $author$project$NPC$npcDarkKnight2, $author$project$NPC$npcSkullKnight1, $author$project$NPC$npcSkullKnight2, $author$project$NPC$npcSkullKnight3, $author$project$NPC$npcBoss, $author$project$NPC$npcWarrior, $author$project$NPC$npcArcher, $author$project$NPC$npcAssassin, $author$project$NPC$npcMage, $author$project$NPC$npcHealer, $author$project$NPC$npcEngineer]);
 var $author$project$Data$Dungeon = {$: 'Dungeon'};
 var $author$project$Data$Dungeon2 = {$: 'Dungeon2'};
 var $author$project$Data$FailtoEnter = function (a) {
@@ -11751,7 +11987,7 @@ var $author$project$Update$updateTutorial = F3(
 							break _v2$3;
 					}
 				}
-				return (A2($author$project$Update$followTutorial, msg, k) && _Utils_eq(model.board.boardState, $author$project$Data$NoActions)) ? A2(
+				return (A2($author$project$Update$followTutorial, msg, k) && (_Utils_eq(model.board.boardState, $author$project$Data$NoActions) && _Utils_eq(model.board.turn, $author$project$Data$PlayerTurn))) ? A2(
 					$author$project$Update$updateBoardGame,
 					msg,
 					_Utils_update(
@@ -11816,7 +12052,7 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$ViewAnimation$animateEnemyVisuals = function (enemy) {
-	var _v0 = $author$project$Data$findPos(enemy.pos);
+	var _v0 = $author$project$Data$findFixedPos(enemy.pos);
 	var x = _v0.a;
 	var y = _v0.b;
 	return A2(
@@ -11859,7 +12095,7 @@ var $author$project$ViewAnimation$animateEnemyVisuals = function (enemy) {
 			]));
 };
 var $author$project$ViewAnimation$animateHeroVisuals = function (hero) {
-	var _v0 = $author$project$Data$findPos(hero.pos);
+	var _v0 = $author$project$Data$findFixedPos(hero.pos);
 	var x = _v0.a;
 	var y = _v0.b;
 	return A2(
@@ -12050,6 +12286,152 @@ var $author$project$ViewOthers$viewCoinSVG = function (_v0) {
 			]),
 		_List_Nil);
 };
+var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$textAnchor = _VirtualDom_attribute('text-anchor');
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $author$project$ViewOthers$viewCoordinate = function (_v0) {
+	var row = _v0.a;
+	var column = _v0.b;
+	var s_row = $elm$core$Debug$toString(row);
+	var s_column = $elm$core$Debug$toString(column);
+	var _v1 = $author$project$Data$findFixedPos(
+		_Utils_Tuple2(row, column));
+	var c_x = _v1.a;
+	var c_y = _v1.b;
+	return A2(
+		$elm$svg$Svg$text_,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$x(
+				$elm$core$Debug$toString(c_x)),
+				$elm$svg$Svg$Attributes$y(
+				$elm$core$Debug$toString(c_y)),
+				$elm$svg$Svg$Attributes$textAnchor('middle'),
+				$elm$svg$Svg$Attributes$dominantBaseline('middle'),
+				$elm$svg$Svg$Attributes$fill('grey')
+			]),
+		_List_fromArray(
+			[
+				$elm$svg$Svg$text(s_row + (' , ' + s_column))
+			]));
+};
+var $elm$core$Basics$pi = _Basics_pi;
+var $elm$core$Basics$cos = _Basics_cos;
+var $elm$core$Basics$sin = _Basics_sin;
+var $author$project$Data$rotatePos = F3(
+	function (_v0, theta, _v1) {
+		var cx = _v0.a;
+		var cy = _v0.b;
+		var ix = _v1.a;
+		var iy = _v1.b;
+		var _v2 = _Utils_Tuple2(ix - cx, iy - cy);
+		var deltaX = _v2.a;
+		var deltaY = _v2.b;
+		return _Utils_Tuple2(
+			(cx + (deltaX * $elm$core$Basics$cos(theta))) - (deltaY * $elm$core$Basics$sin(theta)),
+			(cy + (deltaX * $elm$core$Basics$sin(theta))) + (deltaY * $elm$core$Basics$cos(theta)));
+	});
+var $author$project$Data$findPos = F4(
+	function (rotating, level, time, _v0) {
+		var row = _v0.a;
+		var column = _v0.b;
+		var fixedPos = $author$project$Data$findFixedPos(
+			_Utils_Tuple2(row, column));
+		if (rotating) {
+			var theta = ($elm$core$Basics$pi / 3) * (1 - time);
+			if (level === 5) {
+				return (A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) === 4) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 5)),
+					theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) === 2) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 5)),
+					0 - theta,
+					fixedPos) : fixedPos);
+			} else {
+				var _v2 = (A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 5)),
+					theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(2, 5),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(2, 5)),
+					0 - theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(2, 8),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(2, 8)),
+					theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 8),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 8)),
+					0 - theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(8, 5),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(8, 5)),
+					theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(8, 2),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(8, 2)),
+					0 - theta,
+					fixedPos) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 2),
+					_Utils_Tuple2(row, column)) === 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 2)),
+					theta,
+					fixedPos) : fixedPos))))));
+				var newX = _v2.a;
+				var newY = _v2.b;
+				return (A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) > 1) ? A3(
+					$author$project$Data$rotatePos,
+					$author$project$Data$findFixedPos(
+						_Utils_Tuple2(5, 5)),
+					0 - theta,
+					_Utils_Tuple2(newX, newY)) : _Utils_Tuple2(newX, newY);
+			}
+		} else {
+			return fixedPos;
+		}
+	});
 var $author$project$DetectMouse$alwaysPreventDefault = function (msg) {
 	return _Utils_Tuple2(msg, true);
 };
@@ -12073,27 +12455,31 @@ var $author$project$DetectMouse$onContentMenu = function (msg) {
 			$elm$json$Json$Decode$succeed(msg)));
 };
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $author$project$View$viewCrate = function (obs) {
-	var _v0 = $author$project$Data$findPos(obs.pos);
-	var x = _v0.a;
-	var y = _v0.b;
-	return _Utils_eq(obs.obstacleType, $author$project$Data$MysteryBox) ? A2(
-		$elm$svg$Svg$image,
-		_List_fromArray(
-			[
-				$elm$svg$Svg$Attributes$width('80'),
-				$elm$svg$Svg$Attributes$height('80'),
-				$elm$svg$Svg$Attributes$x(
-				$elm$core$Debug$toString(x - 40)),
-				$elm$svg$Svg$Attributes$y(
-				$elm$core$Debug$toString(y - 40)),
-				$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
-				$elm$svg$Svg$Attributes$xlinkHref('./assets/image/Crate.png'),
-				$author$project$DetectMouse$onContentMenu(
-				$author$project$Message$Hit(obs.pos))
-			]),
-		_List_Nil) : A2($elm$svg$Svg$rect, _List_Nil, _List_Nil);
-};
+var $author$project$View$viewCrate = F2(
+	function (board, obs) {
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, obs.pos);
+		var x = _v1.a;
+		var y = _v1.b;
+		return _Utils_eq(obs.obstacleType, $author$project$Data$MysteryBox) ? A2(
+			$elm$svg$Svg$image,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$width('80'),
+					$elm$svg$Svg$Attributes$height('80'),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$Debug$toString(x - 40)),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$Debug$toString(y - 40)),
+					$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
+					$elm$svg$Svg$Attributes$xlinkHref('./assets/image/Crate.png'),
+					$author$project$DetectMouse$onContentMenu(
+					$author$project$Message$Hit(obs.pos))
+				]),
+			_List_Nil) : A2($elm$svg$Svg$rect, _List_Nil, _List_Nil);
+	});
 var $author$project$ViewOthers$viewCritical = function (board) {
 	return A2(
 		$elm$html$Html$div,
@@ -12152,88 +12538,123 @@ var $elm$html$Html$Attributes$width = function (n) {
 		'width',
 		$elm$core$String$fromInt(n));
 };
-var $author$project$ViewAllEnemy$viewEnemy = function (enemy) {
-	var _class = $elm$core$Debug$toString(enemy._class);
-	var faudio = './assets/audio/' + (function () {
-		if (_class === 'Turret') {
-			return 'Archer';
+var $author$project$ViewAllEnemy$viewEnemy = F2(
+	function (board, enemy) {
+		var _class = $elm$core$Debug$toString(enemy._class);
+		var faudio = './assets/audio/' + (function () {
+			if (_class === 'Turret') {
+				return 'Archer';
+			} else {
+				var a = _class;
+				return a;
+			}
+		}() + 'SFX.mp3');
+		var fimage = './assets/image/' + _class;
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, enemy.pos);
+		var x = _v1.a;
+		var y = _v1.b;
+		if (!enemy.boss) {
+			var _v2 = enemy.state;
+			switch (_v2.$) {
+				case 'Attacking':
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 45) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src(fimage + 'RedGIF.gif'),
+										$elm$html$Html$Attributes$height(85),
+										$elm$html$Html$Attributes$width(115)
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$audio,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$autoplay(true),
+										$elm$html$Html$Attributes$loop(false),
+										$elm$html$Html$Attributes$preload('True'),
+										$elm$html$Html$Attributes$src(faudio),
+										$elm$html$Html$Attributes$id(faudio)
+									]),
+								_List_Nil)
+							]));
+				case 'Attacked':
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 40) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src(fimage + 'GotHit.png'),
+										$elm$html$Html$Attributes$height(80),
+										$elm$html$Html$Attributes$width(80)
+									]),
+								_List_Nil)
+							]));
+				default:
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 40) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px'),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(enemy.pos))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src(fimage + 'Red.png'),
+										$elm$html$Html$Attributes$height(80),
+										$elm$html$Html$Attributes$width(80)
+									]),
+								_List_Nil)
+							]));
+			}
 		} else {
-			var a = _class;
-			return a;
-		}
-	}() + 'SFX.mp3');
-	var fimage = './assets/image/' + _class;
-	var _v0 = $author$project$Data$findPos(enemy.pos);
-	var x = _v0.a;
-	var y = _v0.b;
-	var _v1 = enemy.state;
-	switch (_v1.$) {
-		case 'Attacking':
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 45) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src(fimage + 'RedGIF.gif'),
-								$elm$html$Html$Attributes$height(85),
-								$elm$html$Html$Attributes$width(115)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$audio,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$autoplay(true),
-								$elm$html$Html$Attributes$loop(false),
-								$elm$html$Html$Attributes$preload('True'),
-								$elm$html$Html$Attributes$src(faudio),
-								$elm$html$Html$Attributes$id(faudio)
-							]),
-						_List_Nil)
-					]));
-		case 'Attacked':
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 40) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src(fimage + 'GotHit.png'),
-								$elm$html$Html$Attributes$height(80),
-								$elm$html$Html$Attributes$width(80)
-							]),
-						_List_Nil)
-					]));
-		default:
 			return A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -12256,14 +12677,14 @@ var $author$project$ViewAllEnemy$viewEnemy = function (enemy) {
 						$elm$html$Html$img,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$src(fimage + 'Red.png'),
+								$elm$html$Html$Attributes$src('./assets/image/SkullKnight.png'),
 								$elm$html$Html$Attributes$height(80),
 								$elm$html$Html$Attributes$width(80)
 							]),
 						_List_Nil)
 					]));
-	}
-};
+		}
+	});
 var $author$project$Data$offsetEnemy = function (selected) {
 	return selected ? 50 : 0;
 };
@@ -12325,7 +12746,6 @@ var $author$project$ViewAllEnemy$viewEnemyCondition = F2(
 				_List_Nil)
 			]);
 	});
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
 var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var $author$project$ViewAllEnemy$viewEnemyHealth = F2(
@@ -12343,9 +12763,12 @@ var $author$project$ViewAllEnemy$viewEnemyHealth = F2(
 		var idxOnBoard = (enemy.indexOnBoard - minIdx) + 1;
 		var healthBarlen2 = (100 * enemy.health) / enemy.maxHealth;
 		var healthBarlen1 = (200 * enemy.health) / enemy.maxHealth;
-		var _v0 = $author$project$Data$findPos(enemy.pos);
-		var x = _v0.a;
-		var y = _v0.b;
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, enemy.pos);
+		var x = _v1.a;
+		var y = _v1.b;
 		return _List_fromArray(
 			[
 				A2(
@@ -12430,7 +12853,7 @@ var $author$project$ViewAllEnemy$viewEnemyImage = F2(
 					board.enemies)));
 		var idxOnBoard = (enemy.indexOnBoard - minIdx) + 1;
 		var _class = $elm$core$Debug$toString(enemy._class);
-		return A2(
+		return (!enemy.boss) ? A2(
 			$elm$svg$Svg$image,
 			_List_fromArray(
 				[
@@ -12444,6 +12867,21 @@ var $author$project$ViewAllEnemy$viewEnemyImage = F2(
 					$elm$core$Debug$toString((idxOnBoard * 150) - 100)),
 					$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
 					$elm$svg$Svg$Attributes$xlinkHref('./assets/image/' + (_class + 'Red.png'))
+				]),
+			_List_Nil) : A2(
+			$elm$svg$Svg$image,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$width('70'),
+					$elm$svg$Svg$Attributes$height('70'),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$Debug$toString(
+						50 + $author$project$Data$offsetEnemy(
+							_Utils_eq(enemy.indexOnBoard, board.cntEnemy)))),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$Debug$toString((idxOnBoard * 150) - 100)),
+					$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
+					$elm$svg$Svg$Attributes$xlinkHref('./assets/image/SkullKnight.png')
 				]),
 			_List_Nil);
 	});
@@ -12584,120 +13022,124 @@ var $author$project$ViewAllEnemy$viewEnemyOuterFrame = F2(
 var $author$project$Message$Select = function (a) {
 	return {$: 'Select', a: a};
 };
-var $author$project$ViewAllHero$viewHero = function (hero) {
-	var _class = $elm$core$Debug$toString(hero._class);
-	var faudio = './assets/audio/' + (function () {
-		if (_class === 'Turret') {
-			return 'Archer';
-		} else {
-			var a = _class;
-			return a;
+var $author$project$ViewAllHero$viewHero = F2(
+	function (board, hero) {
+		var _class = $elm$core$Debug$toString(hero._class);
+		var faudio = './assets/audio/' + (function () {
+			if (_class === 'Turret') {
+				return 'Archer';
+			} else {
+				var a = _class;
+				return a;
+			}
+		}() + 'SFX.mp3');
+		var fimage = './assets/image/' + _class;
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, hero.pos);
+		var x = _v1.a;
+		var y = _v1.b;
+		var _v2 = hero.state;
+		switch (_v2.$) {
+			case 'Attacking':
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$Debug$toString(y - 45) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$Debug$toString(x - 40) + 'px')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$img,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$src(fimage + 'BlueGIF.gif'),
+									$elm$html$Html$Attributes$height(85),
+									$elm$html$Html$Attributes$width(115)
+								]),
+							_List_Nil),
+							A2(
+							$elm$html$Html$audio,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$autoplay(true),
+									$elm$html$Html$Attributes$loop(false),
+									$elm$html$Html$Attributes$preload('True'),
+									$elm$html$Html$Attributes$src(faudio),
+									$elm$html$Html$Attributes$id(faudio)
+								]),
+							_List_Nil)
+						]));
+			case 'Attacked':
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$Debug$toString(y - 40) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$Debug$toString(x - 40) + 'px')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$img,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$src(fimage + 'GotHit.png'),
+									$elm$html$Html$Attributes$height(80),
+									$elm$html$Html$Attributes$width(80)
+								]),
+							_List_Nil)
+						]));
+			default:
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'top',
+							$elm$core$Debug$toString(y - 40) + 'px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'left',
+							$elm$core$Debug$toString(x - 40) + 'px'),
+							$elm$html$Html$Events$onClick(
+							$author$project$Message$Select(hero)),
+							$author$project$DetectMouse$onContentMenu(
+							$author$project$Message$Hit(hero.pos))
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$img,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$src(fimage + 'Blue.png'),
+									$elm$html$Html$Attributes$height(80),
+									$elm$html$Html$Attributes$width(80)
+								]),
+							_List_Nil)
+						]));
 		}
-	}() + 'SFX.mp3');
-	var fimage = './assets/image/' + _class;
-	var _v0 = $author$project$Data$findPos(hero.pos);
-	var x = _v0.a;
-	var y = _v0.b;
-	var _v1 = hero.state;
-	switch (_v1.$) {
-		case 'Attacking':
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 45) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src(fimage + 'BlueGIF.gif'),
-								$elm$html$Html$Attributes$height(85),
-								$elm$html$Html$Attributes$width(115)
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$audio,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$autoplay(true),
-								$elm$html$Html$Attributes$loop(false),
-								$elm$html$Html$Attributes$preload('True'),
-								$elm$html$Html$Attributes$src(faudio),
-								$elm$html$Html$Attributes$id(faudio)
-							]),
-						_List_Nil)
-					]));
-		case 'Attacked':
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 40) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src(fimage + 'GotHit.png'),
-								$elm$html$Html$Attributes$height(80),
-								$elm$html$Html$Attributes$width(80)
-							]),
-						_List_Nil)
-					]));
-		default:
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 40) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px'),
-						$elm$html$Html$Events$onClick(
-						$author$project$Message$Select(hero)),
-						$author$project$DetectMouse$onContentMenu(
-						$author$project$Message$Hit(hero.pos))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src(fimage + 'Blue.png'),
-								$elm$html$Html$Attributes$height(80),
-								$elm$html$Html$Attributes$width(80)
-							]),
-						_List_Nil)
-					]));
-	}
-};
+	});
 var $author$project$Data$offsetHero = function (hero) {
 	return hero.selected ? 50 : 0;
 };
@@ -12751,63 +13193,24 @@ var $author$project$ViewAllHero$viewHeroCondition = function (hero) {
 			_List_Nil)
 		]);
 };
-var $author$project$ViewAllHero$viewHeroHealth = function (hero) {
-	var healthBarlen2 = (100 * hero.health) / hero.maxHealth;
-	var healthBarlen1 = (200 * hero.health) / hero.maxHealth;
-	var rightInfo = _Utils_eq(hero._class, $author$project$Data$Turret) ? _List_Nil : _List_fromArray(
-		[
-			A2(
-			$elm$svg$Svg$rect,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$width('200'),
-					$elm$svg$Svg$Attributes$height('20'),
-					$elm$svg$Svg$Attributes$x(
-					$elm$core$Debug$toString(
-						1740 - $author$project$Data$offsetHero(hero))),
-					$elm$svg$Svg$Attributes$y(
-					$elm$core$Debug$toString((hero.indexOnBoard * 150) - 95)),
-					$elm$svg$Svg$Attributes$fill('black'),
-					$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
-					$elm$svg$Svg$Attributes$rx('5')
-				]),
-			_List_Nil),
-			A2(
-			$elm$svg$Svg$rect,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$width(
-					$elm$core$Debug$toString(healthBarlen1)),
-					$elm$svg$Svg$Attributes$height('20'),
-					$elm$svg$Svg$Attributes$x(
-					$elm$core$Debug$toString(
-						1740 - $author$project$Data$offsetHero(hero))),
-					$elm$svg$Svg$Attributes$y(
-					$elm$core$Debug$toString((hero.indexOnBoard * 150) - 95)),
-					$elm$svg$Svg$Attributes$fill('rgb(5,124,196)'),
-					$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
-					$elm$svg$Svg$Attributes$rx('5')
-				]),
-			_List_Nil)
-		]);
-	var _v0 = $author$project$Data$findPos(hero.pos);
-	var x = _v0.a;
-	var y = _v0.b;
-	return _Utils_ap(
-		rightInfo,
-		_List_fromArray(
+var $author$project$ViewAllHero$viewHeroHealth = F2(
+	function (board, hero) {
+		var healthBarlen2 = (100 * hero.health) / hero.maxHealth;
+		var healthBarlen1 = (200 * hero.health) / hero.maxHealth;
+		var rightInfo = _Utils_eq(hero._class, $author$project$Data$Turret) ? _List_Nil : _List_fromArray(
 			[
 				A2(
 				$elm$svg$Svg$rect,
 				_List_fromArray(
 					[
-						$elm$svg$Svg$Attributes$width('100'),
-						$elm$svg$Svg$Attributes$height('10'),
+						$elm$svg$Svg$Attributes$width('200'),
+						$elm$svg$Svg$Attributes$height('20'),
 						$elm$svg$Svg$Attributes$x(
-						$elm$core$Debug$toString(x - 50)),
+						$elm$core$Debug$toString(
+							1740 - $author$project$Data$offsetHero(hero))),
 						$elm$svg$Svg$Attributes$y(
-						$elm$core$Debug$toString(y - 60)),
-						$elm$svg$Svg$Attributes$fill('transparent'),
+						$elm$core$Debug$toString((hero.indexOnBoard * 150) - 95)),
+						$elm$svg$Svg$Attributes$fill('black'),
 						$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
 						$elm$svg$Svg$Attributes$rx('5')
 					]),
@@ -12817,19 +13220,62 @@ var $author$project$ViewAllHero$viewHeroHealth = function (hero) {
 				_List_fromArray(
 					[
 						$elm$svg$Svg$Attributes$width(
-						$elm$core$Debug$toString(healthBarlen2)),
-						$elm$svg$Svg$Attributes$height('10'),
+						$elm$core$Debug$toString(healthBarlen1)),
+						$elm$svg$Svg$Attributes$height('20'),
 						$elm$svg$Svg$Attributes$x(
-						$elm$core$Debug$toString(x - 50)),
+						$elm$core$Debug$toString(
+							1740 - $author$project$Data$offsetHero(hero))),
 						$elm$svg$Svg$Attributes$y(
-						$elm$core$Debug$toString(y - 60)),
+						$elm$core$Debug$toString((hero.indexOnBoard * 150) - 95)),
 						$elm$svg$Svg$Attributes$fill('rgb(5,124,196)'),
 						$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
 						$elm$svg$Svg$Attributes$rx('5')
 					]),
 				_List_Nil)
-			]));
-};
+			]);
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, hero.pos);
+		var x = _v1.a;
+		var y = _v1.b;
+		return _Utils_ap(
+			rightInfo,
+			_List_fromArray(
+				[
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$width('100'),
+							$elm$svg$Svg$Attributes$height('10'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$Debug$toString(x - 50)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$Debug$toString(y - 60)),
+							$elm$svg$Svg$Attributes$fill('transparent'),
+							$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
+							$elm$svg$Svg$Attributes$rx('5')
+						]),
+					_List_Nil),
+					A2(
+					$elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$width(
+							$elm$core$Debug$toString(healthBarlen2)),
+							$elm$svg$Svg$Attributes$height('10'),
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$Debug$toString(x - 50)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$Debug$toString(y - 60)),
+							$elm$svg$Svg$Attributes$fill('rgb(5,124,196)'),
+							$elm$svg$Svg$Attributes$stroke('rgb(5,124,196)'),
+							$elm$svg$Svg$Attributes$rx('5')
+						]),
+					_List_Nil)
+				]));
+	});
 var $author$project$ViewAllHero$viewHeroImage = function (hero) {
 	var _class = $elm$core$Debug$toString(hero._class);
 	return _Utils_eq(hero._class, $author$project$Data$Turret) ? _List_Nil : _List_fromArray(
@@ -12976,68 +13422,75 @@ var $author$project$ViewAllHero$viewHeroOuterFrame = function (hero) {
 			_List_Nil)
 		]);
 };
-var $author$project$View$viewItem = function (item) {
-	var itemtype = $elm$core$Debug$toString(item.itemType);
-	var _v0 = $author$project$Data$findPos(item.pos);
-	var x = _v0.a;
-	var y = _v0.b;
-	var _v1 = item.itemType;
-	switch (_v1.$) {
-		case 'Gold':
-			return _List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$image,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$width('80'),
-							$elm$svg$Svg$Attributes$height('80'),
-							$elm$svg$Svg$Attributes$x(
-							$elm$core$Debug$toString(x - 40)),
-							$elm$svg$Svg$Attributes$y(
-							$elm$core$Debug$toString(y - 40)),
-							$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
-							$elm$svg$Svg$Attributes$xlinkHref('./assets/image/Gold.png'),
-							$elm$html$Html$Events$onClick(
-							$author$project$Message$Move(item.pos)),
-							$author$project$DetectMouse$onContentMenu(
-							$author$project$Message$Hit(item.pos))
-						]),
-					_List_Nil)
-				]);
-		case 'NoItem':
-			return _List_Nil;
-		default:
-			return _List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$image,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$width('80'),
-							$elm$svg$Svg$Attributes$height('80'),
-							$elm$svg$Svg$Attributes$x(
-							$elm$core$Debug$toString(x - 40)),
-							$elm$svg$Svg$Attributes$y(
-							$elm$core$Debug$toString(y - 40)),
-							$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
-							$elm$svg$Svg$Attributes$xlinkHref('./assets/image/' + (itemtype + '.png')),
-							$elm$html$Html$Events$onClick(
-							$author$project$Message$Move(item.pos)),
-							$author$project$DetectMouse$onContentMenu(
-							$author$project$Message$Hit(item.pos))
-						]),
-					_List_Nil)
-				]);
-	}
-};
+var $author$project$View$viewItem = F2(
+	function (board, item) {
+		var itemtype = $elm$core$Debug$toString(item.itemType);
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
+		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, item.pos);
+		var x = _v1.a;
+		var y = _v1.b;
+		var _v2 = item.itemType;
+		switch (_v2.$) {
+			case 'Gold':
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$image,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$width('80'),
+								$elm$svg$Svg$Attributes$height('80'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$Debug$toString(x - 40)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$Debug$toString(y - 40)),
+								$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
+								$elm$svg$Svg$Attributes$xlinkHref('./assets/image/Gold.png'),
+								$elm$html$Html$Events$onClick(
+								$author$project$Message$Move(item.pos)),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(item.pos))
+							]),
+						_List_Nil)
+					]);
+			case 'NoItem':
+				return _List_Nil;
+			default:
+				return _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$image,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$width('80'),
+								$elm$svg$Svg$Attributes$height('80'),
+								$elm$svg$Svg$Attributes$x(
+								$elm$core$Debug$toString(x - 40)),
+								$elm$svg$Svg$Attributes$y(
+								$elm$core$Debug$toString(y - 40)),
+								$elm$svg$Svg$Attributes$preserveAspectRatio('none'),
+								$elm$svg$Svg$Attributes$xlinkHref('./assets/image/' + (itemtype + '.png')),
+								$elm$html$Html$Events$onClick(
+								$author$project$Message$Move(item.pos)),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(item.pos))
+							]),
+						_List_Nil)
+					]);
+		}
+	});
 var $author$project$ViewOthers$viewLevel = function (level) {
 	var levelText = function () {
-		if (!level) {
-			return 'Tutorial Level';
-		} else {
-			var k = level;
-			return 'Level ' + $elm$core$Debug$toString(k);
+		switch (level) {
+			case 0:
+				return 'Tutorial Level';
+			case 6:
+				return 'Boss Level';
+			default:
+				var k = level;
+				return 'Level ' + $elm$core$Debug$toString(k);
 		}
 	}();
 	return A2(
@@ -13063,32 +13516,159 @@ var $author$project$ViewOthers$viewLevel = function (level) {
 var $elm$core$String$concat = function (strings) {
 	return A2($elm$core$String$join, '', strings);
 };
+var $author$project$ViewOthers$rotateHexagonSelf = F2(
+	function (_v0, theta) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return _Utils_Tuple2(
+			(x * $elm$core$Basics$cos(theta)) - (y * $elm$core$Basics$sin(theta)),
+			(x * $elm$core$Basics$sin(theta)) + (y * $elm$core$Basics$cos(theta)));
+	});
+var $author$project$Data$vecAddFloat = F2(
+	function (_v0, _v1) {
+		var x1 = _v0.a;
+		var y1 = _v0.b;
+		var x2 = _v1.a;
+		var y2 = _v1.b;
+		return _Utils_Tuple2(x1 + x2, y1 + y2);
+	});
+var $author$project$ViewOthers$fixedPoints = function (_v0) {
+	var x = _v0.a;
+	var y = _v0.b;
+	return A2(
+		$elm$core$List$map,
+		$author$project$Data$vecAddFloat(
+			_Utils_Tuple2(x, y)),
+		A2(
+			$elm$core$List$map,
+			$author$project$ViewOthers$rotateHexagonSelf(
+				_Utils_Tuple2(70, 0)),
+			_List_fromArray(
+				[((-5) / 6) * $elm$core$Basics$pi, ((-1) / 2) * $elm$core$Basics$pi, ((-1) / 6) * $elm$core$Basics$pi, (1 / 6) * $elm$core$Basics$pi, (1 / 2) * $elm$core$Basics$pi, (5 / 6) * $elm$core$Basics$pi])));
+};
 var $author$project$Data$posToString = function (_v0) {
 	var x = _v0.a;
 	var y = _v0.b;
 	return $elm$core$String$fromFloat(x) + (',' + ($elm$core$String$fromFloat(y) + ' '));
 };
-var $author$project$ViewOthers$detPoints = function (_v0) {
-	var x = _v0.a;
-	var y = _v0.b;
-	return $elm$core$String$concat(
-		A2(
-			$elm$core$List$map,
-			$author$project$Data$posToString,
-			_List_fromArray(
-				[
-					_Utils_Tuple2(x, y - 70),
-					_Utils_Tuple2(x + $author$project$Data$halfWid, y - 35),
-					_Utils_Tuple2(x + $author$project$Data$halfWid, y + 35),
-					_Utils_Tuple2(x, y + 70),
-					_Utils_Tuple2(x - $author$project$Data$halfWid, y + 35),
-					_Utils_Tuple2(x - $author$project$Data$halfWid, y - 35)
-				])));
-};
+var $author$project$ViewOthers$detPoints = F3(
+	function (board, _v0, _v1) {
+		var row = _v0.a;
+		var column = _v0.b;
+		var x = _v1.a;
+		var y = _v1.b;
+		var _v2 = board.mapRotating;
+		var rotating = _v2.a;
+		var time = _v2.b;
+		if (rotating) {
+			var _v3 = board.level;
+			if (_v3 === 5) {
+				var deltaTheta = (A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) === 4) ? (((-$elm$core$Basics$pi) / 3) * time) : ((A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) === 2) ? (($elm$core$Basics$pi / 3) * time) : 0);
+				return $elm$core$String$concat(
+					A2(
+						$elm$core$List$map,
+						$author$project$Data$posToString,
+						A2(
+							$elm$core$List$map,
+							$author$project$Data$vecAddFloat(
+								_Utils_Tuple2(x, y)),
+							A2(
+								$elm$core$List$map,
+								$author$project$ViewOthers$rotateHexagonSelf(
+									_Utils_Tuple2(70, 0)),
+								A2(
+									$elm$core$List$map,
+									$elm$core$Basics$add(deltaTheta),
+									_List_fromArray(
+										[((-5) / 6) * $elm$core$Basics$pi, ((-1) / 2) * $elm$core$Basics$pi, ((-1) / 6) * $elm$core$Basics$pi, (1 / 6) * $elm$core$Basics$pi, (1 / 2) * $elm$core$Basics$pi, (5 / 6) * $elm$core$Basics$pi]))))));
+			} else {
+				var deltaTheta2 = A2(
+					$elm$core$List$member,
+					_Utils_Tuple2(row, column),
+					$elm$core$List$concat(
+						A2(
+							$elm$core$List$map,
+							function (pos) {
+								return A2(
+									$elm$core$List$map,
+									$author$project$Data$vecAdd(pos),
+									A2(
+										$elm$core$List$cons,
+										_Utils_Tuple2(0, 0),
+										$author$project$Data$neighbour));
+							},
+							_List_fromArray(
+								[
+									_Utils_Tuple2(2, 5),
+									_Utils_Tuple2(5, 8),
+									_Utils_Tuple2(8, 2)
+								])))) ? (($elm$core$Basics$pi / 3) * time) : (A2(
+					$elm$core$List$member,
+					_Utils_Tuple2(row, column),
+					$elm$core$List$concat(
+						A2(
+							$elm$core$List$map,
+							function (pos) {
+								return A2(
+									$elm$core$List$map,
+									$author$project$Data$vecAdd(pos),
+									A2(
+										$elm$core$List$cons,
+										_Utils_Tuple2(0, 0),
+										$author$project$Data$neighbour));
+							},
+							_List_fromArray(
+								[
+									_Utils_Tuple2(5, 5),
+									_Utils_Tuple2(2, 8),
+									_Utils_Tuple2(8, 5),
+									_Utils_Tuple2(5, 2)
+								])))) ? (((-$elm$core$Basics$pi) / 3) * time) : 0);
+				var deltaTheta1 = (A2(
+					$author$project$Data$distance,
+					_Utils_Tuple2(5, 5),
+					_Utils_Tuple2(row, column)) > 1) ? (($elm$core$Basics$pi / 3) * time) : 0;
+				var deltaTheta = deltaTheta1 + deltaTheta2;
+				return $elm$core$String$concat(
+					A2(
+						$elm$core$List$map,
+						$author$project$Data$posToString,
+						A2(
+							$elm$core$List$map,
+							$author$project$Data$vecAddFloat(
+								_Utils_Tuple2(x, y)),
+							A2(
+								$elm$core$List$map,
+								$author$project$ViewOthers$rotateHexagonSelf(
+									_Utils_Tuple2(70, 0)),
+								A2(
+									$elm$core$List$map,
+									$elm$core$Basics$add(deltaTheta),
+									_List_fromArray(
+										[((-5) / 6) * $elm$core$Basics$pi, ((-1) / 2) * $elm$core$Basics$pi, ((-1) / 6) * $elm$core$Basics$pi, (1 / 6) * $elm$core$Basics$pi, (1 / 2) * $elm$core$Basics$pi, (5 / 6) * $elm$core$Basics$pi]))))));
+			}
+		} else {
+			return $elm$core$String$concat(
+				A2(
+					$elm$core$List$map,
+					$author$project$Data$posToString,
+					$author$project$ViewOthers$fixedPoints(
+						_Utils_Tuple2(x, y))));
+		}
+	});
 var $elm$svg$Svg$Attributes$points = _VirtualDom_attribute('points');
 var $elm$svg$Svg$polygon = $elm$svg$Svg$trustedNode('polygon');
 var $author$project$View$viewCell = F2(
 	function (board, pos) {
+		var _v0 = board.mapRotating;
+		var rotating = _v0.a;
+		var time = _v0.b;
 		return A2(
 			$elm$core$List$member,
 			pos,
@@ -13109,8 +13689,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('black'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$author$project$DetectMouse$onContentMenu(
 					$author$project$Message$Hit(pos))
 				]),
@@ -13121,8 +13704,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('rgb(154,205,50)'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$elm$html$Html$Events$onClick(
 					$author$project$Message$Move(pos)),
 					$author$project$DetectMouse$onContentMenu(
@@ -13150,8 +13736,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('yellow'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$author$project$DetectMouse$onContentMenu(
 					$author$project$Message$Hit(pos))
 				]),
@@ -13162,8 +13751,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('rgb(132,112,255)'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$elm$html$Html$Events$onClick(
 					$author$project$Message$Move(pos)),
 					$author$project$DetectMouse$onContentMenu(
@@ -13181,8 +13773,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('rgb(173,216,230)'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$author$project$DetectMouse$onContentMenu(
 					$author$project$Message$Hit(pos))
 				]),
@@ -13193,8 +13788,11 @@ var $author$project$View$viewCell = F2(
 					$elm$svg$Svg$Attributes$fill('white'),
 					$elm$svg$Svg$Attributes$stroke('blue'),
 					$elm$svg$Svg$Attributes$points(
-					$author$project$ViewOthers$detPoints(
-						$author$project$Data$findPos(pos))),
+					A3(
+						$author$project$ViewOthers$detPoints,
+						board,
+						pos,
+						A4($author$project$Data$findPos, rotating, board.level, time, pos))),
 					$elm$svg$Svg$Attributes$opacity('75%'),
 					$elm$html$Html$Events$onClick(
 					$author$project$Message$Move(pos)),
@@ -13369,62 +13967,73 @@ var $author$project$View$viewBoard = function (model) {
 						_Utils_ap(
 							$author$project$View$viewMap(model.board),
 							_Utils_ap(
-								$elm$core$List$concat(
-									A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroOuterFrame, model.board.heroes)),
+								A2($elm$core$List$map, $author$project$ViewOthers$viewCoordinate, model.board.map),
 								_Utils_ap(
 									$elm$core$List$concat(
-										A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroInnerFrame, model.board.heroes)),
+										A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroOuterFrame, model.board.heroes)),
 									_Utils_ap(
 										$elm$core$List$concat(
-											A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroImage, model.board.heroes)),
+											A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroInnerFrame, model.board.heroes)),
 										_Utils_ap(
 											$elm$core$List$concat(
-												A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroCondition, model.board.heroes)),
+												A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroImage, model.board.heroes)),
 											_Utils_ap(
 												$elm$core$List$concat(
-													A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroHealth, model.board.heroes)),
+													A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroCondition, model.board.heroes)),
 												_Utils_ap(
-													A2(
-														$elm$core$List$map,
-														$author$project$ViewAllEnemy$viewEnemyOuterFrame(model.board),
-														model.board.enemies),
+													$elm$core$List$concat(
+														A2(
+															$elm$core$List$map,
+															$author$project$ViewAllHero$viewHeroHealth(model.board),
+															model.board.heroes)),
 													_Utils_ap(
 														A2(
 															$elm$core$List$map,
-															$author$project$ViewAllEnemy$viewEnemyInnerFrame(model.board),
+															$author$project$ViewAllEnemy$viewEnemyOuterFrame(model.board),
 															model.board.enemies),
 														_Utils_ap(
 															A2(
 																$elm$core$List$map,
-																$author$project$ViewAllEnemy$viewEnemyImage(model.board),
+																$author$project$ViewAllEnemy$viewEnemyInnerFrame(model.board),
 																model.board.enemies),
 															_Utils_ap(
-																$elm$core$List$concat(
-																	A2(
-																		$elm$core$List$map,
-																		$author$project$ViewAllEnemy$viewEnemyCondition(model.board),
-																		model.board.enemies)),
+																A2(
+																	$elm$core$List$map,
+																	$author$project$ViewAllEnemy$viewEnemyImage(model.board),
+																	model.board.enemies),
 																_Utils_ap(
 																	$elm$core$List$concat(
 																		A2(
 																			$elm$core$List$map,
-																			$author$project$ViewAllEnemy$viewEnemyHealth(model.board),
+																			$author$project$ViewAllEnemy$viewEnemyCondition(model.board),
 																			model.board.enemies)),
 																	_Utils_ap(
-																		A2($elm$core$List$map, $author$project$View$viewCrate, model.board.obstacles),
+																		$elm$core$List$concat(
+																			A2(
+																				$elm$core$List$map,
+																				$author$project$ViewAllEnemy$viewEnemyHealth(model.board),
+																				model.board.enemies)),
 																		_Utils_ap(
-																			A2($elm$core$List$concatMap, $author$project$View$viewItem, model.board.item),
+																			A2(
+																				$elm$core$List$map,
+																				$author$project$View$viewCrate(model.board),
+																				model.board.obstacles),
 																			_Utils_ap(
-																				A4($author$project$ViewOthers$viewUIFrame, 420, 500, 1570, 500),
+																				A2(
+																					$elm$core$List$concatMap,
+																					$author$project$View$viewItem(model.board),
+																					model.board.item),
 																				_Utils_ap(
-																					A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
+																					A4($author$project$ViewOthers$viewUIFrame, 420, 500, 1570, 500),
 																					_Utils_ap(
-																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 50, 800),
-																						_List_fromArray(
-																							[
-																								$author$project$ViewOthers$viewCoinSVG(
-																								_Utils_Tuple2(1700, 785))
-																							]))))))))))))))))))),
+																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
+																						_Utils_ap(
+																							A4($author$project$ViewOthers$viewUIButton, 170, 80, 50, 800),
+																							_List_fromArray(
+																								[
+																									$author$project$ViewOthers$viewCoinSVG(
+																									_Utils_Tuple2(1700, 785))
+																								])))))))))))))))))))),
 					$author$project$ViewOthers$endTurnButton,
 					$author$project$ViewOthers$viewCritical(model.board),
 					$author$project$ViewOthers$viewBoardCoin(model.board),
@@ -13458,7 +14067,7 @@ var $author$project$View$viewBoard = function (model) {
 			_Utils_ap(
 				A2(
 					$elm$core$List$map,
-					$author$project$ViewAllHero$viewHero,
+					$author$project$ViewAllHero$viewHero(model.board),
 					A2(
 						$elm$core$List$sortBy,
 						function ($) {
@@ -13471,7 +14080,7 @@ var $author$project$View$viewBoard = function (model) {
 					_Utils_ap(
 						A2(
 							$elm$core$List$map,
-							$author$project$ViewAllEnemy$viewEnemy,
+							$author$project$ViewAllEnemy$viewEnemy(model.board),
 							A2(
 								$elm$core$List$sortBy,
 								function ($) {
@@ -14010,27 +14619,6 @@ var $author$project$ViewDialog$viewDialogBox = A2(
 			$elm$svg$Svg$Attributes$xlinkHref('./assets/image/dialogBox.png')
 		]),
 	_List_Nil);
-var $author$project$ViewDialog$viewDarkKnightDialog = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-			A2($elm$html$Html$Attributes$style, 'top', '100px'),
-			A2($elm$html$Html$Attributes$style, 'left', '1180px'),
-			A2($elm$html$Html$Attributes$style, 'transform', 'scaleX(-1)')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$img,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$src('./assets/image/EvilNPC.png'),
-					$elm$html$Html$Attributes$height(400),
-					$elm$html$Html$Attributes$width(480)
-				]),
-			_List_Nil)
-		]));
 var $author$project$ViewDialog$viewDialogContent = function (string) {
 	return A2(
 		$elm$html$Html$div,
@@ -14064,6 +14652,64 @@ var $author$project$ViewDialog$viewMainCharacterDialog = A2(
 			_List_fromArray(
 				[
 					$elm$html$Html$Attributes$src('./assets/image/MainCharacter.png'),
+					$elm$html$Html$Attributes$height(400),
+					$elm$html$Html$Attributes$width(480)
+				]),
+			_List_Nil)
+		]));
+var $author$project$ViewDialog$viewSkullKnightDialog = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+			A2($elm$html$Html$Attributes$style, 'top', '100px'),
+			A2($elm$html$Html$Attributes$style, 'left', '1180px'),
+			A2($elm$html$Html$Attributes$style, 'transform', 'scaleX(-1)')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$img,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$src('./assets/image/SkullKnight.png'),
+					$elm$html$Html$Attributes$height(400),
+					$elm$html$Html$Attributes$width(480)
+				]),
+			_List_Nil)
+		]));
+var $author$project$ViewDialog$viewDialogBoss = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'width', '100%'),
+			A2($elm$html$Html$Attributes$style, 'height', '100%'),
+			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+			A2($elm$html$Html$Attributes$style, 'left', '0'),
+			A2($elm$html$Html$Attributes$style, 'top', '0')
+		]),
+	_List_fromArray(
+		[
+			$author$project$ViewDialog$viewMainCharacterDialog,
+			$author$project$ViewDialog$viewSkullKnightDialog,
+			$author$project$ViewDialog$viewDialogContent($author$project$NPC$npcBoss.dialogue)
+		]));
+var $author$project$ViewDialog$viewDarkKnightDialog = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+			A2($elm$html$Html$Attributes$style, 'top', '100px'),
+			A2($elm$html$Html$Attributes$style, 'left', '1180px'),
+			A2($elm$html$Html$Attributes$style, 'transform', 'scaleX(-1)')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$img,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$src('./assets/image/EvilNPC.png'),
 					$elm$html$Html$Attributes$height(400),
 					$elm$html$Html$Attributes$width(480)
 				]),
@@ -14170,27 +14816,6 @@ var $author$project$ViewDialog$viewDialogGeneral = A2(
 						]),
 					_List_Nil)
 				]))
-		]));
-var $author$project$ViewDialog$viewSkullKnightDialog = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-			A2($elm$html$Html$Attributes$style, 'top', '100px'),
-			A2($elm$html$Html$Attributes$style, 'left', '1180px'),
-			A2($elm$html$Html$Attributes$style, 'transform', 'scaleX(-1)')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$img,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$src('./assets/image/SkullKnight.png'),
-					$elm$html$Html$Attributes$height(400),
-					$elm$html$Html$Attributes$width(480)
-				]),
-			_List_Nil)
 		]));
 var $author$project$ViewDialog$viewDialogSkullKnight1 = A2(
 	$elm$html$Html$div,
@@ -14330,7 +14955,7 @@ var $author$project$ViewDialog$viewFinishTutorial = A2(
 			A7($author$project$ViewOthers$dialogHelper, 1300, 450, 370, 560, 50, 'blue', 'Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue.')
 		]));
 var $author$project$ViewDialog$viewDialogMatch = function (task) {
-	_v0$7:
+	_v0$8:
 	while (true) {
 		switch (task.$) {
 			case 'MeetElder':
@@ -14349,11 +14974,13 @@ var $author$project$ViewDialog$viewDialogMatch = function (task) {
 						return $author$project$ViewDialog$viewDialogSkullKnight2;
 					case 5:
 						return $author$project$ViewDialog$viewDialogSkullKnight3;
+					case 6:
+						return $author$project$ViewDialog$viewDialogBoss;
 					default:
-						break _v0$7;
+						break _v0$8;
 				}
 			default:
-				break _v0$7;
+				break _v0$8;
 		}
 	}
 	return $author$project$ViewDialog$viewDialogGeneral;
@@ -15136,8 +15763,6 @@ var $author$project$ViewChoose$viewHeroChoose = function (model) {
 				$author$project$ViewChoose$confirmButton
 			]));
 };
-var $elm$core$Basics$pi = _Basics_pi;
-var $elm$core$Basics$sin = _Basics_sin;
 var $author$project$ViewScenes$determineOpct = function (t) {
 	return (t <= 6) ? (($elm$core$Basics$sin((t * $elm$core$Basics$pi) / 6) * 2) / 1.732) : 0;
 };
@@ -15644,7 +16269,7 @@ var $author$project$ViewTutorial$viewTutorial1 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(5, 5)),
 					'blue',
 					_Utils_Tuple2(0, 0))
@@ -15678,7 +16303,7 @@ var $author$project$ViewTutorial$viewTutorial10 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(5, 4)),
 					'blue',
 					_Utils_Tuple2(5, 4))
@@ -15709,7 +16334,7 @@ var $author$project$ViewTutorial$viewTutorial11 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(2, 7)),
 					'blue',
 					_Utils_Tuple2(2, 7))
@@ -15740,7 +16365,7 @@ var $author$project$ViewTutorial$viewTutorial12 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(7, 2)),
 					'blue',
 					_Utils_Tuple2(7, 2))
@@ -15793,7 +16418,7 @@ var $author$project$ViewTutorial$viewTutorial2 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(2, 8)),
 					'blue',
 					_Utils_Tuple2(0, 0))
@@ -15824,7 +16449,7 @@ var $author$project$ViewTutorial$viewTutorial3 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(3, 7)),
 					'blue',
 					_Utils_Tuple2(3, 7))
@@ -15855,7 +16480,7 @@ var $author$project$ViewTutorial$viewTutorial4 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(4, 6)),
 					'blue',
 					_Utils_Tuple2(4, 6))
@@ -15886,7 +16511,7 @@ var $author$project$ViewTutorial$viewTutorial5 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(2, 7)),
 					'blue',
 					_Utils_Tuple2(0, 0))
@@ -15917,7 +16542,7 @@ var $author$project$ViewTutorial$viewTutorial6 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(5, 4)),
 					'blue',
 					_Utils_Tuple2(5, 4))
@@ -15986,7 +16611,7 @@ var $author$project$ViewTutorial$viewTutorial8 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(4, 6)),
 					'blue',
 					_Utils_Tuple2(4, 6))
@@ -16017,7 +16642,7 @@ var $author$project$ViewTutorial$viewTutorial9 = A2(
 					A4(
 					$author$project$ViewOthers$shapeHelper,
 					_Utils_Tuple2(100, 100),
-					$author$project$Data$findPos(
+					$author$project$Data$findFixedPos(
 						_Utils_Tuple2(4, 5)),
 					'blue',
 					_Utils_Tuple2(4, 5))
@@ -16121,62 +16746,73 @@ var $author$project$View$viewTutorial = F2(
 						_Utils_ap(
 							$author$project$View$viewMap(model.board),
 							_Utils_ap(
-								$elm$core$List$concat(
-									A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroOuterFrame, model.board.heroes)),
+								A2($elm$core$List$map, $author$project$ViewOthers$viewCoordinate, model.board.map),
 								_Utils_ap(
 									$elm$core$List$concat(
-										A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroInnerFrame, model.board.heroes)),
+										A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroOuterFrame, model.board.heroes)),
 									_Utils_ap(
 										$elm$core$List$concat(
-											A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroImage, model.board.heroes)),
+											A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroInnerFrame, model.board.heroes)),
 										_Utils_ap(
 											$elm$core$List$concat(
-												A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroCondition, model.board.heroes)),
+												A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroImage, model.board.heroes)),
 											_Utils_ap(
 												$elm$core$List$concat(
-													A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroHealth, model.board.heroes)),
+													A2($elm$core$List$map, $author$project$ViewAllHero$viewHeroCondition, model.board.heroes)),
 												_Utils_ap(
-													A2(
-														$elm$core$List$map,
-														$author$project$ViewAllEnemy$viewEnemyOuterFrame(model.board),
-														model.board.enemies),
+													$elm$core$List$concat(
+														A2(
+															$elm$core$List$map,
+															$author$project$ViewAllHero$viewHeroHealth(model.board),
+															model.board.heroes)),
 													_Utils_ap(
 														A2(
 															$elm$core$List$map,
-															$author$project$ViewAllEnemy$viewEnemyInnerFrame(model.board),
+															$author$project$ViewAllEnemy$viewEnemyOuterFrame(model.board),
 															model.board.enemies),
 														_Utils_ap(
 															A2(
 																$elm$core$List$map,
-																$author$project$ViewAllEnemy$viewEnemyImage(model.board),
+																$author$project$ViewAllEnemy$viewEnemyInnerFrame(model.board),
 																model.board.enemies),
 															_Utils_ap(
-																$elm$core$List$concat(
-																	A2(
-																		$elm$core$List$map,
-																		$author$project$ViewAllEnemy$viewEnemyCondition(model.board),
-																		model.board.enemies)),
+																A2(
+																	$elm$core$List$map,
+																	$author$project$ViewAllEnemy$viewEnemyImage(model.board),
+																	model.board.enemies),
 																_Utils_ap(
 																	$elm$core$List$concat(
 																		A2(
 																			$elm$core$List$map,
-																			$author$project$ViewAllEnemy$viewEnemyHealth(model.board),
+																			$author$project$ViewAllEnemy$viewEnemyCondition(model.board),
 																			model.board.enemies)),
 																	_Utils_ap(
-																		A2($elm$core$List$map, $author$project$View$viewCrate, model.board.obstacles),
+																		$elm$core$List$concat(
+																			A2(
+																				$elm$core$List$map,
+																				$author$project$ViewAllEnemy$viewEnemyHealth(model.board),
+																				model.board.enemies)),
 																		_Utils_ap(
-																			A2($elm$core$List$concatMap, $author$project$View$viewItem, model.board.item),
+																			A2(
+																				$elm$core$List$map,
+																				$author$project$View$viewCrate(model.board),
+																				model.board.obstacles),
 																			_Utils_ap(
-																				A4($author$project$ViewOthers$viewUIFrame, 420, 500, 1570, 500),
+																				A2(
+																					$elm$core$List$concatMap,
+																					$author$project$View$viewItem(model.board),
+																					model.board.item),
 																				_Utils_ap(
-																					A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
+																					A4($author$project$ViewOthers$viewUIFrame, 420, 500, 1570, 500),
 																					_Utils_ap(
-																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 50, 800),
-																						_List_fromArray(
-																							[
-																								$author$project$ViewOthers$viewCoinSVG(
-																								_Utils_Tuple2(1700, 785))
-																							]))))))))))))))))))),
+																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
+																						_Utils_ap(
+																							A4($author$project$ViewOthers$viewUIButton, 170, 80, 50, 800),
+																							_List_fromArray(
+																								[
+																									$author$project$ViewOthers$viewCoinSVG(
+																									_Utils_Tuple2(1700, 785))
+																								])))))))))))))))))))),
 				_Utils_ap(
 					A2($author$project$ViewTutorial$viewTutorialScene, model, k),
 					_Utils_ap(
@@ -16191,7 +16827,7 @@ var $author$project$View$viewTutorial = F2(
 						_Utils_ap(
 							A2(
 								$elm$core$List$map,
-								$author$project$ViewAllHero$viewHero,
+								$author$project$ViewAllHero$viewHero(model.board),
 								A2(
 									$elm$core$List$sortBy,
 									function ($) {
@@ -16204,7 +16840,7 @@ var $author$project$View$viewTutorial = F2(
 								_Utils_ap(
 									A2(
 										$elm$core$List$map,
-										$author$project$ViewAllEnemy$viewEnemy,
+										$author$project$ViewAllEnemy$viewEnemy(model.board),
 										A2(
 											$elm$core$List$sortBy,
 											function ($) {
@@ -16348,9 +16984,7 @@ var $author$project$ViewShop$upgradeButton = function (model) {
 		return _List_Nil;
 	}
 };
-var $elm$svg$Svg$Attributes$dominantBaseline = _VirtualDom_attribute('dominant-baseline');
 var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $author$project$ViewShop$viewHeroAttr = function (model) {
 	var maybeChosen = $elm$core$List$head(
 		A2(
