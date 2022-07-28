@@ -37,14 +37,14 @@ updateAttackable board =
         Just hero ->
             let
                 realattackRange =
-                    if hero.energy >= 3 && hero.class /= Turret then
+                    if hero.class /= Turret then
                         List.map (vecAdd hero.pos) (attackRange board hero)
 
                     else
                         []
 
                 realskillRange =
-                    if hero.energy >= 3 && hero.class /= Turret then
+                    if hero.class /= Turret then
                         case hero.class of
                             Healer ->
                                 List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)

@@ -31,39 +31,41 @@ checkAttack board pos critical =
             board
 
         Just hero ->
-            if hero.energy > 2 && isMeaningfulAttack board hero.class pos then
-                --    if hero.energy > 2 && List.member pos (listIntersection (List.map .pos board.enemies ++ List.map .pos board.obstacles) board.attackable) then
-                let
+            if isMeaningfulAttack board hero.class pos then
+                if hero.energy > 2 then
+                    let
+                        newheroes =
+                            { hero | energy = hero.energy - 3, state = Attacking } :: unselectedHero board.heroes
 
-                    newheroes =
-                        { hero | energy = hero.energy - 3, state = Attacking } :: unselectedHero board.heroes
+                        newcritical =
+                            case critical of
+                                Less ->
+                                    -2
 
-                    newcritical =
-                        case critical of
-                            Less ->
-                                -2
+                                Low ->
+                                    2
 
-                            Low ->
-                                2
+                                Medium ->
+                                    4
 
-                            Medium ->
-                                4
+                                High ->
+                                    6
 
-                            High ->
-                                6
+                                _ ->
+                                    0
 
-                            _ ->
-                                0
+                        attackedPoslist =
+                            case hero.class of
+                                Mage ->
+                                    pos :: List.map (vecAdd pos) neighbour
 
-                    attackedPoslist =
-                        case hero.class of
-                            Mage ->
-                                pos :: List.map (vecAdd pos) neighbour
+                                _ ->
+                                    [ pos ]
+                    in
+                    List.foldl (checkAttackTarget hero) { board | critical = newcritical, heroes = newheroes, boardState = HeroAttack } attackedPoslist
 
-                            _ ->
-                                [ pos ]
-                in
-                List.foldl (checkAttackTarget hero) { board | critical = newcritical, heroes = newheroes, boardState = HeroAttack } attackedPoslist
+                else
+                    { board | popUpHint = ( LackEnergy, 0 ) }
 
             else
                 board

@@ -35,30 +35,30 @@ checkLeaveCastle model =
             { model | mode = Shop, character = { character | width = 100, height = 100, pos = ( 782, 882 ), speed = 800 } }
 
         else if Tuple.first model.popUpHint == Noop then
-            model
+            { model | popUpHint = ( FailtoEnter ShopScene, 0 ) }
 
         else
-            { model | popUpHint = ( FailtoEnter ShopScene, 0 ) }
+            model
 
     else if x > 320 && x < 440 && y < 810 && y > 780 then
         if model.unlockDungeon then
             { model | mode = Dungeon, character = { character | pos = ( 1002, 962 ) } }
 
         else if Tuple.first model.popUpHint == Noop then
-            model
+            { model | popUpHint = ( FailtoEnter DungeonScene, 0 ) }
 
         else
-            { model | popUpHint = ( FailtoEnter DungeonScene, 0 ) }
+            model
 
     else if x > 930 && x < 1080 && y <= 430 && y > 380 then
         if model.unlockDungeon2 then
             { model | mode = Dungeon2, character = { character | pos = ( 1002, 962 ) } }
 
         else if Tuple.first model.popUpHint == Noop then
-            model
+            { model | popUpHint = ( FailtoEnter Dungeon2Scene, 0 ) }
 
         else
-            { model | popUpHint = ( FailtoEnter Dungeon2Scene, 0 ) }
+            model
 
     else
         model

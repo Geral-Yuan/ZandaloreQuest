@@ -277,17 +277,21 @@ moveHero board clickpos =
                     ( board, Nothing )
 
                 Just hero ->
-                    if distance clickpos hero.pos == 1 && not (List.member clickpos (unMoveable board)) && hero.energy >= 2 then
-                        ( { board | heroes = { hero | pos = clickpos, energy = hero.energy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
-                        , Just hero.indexOnBoard
-                        )
+                    if distance clickpos hero.pos == 1 && not (List.member clickpos (unMoveable board)) then
+                        if hero.energy >= 2 then
+                            ( { board | heroes = { hero | pos = clickpos, energy = hero.energy - 2, state = Moving } :: unselectedHero board.heroes, boardState = HeroMoving }
+                            , Just hero.indexOnBoard
+                            )
+
+                        else
+                            ( { board | popUpHint = ( LackEnergy, 0 ) }, Nothing )
 
                     else
                         ( board, Nothing )
     in
     case index of
         Nothing ->
-            board
+            nboard
 
         Just n ->
             nboard
