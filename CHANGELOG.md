@@ -6,6 +6,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## [m1.54] -- 2022-7-27
+
+### Changed
+
+- fix the wrong text in lucky draw
+
 ## [m1.55] -- 2022-7-28
 
 ### Added
