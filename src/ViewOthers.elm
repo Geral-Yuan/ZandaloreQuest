@@ -246,7 +246,7 @@ skipButton : Html Msg
 skipButton =
     button
         [ HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "top" "700px"
+        , HtmlAttr.style "top" "800px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "bold"
@@ -261,6 +261,27 @@ skipButton =
         , onClick (Kill False)
         ]
         [ text "Skip" ]
+
+
+hintButton : Html Msg
+hintButton =
+    button
+        [ HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "top" "700px"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
+        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "height" "80px"
+        , HtmlAttr.style "left" "29px"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "outline" "none"
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "width" "170px"
+        , HtmlAttr.style "border" "transparent"
+        , onClick (Kill False)
+        ]
+        [ text "Hint" ]
 
 
 viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)

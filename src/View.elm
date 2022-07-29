@@ -131,14 +131,16 @@ viewTutorial k model =
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
-                -- UI for encyclopedia button
+                -- UI for skip button
                 ++ viewUIButton 170 80 29 700
+                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
             :: viewTutorialScene model k
             ++ [ endTurnButton
                , skipButton
+               , hintButton
                , viewCritical model.board
                , viewBoardCoin model.board
                , viewLevel model.level
@@ -205,18 +207,19 @@ viewBoard model =
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
-                -- UI for encyclopedia button
+                -- UI for skip button
                 ++ viewUIButton 170 80 29 700
+                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
          , endTurnButton
          , skipButton
+         , hintButton
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
-         , viewEncyclopediaButton
          , div
             [ HtmlAttr.style "bottom" "20px"
             , HtmlAttr.style "left" "0px"
