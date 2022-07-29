@@ -7,7 +7,7 @@ import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
-import Svg exposing (Svg, text, view)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
@@ -458,17 +458,32 @@ viewTipForDir =
 viewTipForT : Html Msg
 viewTipForT =
     div
-        [ HtmlAttr.style "top" "30px"
-        , HtmlAttr.style "left" "0px"
+        [ HtmlAttr.style "top" "900px"
+        , HtmlAttr.style "left" "800px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-size" "22px"
+        , HtmlAttr.style "font-size" "32px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Press T to access all levels" ]
+
+
+
+--    div
+--        [ HtmlAttr.style "top" "30px"
+--        , HtmlAttr.style "left" "0px"
+--        , HtmlAttr.style "color" "white"
+--        , HtmlAttr.style "font-family" "myfont"
+--        , HtmlAttr.style "font-size" "22px"
+--        , HtmlAttr.style "font-weight" "bold"
+--        , HtmlAttr.style "text-align" "center"
+--        , HtmlAttr.style "line-height" "60px"
+--        , HtmlAttr.style "position" "absolute"
+--        ]
+--        [ text "Press T to access all levels" ]
 
 
 viewTipForC : Html Msg

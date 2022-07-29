@@ -6374,7 +6374,7 @@ var $author$project$Board$initObstacles = function (k) {
 					$author$project$Data$Obstacle,
 					$author$project$Data$MysteryBox,
 					_Utils_Tuple2(5, 5),
-					$author$project$Data$Gold(3)),
+					$author$project$Data$Gold(5)),
 					A3(
 					$author$project$Data$Obstacle,
 					$author$project$Data$MysteryBox,
@@ -6405,7 +6405,7 @@ var $author$project$Board$initObstacles = function (k) {
 						$author$project$Data$Obstacle,
 						$author$project$Data$MysteryBox,
 						_Utils_Tuple2(4, 8),
-						$author$project$Data$Gold(3)),
+						$author$project$Data$Gold(5)),
 						A3(
 						$author$project$Data$Obstacle,
 						$author$project$Data$MysteryBox,
@@ -6433,7 +6433,7 @@ var $author$project$Board$initObstacles = function (k) {
 						$author$project$Data$Obstacle,
 						$author$project$Data$MysteryBox,
 						_Utils_Tuple2(2, 8),
-						$author$project$Data$Gold(3)),
+						$author$project$Data$Gold(5)),
 						A3(
 						$author$project$Data$Obstacle,
 						$author$project$Data$MysteryBox,
@@ -6448,7 +6448,7 @@ var $author$project$Board$initObstacles = function (k) {
 						$author$project$Data$Obstacle,
 						$author$project$Data$MysteryBox,
 						_Utils_Tuple2(8, 2),
-						$author$project$Data$Gold(3))
+						$author$project$Data$Gold(5))
 					]));
 		case 3:
 			return _List_Nil;
@@ -6517,7 +6517,7 @@ var $author$project$Data$Enemy = function (_class) {
 };
 var $author$project$Data$Turret = {$: 'Turret'};
 var $author$project$Data$initBoss = $author$project$Data$Enemy($author$project$Data$Turret)(
-	_Utils_Tuple2(5, 5))(200)(200)(10)(0)(true)($author$project$Data$Waiting)(false)(1)(true)(1);
+	_Utils_Tuple2(5, 5))(300)(300)(20)(0)(true)($author$project$Data$Waiting)(false)(1)(true)(1);
 var $author$project$Data$sampleEnemy = F3(
 	function (_class, pos, index) {
 		switch (_class.$) {
@@ -10438,6 +10438,16 @@ var $author$project$Data$TakingEnergy = {$: 'TakingEnergy'};
 var $author$project$Data$TakingHealth = function (a) {
 	return {$: 'TakingHealth', a: a};
 };
+var $author$project$UpdateBoard$fullEnergy = function (_class) {
+	switch (_class.$) {
+		case 'Assassin':
+			return 6;
+		case 'Mage':
+			return 3;
+		default:
+			return 5;
+	}
+};
 var $author$project$UpdateBoard$checkHeroItem = F2(
 	function (hero, board) {
 		var otherHeroes = A2(
@@ -10454,7 +10464,7 @@ var $author$project$UpdateBoard$checkHeroItem = F2(
 		var _v0 = chosenItem.itemType;
 		switch (_v0.$) {
 			case 'HealthPotion':
-				var nhealth = A2($elm$core$Basics$min, hero.health + 10, hero.maxHealth);
+				var nhealth = A2($elm$core$Basics$min, hero.health + (((hero.maxHealth * 3) / 5) | 0), hero.maxHealth);
 				var healthDif = nhealth - hero.maxHealth;
 				return _Utils_update(
 					board,
@@ -10485,7 +10495,10 @@ var $author$project$UpdateBoard$checkHeroItem = F2(
 							$elm$core$List$cons,
 							_Utils_update(
 								hero,
-								{energy: hero.energy + 2, state: $author$project$Data$TakingEnergy}),
+								{
+									energy: $author$project$UpdateBoard$fullEnergy(hero._class),
+									state: $author$project$Data$TakingEnergy
+								}),
 							otherHeroes),
 						item: otherItems
 					});
@@ -12201,7 +12214,7 @@ var $author$project$ViewAnimation$animateHeroVisuals = function (hero) {
 					case 'Moving':
 						return $elm$svg$Svg$text('-2 Energy');
 					case 'TakingEnergy':
-						return $elm$svg$Svg$text('+2 Energy');
+						return $elm$svg$Svg$text('Max Energy reached');
 					case 'TakingHealth':
 						var h1 = _v1.a;
 						return $elm$svg$Svg$text(
@@ -12276,37 +12289,6 @@ var $author$project$ViewOthers$endTurnButton = A2(
 		]));
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var $author$project$Message$ViewHint = function (a) {
-	return {$: 'ViewHint', a: a};
-};
-var $author$project$ViewOthers$hintButton = function (board) {
-	var on = !board.hintOn;
-	var txt = on ? 'Hint' : 'Turn Off Hint';
-	return A2(
-		$elm$html$Html$button,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'background', 'transparent'),
-				A2($elm$html$Html$Attributes$style, 'top', '700px'),
-				A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
-				A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
-				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
-				A2($elm$html$Html$Attributes$style, 'height', '80px'),
-				A2($elm$html$Html$Attributes$style, 'left', '29px'),
-				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
-				A2($elm$html$Html$Attributes$style, 'outline', 'none'),
-				A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-				A2($elm$html$Html$Attributes$style, 'width', '170px'),
-				A2($elm$html$Html$Attributes$style, 'border', 'transparent'),
-				$elm$html$Html$Events$onClick(
-				$author$project$Message$ViewHint(on))
-			]),
-		_List_fromArray(
-			[
-				$elm$svg$Svg$text(txt)
-			]));
-};
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -13564,165 +13546,6 @@ var $author$project$ViewAllHero$viewHeroOuterFrame = function (hero) {
 			_List_Nil)
 		]);
 };
-var $author$project$ViewOthers$dialogHelper = F7(
-	function (width, height, left, top, fontSize, color, textIn) {
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$Attributes$style,
-					'width',
-					$elm$core$Debug$toString(width) + 'px'),
-					A2(
-					$elm$html$Html$Attributes$style,
-					'height',
-					$elm$core$Debug$toString(height) + 'px'),
-					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
-					A2(
-					$elm$html$Html$Attributes$style,
-					'left',
-					$elm$core$Debug$toString(left) + 'px'),
-					A2(
-					$elm$html$Html$Attributes$style,
-					'top',
-					$elm$core$Debug$toString(top) + 'px'),
-					A2($elm$html$Html$Attributes$style, 'color', color),
-					A2(
-					$elm$html$Html$Attributes$style,
-					'font-size',
-					$elm$core$Debug$toString(fontSize) + 'px')
-				]),
-			_List_fromArray(
-				[
-					$elm$svg$Svg$text(textIn)
-				]));
-	});
-var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
-var $author$project$ViewOthers$shapeHelper = F4(
-	function (_v0, _v1, color, pos) {
-		var height = _v0.a;
-		var width = _v0.b;
-		var x = _v1.a;
-		var y = _v1.b;
-		return A2(
-			$elm$svg$Svg$rect,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$stroke(color),
-					$elm$svg$Svg$Attributes$strokeWidth('5'),
-					$elm$svg$Svg$Attributes$height(
-					$elm$core$Debug$toString(height)),
-					$elm$svg$Svg$Attributes$width(
-					$elm$core$Debug$toString(width)),
-					$elm$svg$Svg$Attributes$fillOpacity('0'),
-					$elm$svg$Svg$Attributes$x(
-					$elm$core$Debug$toString(x - (width / 2))),
-					$elm$svg$Svg$Attributes$y(
-					$elm$core$Debug$toString(y - (height / 2))),
-					$elm$html$Html$Events$onClick(
-					$author$project$Message$Move(pos)),
-					$author$project$DetectMouse$onContentMenu(
-					$author$project$Message$Hit(pos))
-				]),
-			_List_Nil);
-	});
-var $author$project$ViewTutorial$viewHintBackground = F4(
-	function (w, h, x, y) {
-		return A2(
-			$elm$svg$Svg$rect,
-			_List_fromArray(
-				[
-					$elm$svg$Svg$Attributes$width(
-					$elm$core$Debug$toString(w)),
-					$elm$svg$Svg$Attributes$height(
-					$elm$core$Debug$toString(h)),
-					$elm$svg$Svg$Attributes$x(
-					$elm$core$Debug$toString(x)),
-					$elm$svg$Svg$Attributes$y(
-					$elm$core$Debug$toString(y)),
-					$elm$svg$Svg$Attributes$fill('black'),
-					$elm$svg$Svg$Attributes$fillOpacity('70%')
-				]),
-			_List_Nil);
-	});
-var $author$project$View$viewHints = F2(
-	function (bool, board) {
-		var heroesPos = A2(
-			$elm$core$List$map,
-			function (hero) {
-				return hero.pos;
-			},
-			board.heroes);
-		var heroPos = A2(
-			$elm$core$Maybe$withDefault,
-			_Utils_Tuple2(0, 0),
-			$elm$core$List$head(heroesPos));
-		var enemiesPos = A2(
-			$elm$core$List$map,
-			function (enemy) {
-				return enemy.pos;
-			},
-			board.enemies);
-		var enemyPos = A2(
-			$elm$core$Maybe$withDefault,
-			_Utils_Tuple2(0, 0),
-			$elm$core$List$head(enemiesPos));
-		var _v0 = board.mapRotating;
-		var rotating = _v0.a;
-		var time = _v0.b;
-		var _v1 = A4($author$project$Data$findPos, rotating, board.level, time, heroPos);
-		var hx = _v1.a;
-		var hy = _v1.b;
-		var _v2 = A4($author$project$Data$findPos, rotating, board.level, time, enemyPos);
-		var ex = _v2.a;
-		var ey = _v2.b;
-		return bool ? A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					A2($elm$html$Html$Attributes$style, 'width', '100%'),
-					A2($elm$html$Html$Attributes$style, 'height', '100%'),
-					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
-					A2($elm$html$Html$Attributes$style, 'left', '0'),
-					A2($elm$html$Html$Attributes$style, 'top', '0'),
-					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$svg$Svg$svg,
-					_List_fromArray(
-						[
-							$elm$svg$Svg$Attributes$width('100%'),
-							$elm$svg$Svg$Attributes$height('100%')
-						]),
-					_List_fromArray(
-						[
-							A4(
-							$author$project$ViewOthers$shapeHelper,
-							_Utils_Tuple2(100, 100),
-							_Utils_Tuple2(hx, hy + 5),
-							'blue',
-							_Utils_Tuple2(0, 0)),
-							A4(
-							$author$project$ViewOthers$shapeHelper,
-							_Utils_Tuple2(100, 100),
-							_Utils_Tuple2(ex, ey + 5),
-							'red',
-							_Utils_Tuple2(0, 0)),
-							A4($author$project$ViewTutorial$viewHintBackground, 400, 50, hx + 50, hy - 50),
-							A4($author$project$ViewTutorial$viewHintBackground, 500, 50, hx + 50, hy + 50),
-							A4($author$project$ViewTutorial$viewHintBackground, 450, 50, ex + 50, ey - 50),
-							A4($author$project$ViewTutorial$viewHintBackground, 350, 50, 210, 680)
-						])),
-					A7($author$project$ViewOthers$dialogHelper, 400, 20, hx + 50, hy - 50, 30, 'white', '1. Left click on a hero to select'),
-					A7($author$project$ViewOthers$dialogHelper, 500, 20, hx + 50, hy + 50, 30, 'white', '2. Left click on blue hexagons to move'),
-					A7($author$project$ViewOthers$dialogHelper, 450, 20, ex + 50, ey - 50, 30, 'white', '3. Right click on enemies to attack'),
-					A7($author$project$ViewOthers$dialogHelper, 350, 20, 210, 680, 30, 'white', '4. Click to turn of the hint')
-				])) : A2($elm$html$Html$div, _List_Nil, _List_Nil);
-	});
 var $author$project$View$viewItem = F2(
 	function (board, item) {
 		var itemtype = $elm$core$Debug$toString(item.itemType);
@@ -14122,11 +13945,11 @@ var $author$project$ViewOthers$viewPopUpHint = function (model) {
 				var scene = hint.a;
 				switch (scene.$) {
 					case 'ShopScene':
-						return 'The door to shop is locked';
+						return 'The door to Shop is locked';
 					case 'DungeonScene':
-						return 'The door to dungeon is locked';
+						return 'The door to Side Dungeon is locked';
 					default:
-						return 'The door to dungeon2 is locked';
+						return 'The door to Main Dungeon is locked';
 				}
 			case 'LackEnergy':
 				return 'Your energy is not enough';
@@ -14388,13 +14211,11 @@ var $author$project$View$viewBoard = function (model) {
 																					A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
 																					_Utils_ap(
 																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 800),
-																						_Utils_ap(
-																							A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 700),
-																							_List_fromArray(
-																								[
-																									$author$project$ViewOthers$viewCoinSVG(
-																									_Utils_Tuple2(1700, 785))
-																								])))))))))))))))))))),
+																						_List_fromArray(
+																							[
+																								$author$project$ViewOthers$viewCoinSVG(
+																								_Utils_Tuple2(1700, 785))
+																							]))))))))))))))))))),
 					$author$project$ViewOthers$endTurnButton,
 					$author$project$ViewOthers$skipButton,
 					$author$project$ViewOthers$viewCritical(model.board),
@@ -14458,13 +14279,7 @@ var $author$project$View$viewBoard = function (model) {
 								A2($elm$core$List$map, $author$project$ViewAnimation$animateHeroVisuals, model.board.heroes),
 								_Utils_ap(
 									A2($elm$core$List$map, $author$project$ViewAnimation$animateEnemyVisuals, model.board.enemies),
-									_Utils_ap(
-										$author$project$ViewOthers$viewPopUpHint(model),
-										_List_fromArray(
-											[
-												A2($author$project$View$viewHints, model.board.hintOn, model.board),
-												$author$project$ViewOthers$hintButton(model.board)
-											]))))))))));
+									$author$project$ViewOthers$viewPopUpHint(model)))))))));
 };
 var $author$project$ViewScenes$viewBagCoin = function (model) {
 	return A2(
@@ -14922,11 +14737,11 @@ var $author$project$ViewScenes$viewTipForT = A2(
 	$elm$html$Html$div,
 	_List_fromArray(
 		[
-			A2($elm$html$Html$Attributes$style, 'top', '30px'),
-			A2($elm$html$Html$Attributes$style, 'left', '0px'),
+			A2($elm$html$Html$Attributes$style, 'top', '900px'),
+			A2($elm$html$Html$Attributes$style, 'left', '800px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'white'),
 			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '32px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -15353,6 +15168,41 @@ var $author$project$ViewDialog$viewDialogSkullKnight3 = A2(
 			$author$project$ViewDialog$viewSkullKnightDialog,
 			$author$project$ViewDialog$viewDialogContent($author$project$NPC$npcSkullKnight3.dialogue)
 		]));
+var $author$project$ViewOthers$dialogHelper = F7(
+	function (width, height, left, top, fontSize, color, textIn) {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$Attributes$style,
+					'width',
+					$elm$core$Debug$toString(width) + 'px'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'height',
+					$elm$core$Debug$toString(height) + 'px'),
+					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'left',
+					$elm$core$Debug$toString(left) + 'px'),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'top',
+					$elm$core$Debug$toString(top) + 'px'),
+					A2($elm$html$Html$Attributes$style, 'color', color),
+					A2(
+					$elm$html$Html$Attributes$style,
+					'font-size',
+					$elm$core$Debug$toString(fontSize) + 'px')
+				]),
+			_List_fromArray(
+				[
+					$elm$svg$Svg$text(textIn)
+				]));
+	});
 var $author$project$ViewDialog$viewFinishTutorial = A2(
 	$elm$html$Html$div,
 	_List_fromArray(
@@ -15865,14 +15715,14 @@ var $author$project$ViewEncyclopedia$viewDescription = function (_class) {
 		case 'Healer':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around the it'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around it'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: heals teammates'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 820, 50, 120, 'white', 'Healer')
 				]);
 		default:
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around the warrior'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around it'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: create turrets that can deal 10 damage'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 790, 50, 120, 'white', 'Engineer')
 				]);
@@ -16675,6 +16525,54 @@ var $author$project$ViewScenes$viewSummary = function (model) {
 					]))
 			]));
 };
+var $elm$svg$Svg$Attributes$fillOpacity = _VirtualDom_attribute('fill-opacity');
+var $author$project$ViewOthers$shapeHelper = F4(
+	function (_v0, _v1, color, pos) {
+		var height = _v0.a;
+		var width = _v0.b;
+		var x = _v1.a;
+		var y = _v1.b;
+		return A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$stroke(color),
+					$elm$svg$Svg$Attributes$strokeWidth('5'),
+					$elm$svg$Svg$Attributes$height(
+					$elm$core$Debug$toString(height)),
+					$elm$svg$Svg$Attributes$width(
+					$elm$core$Debug$toString(width)),
+					$elm$svg$Svg$Attributes$fillOpacity('0'),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$Debug$toString(x - (width / 2))),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$Debug$toString(y - (height / 2))),
+					$elm$html$Html$Events$onClick(
+					$author$project$Message$Move(pos)),
+					$author$project$DetectMouse$onContentMenu(
+					$author$project$Message$Hit(pos))
+				]),
+			_List_Nil);
+	});
+var $author$project$ViewTutorial$viewHintBackground = F4(
+	function (w, h, x, y) {
+		return A2(
+			$elm$svg$Svg$rect,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$width(
+					$elm$core$Debug$toString(w)),
+					$elm$svg$Svg$Attributes$height(
+					$elm$core$Debug$toString(h)),
+					$elm$svg$Svg$Attributes$x(
+					$elm$core$Debug$toString(x)),
+					$elm$svg$Svg$Attributes$y(
+					$elm$core$Debug$toString(y)),
+					$elm$svg$Svg$Attributes$fill('black'),
+					$elm$svg$Svg$Attributes$fillOpacity('70%')
+				]),
+			_List_Nil);
+	});
 var $author$project$ViewTutorial$viewTutorial1 = A2(
 	$elm$html$Html$div,
 	_List_fromArray(
@@ -17269,13 +17167,11 @@ var $author$project$View$viewTutorial = F2(
 																					A4($author$project$ViewOthers$viewUIButton, 170, 80, 1700, 900),
 																					_Utils_ap(
 																						A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 800),
-																						_Utils_ap(
-																							A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 700),
-																							_List_fromArray(
-																								[
-																									$author$project$ViewOthers$viewCoinSVG(
-																									_Utils_Tuple2(1700, 785))
-																								])))))))))))))))))))),
+																						_List_fromArray(
+																							[
+																								$author$project$ViewOthers$viewCoinSVG(
+																								_Utils_Tuple2(1700, 785))
+																							]))))))))))))))))))),
 				_Utils_ap(
 					A2($author$project$ViewTutorial$viewTutorialScene, model, k),
 					_Utils_ap(
@@ -17321,12 +17217,7 @@ var $author$project$View$viewTutorial = F2(
 											A2($elm$core$List$map, $author$project$ViewAnimation$animateHeroVisuals, model.board.heroes),
 											_Utils_ap(
 												A2($elm$core$List$map, $author$project$ViewAnimation$animateEnemyVisuals, model.board.enemies),
-												_Utils_ap(
-													$author$project$ViewOthers$viewPopUpHint(model),
-													_List_fromArray(
-														[
-															A2($author$project$View$viewHints, model.board.hintOn, model.board)
-														]))))))))))));
+												$author$project$ViewOthers$viewPopUpHint(model)))))))))));
 	});
 var $author$project$ViewShop$idealAllHeroes = function (model) {
 	var donthave = A2(

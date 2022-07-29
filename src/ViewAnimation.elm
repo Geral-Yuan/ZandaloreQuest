@@ -59,7 +59,7 @@ animateHeroVisuals hero =
                 text "-2 Energy"
 
             TakingEnergy ->
-                text "+2 Energy"
+                text "Max Energy reached"
 
             TakingHealth h1 ->
                 text ("+" ++ toString h1)

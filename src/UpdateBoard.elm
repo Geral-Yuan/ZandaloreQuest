@@ -317,7 +317,7 @@ checkHeroItem hero board =
         HealthPotion ->
             let
                 nhealth =
-                    min (hero.health + 10) hero.maxHealth
+                    min (hero.health + hero.maxHealth * 3 // 5) hero.maxHealth
 
                 healthDif =
                     nhealth - hero.maxHealth
@@ -336,7 +336,7 @@ checkHeroItem hero board =
 
         EnergyPotion ->
             { board
-                | heroes = { hero | energy = hero.energy + 2, state = TakingEnergy } :: otherHeroes
+                | heroes = { hero | energy = fullEnergy hero.class, state = TakingEnergy } :: otherHeroes
                 , item = otherItems
                 , boardState = HeroEnergy
             }
@@ -346,6 +346,19 @@ checkHeroItem hero board =
 
         NoItem ->
             board
+
+
+fullEnergy : Class -> Int
+fullEnergy class =
+    case class of
+        Assassin ->
+            6
+
+        Mage ->
+            3
+
+        _ ->
+            5
 
 
 

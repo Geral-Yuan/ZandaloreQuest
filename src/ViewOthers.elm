@@ -362,13 +362,13 @@ viewPopUpHint model =
                 FailtoEnter scene ->
                     case scene of
                         ShopScene ->
-                            "The door to shop is locked"
+                            "The door to Shop is locked"
 
                         DungeonScene ->
-                            "The door to dungeon is locked"
+                            "The door to Side Dungeon is locked"
 
                         _ ->
-                            "The door to dungeon2 is locked"
+                            "The door to Main Dungeon is locked"
 
                 LackEnergy ->
                     "Your energy is not enough"
