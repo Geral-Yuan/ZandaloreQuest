@@ -80,7 +80,7 @@ updateBoardOthers msg board =
             spawnCrate pos itype board
 
         Kill False ->
-            { board | enemies = [] }
+            { board | enemies = [], spawn = 0 }
 
         Select hero ->
             case board.turn of

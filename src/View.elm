@@ -130,13 +130,15 @@ viewTutorial k model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 50 800
+                ++ viewUIButton 170 80 29 800
                 -- UI for encyclopedia button
+                ++ viewUIButton 170 80 29 700
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
             :: viewTutorialScene model k
             ++ [ endTurnButton
+               , skipButton
                , viewCritical model.board
                , viewBoardCoin model.board
                , viewLevel model.level
@@ -202,12 +204,14 @@ viewBoard model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 50 800
+                ++ viewUIButton 170 80 29 800
                 -- UI for encyclopedia button
+                ++ viewUIButton 170 80 29 700
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
          , endTurnButton
+         , skipButton
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
