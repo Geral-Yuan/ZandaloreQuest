@@ -1,7 +1,7 @@
 module Message exposing (Msg(..))
 
 import Browser.Dom exposing (Viewport)
-import Data exposing (..)
+import Data exposing (Class, Critical, Dir, Hero, ItemType, Pos)
 
 
 type Msg
@@ -12,7 +12,7 @@ type Msg
     | Tick Float
     | Attack Pos Critical
     | Hit Pos
---    | Skill Pos
+      --    | Skill Pos
     | Select Hero
     | Move Pos
     | EndTurn
@@ -27,5 +27,15 @@ type Msg
     | Talk Bool
     | UpgradeHealth
     | UpgradeDamage
+    | DisplayUpgrade Bool
+    | LuckyDraw
+    | GetNewHero Class
+    | EnterUpgrade
+    | LevelUp ( Hero, Int )
     | ExitShop
     | ViewTutorial
+    | SeeEncyclopedia
+    | Back
+    | RightEncyclopedia
+    | LeftEncyclopedia
+    | Test

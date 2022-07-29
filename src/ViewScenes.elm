@@ -2,14 +2,16 @@ module ViewScenes exposing (..)
 
 import Data exposing (..)
 import Debug exposing (toString)
-import Html exposing (Html, div, img)
+import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
-import Message exposing (..)
+import Message exposing (Msg)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import ViewNPCTask exposing (..)
+import ViewEncyclopedia exposing (viewEncyclopediaButton)
+import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
+import ViewOthers exposing (determineOpct, viewCoinSVG, viewPopUpHint, viewUIButton, viewUIFrame)
 
 
 logoWidth : Float
@@ -20,6 +22,16 @@ logoWidth =
 logoHeight : Float
 logoHeight =
     600
+
+
+startWidth : Float
+startWidth =
+    2000
+
+
+startHeight : Float
+startHeight =
+    1000
 
 
 viewScene0 : Model -> Html Msg
@@ -61,19 +73,10 @@ viewLogo t =
         , SvgAttr.x (toString (pixelWidth / 2 - logoWidth / 2))
         , SvgAttr.y (toString (pixelHeight / 2 - logoHeight / 2))
         , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.opacity (determineOpct t |> String.fromFloat)
+        , SvgAttr.opacity (determineOpct t 6 |> String.fromFloat)
         , SvgAttr.xlinkHref "./assets/image/logo.png"
         ]
         []
-
-
-determineOpct : Float -> Float
-determineOpct t =
-    if t <= 6 then
-        sin (t * pi / 6) * 2 / 1.732
-
-    else
-        0
 
 
 viewRpgCharacter : RpgCharacter -> Html Msg
@@ -128,7 +131,7 @@ viewCharacterPos character =
             character.pos
     in
     div
-        [ HtmlAttr.style "bottom" "30px"
+        [ HtmlAttr.style "bottom" "100px"
         , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "red"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -170,17 +173,39 @@ viewCastle model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewCastleSvg
-                    , viewTaskBoard
-                    ]
-               , viewCharacterPos model.character
+                    ([ viewCastleSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                        ++ viewUIButton 170 80 50 800
+                    )
+
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
+               , div
+                    [ HtmlAttr.style "bottom" "20px"
+                    , HtmlAttr.style "left" "0px"
+                    , HtmlAttr.style "position" "absolute"
+                    ]
+                    [ audio
+                        [ HtmlAttr.autoplay True
+                        , HtmlAttr.loop True
+                        , HtmlAttr.preload "True"
+                        , HtmlAttr.controls True
+                        , HtmlAttr.src "./assets/audio/CastleThemeSong.mp3"
+                        , HtmlAttr.id "CastleThemeSong"
+                        ]
+                        []
+                    ]
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
-            ++ [ viewRpgCharacter model.character ]
+            ++ (viewRpgCharacter model.character
+                    :: viewPopUpHint model
+               )
         )
 
 
@@ -213,16 +238,18 @@ viewDungeon model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewDungeonSvg
+                    ([ viewDungeonSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
 
-                    -- , viewExit
-                    , viewTaskBoard
-                    ]
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == DungeonScene)))
             ++ [ viewRpgCharacter model.character ]
@@ -258,16 +285,18 @@ viewDungeon2 model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    [ viewDungeonSvg
+                    ([ viewDungeonSvg
+                     , viewCoinSVG ( 1500, 900 )
+                     ]
+                        ++ viewTaskBoard
+                    )
 
-                    -- , viewExit
-                    , viewTaskBoard
-                    ]
-               , viewCharacterPos model.character
+               --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
+               , viewEncyclopediaButton
                ]
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == Dungeon2Scene)))
             ++ [ viewRpgCharacter model.character ]
@@ -405,17 +434,6 @@ viewCastleSvg =
         []
 
 
-
-startWidth : Float
-startWidth =
-    2000
-
-
-startHeight : Float
-startHeight =
-    1000
-
-
 viewStarting : Model -> Html Msg
 viewStarting model =
     -- Add this when the homepage has been designed
@@ -452,8 +470,8 @@ viewStarting model =
 viewBagCoin : Model -> Html Msg
 viewBagCoin model =
     div
-        [ HtmlAttr.style "bottom" "50px"
-        , HtmlAttr.style "right" "100px"
+        [ HtmlAttr.style "left" "1600px"
+        , HtmlAttr.style "top" "910px"
         , HtmlAttr.style "color" "orange"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
@@ -462,4 +480,89 @@ viewBagCoin model =
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Coins: " ++ toString model.bag.coins) ]
+        [ text (toString model.bag.coins) ]
+
+
+viewSummary : Model -> Html Msg
+viewSummary model =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > startWidth / startHeight then
+                Basics.min 1 (h / startHeight)
+
+            else
+                Basics.min 1 (w / startWidth)
+    in
+    div
+        [ HtmlAttr.style "width" (String.fromFloat startWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat startHeight ++ "px")
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "left" (String.fromFloat ((w - startWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        ]
+        [ Svg.svg
+            [ SvgAttr.width "100%"
+            , SvgAttr.height "100%"
+            ]
+            (viewBoardGameBackGround 20
+                :: viewUIFrame 800 900 600 50
+            )
+        , div
+            [ HtmlAttr.style "top" "200px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center" -- align text seems to not working
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text "Great Battle!" ]
+        , div
+            [ HtmlAttr.style "top" "350px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text ("Gold: +" ++ toString (model.board.coins + 50)) ]
+        , div
+            [ HtmlAttr.style "top" "750px"
+            , HtmlAttr.style "left" "0px"
+            , HtmlAttr.style "width" "2000px"
+            , HtmlAttr.style "color" "white"
+            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-size" "40px"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "position" "absolute"
+            ]
+            [ text "Click Anywhere To Continue" ]
+        ]
+
+
+viewBoardGameBackGround : Int -> Svg Msg
+viewBoardGameBackGround opac =
+    Svg.image
+        [ SvgAttr.width "2000"
+        , SvgAttr.height "1000"
+        , SvgAttr.x "0"
+        , SvgAttr.y (toString (pixelHeight / 2 - 500))
+        , SvgAttr.preserveAspectRatio "none"
+        , SvgAttr.opacity (toString opac ++ "%")
+        , SvgAttr.xlinkHref "./assets/image/BoardGameBG.png"
+        ]
+        []

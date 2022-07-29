@@ -23,6 +23,7 @@ updateEnemyAttackable board =
                         List.map (vecAdd enemy.pos) (attackRangeEnemy board enemy)
                 in
                 { board | enemyAttackable = realattackRange }
+
     else
         board
 
@@ -36,18 +37,26 @@ updateAttackable board =
         Just hero ->
             let
                 realattackRange =
-                    List.map (vecAdd hero.pos) (attackRange board hero)
+                    if hero.class /= Turret then
+                        List.map (vecAdd hero.pos) (attackRange board hero)
+
+                    else
+                        []
 
                 realskillRange =
-                    case hero.class of
-                        Healer ->
-                            List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
+                    if hero.class /= Turret then
+                        case hero.class of
+                            Healer ->
+                                List.map (vecAdd hero.pos) (skillRange hero) |> listIntersection (List.map .pos board.heroes)
 
-                        Engineer ->
-                            List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> (isEngineerSkillGrid x board))
+                            Engineer ->
+                                List.map (vecAdd hero.pos) (skillRange hero) |> List.filter (\x -> isEngineerSkillGrid x board)
 
-                        _ ->
-                            []
+                            _ ->
+                                []
+
+                    else
+                        []
             in
             { board | attackable = realattackRange, skillable = realskillRange }
 
@@ -77,6 +86,23 @@ attackRangeEnemy board enemy =
         Mage ->
             subneighbour
 
+        Healer ->
+            ( 0, 0 ) :: neighbour
+
+        Turret ->
+            case enemy.bossState of
+                2 ->
+                    List.concat (List.map (stuckInWay board enemy.pos Hostile) neighbour)
+
+                3 ->
+                    subneighbour
+
+                4 ->
+                    ( 0, 0 ) :: neighbour
+
+                _ ->
+                    neighbour
+
         _ ->
             neighbour
 
@@ -99,10 +125,10 @@ attackedByArcherRange board pos =
     List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Hostile) neighbour))
 
 
-
 attackedByHeroArcherRange : Board -> Pos -> List Pos
 attackedByHeroArcherRange board pos =
     List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Friend) neighbour))
+
 
 stuckInWay : Board -> Pos -> Side -> Pos -> List Pos
 stuckInWay board my_pos my_side nbhd_pos =
@@ -213,21 +239,23 @@ checkAttackObstacle pos_list board =
 
 
 maxTurret : Int
-maxTurret = 2
+maxTurret =
+    2
 
 
-sampleTurret : Pos -> Board -> Hero
-sampleTurret pos board = 
-    Hero Turret pos 30 30 10 0 False Waiting (board.totalHeroNumber + 1)
+sampleTurret : Int -> Int -> Pos -> Board -> Hero
+sampleTurret health dmg pos board =
+    Hero Turret pos (health - 10) (health - 10) (2 * dmg) 0 False Waiting (board.totalHeroNumber + 1)
 
-checkBuildTurret : Class -> Pos -> Board -> Board
-checkBuildTurret class pos board =
-    case class of
+
+checkBuildTurret : Hero -> Pos -> Board -> Board
+checkBuildTurret myhero pos board =
+    case myhero.class of
         Engineer ->
             let
                 newherolist =
                     if isGridEmpty pos board then
-                        (sampleTurret pos board) :: board.heroes
+                        sampleTurret myhero.maxHealth myhero.damage pos board :: board.heroes
 
                     else
                         board.heroes
@@ -235,16 +263,17 @@ checkBuildTurret class pos board =
             case pos2Hero board.heroes pos of
                 Nothing ->
                     if (board.heroes |> List.filter (\x -> x.class == Turret) |> List.length) < maxTurret then
-                        { board | heroes = newherolist, totalHeroNumber = board.totalHeroNumber + 1 , boardState = HeroAttack}
-                    else 
+                        { board | heroes = newherolist, totalHeroNumber = board.totalHeroNumber + 1, boardState = HeroAttack }
+
+                    else
                         board
 
                 Just hero ->
                     if hero.class == Turret then
-                        { board | heroes = listDifference board.heroes [hero], boardState = HeroAttack}
+                        { board | heroes = listDifference board.heroes [ hero ], boardState = HeroAttack }
+
                     else
                         board
-           
 
         _ ->
             board
@@ -329,6 +358,7 @@ isGridEmpty pos board =
          )
             |> List.member pos
         )
+
 
 isEngineerSkillGrid : Pos -> Board -> Bool
 isEngineerSkillGrid pos board =

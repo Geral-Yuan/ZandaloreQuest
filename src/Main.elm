@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
-import Data exposing (..)
+import Data exposing (Dir(..))
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
 import Message exposing (Msg(..))
@@ -31,24 +31,23 @@ subscriptions _ =
 key : Bool -> Int -> Msg
 key on keycode =
     case keycode of
---        87 ->
---            Key W on
---
---        69 ->
---            Key E on
---
---        68 ->
---            Key D on
---
---        88 ->
---            Key X on
---
---        90 ->
---            Key Z on
---
---        65 ->
---            Key A on
-
+        --        87 ->
+        --            Key W on
+        --
+        --        69 ->
+        --            Key E on
+        --
+        --        68 ->
+        --            Key D on
+        --
+        --        88 ->
+        --            Key X on
+        --
+        --        90 ->
+        --            Key Z on
+        --
+        --        65 ->
+        --            Key A on
         13 ->
             Enter on
 
@@ -71,22 +70,10 @@ key on keycode =
             -- Key K
             Kill on
 
-        --        49 ->
-        --            -- Key 1
-        --            -- This might have to change because players can select 3 heroes from their inventory
-        --            Select Warrior on
-        --        50 ->
-        --            -- Key 2
-        --            Select Archer on
-        --        51 ->
-        --            -- Key 3
-        --            Select Assassin on
-        --        52 ->
-        --            -- Key 4
-        --            Select Mage on
-        --        53 ->
-        --            -- Key 5
-        --            Select Healer on
+        84 ->
+            -- Key T
+            Test
+
         _ ->
             Key_None
 

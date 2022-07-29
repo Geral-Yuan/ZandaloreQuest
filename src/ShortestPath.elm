@@ -1,4 +1,4 @@
-module ShortestPath exposing (leastArcherPath, leastMagePath, leastWarriorPath, leastHealerPath)
+module ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange)
 import Board exposing (Board)
@@ -63,7 +63,8 @@ leastMagePath my_enemy board =
 
 leastHealerPath : Enemy -> Board -> List Pos
 leastHealerPath my_enemy board =
-    leastPathHelper my_enemy board (unionList (List.map (\enemy -> List.map (vecAdd enemy.pos) neighbour) (listDifference board.enemies [my_enemy])))
+    leastPathHelper my_enemy board (unionList (List.map (\enemy -> List.map (vecAdd enemy.pos) neighbour) (listDifference board.enemies [ my_enemy ])))
+
 
 
 {- A useful helper to find the shortest path from my_enemy's position towards a list of end positions

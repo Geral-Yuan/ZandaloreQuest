@@ -7,6 +7,135 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.54] -- 2022-7-27
+
+### Changed
+
+- fix the wrong text in lucky draw
+
+## [m1.55] -- 2022-7-28
+
+### Added
+
+- Map of Boss level
+
+- Animation of map rotation
+
+- The boss with skills of any classes
+
+## [m1.54] -- 2022-7-27
+
+### Changed
+
+- actions for enemy healer
+
+- appearance for buttons in the shop
+
+- fancy shop appearance
+
+- upgrade appearance
+
+- delete coordinate
+
+- change turret generation attribute
+
+
+## [m1.53] -- 2022-7-27
+
+### Added
+- added UI for button
+
+### Changed
+- changed health bar color
+- heroes selection scene format
+
+### Fixed
+- fixed wrong information in encyclopedia
+
+
+## [m1.52] -- 2022-7-26 
+
+### Added
+- Encyclopedia messages and gameMode
+- Encyclopedia function where players can find out more about each hero
+- new assets
+- ViewEncyclopedia.elm file
+
+### Changed
+- some typos
+## [m1.51] -- 2022-7-26
+
+### Added
+
+- Add Level 3, Level 4, and Level 5
+- Add three new maps: snake map, hollow map, and dynamic map
+- Connect the levels, NPCs, and the task system.
+- Test mode that can unlock any NPCs, heroes, and scenes to better test/debug the game
+
+### Changed
+
+- Only show attackable range when hero's energy is enough
+- Adjust the dialogue and tutorial system
+- Change the color of hero's health bar to blue
+- Adjust the task board to make it looks better
+- Make the first hero lucky draw free
+
+### Fixed
+
+- Not to show energy use for turret
+- Improve the module exposing and import clear and concrete
+
+## [m1.50] -- 2022
+### Added
+- added UI for board game
+
+### Fixed
+- fixed volume adjust tab position
+
+### Changed
+- changed board game background to have simpler color
+- changed formatting issues such as text alignment
+
+## [m1.49] -- 2022-7-24
+
+### Added
+- added SFXs for every character
+- added theme songs for both rpg mode and board game mode
+- added display obtained character scene
+- added board game summarize scene
+- added board game background images
+
+### Fixed
+- fixed select nonplayable character
+
+
+## [m1.48] -- 2022-7-24
+
+### Changed
+- changed some of the formmatting for tutorial
+- corrected some typos in tutorial 
+
+
+## [m1.47] -- 2022-7-23
+
+### Added
+
+- spend gold coins upgrading heroes
+- draw heroes
+- use black hero pictures to represent locked heroes
+- use ← and → to switch heroes
+
+
+## [m1.46] -- 2022-7-23
+
+### Added
+
+- dialogHelper and shapeHelper functions to help with the tutorial system
+- more scenes for the live tutorial 
+- all the scenes for the tutorial system
+- added a new task to accompany the dialog at the end of the tutorial
+
+
 
 ## [m1.45] -- 2022-7-23
 

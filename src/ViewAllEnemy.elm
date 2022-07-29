@@ -3,51 +3,87 @@ module ViewAllEnemy exposing (..)
 import Board exposing (Board)
 import Data exposing (..)
 import Debug exposing (toString)
-import DetectMouse exposing (..)
-import Html exposing (Html, div, img)
+import DetectMouse exposing (onContentMenu)
+import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Svg exposing (..)
 import Svg.Attributes as SvgAttr
 
 
-viewEnemy : Enemy -> Svg Msg
-viewEnemy enemy =
+viewEnemy : Board -> Enemy -> Svg Msg
+viewEnemy board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         class =
             toString enemy.class
+
+        fimage =
+            "./assets/image/" ++ class
+
+        faudio =
+            "./assets/audio/"
+                ++ (case class of
+                        "Turret" ->
+                            "Archer"
+
+                        a ->
+                            a
+                   )
+                ++ "SFX.mp3"
     in
-    case enemy.state of
-        Attacking ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 45) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                ]
-                [ img [ src ("./assets/image/" ++ class ++ "RedGIF.gif"), height 85, width 115 ] []
-                ]
+    if not enemy.boss then
+        case enemy.state of
+            Attacking ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 45) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    ]
+                    [ img [ src (fimage ++ "RedGIF.gif"), height 85, width 115 ] []
+                    , audio
+                        [ HtmlAttr.autoplay True
+                        , HtmlAttr.loop False
+                        , HtmlAttr.preload "True"
+                        , HtmlAttr.src faudio
+                        , HtmlAttr.id faudio
+                        ]
+                        []
+                    ]
 
-        Attacked _ ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                ]
-                [ img [ src ("./assets/image/" ++ class ++ "GotHit.png"), height 80, width 80 ] []
-                ]
+            Attacked _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    ]
+                    [ img [ src (fimage ++ "GotHit.png"), height 80, width 80 ] []
+                    ]
 
-        _ ->
-            div
-                [ HtmlAttr.style "position" "absolute"
-                , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-                , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-                , onContentMenu (Hit enemy.pos)
-                ]
-                [ img [ src ("./assets/image/" ++ class ++ "Red.png"), height 80, width 80 ] []
-                ]
+            _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src (fimage ++ "Red.png"), height 80, width 80 ] []
+                    ]
+
+    else
+        div
+            [ HtmlAttr.style "position" "absolute"
+            , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+            , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+            , onContentMenu (Hit enemy.pos)
+            ]
+            [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
+            ]
 
 
 viewEnemyImage : Board -> Enemy -> Svg msg
@@ -64,19 +100,30 @@ viewEnemyImage board enemy =
         idxOnBoard =
             enemy.indexOnBoard - minIdx + 1
     in
-    Svg.image
-        [ SvgAttr.width "70"
-        , SvgAttr.height "70"
-        , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (idxOnBoard * 150 - 100))
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
-        ]
-        []
+    if not enemy.boss then
+        Svg.image
+            [ SvgAttr.width "70"
+            , SvgAttr.height "70"
+            , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+            , SvgAttr.y (toString (idxOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
+            ]
+            []
+    else
+        Svg.image
+            [ SvgAttr.width "70"
+            , SvgAttr.height "70"
+            , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+            , SvgAttr.y (toString (idxOnBoard * 150 - 100))
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/SkullKnight.png")
+            ]
+            []
 
 
-viewEnemyFrame : Board -> Enemy -> Svg msg
-viewEnemyFrame board enemy =
+viewEnemyOuterFrame : Board -> Enemy -> Svg msg
+viewEnemyOuterFrame board enemy =
     let
         minIdx =
             List.map .indexOnBoard board.enemies
@@ -87,13 +134,38 @@ viewEnemyFrame board enemy =
             enemy.indexOnBoard - minIdx + 1
     in
     Svg.rect
+        -- outer frame
+        [ SvgAttr.width "420"
+        , SvgAttr.height "140"
+        , SvgAttr.x (toString (20 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
+        , SvgAttr.y (toString (idxOnBoard * 150 - 130))
+        , SvgAttr.fill "rgb(184,111,80)"
+        , SvgAttr.stroke "black"
+        , SvgAttr.strokeWidth "2"
+        ]
+        []
+
+
+viewEnemyInnerFrame : Board -> Enemy -> Svg msg
+viewEnemyInnerFrame board enemy =
+    let
+        minIdx =
+            List.map .indexOnBoard board.enemies
+                |> List.minimum
+                |> Maybe.withDefault 1
+
+        idxOnBoard =
+            enemy.indexOnBoard - minIdx + 1
+    in
+    Svg.rect
+        -- inner frame
         [ SvgAttr.width "400"
         , SvgAttr.height "120"
         , SvgAttr.x (toString (30 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-        , SvgAttr.y (toString (idxOnBoard * 150 - 125))
-        , SvgAttr.fill "transparent"
+        , SvgAttr.y (toString (idxOnBoard * 150 - 120))
+        , SvgAttr.fill "rgb(63,40,50)"
         , SvgAttr.stroke "black"
-        , SvgAttr.rx "20"
+        , SvgAttr.strokeWidth "2"
         ]
         []
 
@@ -143,8 +215,11 @@ viewEnemyCondition board enemy =
 viewEnemyHealth : Board -> Enemy -> List (Svg msg)
 viewEnemyHealth board enemy =
     let
+        ( rotating, time ) =
+            board.mapRotating
+
         ( x, y ) =
-            findPos enemy.pos
+            findPos rotating board.level time enemy.pos
 
         healthBarlen1 =
             200 * toFloat enemy.health / toFloat enemy.maxHealth
@@ -165,7 +240,7 @@ viewEnemyHealth board enemy =
         , SvgAttr.height "20"
         , SvgAttr.x (toString (190 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
         , SvgAttr.y (toString (idxOnBoard * 150 - 95))
-        , SvgAttr.fill "transparent"
+        , SvgAttr.fill "black"
         , SvgAttr.stroke "red"
         , SvgAttr.rx "5"
         ]
@@ -217,7 +292,7 @@ viewEnemyInfo board enemy =
     [ div
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 115) ++ "px")
         , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
-        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
@@ -229,7 +304,7 @@ viewEnemyInfo board enemy =
     , div
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 75) ++ "px")
         , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
-        , HtmlAttr.style "color" "blue"
+        , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"

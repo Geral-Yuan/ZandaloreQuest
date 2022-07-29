@@ -1,8 +1,8 @@
-module DetectMouse exposing (..)
+module DetectMouse exposing (onContentMenu)
 
 import Html.Events exposing (preventDefaultOn)
 import Json.Decode as Decode
-import Svg exposing (..)
+import Svg exposing (Attribute)
 
 
 onContentMenu : msg -> Attribute msg
