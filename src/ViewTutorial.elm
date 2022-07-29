@@ -1,4 +1,4 @@
-module ViewTutorial exposing (viewTutorialScene)
+module ViewTutorial exposing (viewHintBackground, viewTutorialScene)
 
 import Data exposing (..)
 import Debug exposing (toString)
@@ -59,37 +59,7 @@ viewTutorialScene model k =
         []
 
 
-viewHints : Html Msg
-viewHints =
-    -- TO BE EDITED --
-    div
-        [ HtmlAttr.style "width" "100%"
-        , HtmlAttr.style "height" "100%"
-        , HtmlAttr.style "position" "fixed"
-        , HtmlAttr.style "left" "0"
-        , HtmlAttr.style "top" "0"
-        , HtmlAttr.style "font-family" "myfont"
-        ]
-        [ Svg.svg
-            [ SvgAttr.width "100%"
-            , SvgAttr.height "100%"
-            ]
-            [ shapeHelper ( 150, 430 ) ( 230, 90 ) "blue" ( 0, 0 )
-            , shapeHelper ( 300, 430 ) ( 1780, 165 ) "blue" ( 0, 0 )
-            , shapeHelper ( 100, 100 ) (findFixedPos ( 5, 5 )) "blue" ( 0, 0 )
-            , viewHintBackground 600 20 20 170
-            , viewHintBackground 400 20 1250 50
-            , viewHintBackground 600 20 950 700
-            , viewHintBackground 800 20 20 900
-            ]
-        , dialogHelper 600 20 20 170 50 "white" "1. Left click on blue hexagons to move"
-        , dialogHelper 400 20 1250 50 50 "white" "2. Right click on enemies to attack"
-        , dialogHelper 600 20 950 700 50 "white" "3. Click T to access all levels and heroes"
-        , dialogHelper 800 20 20 900 50 "white" "4. Plan a few steps ahead"
-        ]
-
-
-viewHintBackground : Int -> Int -> Int -> Int -> Svg msg
+viewHintBackground : Float -> Float -> Float -> Float -> Svg msg
 viewHintBackground w h x y =
     Svg.rect
         [ SvgAttr.width (toString w)
@@ -100,28 +70,6 @@ viewHintBackground w h x y =
         , SvgAttr.fillOpacity "70%"
         ]
         []
-
-
-viewHintsButton : Html Msg
-viewHintsButton =
-    -- TO BE EDITED --
-    button
-        [ HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "top" "800px"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "24px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "29px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "170px"
-        , HtmlAttr.style "border" "transparent"
-        , onClick SeeEncyclopedia
-        ]
-        [ text "Hint" ]
 
 
 viewTutorial1 : Html Msg

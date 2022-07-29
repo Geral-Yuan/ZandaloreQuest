@@ -263,8 +263,19 @@ skipButton =
         [ text "Skip" ]
 
 
-hintButton : Html Msg
-hintButton =
+hintButton : Board -> Html Msg
+hintButton board =
+    let
+        on =
+            not board.hintOn
+
+        txt =
+            if on then
+                "Hint"
+
+            else
+                "Turn Off Hint"
+    in
     button
         [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "700px"
@@ -279,9 +290,9 @@ hintButton =
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
         , HtmlAttr.style "border" "transparent"
-        , onClick (Kill False)
+        , onClick (ViewHint on)
         ]
-        [ text "Hint" ]
+        [ text txt ]
 
 
 viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)

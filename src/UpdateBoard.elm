@@ -112,6 +112,9 @@ updateBoardOthers msg board =
                 EnemyTurn ->
                     board
 
+        ViewHint on ->
+            { board | hintOn = on }
+
         _ ->
             board
 
