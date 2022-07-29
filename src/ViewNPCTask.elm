@@ -96,13 +96,13 @@ viewTask model =
         , HtmlAttr.style "left" "1745px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-size" "22px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "left"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
-        [ text ("Current Task: " ++ textTask model) ]
+        [ text ("Task: " ++ textTask model) ]
 
 
 textTask : Model -> String
