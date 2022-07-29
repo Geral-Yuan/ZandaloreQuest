@@ -84,7 +84,7 @@ viewEnemy board enemy =
                     , HtmlAttr.style "left" (toString (x - 40) ++ "px")
                     , onContentMenu (Hit enemy.pos)
                     ]
-                    [ img [ src "./assets/image/Boss.gif", height 80, width 80 ] []
+                    [ img [ src "./assets/image/Boss.gif", height 80, width 115 ] []
                     ]
 
             Attacked _ ->

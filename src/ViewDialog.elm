@@ -104,7 +104,7 @@ viewFinishTutorial =
             ]
             [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []
             ]
-        , dialogHelper 1300 450 370 560 50 "blue" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue."
+        , dialogHelper 1300 450 370 560 50 "black" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue."
         ]
 
 

@@ -31,6 +31,7 @@ type alias Board =
     , level : Int
     , mapRotating : ( Bool, Float )
     , popUpHint : ( FailToDo, Float )
+    , hintOn : Bool
     }
 
 
@@ -242,7 +243,8 @@ initBoard heroes k =
     , coins = 0
     , level = k
     , mapRotating = ( False, 0 )
-    , popUpHint = (Noop, 0)
+    , popUpHint = ( Noop, 0 )
+    , hintOn = False
     }
 
 
@@ -272,5 +274,6 @@ sampleBoard =
     , coins = 0
     , level = 0
     , mapRotating = ( False, 0 )
-    , popUpHint = (Noop, 0)
+    , popUpHint = ( Noop, 0 )
+    , hintOn = False
     }
