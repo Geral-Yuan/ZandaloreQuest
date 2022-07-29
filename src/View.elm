@@ -20,7 +20,7 @@ import ViewEncyclopedia exposing (..)
 import ViewOthers exposing (..)
 import ViewScenes exposing (viewBoardGameBackGround, viewCastle, viewDungeon, viewDungeon2, viewScene0, viewSummary)
 import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
-import ViewTutorial exposing (viewTutorialScene)
+import ViewTutorial exposing (..)
 
 
 view : Model -> Html Msg
@@ -78,7 +78,7 @@ view model =
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
         , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "url('./assets/PixelOperator-Bold.ttf') format('truetype')"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewAll
         ]
@@ -106,6 +106,7 @@ viewTutorial k model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (Svg.svg
             [ SvgAttr.width "100%"
@@ -129,13 +130,16 @@ viewTutorial k model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 50 800
-                -- UI for encyclopedia button
+                ++ viewUIButton 170 80 29 800
+                -- UI for skip button
+                ++ viewUIButton 170 80 29 700
+                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
             :: viewTutorialScene model k
             ++ [ endTurnButton
+               , skipButton
                , viewCritical model.board
                , viewBoardCoin model.board
                , viewLevel model.level
@@ -151,6 +155,7 @@ viewTutorial k model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
+            ++ [ viewHints model.board.hintOn model.board ]
         )
 
 
@@ -176,6 +181,7 @@ viewBoard model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         ([ Svg.svg
             [ SvgAttr.width "100%"
@@ -200,17 +206,19 @@ viewBoard model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 50 800
-                -- UI for encyclopedia button
+                ++ viewUIButton 170 80 29 800
+                -- UI for skip button
+                ++ viewUIButton 170 80 29 700
+                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
          , endTurnButton
+         , skipButton
          , viewCritical model.board
          , viewBoardCoin model.board
          , viewLevel model.level
          , viewTurn model
-         , viewEncyclopediaButton
          , div
             [ HtmlAttr.style "bottom" "20px"
             , HtmlAttr.style "left" "0px"
@@ -237,6 +245,7 @@ viewBoard model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
+            ++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
         )
 
 
@@ -342,12 +351,12 @@ viewTurn model =
         , HtmlAttr.style "top" "640px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ case model.board.turn of
             EnemyTurn ->
@@ -430,3 +439,57 @@ viewItem board item =
                 ]
                 []
             ]
+
+
+viewHints : Bool -> Board -> Html Msg
+viewHints bool board =
+    let
+        ( rotating, time ) =
+            board.mapRotating
+
+        enemiesPos =
+            List.map (\enemy -> enemy.pos) board.enemies
+
+        enemyPos =
+            Maybe.withDefault ( 0, 0 ) (List.head enemiesPos)
+
+        ( ex, ey ) =
+            findPos rotating board.level time enemyPos
+
+        heroesPos =
+            List.map (\hero -> hero.pos) board.heroes
+
+        heroPos =
+            Maybe.withDefault ( 0, 0 ) (List.head heroesPos)
+
+        ( hx, hy ) =
+            findPos rotating board.level time heroPos
+    in
+    if bool == True then
+        div
+            [ HtmlAttr.style "width" "100%"
+            , HtmlAttr.style "height" "100%"
+            , HtmlAttr.style "position" "fixed"
+            , HtmlAttr.style "left" "0"
+            , HtmlAttr.style "top" "0"
+            , HtmlAttr.style "font-family" "myfont"
+            ]
+            [ Svg.svg
+                [ SvgAttr.width "100%"
+                , SvgAttr.height "100%"
+                ]
+                [ shapeHelper ( 100, 100 ) ( hx, hy + 5 ) "blue" ( 0, 0 )
+                , shapeHelper ( 100, 100 ) ( ex, ey + 5 ) "red" ( 0, 0 )
+                , viewHintBackground 400 50 (hx + 50) (hy - 50)
+                , viewHintBackground 500 50 (hx + 50) (hy + 50)
+                , viewHintBackground 450 50 (ex + 50) (ey - 50)
+                , viewHintBackground 350 50 210 680
+                ]
+            , dialogHelper 400 20 (hx + 50) (hy - 50) 30 "white" "1. Left click on a hero to select"
+            , dialogHelper 500 20 (hx + 50) (hy + 50) 30 "white" "2. Left click on blue hexagons to move"
+            , dialogHelper 450 20 (ex + 50) (ey - 50) 30 "white" "3. Right click on enemies to attack"
+            , dialogHelper 350 20 210 680 30 "white" "4. Click to turn of the hint"
+            ]
+
+    else
+        div [] []

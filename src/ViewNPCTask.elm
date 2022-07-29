@@ -1,4 +1,4 @@
-module ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard,checkTalkRange)
+module ViewNPCTask exposing (checkTalkRange, viewSingleNPC, viewTask, viewTaskBoard)
 
 import Data exposing (..)
 import Debug exposing (toString)
@@ -31,6 +31,7 @@ viewSingleNPC npc =
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "left" (toString (x - w / 2) ++ "px")
         , HtmlAttr.style "top" (toString (y - h / 2) ++ "px")
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ img
             [ src ("./assets/image/" ++ npc.image ++ ".png")
@@ -94,7 +95,7 @@ viewTask model =
         [ HtmlAttr.style "top" "40px"
         , HtmlAttr.style "left" "1745px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "20px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "left"
@@ -108,7 +109,7 @@ textTask : Model -> String
 textTask model =
     case model.cntTask of
         MeetElder ->
-            "Go to meet Elder and have the Tutorial Level!"
+            "Meet the Elder to complete the Tutorial Level!"
 
         GoToShop ->
             "Go to the shop and get a free random hero!"
@@ -117,16 +118,16 @@ textTask model =
             "Talk to a Dark Knight 1 and defeat him!"
 
         Level 2 ->
-            "Talk to a Dark Knight 2 and defeat him!"
+            "Talk to Dark Knight 2 and defeat him!"
 
         Level 3 ->
-            "Enter Dungeon and destroy Skull Knight 1!"
+            "Enter Dungeon and destroy the Skull Knight!"
 
         Level 4 ->
             "Skull Knight 2 appears! Kill him!"
 
         Level 5 ->
-            "Enter Dungeon2 and battle with Skull Knight 3"
+            "Enter the Side Dungeon and fight Skull Knight 3"
 
         -- Maybe a name for each NPC later
         _ ->

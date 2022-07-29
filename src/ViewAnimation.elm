@@ -18,7 +18,7 @@ animateEnemyVisuals enemy =
         [ HtmlAttr.style "left" (toString x ++ "px")
         , HtmlAttr.style "top" (toString (y - 80) ++ "px")
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "60px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -47,7 +47,7 @@ animateHeroVisuals hero =
         [ HtmlAttr.style "left" (toString (x + 40) ++ "px")
         , HtmlAttr.style "top" (toString (y - 80) ++ "px")
         , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "60px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"

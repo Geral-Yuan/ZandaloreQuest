@@ -19,6 +19,7 @@ dialogHelper width height left top fontSize color textIn =
         [ HtmlAttr.style "width" (toString width ++ "px")
         , HtmlAttr.style "height" (toString height ++ "px")
         , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "left" (toString left ++ "px")
         , HtmlAttr.style "top" (toString top ++ "px")
         , HtmlAttr.style "color" color
@@ -47,10 +48,10 @@ viewCritical : Board -> Html Msg
 viewCritical board =
     div
         [ HtmlAttr.style "top" "720px"
-        , HtmlAttr.style "left" "1600px"
+        , HtmlAttr.style "left" "1630px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "left"
@@ -66,7 +67,7 @@ viewBoardCoin board =
         [ HtmlAttr.style "top" "800px"
         , HtmlAttr.style "left" "1800px"
         , HtmlAttr.style "color" "orange"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "line-height" "60px"
@@ -106,7 +107,7 @@ viewLevel level =
         , HtmlAttr.style "left" "1580px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -228,6 +229,7 @@ endTurnButton =
         , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
         , HtmlAttr.style "left" "1700px"
         , HtmlAttr.style "line-height" "60px"
@@ -238,6 +240,59 @@ endTurnButton =
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
+
+
+skipButton : Html Msg
+skipButton =
+    button
+        [ HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "top" "800px"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
+        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "height" "80px"
+        , HtmlAttr.style "left" "29px"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "outline" "none"
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "width" "170px"
+        , HtmlAttr.style "border" "transparent"
+        , onClick (Kill False)
+        ]
+        [ text "Skip" ]
+
+
+hintButton : Board -> Html Msg
+hintButton board =
+    let
+        on =
+            not board.hintOn
+
+        txt =
+            if on then
+                "Hint"
+
+            else
+                "Turn Off Hint"
+    in
+    button
+        [ HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "top" "700px"
+        , HtmlAttr.style "color" "rgb(61,43,31)"
+        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "height" "80px"
+        , HtmlAttr.style "left" "29px"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "outline" "none"
+        , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "width" "170px"
+        , HtmlAttr.style "border" "transparent"
+        , onClick (ViewHint on)
+        ]
+        [ text txt ]
 
 
 viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)
@@ -337,10 +392,12 @@ viewPopUpHint model =
             , HtmlAttr.style "color" "red"
             , HtmlAttr.style "font-size" "40px"
             , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "opacity" (toString (determineOpct time 2))
             ]
             [ text hintText ]
         ]
+
 
 determineOpct : Float -> Float -> Float
 determineOpct t tMax =

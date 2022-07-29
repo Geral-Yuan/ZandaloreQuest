@@ -6,7 +6,7 @@ import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
 import Model exposing (Model)
-import NPC exposing (npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3, npcBoss)
+import NPC exposing (npcBoss, npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewOthers exposing (dialogHelper)
@@ -35,6 +35,7 @@ viewDialog task model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
@@ -86,6 +87,7 @@ viewFinishTutorial =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ div
             [ HtmlAttr.style "position" "absolute"
@@ -102,7 +104,7 @@ viewFinishTutorial =
             ]
             [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []
             ]
-        , dialogHelper 1300 450 370 560 50 "blue" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue."
+        , dialogHelper 1300 450 370 560 50 "black" "Elder: Congratulations hero! The warrior and archer will be your comrades throughout this arduous journey. Now, head to the shop to recruit one more comrade. Click anywhere to continue."
         ]
 
 
@@ -112,6 +114,7 @@ viewDialogElder =
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
         , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
         ]
@@ -129,6 +132,7 @@ viewDialogDarkKnight1 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewDarkKnightDialog
@@ -144,6 +148,7 @@ viewDialogDarkKnight2 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewDarkKnightDialog
@@ -159,6 +164,7 @@ viewDialogSkullKnight1 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewSkullKnightDialog
@@ -174,6 +180,7 @@ viewDialogSkullKnight2 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewSkullKnightDialog
@@ -189,11 +196,13 @@ viewDialogSkullKnight3 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewSkullKnightDialog
         , viewDialogContent npcSkullKnight3.dialogue
         ]
+
 
 viewDialogBoss : Html Msg
 viewDialogBoss =
@@ -203,6 +212,7 @@ viewDialogBoss =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewMainCharacterDialog
         , viewSkullKnightDialog
@@ -216,6 +226,7 @@ viewMainCharacterDialog =
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "top" "100px"
         , HtmlAttr.style "left" "350px"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ img [ src "./assets/image/MainCharacter.png", height 400, width 480 ] []
         ]
@@ -230,6 +241,7 @@ viewDialogContent string =
         , HtmlAttr.style "left" "365px"
         , HtmlAttr.style "top" "570px"
         , HtmlAttr.style "color" "black"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "50px"
         ]
         [ text string ]
@@ -241,6 +253,7 @@ viewElderDialog =
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "top" "100px"
         , HtmlAttr.style "left" "1180px"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "transform" "scaleX(-1)"
         ]
         [ img [ src "./assets/image/ElderNPC.png", height 400, width 480 ] []

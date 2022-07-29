@@ -7113,7 +7113,7 @@ var $author$project$Data$Level = function (a) {
 };
 var $author$project$NPC$npcBoss = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'How dare you! It was my mistake... You shouldn\'t be alive and I WILL KILL YOU! Tip: the boss can use the skills of all heroes, so do not get too close. The board contains 7 sets of 7 hexagons that will rotate. Kill the skull knights boss and bring glory! Click anywhere to continue.',
 	faceDir: $author$project$Data$Left,
 	image: 'SkullKnight',
 	level: 6,
@@ -7128,7 +7128,7 @@ var $author$project$NPC$npcBoss = {
 };
 var $author$project$NPC$npcDarkKnight1 = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'Zandalore was destined for failure, you are going down weakling! In this level, the board is a big hexagon. The recommended team composition is one melee, one ranged and one utility hero.  Select 3 heroes and kill all enemies. Click anywhere to continue.',
 	faceDir: $author$project$Data$Right,
 	image: 'EvilNPC',
 	level: 1,
@@ -7143,7 +7143,7 @@ var $author$project$NPC$npcDarkKnight1 = {
 };
 var $author$project$NPC$npcDarkKnight2 = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'Wow you seem to be stronger than the others Zandalorian, but you are going to die in my hands! Tip: Use the warrior to protect your ranged and utility heroes. The board is a big hexagon and there are 2 waves of enemies. Kill them all! Click anywhere to continue.',
 	faceDir: $author$project$Data$Right,
 	image: 'EvilNPC',
 	level: 2,
@@ -7159,7 +7159,7 @@ var $author$project$NPC$npcDarkKnight2 = {
 var $author$project$Data$DungeonScene = {$: 'DungeonScene'};
 var $author$project$NPC$npcSkullKnight1 = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'Seeking revenge for your filthy kingdom eh? You are too weak kid! Tip: You should use more ranged heroes in this level. The board is a big hexagon with holes. Kill all 3 waves of enemies. Click anywhere to continue.',
 	faceDir: $author$project$Data$Right,
 	image: 'SkullKnight',
 	level: 3,
@@ -7174,7 +7174,7 @@ var $author$project$NPC$npcSkullKnight1 = {
 };
 var $author$project$NPC$npcSkullKnight2 = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'How dare you kill my fellow knights! Die!!! Tip: Make sure that your ranged heroes are far away from the enemies. The board is a big hexagon with holes and there are 3 waves of enemies. Kill them all! Click anywhere to continue.',
 	faceDir: $author$project$Data$Left,
 	image: 'SkullKnight',
 	level: 4,
@@ -7189,7 +7189,7 @@ var $author$project$NPC$npcSkullKnight2 = {
 };
 var $author$project$NPC$npcSkullKnight3 = {
 	beaten: false,
-	dialogue: '',
+	dialogue: 'What?! A Zandalorian killed my knights? You shall perish!! Tip: This map will rotate so you will have to time your attacks and escapes well. There are 7 hexagons at the center with 2 rows of hexagons surrounding it and they will rotate. Kill all 3 waves of enemies! Click anywhere to continue.',
 	faceDir: $author$project$Data$Right,
 	image: 'SkullKnight',
 	level: 5,
@@ -8047,7 +8047,7 @@ var $author$project$Update$groupEnemyClasses = A2(
 		$elm$random$Random$uniform,
 		$author$project$Data$Warrior,
 		_List_fromArray(
-			[$author$project$Data$Archer, $author$project$Data$Mage])));
+			[$author$project$Data$Archer, $author$project$Data$Mage, $author$project$Data$Assassin, $author$project$Data$Healer])));
 var $author$project$Update$randomEnemies = function (_v0) {
 	var model = _v0.a;
 	var cmd = _v0.b;
@@ -9770,18 +9770,18 @@ var $author$project$UpdateBoard$updateMap = F2(
 									false,
 									A4(
 										$author$project$UpdateBoard$rotate,
-										_Utils_Tuple2(2, 5),
-										1,
+										_Utils_Tuple2(5, 5),
+										2,
 										true,
 										A4(
 											$author$project$UpdateBoard$rotate,
 											_Utils_Tuple2(5, 5),
-											1,
+											3,
 											false,
 											A4(
 												$author$project$UpdateBoard$rotate,
 												_Utils_Tuple2(5, 5),
-												3,
+												4,
 												true,
 												_Utils_update(
 													board,
@@ -12136,7 +12136,7 @@ var $author$project$ViewAnimation$animateEnemyVisuals = function (enemy) {
 				'top',
 				$elm$core$Debug$toString(y - 80) + 'px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'red'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '60px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -12179,7 +12179,7 @@ var $author$project$ViewAnimation$animateHeroVisuals = function (hero) {
 				'top',
 				$elm$core$Debug$toString(y - 80) + 'px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'blue'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '60px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -12253,6 +12253,7 @@ var $author$project$ViewOthers$endTurnButton = A2(
 			A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
 			A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'height', '80px'),
 			A2($elm$html$Html$Attributes$style, 'left', '1700px'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -12295,7 +12296,7 @@ var $author$project$ViewOthers$viewBoardCoin = function (board) {
 				A2($elm$html$Html$Attributes$style, 'top', '800px'),
 				A2($elm$html$Html$Attributes$style, 'left', '1800px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'orange'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -12524,10 +12525,10 @@ var $author$project$ViewOthers$viewCritical = function (board) {
 		_List_fromArray(
 			[
 				A2($elm$html$Html$Attributes$style, 'top', '720px'),
-				A2($elm$html$Html$Attributes$style, 'left', '1600px'),
+				A2($elm$html$Html$Attributes$style, 'left', '1630px'),
 				A2($elm$html$Html$Attributes$style, 'width', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'red'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'left'),
@@ -12548,10 +12549,11 @@ var $author$project$ViewEncyclopedia$viewEncyclopediaButton = A2(
 			A2($elm$html$Html$Attributes$style, 'background', 'transparent'),
 			A2($elm$html$Html$Attributes$style, 'top', '800px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'height', '80px'),
-			A2($elm$html$Html$Attributes$style, 'left', '50px'),
+			A2($elm$html$Html$Attributes$style, 'left', '29px'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 			A2($elm$html$Html$Attributes$style, 'outline', 'none'),
 			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
@@ -12693,34 +12695,96 @@ var $author$project$ViewAllEnemy$viewEnemy = F2(
 							]));
 			}
 		} else {
-			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'top',
-						$elm$core$Debug$toString(y - 40) + 'px'),
-						A2(
-						$elm$html$Html$Attributes$style,
-						'left',
-						$elm$core$Debug$toString(x - 40) + 'px'),
-						$author$project$DetectMouse$onContentMenu(
-						$author$project$Message$Hit(enemy.pos))
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
+			var _v3 = enemy.state;
+			switch (_v3.$) {
+				case 'Attacking':
+					return A2(
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$src('./assets/image/SkullKnight.png'),
-								$elm$html$Html$Attributes$height(80),
-								$elm$html$Html$Attributes$width(80)
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 40) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px'),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(enemy.pos))
 							]),
-						_List_Nil)
-					]));
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('./assets/image/Boss.gif'),
+										$elm$html$Html$Attributes$height(80),
+										$elm$html$Html$Attributes$width(80)
+									]),
+								_List_Nil)
+							]));
+				case 'Attacked':
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 40) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px'),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(enemy.pos))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('./assets/image/BossGotHit.png'),
+										$elm$html$Html$Attributes$height(80),
+										$elm$html$Html$Attributes$width(80)
+									]),
+								_List_Nil)
+							]));
+				default:
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$Debug$toString(y - 40) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'left',
+								$elm$core$Debug$toString(x - 40) + 'px'),
+								$author$project$DetectMouse$onContentMenu(
+								$author$project$Message$Hit(enemy.pos))
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('./assets/image/SkullKnight.png'),
+										$elm$html$Html$Attributes$height(80),
+										$elm$html$Html$Attributes$width(80)
+									]),
+								_List_Nil)
+							]));
+			}
 		}
 	});
 var $author$project$Data$offsetEnemy = function (selected) {
@@ -12954,7 +13018,7 @@ var $author$project$ViewAllEnemy$viewEnemyInfo = F2(
 							250 + $author$project$Data$offsetEnemy(
 								_Utils_eq(enemy.indexOnBoard, board.cntEnemy))) + 'px'),
 						A2($elm$html$Html$Attributes$style, 'color', 'white'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
 						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -12981,7 +13045,7 @@ var $author$project$ViewAllEnemy$viewEnemyInfo = F2(
 							200 + $author$project$Data$offsetEnemy(
 								_Utils_eq(enemy.indexOnBoard, board.cntEnemy))) + 'px'),
 						A2($elm$html$Html$Attributes$style, 'color', 'white'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
 						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -13094,7 +13158,8 @@ var $author$project$ViewAllHero$viewHero = F2(
 							A2(
 							$elm$html$Html$Attributes$style,
 							'left',
-							$elm$core$Debug$toString(x - 40) + 'px')
+							$elm$core$Debug$toString(x - 40) + 'px'),
+							A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 						]),
 					_List_fromArray(
 						[
@@ -13353,7 +13418,7 @@ var $author$project$ViewAllHero$viewHeroInfo = function (hero) {
 					$elm$core$Debug$toString(
 						1800 - $author$project$Data$offsetHero(hero)) + 'px'),
 					A2($elm$html$Html$Attributes$style, 'color', 'white'),
-					A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -13379,7 +13444,7 @@ var $author$project$ViewAllHero$viewHeroInfo = function (hero) {
 					$elm$core$Debug$toString(
 						1750 - $author$project$Data$offsetHero(hero)) + 'px'),
 					A2($elm$html$Html$Attributes$style, 'color', 'white'),
-					A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -13405,7 +13470,7 @@ var $author$project$ViewAllHero$viewHeroInfo = function (hero) {
 					$elm$core$Debug$toString(
 						1880 - $author$project$Data$offsetHero(hero)) + 'px'),
 					A2($elm$html$Html$Attributes$style, 'color', 'white'),
-					A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -13540,7 +13605,7 @@ var $author$project$ViewOthers$viewLevel = function (level) {
 				A2($elm$html$Html$Attributes$style, 'left', '1580px'),
 				A2($elm$html$Html$Attributes$style, 'width', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -13892,6 +13957,7 @@ var $author$project$ViewOthers$viewPopUpHint = function (model) {
 					A2($elm$html$Html$Attributes$style, 'color', 'red'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2(
 					$elm$html$Html$Attributes$style,
 					'opacity',
@@ -13913,12 +13979,12 @@ var $author$project$View$viewTurn = function (model) {
 				A2($elm$html$Html$Attributes$style, 'top', '640px'),
 				A2($elm$html$Html$Attributes$style, 'width', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'red'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
-				A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+				A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[
@@ -14046,7 +14112,8 @@ var $author$project$View$viewBoard = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'grey')
+				A2($elm$html$Html$Attributes$style, 'background', 'grey'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			_List_fromArray(
@@ -14202,7 +14269,7 @@ var $author$project$ViewScenes$viewBagCoin = function (model) {
 				A2($elm$html$Html$Attributes$style, 'left', '1600px'),
 				A2($elm$html$Html$Attributes$style, 'top', '910px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'orange'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -14229,6 +14296,42 @@ var $author$project$ViewScenes$viewCastleSvg = A2(
 			$elm$svg$Svg$Attributes$xlinkHref('./assets/image/Castle.png')
 		]),
 	_List_Nil);
+var $author$project$ViewScenes$viewDungeon1Location = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'top', '263px'),
+			A2($elm$html$Html$Attributes$style, 'left', '921px'),
+			A2($elm$html$Html$Attributes$style, 'color', 'white'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '27px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+		]),
+	_List_fromArray(
+		[
+			$elm$svg$Svg$text('Main Dungeon')
+		]));
+var $author$project$ViewScenes$viewDungeon2Location = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'top', '682px'),
+			A2($elm$html$Html$Attributes$style, 'left', '286px'),
+			A2($elm$html$Html$Attributes$style, 'color', 'white'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '30px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+		]),
+	_List_fromArray(
+		[
+			$elm$svg$Svg$text('Side Dungeon')
+		]));
 var $author$project$ViewScenes$viewSvgForC = A2(
 	$elm$html$Html$div,
 	_List_fromArray(
@@ -14321,7 +14424,8 @@ var $author$project$ViewScenes$viewRpgCharacter = function (character) {
 				A2(
 				$elm$html$Html$Attributes$style,
 				'top',
-				$elm$core$Debug$toString(y - (h / 2)) + 'px')
+				$elm$core$Debug$toString(y - (h / 2)) + 'px'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[
@@ -14342,6 +14446,24 @@ var $author$project$ViewScenes$viewRpgCharacter = function (character) {
 				_List_Nil)
 			]));
 };
+var $author$project$ViewScenes$viewShopLocation = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'top', '680px'),
+			A2($elm$html$Html$Attributes$style, 'left', '1599px'),
+			A2($elm$html$Html$Attributes$style, 'color', 'white'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '27px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+		]),
+	_List_fromArray(
+		[
+			$elm$svg$Svg$text('Shop')
+		]));
 var $author$project$ViewNPCTask$viewChatBox = F2(
 	function (_v0, scaleFactor) {
 		var x = _v0.a;
@@ -14406,7 +14528,8 @@ var $author$project$ViewNPCTask$viewSingleNPC = function (npc) {
 					A2(
 					$elm$html$Html$Attributes$style,
 					'top',
-					$elm$core$Debug$toString(y - (h / 2)) + 'px')
+					$elm$core$Debug$toString(y - (h / 2)) + 'px'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 				]),
 			_List_fromArray(
 				[
@@ -14438,7 +14561,7 @@ var $author$project$ViewNPCTask$textTask = function (model) {
 	while (true) {
 		switch (_v0.$) {
 			case 'MeetElder':
-				return 'Go to meet Elder and have the Tutorial Level!';
+				return 'Meet the Elder to complete the Tutorial Level!';
 			case 'GoToShop':
 				return 'Go to the shop and get a free random hero!';
 			case 'Level':
@@ -14446,13 +14569,13 @@ var $author$project$ViewNPCTask$textTask = function (model) {
 					case 1:
 						return 'Talk to a Dark Knight 1 and defeat him!';
 					case 2:
-						return 'Talk to a Dark Knight 2 and defeat him!';
+						return 'Talk to Dark Knight 2 and defeat him!';
 					case 3:
-						return 'Enter Dungeon and destroy Skull Knight 1!';
+						return 'Enter Dungeon and destroy the Skull Knight!';
 					case 4:
 						return 'Skull Knight 2 appears! Kill him!';
 					case 5:
-						return 'Enter Dungeon2 and battle with Skull Knight 3';
+						return 'Enter the Side Dungeon and fight Skull Knight 3';
 					default:
 						break _v0$7;
 				}
@@ -14470,7 +14593,7 @@ var $author$project$ViewNPCTask$viewTask = function (model) {
 				A2($elm$html$Html$Attributes$style, 'top', '40px'),
 				A2($elm$html$Html$Attributes$style, 'left', '1745px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'left'),
@@ -14519,8 +14642,8 @@ var $author$project$ViewScenes$viewTipForC = A2(
 			A2($elm$html$Html$Attributes$style, 'top', '700px'),
 			A2($elm$html$Html$Attributes$style, 'left', '5px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'white'),
-			A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -14537,8 +14660,8 @@ var $author$project$ViewScenes$viewTipForDir = A2(
 			A2($elm$html$Html$Attributes$style, 'top', '280px'),
 			A2($elm$html$Html$Attributes$style, 'left', '10px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'white'),
-			A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -14555,8 +14678,8 @@ var $author$project$ViewScenes$viewTipForEnter = A2(
 			A2($elm$html$Html$Attributes$style, 'top', '500px'),
 			A2($elm$html$Html$Attributes$style, 'left', '-5px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'white'),
-			A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
-			A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -14565,6 +14688,24 @@ var $author$project$ViewScenes$viewTipForEnter = A2(
 	_List_fromArray(
 		[
 			$elm$svg$Svg$text('Press Enter to pass doors')
+		]));
+var $author$project$ViewScenes$viewTipForT = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			A2($elm$html$Html$Attributes$style, 'top', '30px'),
+			A2($elm$html$Html$Attributes$style, 'left', '0px'),
+			A2($elm$html$Html$Attributes$style, 'color', 'white'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
+			A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
+			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+			A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+			A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
+			A2($elm$html$Html$Attributes$style, 'position', 'absolute')
+		]),
+	_List_fromArray(
+		[
+			$elm$svg$Svg$text('Press T to access all levels')
 		]));
 var $author$project$ViewScenes$viewCastle = function (model) {
 	var _v0 = model.size;
@@ -14597,7 +14738,8 @@ var $author$project$ViewScenes$viewCastle = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			$author$project$ViewScenes$viewKeyGif,
@@ -14621,12 +14763,22 @@ var $author$project$ViewScenes$viewCastle = function (model) {
 								]),
 							_Utils_ap(
 								$author$project$ViewNPCTask$viewTaskBoard,
-								A4($author$project$ViewOthers$viewUIButton, 170, 80, 50, 800)))),
+								_Utils_ap(
+									A4($author$project$ViewOthers$viewUIFrame, 200, 42, 1525, 688),
+									_Utils_ap(
+										A4($author$project$ViewOthers$viewUIFrame, 200, 42, 268, 688),
+										_Utils_ap(
+											A4($author$project$ViewOthers$viewUIFrame, 200, 42, 899, 270),
+											A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 800))))))),
 						$author$project$ViewScenes$viewBagCoin(model),
 						$author$project$ViewScenes$viewTipForDir,
 						$author$project$ViewScenes$viewTipForC,
 						$author$project$ViewScenes$viewTipForEnter,
 						$author$project$ViewEncyclopedia$viewEncyclopediaButton,
+						$author$project$ViewScenes$viewTipForT,
+						$author$project$ViewScenes$viewDungeon1Location,
+						$author$project$ViewScenes$viewShopLocation,
+						$author$project$ViewScenes$viewDungeon2Location,
 						A2(
 						$elm$html$Html$div,
 						_List_fromArray(
@@ -14727,6 +14879,7 @@ var $author$project$ViewDialog$viewDialogContent = function (string) {
 				A2($elm$html$Html$Attributes$style, 'left', '365px'),
 				A2($elm$html$Html$Attributes$style, 'top', '570px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'font-size', '50px')
 			]),
 		_List_fromArray(
@@ -14740,7 +14893,8 @@ var $author$project$ViewDialog$viewMainCharacterDialog = A2(
 		[
 			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 			A2($elm$html$Html$Attributes$style, 'top', '100px'),
-			A2($elm$html$Html$Attributes$style, 'left', '350px')
+			A2($elm$html$Html$Attributes$style, 'left', '350px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14783,7 +14937,8 @@ var $author$project$ViewDialog$viewDialogBoss = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14820,7 +14975,8 @@ var $author$project$ViewDialog$viewDialogDarkKnight1 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14836,7 +14992,8 @@ var $author$project$ViewDialog$viewDialogDarkKnight2 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14851,6 +15008,7 @@ var $author$project$ViewDialog$viewElderDialog = A2(
 			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 			A2($elm$html$Html$Attributes$style, 'top', '100px'),
 			A2($elm$html$Html$Attributes$style, 'left', '1180px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'transform', 'scaleX(-1)')
 		]),
 	_List_fromArray(
@@ -14872,6 +15030,7 @@ var $author$project$ViewDialog$viewDialogElder = A2(
 			A2($elm$html$Html$Attributes$style, 'width', '100%'),
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
 			A2($elm$html$Html$Attributes$style, 'top', '0')
 		]),
@@ -14922,7 +15081,8 @@ var $author$project$ViewDialog$viewDialogSkullKnight1 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14938,7 +15098,8 @@ var $author$project$ViewDialog$viewDialogSkullKnight2 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14954,7 +15115,8 @@ var $author$project$ViewDialog$viewDialogSkullKnight3 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -14977,6 +15139,7 @@ var $author$project$ViewOthers$dialogHelper = F7(
 					'height',
 					$elm$core$Debug$toString(height) + 'px'),
 					A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2(
 					$elm$html$Html$Attributes$style,
 					'left',
@@ -15004,7 +15167,8 @@ var $author$project$ViewDialog$viewFinishTutorial = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -15114,7 +15278,8 @@ var $author$project$ViewDialog$viewDialog = F2(
 					$elm$html$Html$Attributes$style,
 					'transform',
 					'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-					A2($elm$html$Html$Attributes$style, 'background', 'black')
+					A2($elm$html$Html$Attributes$style, 'background', 'black'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 				]),
 			_List_fromArray(
 				[
@@ -15143,6 +15308,7 @@ var $author$project$ViewShop$exitButton = A2(
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
 			A2($elm$html$Html$Attributes$style, 'font-size', '18px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'top', '920px'),
 			A2($elm$html$Html$Attributes$style, 'height', '50px'),
 			A2($elm$html$Html$Attributes$style, 'left', '1400px'),
@@ -15206,7 +15372,8 @@ var $author$project$ViewShop$viewDrawnHero = F2(
 					$elm$html$Html$Attributes$style,
 					'transform',
 					'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-					A2($elm$html$Html$Attributes$style, 'background', 'black')
+					A2($elm$html$Html$Attributes$style, 'background', 'black'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 				]),
 			_List_fromArray(
 				[
@@ -15269,7 +15436,8 @@ var $author$project$ViewScenes$viewDungeon = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			$author$project$ViewScenes$viewKeyGif,
@@ -15291,8 +15459,11 @@ var $author$project$ViewScenes$viewDungeon = function (model) {
 									$author$project$ViewOthers$viewCoinSVG(
 									_Utils_Tuple2(1500, 900))
 								]),
-							$author$project$ViewNPCTask$viewTaskBoard)),
+							_Utils_ap(
+								$author$project$ViewNPCTask$viewTaskBoard,
+								A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 800)))),
 						$author$project$ViewScenes$viewBagCoin(model),
+						$author$project$ViewScenes$viewTipForT,
 						$author$project$ViewScenes$viewTipForDir,
 						$author$project$ViewScenes$viewTipForC,
 						$author$project$ViewScenes$viewTipForEnter,
@@ -15345,7 +15516,8 @@ var $author$project$ViewScenes$viewDungeon2 = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			$author$project$ViewScenes$viewKeyGif,
@@ -15367,9 +15539,12 @@ var $author$project$ViewScenes$viewDungeon2 = function (model) {
 									$author$project$ViewOthers$viewCoinSVG(
 									_Utils_Tuple2(1500, 900))
 								]),
-							$author$project$ViewNPCTask$viewTaskBoard)),
+							_Utils_ap(
+								$author$project$ViewNPCTask$viewTaskBoard,
+								A4($author$project$ViewOthers$viewUIButton, 170, 80, 29, 800)))),
 						$author$project$ViewScenes$viewBagCoin(model),
 						$author$project$ViewScenes$viewTipForDir,
+						$author$project$ViewScenes$viewTipForT,
 						$author$project$ViewScenes$viewTipForC,
 						$author$project$ViewScenes$viewTipForEnter,
 						$author$project$ViewEncyclopedia$viewEncyclopediaButton
@@ -15468,44 +15643,44 @@ var $author$project$ViewEncyclopedia$viewDescription = function (_class) {
 		case 'Warrior':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon around the warrior'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around it'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: high health and tanky'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Warrior')
 				]);
 		case 'Archer':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon within the 6 lanes around archer'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon along a clear path'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: high damage but health is low'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Archer')
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 810, 50, 120, 'white', 'Archer')
 				]);
 		case 'Mage':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon around the mage which is 2 steps away'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon 2 steps away from it'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: heros around the hexagon that was clicked will be damaged too'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Mage')
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 850, 50, 120, 'white', 'Mage')
 				]);
 		case 'Assassin':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon around the warrior'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around it'),
 					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: fast (more energy to move/attack)'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Assassin')
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 780, 50, 120, 'white', 'Assassin')
 				]);
 		case 'Healer':
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon around the healer'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: heal teammates'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Healer')
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around the it'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: heals teammates'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 820, 50, 120, 'white', 'Healer')
 				]);
 		default:
 			return _List_fromArray(
 				[
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Attack range: any one hexagon around the warrior'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: create turrets that can damage enemies'),
-					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 800, 50, 120, 'white', 'Engineer')
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 700, 40, 'white', '- Range: any one hexagon around the warrior'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 500, 770, 40, 'white', '- Specialty: create turrets that can deal 10 damage'),
+					A7($author$project$ViewOthers$dialogHelper, 1100, 20, 790, 50, 120, 'white', 'Engineer')
 				]);
 	}
 };
@@ -15568,6 +15743,7 @@ var $author$project$ViewEncyclopedia$viewHeroInfo = function (_class) {
 					A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '50px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 					A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 					A2($elm$html$Html$Attributes$style, 'position', 'absolute')
@@ -15588,6 +15764,7 @@ var $author$project$ViewEncyclopedia$viewHeroInfo = function (_class) {
 					A2($elm$html$Html$Attributes$style, 'font-size', '50px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 					A2($elm$html$Html$Attributes$style, 'position', 'absolute')
 				]),
@@ -15606,6 +15783,7 @@ var $author$project$ViewEncyclopedia$viewHeroInfo = function (_class) {
 					A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
 					A2($elm$html$Html$Attributes$style, 'font-size', '50px'),
 					A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 					A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
 					A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 					A2($elm$html$Html$Attributes$style, 'position', 'absolute')
@@ -15688,7 +15866,8 @@ var $author$project$ViewEncyclopedia$viewEncyclopedia = F2(
 					$elm$html$Html$Attributes$style,
 					'transform',
 					'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-					A2($elm$html$Html$Attributes$style, 'background', 'rgb(184,111,80)')
+					A2($elm$html$Html$Attributes$style, 'background', 'rgb(184,111,80)'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 				]),
 			_Utils_ap(
 				_List_fromArray(
@@ -15723,6 +15902,7 @@ var $author$project$ViewChoose$confirmButton = A2(
 			A2($elm$html$Html$Attributes$style, 'top', '875px'),
 			A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
 			A2($elm$html$Html$Attributes$style, 'font-size', '25px'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'height', '100px'),
 			A2($elm$html$Html$Attributes$style, 'left', '875px'),
@@ -15825,6 +16005,7 @@ var $author$project$ViewChoose$viewHeroChoose = function (model) {
 				'top',
 				$elm$core$String$fromFloat((h - ($author$project$Data$pixelHeight * r)) / 2) + 'px'),
 				A2($elm$html$Html$Attributes$style, 'transform-origin', '0 0'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2(
 				$elm$html$Html$Attributes$style,
 				'transform',
@@ -15914,7 +16095,8 @@ var $author$project$ViewScenes$viewScene0 = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[
@@ -15979,7 +16161,8 @@ var $author$project$ViewShop$viewShop = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			$author$project$ViewScenes$viewKeyGif,
@@ -16033,8 +16216,7 @@ var $author$project$ViewShop$drawButton = function (model) {
 				A2($elm$html$Html$Attributes$style, 'background', '#34495f'),
 				A2($elm$html$Html$Attributes$style, 'top', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
-				A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
-				A2($elm$html$Html$Attributes$style, 'font-weight', '500'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'height', '200px'),
 				A2($elm$html$Html$Attributes$style, 'left', '1000px'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -16057,8 +16239,7 @@ var $author$project$ViewShop$drawButton = function (model) {
 				A2($elm$html$Html$Attributes$style, 'background', '#34495f'),
 				A2($elm$html$Html$Attributes$style, 'top', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
-				A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
-				A2($elm$html$Html$Attributes$style, 'font-weight', '500'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'height', '200px'),
 				A2($elm$html$Html$Attributes$style, 'left', '1000px'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -16082,9 +16263,8 @@ var $author$project$ViewShop$drawButton = function (model) {
 				A2($elm$html$Html$Attributes$style, 'background', '#34495f'),
 				A2($elm$html$Html$Attributes$style, 'top', '400px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
-				A2($elm$html$Html$Attributes$style, 'font-size', '24px'),
-				A2($elm$html$Html$Attributes$style, 'font-weight', '500'),
 				A2($elm$html$Html$Attributes$style, 'height', '200px'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 				A2($elm$html$Html$Attributes$style, 'left', '1000px'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 				A2($elm$html$Html$Attributes$style, 'outline', 'none'),
@@ -16119,6 +16299,7 @@ var $author$project$ViewShop$enterUpgradeButton = A2(
 			A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 			A2($elm$html$Html$Attributes$style, 'width', '400px'),
 			A2($elm$html$Html$Attributes$style, 'background', 'transparent'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 			A2($elm$html$Html$Attributes$style, 'border', 'transparent'),
 			A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 			A2($elm$html$Html$Attributes$style, 'color', 'rgb(61,43,31)'),
@@ -16160,7 +16341,8 @@ var $author$project$ViewShop$viewShopChoose = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[
@@ -16223,7 +16405,8 @@ var $author$project$ViewScenes$viewSummary = function (model) {
 				A2(
 				$elm$html$Html$Attributes$style,
 				'transform',
-				'scale(' + ($elm$core$String$fromFloat(r) + ')'))
+				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[
@@ -16246,7 +16429,7 @@ var $author$project$ViewScenes$viewSummary = function (model) {
 						A2($elm$html$Html$Attributes$style, 'left', '0px'),
 						A2($elm$html$Html$Attributes$style, 'width', '2000px'),
 						A2($elm$html$Html$Attributes$style, 'color', 'white'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -16265,7 +16448,7 @@ var $author$project$ViewScenes$viewSummary = function (model) {
 						A2($elm$html$Html$Attributes$style, 'left', '0px'),
 						A2($elm$html$Html$Attributes$style, 'width', '2000px'),
 						A2($elm$html$Html$Attributes$style, 'color', 'white'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -16285,7 +16468,7 @@ var $author$project$ViewScenes$viewSummary = function (model) {
 						A2($elm$html$Html$Attributes$style, 'left', '0px'),
 						A2($elm$html$Html$Attributes$style, 'width', '2000px'),
 						A2($elm$html$Html$Attributes$style, 'color', 'white'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'Helvetica, Arial, sans-serif'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'font-size', '40px'),
 						A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 						A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
@@ -16335,7 +16518,8 @@ var $author$project$ViewTutorial$viewTutorial1 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -16496,7 +16680,8 @@ var $author$project$ViewTutorial$viewTutorial2 = A2(
 			A2($elm$html$Html$Attributes$style, 'height', '100%'),
 			A2($elm$html$Html$Attributes$style, 'position', 'fixed'),
 			A2($elm$html$Html$Attributes$style, 'left', '0'),
-			A2($elm$html$Html$Attributes$style, 'top', '0')
+			A2($elm$html$Html$Attributes$style, 'top', '0'),
+			A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 		]),
 	_List_fromArray(
 		[
@@ -16823,7 +17008,8 @@ var $author$project$View$viewTutorial = F2(
 					$elm$html$Html$Attributes$style,
 					'transform',
 					'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-					A2($elm$html$Html$Attributes$style, 'background', 'grey')
+					A2($elm$html$Html$Attributes$style, 'background', 'grey'),
+					A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 				]),
 			A2(
 				$elm$core$List$cons,
@@ -17029,6 +17215,7 @@ var $author$project$ViewShop$upgradeButton = function (model) {
 						A2($elm$html$Html$Attributes$style, 'height', '150px'),
 						A2($elm$html$Html$Attributes$style, 'left', '850px'),
 						A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'outline', 'none'),
 						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 						A2($elm$html$Html$Attributes$style, 'width', '300px'),
@@ -17061,6 +17248,7 @@ var $author$project$ViewShop$upgradeButton = function (model) {
 						A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
 						A2($elm$html$Html$Attributes$style, 'outline', 'none'),
 						A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+						A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
 						A2($elm$html$Html$Attributes$style, 'width', '400px'),
 						A2($elm$html$Html$Attributes$style, 'background', 'transparent'),
 						A2($elm$html$Html$Attributes$style, 'border', 'transparent'),
@@ -17376,7 +17564,8 @@ var $author$project$ViewShop$viewUpgradePage = function (model) {
 				$elm$html$Html$Attributes$style,
 				'transform',
 				'scale(' + ($elm$core$String$fromFloat(r) + ')')),
-				A2($elm$html$Html$Attributes$style, 'background', 'black')
+				A2($elm$html$Html$Attributes$style, 'background', 'black'),
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_Utils_ap(
 			_List_fromArray(
@@ -17466,7 +17655,7 @@ var $author$project$View$view = function (model) {
 				A2($elm$html$Html$Attributes$style, 'left', '0'),
 				A2($elm$html$Html$Attributes$style, 'top', '0'),
 				A2($elm$html$Html$Attributes$style, 'background', 'black'),
-				A2($elm$html$Html$Attributes$style, 'font-family', 'url(\'./assets/PixelOperator-Bold.ttf\') format(\'truetype\')')
+				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont')
 			]),
 		_List_fromArray(
 			[viewAll]));

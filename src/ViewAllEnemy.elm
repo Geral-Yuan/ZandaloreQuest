@@ -76,14 +76,36 @@ viewEnemy board enemy =
                     ]
 
     else
-        div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-            , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-            , onContentMenu (Hit enemy.pos)
-            ]
-            [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
-            ]
+        case enemy.state of
+            Attacking ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/Boss.gif", height 80, width 115 ] []
+                    ]
+
+            Attacked _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/BossGotHit.png", height 80, width 80 ] []
+                    ]
+
+            _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
+                    ]
 
 
 viewEnemyImage : Board -> Enemy -> Svg msg
@@ -110,6 +132,7 @@ viewEnemyImage board enemy =
             , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
             ]
             []
+
     else
         Svg.image
             [ SvgAttr.width "70"
@@ -117,7 +140,7 @@ viewEnemyImage board enemy =
             , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
             , SvgAttr.y (toString (idxOnBoard * 150 - 100))
             , SvgAttr.preserveAspectRatio "none"
-            , SvgAttr.xlinkHref ("./assets/image/SkullKnight.png")
+            , SvgAttr.xlinkHref "./assets/image/SkullKnight.png"
             ]
             []
 
@@ -293,7 +316,7 @@ viewEnemyInfo board enemy =
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 115) ++ "px")
         , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -305,7 +328,7 @@ viewEnemyInfo board enemy =
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 75) ++ "px")
         , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"

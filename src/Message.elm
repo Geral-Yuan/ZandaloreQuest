@@ -39,3 +39,4 @@ type Msg
     | RightEncyclopedia
     | LeftEncyclopedia
     | Test
+    | ViewHint Bool

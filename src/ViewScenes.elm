@@ -7,7 +7,7 @@ import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg)
 import Model exposing (Model)
 import RpgCharacter exposing (RpgCharacter)
-import Svg exposing (Svg, text)
+import Svg exposing (Svg, text, view)
 import Svg.Attributes as SvgAttr
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
@@ -56,6 +56,7 @@ viewScene0 model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
@@ -113,6 +114,7 @@ viewRpgCharacter character =
         [ HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "left" (toString (x - w / 2) ++ "px")
         , HtmlAttr.style "top" (toString (y - h / 2) ++ "px")
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ img
             [ src ("./assets/image/MainCharacter" ++ image)
@@ -134,7 +136,7 @@ viewCharacterPos character =
         [ HtmlAttr.style "bottom" "100px"
         , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -166,6 +168,7 @@ viewCastle model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (viewKeyGif
             ++ [ viewTask model
@@ -177,7 +180,12 @@ viewCastle model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
-                        ++ viewUIButton 170 80 50 800
+                        ++ viewUIFrame 200 42 1525 688
+                        -- shop
+                        ++ viewUIFrame 200 42 268 688
+                        ++ viewUIFrame 200 42 899 270
+                        -- dungeon1
+                        ++ viewUIButton 170 80 29 800
                     )
 
                --, viewCharacterPos model.character
@@ -186,6 +194,10 @@ viewCastle model =
                , viewTipForC
                , viewTipForEnter
                , viewEncyclopediaButton
+               , viewTipForT
+               , viewDungeon1Location
+               , viewShopLocation
+               , viewDungeon2Location
                , div
                     [ HtmlAttr.style "bottom" "20px"
                     , HtmlAttr.style "left" "0px"
@@ -231,6 +243,7 @@ viewDungeon model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (viewKeyGif
             ++ [ viewTask model
@@ -242,10 +255,12 @@ viewDungeon model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
+                        ++ viewUIButton 170 80 29 800
                     )
 
                --, viewCharacterPos model.character
                , viewBagCoin model
+               , viewTipForT
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
@@ -278,6 +293,7 @@ viewDungeon2 model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (viewKeyGif
             ++ [ viewTask model
@@ -289,11 +305,13 @@ viewDungeon2 model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
+                        ++ viewUIButton 170 80 29 800
                     )
 
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
+               , viewTipForT
                , viewTipForC
                , viewTipForEnter
                , viewEncyclopediaButton
@@ -373,14 +391,62 @@ viewSvgForEnter =
         ]
 
 
+viewShopLocation : Html msg
+viewShopLocation =
+    div
+        [ HtmlAttr.style "top" "680px"
+        , HtmlAttr.style "left" "1599px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "27px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Shop" ]
+
+
+viewDungeon1Location : Html msg
+viewDungeon1Location =
+    div
+        [ HtmlAttr.style "top" "263px"
+        , HtmlAttr.style "left" "921px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "27px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Main Dungeon" ]
+
+
+viewDungeon2Location : Html msg
+viewDungeon2Location =
+    div
+        [ HtmlAttr.style "top" "682px"
+        , HtmlAttr.style "left" "286px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "30px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Side Dungeon" ]
+
+
 viewTipForDir : Html Msg
 viewTipForDir =
     div
         [ HtmlAttr.style "top" "280px"
         , HtmlAttr.style "left" "10px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
@@ -389,14 +455,30 @@ viewTipForDir =
         [ text "Press ⬆⬅⬇➡ to move" ]
 
 
+viewTipForT : Html Msg
+viewTipForT =
+    div
+        [ HtmlAttr.style "top" "30px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press T to access all levels" ]
+
+
 viewTipForC : Html Msg
 viewTipForC =
     div
         [ HtmlAttr.style "top" "700px"
         , HtmlAttr.style "left" "5px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
@@ -411,8 +493,8 @@ viewTipForEnter =
         [ HtmlAttr.style "top" "500px"
         , HtmlAttr.style "left" "-5px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-        , HtmlAttr.style "font-size" "20px"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
@@ -455,6 +537,7 @@ viewStarting model =
         , HtmlAttr.style "left" (String.fromFloat (600 + (w - startWidth * r) / 2) ++ "px")
         , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , ("url('./assets/image/Start.png')"
             ++ " no-repeat fixed "
@@ -473,7 +556,7 @@ viewBagCoin model =
         [ HtmlAttr.style "left" "1600px"
         , HtmlAttr.style "top" "910px"
         , HtmlAttr.style "color" "orange"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -504,6 +587,7 @@ viewSummary model =
         , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
@@ -517,7 +601,7 @@ viewSummary model =
             , HtmlAttr.style "left" "0px"
             , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "40px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center" -- align text seems to not working
@@ -530,7 +614,7 @@ viewSummary model =
             , HtmlAttr.style "left" "0px"
             , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "40px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -543,7 +627,7 @@ viewSummary model =
             , HtmlAttr.style "left" "0px"
             , HtmlAttr.style "width" "2000px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "40px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"

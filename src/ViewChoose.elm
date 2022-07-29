@@ -32,6 +32,7 @@ viewHeroChoose model =
         , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
         , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
         ]
@@ -118,6 +119,7 @@ confirmButton =
         , HtmlAttr.style "top" "875px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "25px"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "height" "100px"
         , HtmlAttr.style "left" "875px"
