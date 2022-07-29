@@ -2,12 +2,14 @@ module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePa
 
 {-| This file fills pages in the shop.
 
-# Functions 
+
+# Functions
+
 @docs viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage
 
 -}
 
-import Data exposing (Class(..), Hero, HeroState(..), Scene(..), pixelHeight, pixelWidth)
+import Data exposing (Class(..), Hero, HeroState(..), Scene(..), pixelHeight, pixelWidth, upgradeDamage, upgradeHealth)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
@@ -18,11 +20,11 @@ import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
-import ViewScenes exposing (viewKeyGif, viewTipForDir, viewTipForC, viewTipForEnter, viewBagCoin, viewRpgCharacter)
-import Data exposing (upgradeHealth)
-import Data exposing (upgradeDamage)
+import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipForC, viewTipForDir, viewTipForEnter)
 
-{-| view the shop where the rpg character can move -}
+
+{-| view the shop where the rpg character can move
+-}
 viewShop : Model -> Html Msg
 viewShop model =
     let
@@ -45,6 +47,7 @@ viewShop model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (viewKeyGif
             ++ [ viewTask model
@@ -52,12 +55,11 @@ viewShop model =
                     [ SvgAttr.width "100%"
                     , SvgAttr.height "100%"
                     ]
-                    (
-                        
-                        viewShopSvg
+                    (viewShopSvg
                         ++ viewTaskBoard
-                        ++ [viewCoinSVG ( 1500, 900 )]
+                        ++ [ viewCoinSVG ( 1500, 900 ) ]
                     )
+
                --, viewCharacterPos model.character
                , viewTipForDir
                , viewTipForC
@@ -71,49 +73,46 @@ viewShop model =
 
 viewShopSvg : List (Svg msg)
 viewShopSvg =
-    [
-        Svg.image
+    [ Svg.image
         [ SvgAttr.width "1600"
         , SvgAttr.height "1000"
         , SvgAttr.x (toString (pixelWidth / 2 - 800))
         , SvgAttr.y (toString (pixelHeight / 2 - 500))
         , SvgAttr.preserveAspectRatio "none"
-        
         , SvgAttr.xlinkHref "./assets/image/Shop.jpg"
         ]
         []
     ]
 
+
 viewBuySvg : List (Svg msg)
 viewBuySvg =
-    [
-    -- Svg.linearGradient
-    --     [ SvgAttr.id ("myLRadial")
-    --     , SvgAttr.x1 "0%"
-    --     , SvgAttr.x2 "100%"
-    --     , SvgAttr.y1 "0%"
-    --     , SvgAttr.y2 "0%" ]
-    --     [ Svg.stop
-    --         [ SvgAttr.offset "0%"
-    --         , SvgAttr.stopOpacity "100%"
-    --         , SvgAttr.stopColor "transparent"
-    --         ]
-    --         []
-    --     -- , Svg.stop
-    --     --     [ SvgAttr.offset "50%"
-    --     --     , SvgAttr.stopOpacity "0%"
-    --     --     ]
-    --     --     []
-    --     , Svg.stop
-    --         [ SvgAttr.offset "100%"
-    --         , SvgAttr.stopOpacity "0%"
-    --         , SvgAttr.stopColor "transparent"
-    --         ]
-    --         []
-    --     ]
-    
-    -- , 
-    Svg.image
+    [ -- Svg.linearGradient
+      --     [ SvgAttr.id ("myLRadial")
+      --     , SvgAttr.x1 "0%"
+      --     , SvgAttr.x2 "100%"
+      --     , SvgAttr.y1 "0%"
+      --     , SvgAttr.y2 "0%" ]
+      --     [ Svg.stop
+      --         [ SvgAttr.offset "0%"
+      --         , SvgAttr.stopOpacity "100%"
+      --         , SvgAttr.stopColor "transparent"
+      --         ]
+      --         []
+      --     -- , Svg.stop
+      --     --     [ SvgAttr.offset "50%"
+      --     --     , SvgAttr.stopOpacity "0%"
+      --     --     ]
+      --     --     []
+      --     , Svg.stop
+      --         [ SvgAttr.offset "100%"
+      --         , SvgAttr.stopOpacity "0%"
+      --         , SvgAttr.stopColor "transparent"
+      --         ]
+      --         []
+      --     ]
+      -- ,
+      Svg.image
         [ SvgAttr.width "1600"
         , SvgAttr.height "1000"
         , SvgAttr.x (toString (pixelWidth / 2 - 800))
@@ -123,15 +122,13 @@ viewBuySvg =
         , SvgAttr.xlinkHref "./assets/image/Shop.jpg"
         ]
         []
-
-        ]
+    ]
 
 
 viewHighlightHero : List (Svg msg)
 viewHighlightHero =
-
     [ Svg.radialGradient
-        [ SvgAttr.id ("myRadial") ]
+        [ SvgAttr.id "myRadial" ]
         [ Svg.stop
             [ SvgAttr.offset "10%"
             , SvgAttr.stopColor "white"
@@ -162,6 +159,7 @@ viewHighlightHero =
         , SvgAttr.fill "url('#myRadial')"
         ]
         []
+
     -- , Svg.circle
     --     [ SvgAttr.cx "1000"
     --     , SvgAttr.cy "400"
@@ -170,9 +168,10 @@ viewHighlightHero =
     --     ]
     --     []
     ]
-    
 
-{-| view the first page where players can draw a hero and enter upgrade page -}
+
+{-| view the first page where players can draw a hero and enter upgrade page
+-}
 viewShopChoose : Model -> Html Msg
 viewShopChoose model =
     let
@@ -195,24 +194,28 @@ viewShopChoose model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewTask model
         , Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (
-                (viewBuySvg ++ viewTaskBoard)
-                ++ (viewUIButton 100 50 1400 920) --for exit
-                ++ (viewUIButton 400 200 1000 400) -- for draw
-                ++ (viewUIButton 400 200 500 400) -- for upgrade
-                ++ [viewCoinSVG ( 1500, 900 )]
+            ((viewBuySvg ++ viewTaskBoard)
+                ++ viewUIButton 100 50 1400 920
+                --for exit
+                ++ viewUIButton 400 200 1000 400
+                -- for draw
+                ++ viewUIButton 400 200 500 400
+                -- for upgrade
+                ++ [ viewCoinSVG ( 1500, 900 ) ]
             )
         , drawButton model
         , exitButton
         , enterUpgradeButton
         , viewBagCoin model
         ]
+
 
 exitButton : Html Msg
 exitButton =
@@ -222,7 +225,7 @@ exitButton =
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "18px"
-
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "top" "920px"
         , HtmlAttr.style "height" "50px"
         , HtmlAttr.style "left" "1400px"
@@ -242,8 +245,7 @@ drawButton model =
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-size" "24px"
-            , HtmlAttr.style "font-weight" "500"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "height" "200px"
             , HtmlAttr.style "left" "1000px"
             , HtmlAttr.style "line-height" "60px"
@@ -263,8 +265,7 @@ drawButton model =
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-size" "24px"
-            , HtmlAttr.style "font-weight" "500"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "height" "200px"
             , HtmlAttr.style "left" "1000px"
             , HtmlAttr.style "line-height" "60px"
@@ -272,10 +273,10 @@ drawButton model =
             , HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "width" "400px"
             , HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "border" "transparent"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "24px"
+            , HtmlAttr.style "border" "transparent"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "color" "rgb(61,43,31)"
+            , HtmlAttr.style "font-size" "24px"
             , onClick LuckyDraw
             ]
             [ text "0 coins to draw a powerful hero!" ]
@@ -285,24 +286,25 @@ drawButton model =
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-size" "24px"
-            , HtmlAttr.style "font-weight" "500"
             , HtmlAttr.style "height" "200px"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "left" "1000px"
             , HtmlAttr.style "line-height" "60px"
             , HtmlAttr.style "outline" "none"
             , HtmlAttr.style "position" "absolute"
             , HtmlAttr.style "width" "400px"
             , HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "border" "transparent"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "24px"
+            , HtmlAttr.style "border" "transparent"
+            , HtmlAttr.style "font-weight" "bold"
+            , HtmlAttr.style "color" "rgb(61,43,31)"
+            , HtmlAttr.style "font-size" "24px"
             , onClick LuckyDraw
             ]
             [ text "100 coins to draw a powerful hero!" ]
 
-{-| view the page where the player can upgrade heroes -}
+
+{-| view the page where the player can upgrade heroes
+-}
 viewUpgradePage : Model -> Html Msg
 viewUpgradePage model =
     let
@@ -325,22 +327,23 @@ viewUpgradePage model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         ([ viewTask model
          , Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (   viewBuySvg
-                
+            (viewBuySvg
                 ++ viewTaskBoard
                 ++ viewHighlightHero
                 ++ List.map (\hero -> viewShopHeroes model hero) (idealAllHeroes model)
                 ++ viewHeroAttr model
-                ++ (viewUIButton 100 50 1400 920) --for exit
-            ++ (viewUIButton 300 150 850 775) -- for upgrade
-            ++ [viewCoinSVG ( 1500, 900 )]
-            
+                ++ viewUIButton 100 50 1400 920
+                --for exit
+                ++ viewUIButton 300 150 850 775
+                -- for upgrade
+                ++ [ viewCoinSVG ( 1500, 900 ) ]
             )
          , exitButton
          , viewBagCoin model
@@ -364,6 +367,7 @@ enterUpgradeButton =
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "background" "transparent"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "border" "transparent"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "color" "rgb(61,43,31)"
@@ -382,12 +386,13 @@ upgradeButton model =
     case selected of
         Just ( hero, ind ) ->
             if isClassHave ( hero, ind ) model then
-                [ button 
+                [ button
                     [ HtmlAttr.style "top" "775px"
                     , HtmlAttr.style "font-size" "24px"
                     , HtmlAttr.style "height" "150px"
                     , HtmlAttr.style "left" "850px"
                     , HtmlAttr.style "line-height" "60px"
+                    , HtmlAttr.style "font-family" "myfont"
                     , HtmlAttr.style "outline" "none"
                     , HtmlAttr.style "position" "absolute"
                     , HtmlAttr.style "width" "300px"
@@ -414,6 +419,7 @@ upgradeButton model =
                     , HtmlAttr.style "line-height" "60px"
                     , HtmlAttr.style "outline" "none"
                     , HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "font-family" "myfont"
                     , HtmlAttr.style "width" "400px"
                     , HtmlAttr.style "background" "transparent"
                     , HtmlAttr.style "border" "transparent"
@@ -497,7 +503,8 @@ viewShopHeroes model ( hero, index ) =
             []
 
 
-{-| view the hero that the player has just drawn -}
+{-| view the hero that the player has just drawn
+-}
 viewDrawnHero : Model -> Class -> Html Msg
 viewDrawnHero model class =
     let
@@ -520,13 +527,14 @@ viewDrawnHero model class =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "black"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
             (viewBuySvg
-            ++   (Svg.image
+                ++ Svg.image
                     [ SvgAttr.width "400"
                     , SvgAttr.height "400"
                     , SvgAttr.x "800"
@@ -534,9 +542,11 @@ viewDrawnHero model class =
                     , SvgAttr.preserveAspectRatio "none"
                     , SvgAttr.xlinkHref ("./assets/image/" ++ toString class ++ "Blue.png")
                     ]
-                    [])
-                 
-            :: (viewUIButton 100 50 1400 920)) --for exit
+                    []
+                :: viewUIButton 100 50 1400 920
+            )
+
+        --for exit
         , exitButton
         ]
 
@@ -558,95 +568,99 @@ idealAllHeroes model =
 viewHeroAttr : Model -> List (Svg Msg)
 viewHeroAttr model =
     let
-        maybeChosen = List.filter (\x -> isClassHave x model) model.indexedheroes
-                      |> List.filter (\(_, index) -> index == model.upgradePageIndex ) 
-                      |> List.head
+        maybeChosen =
+            List.filter (\x -> isClassHave x model) model.indexedheroes
+                |> List.filter (\( _, index ) -> index == model.upgradePageIndex)
+                |> List.head
 
         shealth =
             case maybeChosen of
                 Nothing ->
                     "???"
 
-                Just (hero, _) ->
+                Just ( hero, _ ) ->
                     if isdplup then
-                        toString (hero.maxHealth) ++ " + " ++ toString (upgradeHealth hero.class)
+                        toString hero.maxHealth ++ " + " ++ toString (upgradeHealth hero.class)
+
                     else
-                        toString (hero.maxHealth)
+                        toString hero.maxHealth
 
         sdmg =
             case maybeChosen of
                 Nothing ->
                     "???"
 
-                Just (hero, _) ->
+                Just ( hero, _ ) ->
                     if isdplup then
-                        toString (hero.damage) ++ " + " ++ toString (upgradeDamage hero.class)
+                        toString hero.damage ++ " + " ++ toString (upgradeDamage hero.class)
+
                     else
-                        toString (hero.damage)
+                        toString hero.damage
+
         senergy =
             case maybeChosen of
                 Nothing ->
                     "???"
 
-                Just (hero, _) ->
-                    toString (hero.energy)
+                Just ( hero, _ ) ->
+                    toString hero.energy
 
-        isdplup = model.isDisplayUpgrade
+        isdplup =
+            model.isDisplayUpgrade
     in
-    viewUIFrame  400 240 800 20
-    ++ [ Svg.image
-        [ SvgAttr.width "55"
-        , SvgAttr.height "55"
-        , SvgAttr.x "850"
-        , SvgAttr.y "40"
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Heart.png"
-        ]
-        []
-    , Svg.image
-        [ SvgAttr.width "55"
-        , SvgAttr.height "55"
-        , SvgAttr.x "850"
-        , SvgAttr.y "110"
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Sword.png"
-        ]
-        []
-    , Svg.image
-        [ SvgAttr.width "55"
-        , SvgAttr.height "55"
-        , SvgAttr.x "850"
-        , SvgAttr.y "180"
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref "./assets/image/Energy.png"
-        ]
-        []
-    , Svg.text_
-        [ SvgAttr.x "950"
-        , SvgAttr.y "67.5"
-        , SvgAttr.dominantBaseline "middle"
-        , SvgAttr.fill "white"
-        , SvgAttr.fontSize "50"
-        ]
-        [ Svg.text shealth
-        ]
-    , Svg.text_
-        [ SvgAttr.x "950"
-        , SvgAttr.y "137.5"
-        , SvgAttr.dominantBaseline "middle"
-        , SvgAttr.fill "white"
-        , SvgAttr.fontSize "50"
-        ]
-        [ Svg.text sdmg
-        ]
-    , Svg.text_
-        [ SvgAttr.x "950"
-        , SvgAttr.y "208"
-        , SvgAttr.dominantBaseline "middle"
-        , SvgAttr.fill "white"
-        , SvgAttr.fontSize "50"
-        ]
-        [ Svg.text senergy
-        ]
-    
-    ]
+    viewUIFrame 400 240 800 20
+        ++ [ Svg.image
+                [ SvgAttr.width "55"
+                , SvgAttr.height "55"
+                , SvgAttr.x "850"
+                , SvgAttr.y "40"
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/Heart.png"
+                ]
+                []
+           , Svg.image
+                [ SvgAttr.width "55"
+                , SvgAttr.height "55"
+                , SvgAttr.x "850"
+                , SvgAttr.y "110"
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/Sword.png"
+                ]
+                []
+           , Svg.image
+                [ SvgAttr.width "55"
+                , SvgAttr.height "55"
+                , SvgAttr.x "850"
+                , SvgAttr.y "180"
+                , SvgAttr.preserveAspectRatio "none"
+                , SvgAttr.xlinkHref "./assets/image/Energy.png"
+                ]
+                []
+           , Svg.text_
+                [ SvgAttr.x "950"
+                , SvgAttr.y "67.5"
+                , SvgAttr.dominantBaseline "middle"
+                , SvgAttr.fill "white"
+                , SvgAttr.fontSize "50"
+                ]
+                [ Svg.text shealth
+                ]
+           , Svg.text_
+                [ SvgAttr.x "950"
+                , SvgAttr.y "137.5"
+                , SvgAttr.dominantBaseline "middle"
+                , SvgAttr.fill "white"
+                , SvgAttr.fontSize "50"
+                ]
+                [ Svg.text sdmg
+                ]
+           , Svg.text_
+                [ SvgAttr.x "950"
+                , SvgAttr.y "208"
+                , SvgAttr.dominantBaseline "middle"
+                , SvgAttr.fill "white"
+                , SvgAttr.fontSize "50"
+                ]
+                [ Svg.text senergy
+                ]
+           ]

@@ -65,6 +65,7 @@ viewTutorial1 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
@@ -90,6 +91,7 @@ viewTutorial2 =
         , HtmlAttr.style "position" "fixed"
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
