@@ -258,7 +258,7 @@ drawButton model =
             ]
             [ text "You have obtained all heroes!" ]
 
-    else if List.length model.indexedheroes <= 3 then
+    else if List.length model.indexedheroes <= 2 then
         button
             [ HtmlAttr.style "background" "#34495f"
             , HtmlAttr.style "top" "400px"
