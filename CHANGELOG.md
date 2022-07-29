@@ -7,7 +7,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
-## [m1.54] -- 2022-7-27
+## [m1.57] -- 2022-7-29
+
+### Added
+- all dialogues
+- all documents
+- added tips for T key
+- formatted all documents 
+### Changed
+
+- all the fonts
+- generate enemies
+- rotate in update
+- formatting in encyclopedia
+
+## [m1.56] -- 2022-7-27
 
 ### Changed
 
