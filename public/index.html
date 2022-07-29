@@ -7742,7 +7742,13 @@ var $author$project$Update$possibleCratePosition = function (model) {
 			$elm$core$List$cons,
 			_Utils_Tuple2(0, 0),
 			$author$project$Data$neighbour));
-	return A2(
+	return ($elm$core$List$length(
+		A2(
+			$elm$core$List$filter,
+			function (x) {
+				return _Utils_eq(x.obstacleType, $author$project$Data$MysteryBox);
+			},
+			model.board.obstacles)) < 5) ? A2(
 		$author$project$Data$listDifference,
 		model.board.map,
 		$author$project$Data$unionList(
@@ -7762,7 +7768,7 @@ var $author$project$Update$possibleCratePosition = function (model) {
 						return $.pos;
 					},
 					model.board.item)
-				])));
+				]))) : _List_Nil;
 };
 var $elm$random$Random$addOne = function (value) {
 	return _Utils_Tuple2(1, value);
@@ -7873,15 +7879,6 @@ var $elm$random$Random$andThen = F2(
 				return genB(newSeed);
 			});
 	});
-var $author$project$Data$listIntersection = F2(
-	function (list1, list2) {
-		return A2(
-			$elm$core$List$filter,
-			function (x) {
-				return A2($elm$core$List$member, x, list2);
-			},
-			list1);
-	});
 var $author$project$Data$subneighbour = _List_fromArray(
 	[
 		_Utils_Tuple2(2, 0),
@@ -7913,14 +7910,9 @@ var $author$project$Update$possibleEnemyPosition = F2(
 				$elm$core$List$cons,
 				_Utils_Tuple2(0, 0),
 				_Utils_ap($author$project$Data$neighbour, $author$project$Data$subneighbour)));
-		var close_enemy = A3(
-			$author$project$Data$cartesianProduct,
-			$author$project$Data$vecAdd,
-			future_enemies_pos,
-			_Utils_ap($author$project$Data$neighbour, $author$project$Data$subneighbour));
 		var possible_pos = A2(
 			$author$project$Data$listDifference,
-			A2($author$project$Data$listIntersection, model.board.map, close_enemy),
+			model.board.map,
 			$author$project$Data$unionList(
 				_List_fromArray(
 					[
@@ -8096,6 +8088,15 @@ var $author$project$Data$leastdistance = F2(
 				$elm$core$List$map,
 				$author$project$Data$distance(pos),
 				pos_list));
+	});
+var $author$project$Data$listIntersection = F2(
+	function (list1, list2) {
+		return A2(
+			$elm$core$List$filter,
+			function (x) {
+				return A2($elm$core$List$member, x, list2);
+			},
+			list1);
 	});
 var $author$project$Data$vecScale = F2(
 	function (a, _v0) {
@@ -16049,7 +16050,7 @@ var $author$project$ViewShop$drawButton = function (model) {
 		_List_fromArray(
 			[
 				$elm$svg$Svg$text('You have obtained all heroes!')
-			])) : (($elm$core$List$length(model.indexedheroes) <= 3) ? A2(
+			])) : (($elm$core$List$length(model.indexedheroes) <= 2) ? A2(
 		$elm$html$Html$button,
 		_List_fromArray(
 			[
