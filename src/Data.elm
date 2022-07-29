@@ -359,7 +359,7 @@ sampleEnemy class pos index =
 
 initBoss : Enemy
 initBoss =
-    Enemy Turret ( 5, 5 ) 200 200 10 0 True Waiting False 1 True 1
+    Enemy Turret ( 5, 5 ) 300 300 20 0 True Waiting False 1 True 1
 
 
 

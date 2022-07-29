@@ -184,13 +184,13 @@ viewDescription class =
             ]
 
         Healer ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around the it"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around it"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: heals teammates"
             , dialogHelper 1100 20 820 50 120 "white" "Healer"
             ]
 
         _ ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around the warrior"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around it"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: create turrets that can deal 10 damage"
             , dialogHelper 1100 20 790 50 120 "white" "Engineer"
             ]

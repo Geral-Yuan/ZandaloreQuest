@@ -132,7 +132,7 @@ viewTutorial k model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                ++ viewUIButton 170 80 29 700
+                --++ viewUIButton 170 80 29 700
                 -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
@@ -155,7 +155,7 @@ viewTutorial k model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
-            ++ [ viewHints model.board.hintOn model.board ]
+            --++ [ viewHints model.board.hintOn model.board ]
         )
 
 
@@ -208,7 +208,7 @@ viewBoard model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                ++ viewUIButton 170 80 29 700
+                --++ viewUIButton 170 80 29 700
                 -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
@@ -245,7 +245,7 @@ viewBoard model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
-            ++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
+            --++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
         )
 
 

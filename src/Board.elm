@@ -40,23 +40,23 @@ initObstacles k =
     -- need to change this
     case k of
         0 ->
-            [ Obstacle MysteryBox ( 5, 5 ) (Gold 3)
+            [ Obstacle MysteryBox ( 5, 5 ) (Gold 5)
             , Obstacle MysteryBox ( 5, 4 ) EnergyPotion
             , Obstacle MysteryBox ( 6, 5 ) HealthPotion
             ]
 
         1 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 6 ), ( 5, 5 ), ( 6, 2 ) ]
-                ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 3)
+                ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 5)
                    , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
                    ]
 
         2 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 1, 9 ), ( 3, 7 ), ( 5, 5 ), ( 7, 3 ), ( 9, 1 ) ]
-                ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 3)
+                ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 5)
                    , Obstacle MysteryBox ( 4, 6 ) EnergyPotion
                    , Obstacle MysteryBox ( 6, 4 ) HealthPotion
-                   , Obstacle MysteryBox ( 8, 2 ) (Gold 3)
+                   , Obstacle MysteryBox ( 8, 2 ) (Gold 5)
                    ]
 
         3 ->
