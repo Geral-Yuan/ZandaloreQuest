@@ -696,7 +696,7 @@ randomEnemies ( model, cmd ) =
 
 groupEnemyClasses : Generator (List Class)
 groupEnemyClasses =
-    Random.list 3 (Random.uniform Warrior [ Archer, Mage ])
+    Random.list 3 (Random.uniform Warrior [ Archer, Mage, Assassin, Healer ])
 
 
 

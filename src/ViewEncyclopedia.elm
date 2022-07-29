@@ -34,6 +34,7 @@ viewEncyclopedia class model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "rgb(184,111,80)"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         ([ Svg.svg
             [ SvgAttr.width "100%"
@@ -120,6 +121,7 @@ viewHeroInfo class =
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "50px"
         , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
@@ -133,6 +135,7 @@ viewHeroInfo class =
         , HtmlAttr.style "font-size" "50px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
         ]
@@ -144,6 +147,7 @@ viewHeroInfo class =
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "50px"
         , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
@@ -156,39 +160,39 @@ viewDescription : Class -> List (Html Msg)
 viewDescription class =
     case class of
         Warrior ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon around the warrior"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around it"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: high health and tanky"
             , dialogHelper 1100 20 800 50 120 "white" "Warrior"
             ]
 
         Archer ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon within the 6 lanes around archer"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon along a clear path"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: high damage but health is low"
-            , dialogHelper 1100 20 800 50 120 "white" "Archer"
+            , dialogHelper 1100 20 810 50 120 "white" "Archer"
             ]
 
         Mage ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon around the mage which is 2 steps away"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon 2 steps away from it"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: heros around the hexagon that was clicked will be damaged too"
-            , dialogHelper 1100 20 800 50 120 "white" "Mage"
+            , dialogHelper 1100 20 850 50 120 "white" "Mage"
             ]
 
         Assassin ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon around the warrior"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around it"
             , dialogHelper 1100 20 500 770 40 "white" "- Specialty: fast (more energy to move/attack)"
-            , dialogHelper 1100 20 800 50 120 "white" "Assassin"
+            , dialogHelper 1100 20 780 50 120 "white" "Assassin"
             ]
 
         Healer ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon around the healer"
-            , dialogHelper 1100 20 500 770 40 "white" "- Specialty: heal teammates"
-            , dialogHelper 1100 20 800 50 120 "white" "Healer"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around the it"
+            , dialogHelper 1100 20 500 770 40 "white" "- Specialty: heals teammates"
+            , dialogHelper 1100 20 820 50 120 "white" "Healer"
             ]
 
         _ ->
-            [ dialogHelper 1100 20 500 700 40 "white" "- Attack range: any one hexagon around the warrior"
-            , dialogHelper 1100 20 500 770 40 "white" "- Specialty: create turrets that can damage enemies"
-            , dialogHelper 1100 20 800 50 120 "white" "Engineer"
+            [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon around the warrior"
+            , dialogHelper 1100 20 500 770 40 "white" "- Specialty: create turrets that can deal 10 damage"
+            , dialogHelper 1100 20 790 50 120 "white" "Engineer"
             ]
 
 
@@ -301,10 +305,11 @@ viewEncyclopediaButton =
         [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "800px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "50px"
+        , HtmlAttr.style "left" "29px"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"

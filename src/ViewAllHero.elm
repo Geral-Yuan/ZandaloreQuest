@@ -1,5 +1,6 @@
 module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 
+import Board exposing (Board)
 import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
@@ -9,7 +10,6 @@ import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import Board exposing (Board)
 
 
 viewHeroImage : Hero -> List (Svg msg)
@@ -184,7 +184,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
             , HtmlAttr.style "left" (toString (1800 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -196,7 +196,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1750 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -208,7 +208,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -251,6 +251,7 @@ viewHero board hero =
                 [ HtmlAttr.style "position" "absolute"
                 , HtmlAttr.style "top" (toString (y - 45) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                , HtmlAttr.style "font-family" "myfont"
                 ]
                 [ img [ src (fimage ++ "BlueGIF.gif"), height 85, width 115 ] []
                 , audio

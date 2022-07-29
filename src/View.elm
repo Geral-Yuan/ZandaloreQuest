@@ -78,7 +78,7 @@ view model =
         , HtmlAttr.style "left" "0"
         , HtmlAttr.style "top" "0"
         , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "url('./assets/PixelOperator-Bold.ttf') format('truetype')"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ viewAll
         ]
@@ -106,6 +106,7 @@ viewTutorial k model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         (Svg.svg
             [ SvgAttr.width "100%"
@@ -176,6 +177,7 @@ viewBoard model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         ([ Svg.svg
             [ SvgAttr.width "100%"
@@ -342,12 +344,12 @@ viewTurn model =
         , HtmlAttr.style "top" "640px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
         , HtmlAttr.style "line-height" "60px"
         , HtmlAttr.style "position" "absolute"
+        , HtmlAttr.style "font-family" "myfont"
         ]
         [ case model.board.turn of
             EnemyTurn ->

@@ -41,7 +41,7 @@ npcDarkKnight1 : NPC
 npcDarkKnight1 =
     { scene = CastleScene
     , name = "DarkKnight 1"
-    , dialogue = ""
+    , dialogue = "Zandalore was destined for failure, you are going down weakling! In this level, the board is a big hexagon. The recommended team composition is one melee, one ranged and one utility hero.  Select 3 heroes and kill all enemies. Click anywhere to continue."
     , image = "EvilNPC"
     , faceDir = Right
     , position = ( 630, 320 )
@@ -57,7 +57,7 @@ npcDarkKnight2 : NPC
 npcDarkKnight2 =
     { scene = CastleScene
     , name = "DarkKnight 2"
-    , dialogue = ""
+    , dialogue = "Wow you seem to be stronger than the others Zandalorian, but you are going to die in my hands! Tip: Use the warrior to protect your ranged and utility heroes. The board is a big hexagon and there are 2 waves of enemies. Kill them all! Click anywhere to continue."
     , image = "EvilNPC"
     , faceDir = Right
     , position = ( 315, 810 )
@@ -73,7 +73,7 @@ npcSkullKnight1 : NPC
 npcSkullKnight1 =
     { scene = DungeonScene
     , name = "SkullKnight 1"
-    , dialogue = ""
+    , dialogue = "Seeking revenge for your filthy kingdom eh? You are too weak kid! Tip: You should use more ranged heroes in this level. The board is a big hexagon with holes. Kill all 3 waves of enemies. Click anywhere to continue."
     , image = "SkullKnight"
     , faceDir = Right
     , position = ( 900, 350 )
@@ -89,7 +89,7 @@ npcSkullKnight2 : NPC
 npcSkullKnight2 =
     { scene = DungeonScene
     , name = "SkullKnight 2"
-    , dialogue = ""
+    , dialogue = "How dare you kill my fellow knights! Die!!! Tip: Make sure that your ranged heroes are far away from the enemies. The board is a big hexagon with holes and there are 3 waves of enemies. Kill them all! Click anywhere to continue."
     , image = "SkullKnight"
     , faceDir = Left
     , position = ( 1100, 350 )
@@ -105,7 +105,7 @@ npcSkullKnight3 : NPC
 npcSkullKnight3 =
     { scene = Dungeon2Scene
     , name = "SkullKnight 3"
-    , dialogue = ""
+    , dialogue = "What?! A Zandalorian killed my knights? You shall perish!! Tip: This map will rotate so you will have to time your attacks and escapes well. There are 7 hexagons at the center with 2 rows of hexagons surrounding it and they will rotate. Kill all 3 waves of enemies! Click anywhere to continue."
     , image = "SkullKnight"
     , faceDir = Right
     , position = ( 900, 350 )
@@ -121,7 +121,7 @@ npcBoss : NPC
 npcBoss =
     { scene = Dungeon2Scene
     , name = "Boss"
-    , dialogue = ""
+    , dialogue = "How dare you! It was my mistake... You shouldn't be alive and I WILL KILL YOU! Tip: the boss can use the skills of all heroes, so do not get too close. The board contains 7 sets of 7 hexagons that will rotate. Kill the skull knights boss and bring glory! Click anywhere to continue."
     , image = "SkullKnight"
     , faceDir = Left
     , position = ( 1100, 350 )
