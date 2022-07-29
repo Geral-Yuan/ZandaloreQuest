@@ -232,9 +232,9 @@ updateMap level board =
 
         6 ->
             { board | mapRotating = ( True, 0 ) }
-                |> rotate ( 5, 5 ) 3 True
-                |> rotate ( 5, 5 ) 1 False
-                |> rotate ( 2, 5 ) 1 True
+                |> rotate ( 5, 5 ) 4 True
+                |> rotate ( 5, 5 ) 3 False
+                |> rotate ( 5, 5 ) 2 True
                 |> rotate ( 2, 8 ) 1 False
                 |> rotate ( 5, 8 ) 1 True
                 |> rotate ( 8, 5 ) 1 False
