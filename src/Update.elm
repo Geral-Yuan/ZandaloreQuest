@@ -744,13 +744,13 @@ possibleEnemyPosition model future_enemies_pos =
             (( 0, 0 ) :: neighbour ++ subneighbour)
                 |> cartesianProduct vecAdd heroes_pos
 
-        close_enemy =
-            (neighbour ++ subneighbour)
-                |> cartesianProduct vecAdd future_enemies_pos
+        -- close_enemy =
+        --     (neighbour ++ subneighbour)
+        --         |> cartesianProduct vecAdd future_enemies_pos
 
         possible_pos =
             unionList [ close_heroes, List.map .pos model.board.obstacles, future_enemies_pos ]
-                |> listDifference (listIntersection model.board.map close_enemy)
+                |> listDifference (model.board.map)
     in
     if future_enemies_pos == [] then
         unionList [ close_heroes, List.map .pos model.board.obstacles ]
@@ -814,9 +814,11 @@ possibleCratePosition model =
             (( 0, 0 ) :: neighbour)
                 |> cartesianProduct vecAdd enemies_pos
     in
-    unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
-        |> listDifference model.board.map
-
+    if (model.board.obstacles |> List.filter (\x -> x.obstacleType == MysteryBox) |> List.length) < 5 then
+        unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
+            |> listDifference model.board.map
+    else
+        []
 
 checkRotationDone : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 checkRotationDone ( model, cmd ) =
