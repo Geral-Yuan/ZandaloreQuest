@@ -9772,24 +9772,34 @@ var $author$project$UpdateBoard$updateMap = F2(
 									false,
 									A4(
 										$author$project$UpdateBoard$rotate,
-										_Utils_Tuple2(5, 5),
-										2,
+										_Utils_Tuple2(2, 5),
+										1,
 										true,
 										A4(
 											$author$project$UpdateBoard$rotate,
 											_Utils_Tuple2(5, 5),
-											3,
+											1,
 											false,
 											A4(
 												$author$project$UpdateBoard$rotate,
 												_Utils_Tuple2(5, 5),
-												4,
+												2,
 												true,
-												_Utils_update(
-													board,
-													{
-														mapRotating: _Utils_Tuple2(true, 0)
-													})))))))));
+												A4(
+													$author$project$UpdateBoard$rotate,
+													_Utils_Tuple2(5, 5),
+													3,
+													true,
+													A4(
+														$author$project$UpdateBoard$rotate,
+														_Utils_Tuple2(5, 5),
+														4,
+														true,
+														_Utils_update(
+															board,
+															{
+																mapRotating: _Utils_Tuple2(true, 0)
+															})))))))))));
 			default:
 				return board;
 		}
@@ -14638,7 +14648,7 @@ var $author$project$ViewNPCTask$viewTask = function (model) {
 				A2($elm$html$Html$Attributes$style, 'left', '1745px'),
 				A2($elm$html$Html$Attributes$style, 'color', 'white'),
 				A2($elm$html$Html$Attributes$style, 'font-family', 'myfont'),
-				A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+				A2($elm$html$Html$Attributes$style, 'font-size', '22px'),
 				A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
 				A2($elm$html$Html$Attributes$style, 'text-align', 'left'),
 				A2($elm$html$Html$Attributes$style, 'line-height', '60px'),
@@ -14647,7 +14657,7 @@ var $author$project$ViewNPCTask$viewTask = function (model) {
 		_List_fromArray(
 			[
 				$elm$svg$Svg$text(
-				'Current Task: ' + $author$project$ViewNPCTask$textTask(model))
+				'Task: ' + $author$project$ViewNPCTask$textTask(model))
 			]));
 };
 var $author$project$ViewNPCTask$viewTaskBoard = _List_fromArray(
