@@ -1,19 +1,24 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
-{-| This file fills functions related to all enemy actions.
-
-
-# Functions
-
-@docs actionEnemy, checkEnemyDone
-
--}
-
 import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
 import Data exposing (neighbour, subneighbour, vecAdd)
 import ListOperation exposing (listDifference)
 import ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Obstacle, Pos)
+
+
+
+checkEnemyDone : Enemy -> Enemy
+checkEnemyDone enemy =
+    if enemy.steps == 0 && enemy.state == Waiting then
+        { enemy | done = True }
+
+    else if enemy.justAttack then
+        { enemy | justAttack = False, done = True }
+
+    else
+        enemy
+
 
 
 actionEnemy : Board -> Board
@@ -84,21 +89,19 @@ actionSmartWarrior board enemy =
         [] ->
             { board | boardState = EnemyAttack
                     , enemies = { enemy | justAttack = True, state = Attacking } :: other_enemies
-                    , heroes = enemyWarriorAttack enemy board.heroes
+                    , heroes = enemyWarriorAttack enemy board
                                |> checkHeroDeath
                 }
 
         first :: _ ->
-            { board | boardState = EnemyAttack
-                    , enemies = { enemy | steps = enemy.steps - 1, pos = first } :: other_enemies
+            { board | enemies = { enemy | steps = enemy.steps - 1, pos = first } :: other_enemies
                 }
 
-
-enemyWarriorAttack : Enemy -> List Hero -> List Hero
-enemyWarriorAttack enemy heroes =
+enemyWarriorAttack : Enemy -> Board -> List Hero
+enemyWarriorAttack enemy board =
     let
         ( attackableHeroes, restHeroes ) =
-            List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) neighbour)) heroes
+            getEnemyAttackable enemy board
 
         sortedAttackableHeroes =
             List.sortBy .health attackableHeroes
@@ -106,7 +109,7 @@ enemyWarriorAttack enemy heroes =
         ( targetHero, newrestHeroes ) =
             case sortedAttackableHeroes of
                 [] ->
-                    ( [], heroes )
+                    ( [], board.heroes )
 
                 hero :: otherHeroes ->
                     ( [ hero ], otherHeroes ++ restHeroes )
@@ -115,11 +118,29 @@ enemyWarriorAttack enemy heroes =
     List.map (heroAttacked enemy) targetHero ++ newrestHeroes
 
 
+getEnemyAttackable : Enemy -> Board -> (List Hero, List Hero)
+getEnemyAttackable enemy board =
+    case enemy.class of
+        Warrior -> 
+            List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) neighbour)) board.heroes
+
+        Archer ->
+            List.partition (\hero -> List.member hero.pos (attackedByArcherRange board enemy.pos)) board.heroes
+
+        Mage ->
+            List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
+
+        Assassin ->
+            List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) neighbour)) board.heroes
+        
+        _ -> List.partition (\hero -> List.member hero.pos (List.map (vecAdd enemy.pos) neighbour)) board.heroes
+
+
 enemyArcherAttack : Enemy -> Board -> List Hero
 enemyArcherAttack enemy board =
     let
         ( attackableHeroes, restHeroes ) =
-            List.partition (\hero -> List.member hero.pos (attackedByArcherRange board enemy.pos)) board.heroes
+            getEnemyAttackable enemy board
 
         sortedAttackableHeroes =
             List.sortBy .health attackableHeroes
@@ -194,7 +215,7 @@ enemyMageAttack enemy board =
             List.map (\x -> vecAdd x enemy.pos) subneighbour
 
         ( attackableHeroes, _ ) =
-            List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
+            getEnemyAttackable enemy board
 
         attackCombination =
             List.map (\tgt -> ( attackHeroGroup tgt attackableHeroes, tgt )) attackPlace
@@ -250,7 +271,7 @@ actionSmartHealer board enemy =
 
         atkboard =
             if isOnlyEnemyHealer board || isAllMaxHealth board then
-                { board | heroes = enemyWarriorAttack enemy board.heroes }
+                { board | heroes = enemyWarriorAttack enemy board }
 
             else
                 board
@@ -333,18 +354,6 @@ addhealth enemy hdenemy =
 
     else
         min (hdenemy.maxHealth - hdenemy.health) (calculateHeal enemy.damage)
-
-
-checkEnemyDone : Enemy -> Enemy
-checkEnemyDone enemy =
-    if enemy.steps == 0 && enemy.state == Waiting then
-        { enemy | done = True }
-
-    else if enemy.justAttack then
-        { enemy | justAttack = False, done = True }
-
-    else
-        enemy
 
 
 checkHeroDeath : List Hero -> List Hero
