@@ -1,5 +1,14 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
+{-| This file fills functions related to all enemy actions.
+
+
+# Functions
+
+@docs actionEnemy, checkEnemyDone
+
+-}
+
 import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
 import Data exposing (neighbour, subneighbour, vecAdd)
 import ListOperation exposing (listDifference)
@@ -7,7 +16,8 @@ import ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, l
 import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Obstacle, Pos)
 
 
-
+{-| check whether the enemy cannot do any action and update its state and justAttack
+-}
 checkEnemyDone : Enemy -> Enemy
 checkEnemyDone enemy =
     if enemy.steps == 0 && enemy.state == Waiting then
@@ -20,7 +30,8 @@ checkEnemyDone enemy =
         enemy
 
 
-
+{-| Let all undone enemies automaticly do their smart action and update the board with all influences enemies bring.
+-}
 actionEnemy : Board -> Board
 actionEnemy board =
     let
