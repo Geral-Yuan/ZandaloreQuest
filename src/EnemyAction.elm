@@ -1,5 +1,14 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
+{-| This file fills functions related to all enemy actions.
+
+
+# Functions
+
+@docs actionEnemy, checkEnemyDone
+
+-}
+
 import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
 import Data exposing (neighbour, subneighbour, vecAdd)
 import ListOperation exposing (listDifference)
@@ -68,24 +77,21 @@ actionSmartWarrior board enemy =
         route =
             leastWarriorPath enemy board
 
-        otherenemies =
+        other_enemies =
             listDifference board.enemies [ enemy ]
     in
     case route of
         [] ->
-            eh2Board
-                ( { enemy | justAttack = True, state = Attacking } :: otherenemies
-                , enemyWarriorAttack enemy board.heroes
-                    |> List.filter (\x -> x.health > 0)
-                )
-                { board | boardState = EnemyAttack }
+            { board | boardState = EnemyAttack
+                    , enemies = { enemy | justAttack = True, state = Attacking } :: other_enemies
+                    , heroes = enemyWarriorAttack enemy board.heroes
+                               |> checkHeroDeath
+                }
 
         first :: _ ->
-            eh2Board
-                ( { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
-                , board.heroes
-                )
-                board
+            { board | boardState = EnemyAttack
+                    , enemies = { enemy | steps = enemy.steps - 1, pos = first } :: other_enemies
+                }
 
 
 enemyWarriorAttack : Enemy -> List Hero -> List Hero
@@ -106,7 +112,7 @@ enemyWarriorAttack enemy heroes =
                     ( [ hero ], otherHeroes ++ restHeroes )
     in
     -- fix 0 for critical now
-    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
+    List.map (heroAttacked enemy) targetHero ++ newrestHeroes
 
 
 enemyArcherAttack : Enemy -> Board -> List Hero
@@ -127,7 +133,7 @@ enemyArcherAttack enemy board =
                     ( [ hero ], otherHeroes ++ restHeroes )
     in
     -- fix 0 for critical now
-    List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
+    List.map (heroAttacked enemy) targetHero ++ newrestHeroes
 
 
 actionSmartArcher : Board -> Enemy -> Board
@@ -142,26 +148,20 @@ actionSmartArcher board enemy =
     in
     case route of
         [] ->
-            eh2Board
-                ( { enemy | justAttack = True, state = Attacking } :: otherenemies
-                , enemyArcherAttack enemy board
-                    |> List.filter (\x -> x.health > 0)
-                )
-                { board | boardState = EnemyAttack }
+            { board | boardState = EnemyAttack
+                    , enemies = { enemy | justAttack = True, state = Attacking } :: otherenemies
+                    , heroes = enemyArcherAttack enemy board
+                                |> checkHeroDeath
+                }
 
         first :: _ ->
-            eh2Board
-                ( { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies
-                , board.heroes
-                )
-                board
+            { board | enemies = { enemy | steps = enemy.steps - 1, pos = first } :: otherenemies}
 
 
 actionSmartMage : Board -> Enemy -> Board
 actionSmartMage board enemy =
     let
         route =
-            -- leastArcherPath enemy board
             leastMagePath enemy board
 
         otherenemies =
@@ -177,7 +177,7 @@ actionSmartMage board enemy =
         [] ->
             { board
                 | enemies = { enemy | justAttack = True, state = Attacking } :: otherenemies
-                , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
+                , heroes = atkedheroes |> checkHeroDeath
                 , obstacles = atkboard.obstacles
                 , item = atkboard.item
                 , boardState = EnemyAttack
@@ -193,7 +193,6 @@ enemyMageAttack enemy board =
         attackPlace =
             List.map (\x -> vecAdd x enemy.pos) subneighbour
 
-        -- |> List.partition (\x -> List.member x (List.map .pos board.obstacles))
         ( attackableHeroes, _ ) =
             List.partition (\hero -> List.member hero.pos (attackedByMageRange enemy.pos)) board.heroes
 
@@ -212,7 +211,7 @@ enemyMageAttack enemy board =
                     ( ( hero, listDifference board.heroes hero ), grid )
 
         newHeroes =
-            List.map (\hero -> { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }) targetHero ++ newrestHeroes
+            List.map (heroAttacked enemy) targetHero ++ newrestHeroes
 
         tgtObsPos =
             attackObsGroup chosenGrid board.obstacles
@@ -261,23 +260,25 @@ actionSmartHealer board enemy =
     in
     case route of
         [] ->
-            { board
-                | enemies =
-                    { healedhealer
-                        | justAttack = True
-                        , state =
-                            case healedhealer.state of
-                                GettingHealed _ ->
-                                    healedhealer.state
+            let
+                new_state =
+                    case healedhealer.state of
+                        GettingHealed _ ->
+                            healedhealer.state
 
-                                _ ->
-                                    Attacking
-                    }
-                        :: healedenemies
-                , heroes = atkedheroes |> List.filter (\x -> x.health > 0)
-                , obstacles = atkboard.obstacles
-                , item = atkboard.item
-                , boardState = EnemyAttack
+                        _ ->
+                            Attacking
+
+                new_healedhealer = { healedhealer| justAttack = True
+                                                    , state = new_state
+                                    }
+            in
+        
+            { board | enemies = new_healedhealer :: healedenemies
+                    , heroes = atkedheroes |> checkHeroDeath
+                    , obstacles = atkboard.obstacles
+                    , item = atkboard.item
+                    , boardState = EnemyAttack
             }
 
         first :: _ ->
@@ -302,26 +303,18 @@ enemyHeal enemy healed =
                     ( [ chosen ], othernothealed ++ others )
     in
     if (enemy.health /= enemy.maxHealth) && List.all (\x -> x.health > enemy.health) targetHealed then
-        ( { enemy
-            | health = enemy.health + addhealth enemy enemy
-            , state = GettingHealed (addhealth enemy enemy)
-          }
-        , healed
-        )
 
+        ( getHealed enemy enemy, healed )
     else
-        ( enemy
-        , List.map
-            (\hdenemy ->
-                { hdenemy
-                    | health = hdenemy.health + addhealth enemy hdenemy
-                    , state = GettingHealed (addhealth enemy hdenemy)
-                }
-            )
-            targetHealed
-            ++ newothers
-        )
 
+        ( enemy, List.map (getHealed enemy) targetHealed ++ newothers )
+
+
+getHealed : Enemy -> Enemy -> Enemy
+getHealed healer_enemy hdenemy=
+    { hdenemy | health = hdenemy.health + addhealth healer_enemy hdenemy
+              , state = GettingHealed (addhealth healer_enemy hdenemy)
+        }
 
 isOnlyEnemyHealer : Board -> Bool
 isOnlyEnemyHealer board =
@@ -354,14 +347,9 @@ checkEnemyDone enemy =
         enemy
 
 
-
--- checkEHDeath : Board -> Board
--- checkEHDeath board =
---     let
---         nenemy = List.filter (\x -> x.health > 0) board.enemies
---         nheroes = List.filter (\x -> x.health > 0) board.heroes
---     in
---     {board | heroes = nheroes, enemies = nenemy}
+checkHeroDeath : List Hero -> List Hero
+checkHeroDeath list_hero =
+    List.filter (\hero -> (hero.health > 0)) list_hero
 
 
 breakItem : Enemy -> Board -> Board
@@ -376,11 +364,6 @@ breakItem enemy board =
     { board | item = otherItems }
 
 
-eh2Board : ( List Enemy, List Hero ) -> Board -> Board
-eh2Board ( l_enemy, l_hero ) board =
-    { board | enemies = l_enemy, heroes = l_hero }
-
-
 index2Enemy : Int -> List Enemy -> Enemy
 index2Enemy index l_enemy =
     case List.filter (\x -> index == x.indexOnBoard) l_enemy of
@@ -389,3 +372,8 @@ index2Enemy index l_enemy =
 
         chosen :: _ ->
             chosen
+
+
+heroAttacked : Enemy -> Hero -> Hero
+heroAttacked enemy hero =
+    { hero | health = hero.health - enemy.damage - 0, state = Attacked enemy.damage }
