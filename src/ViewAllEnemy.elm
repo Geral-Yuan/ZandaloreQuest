@@ -1,14 +1,14 @@
 module ViewAllEnemy exposing (..)
 
-import Board exposing (Board)
-import Data exposing (..)
+import Data exposing (findPos, offsetEnemy)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, Enemy, HeroState(..))
 
 
 viewEnemy : Board -> Enemy -> Svg Msg
@@ -222,16 +222,6 @@ viewEnemyCondition board enemy =
         , SvgAttr.xlinkHref "./assets/image/Sword.png"
         ]
         []
-
-    --        , Svg.image
-    --            [ SvgAttr.width "30"
-    --            , SvgAttr.height "30"
-    --            , SvgAttr.x (toString (280 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-    --            , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
-    --            , SvgAttr.preserveAspectRatio "none"
-    --            , SvgAttr.xlinkHref "./assets/image/Energy.png"
-    --            ]
-    --        []
     ]
 
 

@@ -1,16 +1,17 @@
 module Update exposing (update)
 
-import Action exposing (updateAttackable, updateMoveable, updateTarget)
+import Action exposing (updateAttackable, updateTarget)
 import Bag exposing (addCoin)
 import Board exposing (initBoard)
-import Data exposing (..)
+import Data exposing (allSampleHeroes, cartesianProduct, findChosenHero, initialHeroes, neighbour, pixelHeight, pixelWidth, subneighbour, vecAdd)
 import HeroAttack exposing (generateDamage)
+import ListOperation exposing (listDifference, unionList)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import NPC exposing (allNPC, npcBoss, npcDarkKnight1, npcDarkKnight2, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Random exposing (Generator)
 import RpgCharacter exposing (moveCharacter)
 import Svg.Attributes exposing (mode)
+import Type exposing (..)
 import UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
 import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 import UpdateShop exposing (updateShop)
@@ -152,7 +153,7 @@ updateEncyclopedia msg model =
 
 updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
 updateBoardGame msg model =
-    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateMoveable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
         |> checkMouseMove msg
         |> checkHit msg
         |> randomCrate msg
@@ -747,10 +748,9 @@ possibleEnemyPosition model future_enemies_pos =
         -- close_enemy =
         --     (neighbour ++ subneighbour)
         --         |> cartesianProduct vecAdd future_enemies_pos
-
         possible_pos =
             unionList [ close_heroes, List.map .pos model.board.obstacles, future_enemies_pos ]
-                |> listDifference (model.board.map)
+                |> listDifference model.board.map
     in
     if future_enemies_pos == [] then
         unionList [ close_heroes, List.map .pos model.board.obstacles ]
@@ -793,7 +793,7 @@ generateCrate model =
             generateCrate model
 
         head :: rest ->
-            Random.uniform HealthPotion [ EnergyPotion, Gold 1 ]
+            Random.uniform HealthPotion [ EnergyPotion, Gold 10 ]
                 |> Random.pair (Random.uniform head rest)
 
 
@@ -817,8 +817,10 @@ possibleCratePosition model =
     if (model.board.obstacles |> List.filter (\x -> x.obstacleType == MysteryBox) |> List.length) < 5 then
         unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
             |> listDifference model.board.map
+
     else
         []
+
 
 checkRotationDone : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 checkRotationDone ( model, cmd ) =

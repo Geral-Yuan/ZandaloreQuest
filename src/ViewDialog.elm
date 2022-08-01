@@ -1,14 +1,14 @@
 module ViewDialog exposing (viewDialog)
 
-import Data exposing (Task(..), pixelHeight, pixelWidth)
+import Data exposing (pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import NPC exposing (npcBoss, npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Model, Task(..))
 import ViewOthers exposing (dialogHelper)
 import ViewScenes exposing (viewCastleSvg, viewDungeonSvg)
 

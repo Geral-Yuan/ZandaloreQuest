@@ -1,14 +1,13 @@
 module ViewScenes exposing (..)
 
-import Data exposing (..)
+import Data exposing (pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg)
-import Model exposing (Model)
-import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Dir(..), Model, RpgCharacter, Scene(..))
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (determineOpct, viewCoinSVG, viewPopUpHint, viewUIButton, viewUIFrame)
@@ -260,7 +259,6 @@ viewDungeon model =
 
                --, viewCharacterPos model.character
                , viewBagCoin model
-               , viewTipForT
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
@@ -311,7 +309,6 @@ viewDungeon2 model =
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
-               , viewTipForT
                , viewTipForC
                , viewTipForEnter
                , viewEncyclopediaButton

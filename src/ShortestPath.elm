@@ -1,16 +1,10 @@
 module ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange)
-import Board exposing (Board)
-import Data exposing (..)
+import Data exposing (distance, neighbour, vecAdd)
 import List exposing (append, minimum, partition)
-
-
-type alias Spa_row =
-    { pos : Pos
-    , path_length : Int
-    , pre_pos : Maybe Pos
-    }
+import ListOperation exposing (listDifference, unionList)
+import Type exposing (Board, Enemy, Pos, Spa_row)
 
 
 

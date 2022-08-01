@@ -1,12 +1,13 @@
 module UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
 
 import Action exposing (attackedByHeroArcherRange, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
-import Board exposing (Board)
-import Data exposing (..)
+import Data exposing (distance, rotateStuff, sampleEnemy)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
 import HeroAttack exposing (checkAttack, heroTurretAttack)
+import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
 import Svg.Attributes exposing (rotate)
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, HeroState(..), ItemType(..), Obstacle, ObstacleType(..), Pos, Turn(..))
 
 
 updateBoardAnimation : Msg -> Board -> Board
@@ -342,9 +343,6 @@ checkHeroItem hero board =
                 , item = otherItems
                 , boardState = HeroEnergy
             }
-
-        Buff ->
-            board
 
         NoItem ->
             board

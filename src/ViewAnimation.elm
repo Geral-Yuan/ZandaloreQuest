@@ -1,11 +1,12 @@
 module ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 
-import Data exposing (Class(..), Enemy, Hero, HeroState(..), findFixedPos)
+import Data exposing (findFixedPos)
 import Debug exposing (toString)
 import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
 import Svg exposing (text)
+import Type exposing (Class(..), Enemy, Hero, HeroState(..))
 
 
 animateEnemyVisuals : Enemy -> Html Msg

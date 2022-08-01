@@ -2,11 +2,11 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
-import Data exposing (Dir(..))
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
 import Message exposing (Msg(..))
-import Model exposing (Model, init)
+import Model exposing (init)
+import Type exposing (Dir(..), Model)
 import Update exposing (update)
 import View exposing (view)
 
@@ -31,23 +31,6 @@ subscriptions _ =
 key : Bool -> Int -> Msg
 key on keycode =
     case keycode of
-        --        87 ->
-        --            Key W on
-        --
-        --        69 ->
-        --            Key E on
-        --
-        --        68 ->
-        --            Key D on
-        --
-        --        88 ->
-        --            Key X on
-        --
-        --        90 ->
-        --            Key Z on
-        --
-        --        65 ->
-        --            Key A on
         13 ->
             Enter on
 

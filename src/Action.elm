@@ -1,9 +1,10 @@
 module Action exposing (..)
 
-import Board exposing (Board)
 import Data exposing (..)
+import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
 import Time exposing (Weekday(..))
+import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
 
 
 updateEnemyAttackable : Board -> Board
@@ -159,23 +160,6 @@ stuckInWay board my_pos my_side nbhd_pos =
 attackedByMageRange : Pos -> List Pos
 attackedByMageRange pos =
     pos :: List.map (vecAdd pos) subsubneighbour
-
-
-updateMoveable : Board -> Board
-updateMoveable board =
-    case selectedHero board.heroes of
-        Nothing ->
-            { board | moveable = [] }
-
-        Just hero ->
-            let
-                can_move =
-                    List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighborToDir neighberpos )) neighbour
-
-                really_can_move =
-                    List.filter (\moveable -> List.member (Tuple.first moveable) board.map && not (List.member (Tuple.first moveable) (unMoveable board))) can_move
-            in
-            { board | moveable = really_can_move }
 
 
 updateTarget : Board -> Board

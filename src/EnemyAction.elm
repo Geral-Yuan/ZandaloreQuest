@@ -1,9 +1,10 @@
 module EnemyAction exposing (actionEnemy, checkEnemyDone)
 
 import Action exposing (attackedByArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, pos2Item)
-import Board exposing (Board)
-import Data exposing (..)
+import Data exposing (neighbour, subneighbour, vecAdd)
+import ListOperation exposing (listDifference)
 import ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
+import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Obstacle, Pos)
 
 
 actionEnemy : Board -> Board

@@ -1,10 +1,11 @@
 module UpdateShop exposing (updateShop)
 
-import Data exposing (Class(..), Dir(..), GameMode(..), Hero, Task(..), allSampleHeroes, listDifference)
+import Data exposing (allSampleHeroes)
+import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import NPC exposing (npcDarkKnight1)
 import Random
+import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
 
 updateShop : Msg -> Model -> ( Model, Cmd Msg )
@@ -97,7 +98,7 @@ updateShop msg model =
                 ( model, Cmd.none )
 
         DisplayUpgrade on ->
-            ({model | isDisplayUpgrade = on}, Cmd.none)
+            ( { model | isDisplayUpgrade = on }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -133,7 +134,8 @@ updateDamage hero =
         currDamage =
             currHero.damage
 
-        adddmg = Data.upgradeDamage currHero.class
+        adddmg =
+            Data.upgradeDamage currHero.class
     in
     ( { currHero | damage = currDamage + adddmg }, index )
 

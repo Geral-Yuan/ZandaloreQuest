@@ -1,7 +1,6 @@
 module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 
-import Board exposing (Board)
-import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
+import Data exposing (findPos, offsetHero)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
@@ -10,6 +9,7 @@ import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, Class(..), Hero, HeroState(..))
 
 
 viewHeroImage : Hero -> List (Svg msg)

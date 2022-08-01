@@ -1,7 +1,7 @@
 module Message exposing (Msg(..))
 
 import Browser.Dom exposing (Viewport)
-import Data exposing (Class, Critical, Dir, Hero, ItemType, Pos)
+import Type exposing (Class, Critical, Dir, Hero, ItemType, Pos)
 
 
 type Msg

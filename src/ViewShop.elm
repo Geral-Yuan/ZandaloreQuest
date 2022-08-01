@@ -9,15 +9,15 @@ module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePa
 
 -}
 
-import Data exposing (Class(..), Hero, HeroState(..), Scene(..), pixelHeight, pixelWidth, upgradeDamage, upgradeHealth)
+import Data exposing (pixelHeight, pixelWidth, upgradeDamage, upgradeHealth)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Class(..), Hero, HeroState(..), Model, Scene(..))
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
 import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipForC, viewTipForDir, viewTipForEnter)

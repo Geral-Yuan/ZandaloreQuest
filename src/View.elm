@@ -1,16 +1,16 @@
 module View exposing (view)
 
-import Board exposing (Board)
-import Data exposing (..)
+import Data exposing (findPos, pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
+import ListOperation exposing (listUnion)
 import Message exposing (Msg(..))
-import Model exposing (Model)
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, BoardState(..), GameMode(..), Item, ItemType(..), Model, Obstacle, ObstacleType(..), Pos, Turn(..))
 import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 import ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
@@ -155,7 +155,7 @@ viewTutorial k model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
-            --++ [ viewHints model.board.hintOn model.board ]
+         --++ [ viewHints model.board.hintOn model.board ]
         )
 
 
@@ -245,7 +245,7 @@ viewBoard model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
-            --++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
+         --++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
         )
 
 

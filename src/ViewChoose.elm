@@ -1,14 +1,14 @@
 module ViewChoose exposing (viewHeroChoose)
 
-import Data exposing (..)
+import Data exposing (pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Hero, Model)
 import ViewOthers exposing (viewUIButton, viewUIFrame)
 
 

@@ -1,8 +1,7 @@
 module UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 
-import Data exposing (FailToDo(..), GameMode(..), Scene(..))
 import Message exposing (Msg(..))
-import Model exposing (Model)
+import Type exposing (FailToDo(..), GameMode(..), Model, Scene(..))
 
 
 checkLeaveShop : Model -> Model
