@@ -1,5 +1,14 @@
 module ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 
+{-| This file fills functions that finds Shortest Path for each class.
+
+
+# Functions
+
+@docs leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath
+
+-}
+
 import Action exposing (attackedByArcherRange, attackedByMageRange)
 import Data exposing (distance, neighbour, vecAdd)
 import List exposing (append, minimum, partition)
@@ -7,16 +16,13 @@ import ListOperation exposing (listDifference, unionList)
 import Type exposing (Board, Enemy, Pos, Spa_row)
 
 
-
-{- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
+{-| Output the warrior and assassin shortest path towards the nearest hero. The output path does not include the begin Pos.
 
    "my_enemy" is the enemy that is to move
 
    "board" is the current board
 
 -}
-
 leastWarriorPath : Enemy -> Board -> List Pos
 leastWarriorPath my_enemy board =
     List.map getNeighbour board.heroes
@@ -28,16 +34,14 @@ getNeighbour : { a | pos : Pos } -> List Pos
 getNeighbour tgt =
     List.map (vecAdd tgt.pos) neighbour
 
-{- Output the archer shortest path towards the nearest hero in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
+
+{-| Output the archer shortest path towards the nearest position to attack heroes. The output path does not include the begin Pos.
 
    "my_enemy" is the enemy that is to move
 
    "board" is the current board
 
 -}
-
-
 leastArcherPath : Enemy -> Board -> List Pos
 leastArcherPath my_enemy board =
     List.map (attackedByArcherRange board) (List.map .pos board.heroes)
@@ -45,8 +49,7 @@ leastArcherPath my_enemy board =
     |> leastPathHelper my_enemy board 
 
 
-
-{- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
+{-| Output the mage shortest path towards the nearest position to attack heroes. The output path does not include the begin Pos.
    Remark : the output path does not include the begin Pos
 
    "my_enemy" is the enemy that is to move
@@ -54,8 +57,6 @@ leastArcherPath my_enemy board =
    "board" is the current board
 
 -}
-
-
 leastMagePath : Enemy -> Board -> List Pos
 leastMagePath my_enemy board =
     List.map attackedByMageRange (List.map .pos board.heroes)
@@ -63,6 +64,13 @@ leastMagePath my_enemy board =
     |> leastPathHelper my_enemy board 
 
 
+{-| Output the healer shortest path towards the nearest position to heal other enemies. The output path does not include the begin Pos.
+
+   "my_enemy" is the enemy that is to move
+
+   "board" is the current board
+
+-}
 leastHealerPath : Enemy -> Board -> List Pos
 leastHealerPath my_enemy board =
     listDifference board.enemies [ my_enemy ]
@@ -71,16 +79,13 @@ leastHealerPath my_enemy board =
     |> leastPathHelper my_enemy board 
 
 
-
-{- A useful helper to find the shortest path from my_enemy's position towards a list of end positions
+{-| A useful helper to find the shortest path from my_enemy's position towards a list of end positions.
 
    "my_enemy" is the enemy that is to move
 
    "board" is the current board
 
 -}
-
-
 leastPathHelper : Enemy -> Board -> List Pos -> List Pos
 leastPathHelper my_enemy board tgt_list =
     let
@@ -113,8 +118,7 @@ leastPathHelper my_enemy board tgt_list =
                 shortestPath whole_map unmoveable my_enemy.pos tgt_list
 
 
-
-{- Output the shortest path in the form of (List Pos).
+{-| Output the shortest path in the form of (List Pos).
    Remark : the output path does not include the begin Pos
 
    "wholemap" is the map of the board
@@ -131,8 +135,6 @@ leastPathHelper my_enemy board tgt_list =
    shortestPath board hero_list (1,5) (4,5) == [(2,5), (3,5), (4,5)]
 
 -}
-
-
 shortestPath : List Pos -> List Pos -> Pos -> List Pos -> List Pos
 shortestPath wholemap unmoveable begin end_list =
     let
