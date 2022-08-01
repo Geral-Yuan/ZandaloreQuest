@@ -11,7 +11,7 @@ module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePa
 
 import Data exposing (pixelHeight, pixelWidth, upgradeDamage, upgradeHealth)
 import Debug exposing (toString)
-import Html exposing (Html, button, div)
+import Html exposing (Html, button, div, Attribute)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
@@ -27,48 +27,28 @@ import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipFo
 -}
 viewShop : Model -> Html Msg
 viewShop model =
-    let
-        ( w, h ) =
-            model.size
-
-        r =
-            if w / h > pixelWidth / pixelHeight then
-                Basics.min 1 (h / pixelHeight)
-
-            else
-                Basics.min 1 (w / pixelWidth)
-    in
     div
-        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-        , HtmlAttr.style "transform-origin" "0 0"
-        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "myfont"
-        ]
-        (viewKeyGif
-            ++ [ viewTask model
-               , Svg.svg
-                    [ SvgAttr.width "100%"
-                    , SvgAttr.height "100%"
-                    ]
-                    (viewShopSvg
-                        ++ viewTaskBoard
-                        ++ [ viewCoinSVG ( 1500, 900 ) ]
-                    )
+    (shopDivStyle model)
+    ( viewKeyGif
+        ++ [ viewTask model
+            , Svg.svg
+                [ SvgAttr.width "100%"
+                , SvgAttr.height "100%"
+                ]
+                (viewShopSvg
+                ++ viewTaskBoard
+                ++ [ viewCoinSVG ( 1500, 900 ) ]
+                )
 
-               --, viewCharacterPos model.character
-               , viewTipForDir
-               , viewTipForC
-               , viewTipForEnter
-               , viewBagCoin model
-               ]
-            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
-            ++ [ viewRpgCharacter model.character ]
-        )
+            --, viewCharacterPos model.character
+            , viewTipForDir
+            , viewTipForC
+            , viewTipForEnter
+            , viewBagCoin model
+            ]
+        ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
+        ++ [ viewRpgCharacter model.character ]
+    )
 
 
 viewShopSvg : List (Svg msg)
@@ -87,32 +67,7 @@ viewShopSvg =
 
 viewBuySvg : List (Svg msg)
 viewBuySvg =
-    [ -- Svg.linearGradient
-      --     [ SvgAttr.id ("myLRadial")
-      --     , SvgAttr.x1 "0%"
-      --     , SvgAttr.x2 "100%"
-      --     , SvgAttr.y1 "0%"
-      --     , SvgAttr.y2 "0%" ]
-      --     [ Svg.stop
-      --         [ SvgAttr.offset "0%"
-      --         , SvgAttr.stopOpacity "100%"
-      --         , SvgAttr.stopColor "transparent"
-      --         ]
-      --         []
-      --     -- , Svg.stop
-      --     --     [ SvgAttr.offset "50%"
-      --     --     , SvgAttr.stopOpacity "0%"
-      --     --     ]
-      --     --     []
-      --     , Svg.stop
-      --         [ SvgAttr.offset "100%"
-      --         , SvgAttr.stopOpacity "0%"
-      --         , SvgAttr.stopColor "transparent"
-      --         ]
-      --         []
-      --     ]
-      -- ,
-      Svg.image
+    [ Svg.image
         [ SvgAttr.width "1600"
         , SvgAttr.height "1000"
         , SvgAttr.x (toString (pixelWidth / 2 - 800))
@@ -159,14 +114,6 @@ viewHighlightHero =
         , SvgAttr.fill "url('#myRadial')"
         ]
         []
-
-    -- , Svg.circle
-    --     [ SvgAttr.cx "1000"
-    --     , SvgAttr.cy "400"
-    --     , SvgAttr.r "250"
-    --     , SvgAttr.fill "url('#myRadial')"
-    --     ]
-    --     []
     ]
 
 
@@ -174,28 +121,8 @@ viewHighlightHero =
 -}
 viewShopChoose : Model -> Html Msg
 viewShopChoose model =
-    let
-        ( w, h ) =
-            model.size
-
-        r =
-            if w / h > pixelWidth / pixelHeight then
-                Basics.min 1 (h / pixelHeight)
-
-            else
-                Basics.min 1 (w / pixelWidth)
-    in
     div
-        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-        , HtmlAttr.style "transform-origin" "0 0"
-        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "myfont"
-        ]
+        (shopDivStyle model)
         [ viewTask model
         , Svg.svg
             [ SvgAttr.width "100%"
@@ -220,21 +147,17 @@ viewShopChoose model =
 exitButton : Html Msg
 exitButton =
     button
-        [ HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "border" "transparent"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "font-family" "myfont"
+        (
+        shopButtonStyle 
+        ++ [ HtmlAttr.style "font-size" "18px"
         , HtmlAttr.style "top" "920px"
         , HtmlAttr.style "height" "50px"
         , HtmlAttr.style "left" "1400px"
         , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "100px"
         , onClick ExitShop
         ]
+        )
         [ text "Exit" ]
 
 
@@ -242,64 +165,46 @@ drawButton : Model -> Html Msg
 drawButton model =
     if List.length model.indexedheroes >= 6 then
         button
-            [ HtmlAttr.style "background" "#34495f"
-            , HtmlAttr.style "top" "400px"
-            , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "myfont"
-            , HtmlAttr.style "height" "200px"
-            , HtmlAttr.style "left" "1000px"
-            , HtmlAttr.style "line-height" "60px"
-            , HtmlAttr.style "outline" "none"
-            , HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "background" "transparent"
-            , HtmlAttr.style "border" "transparent"
-            , HtmlAttr.style "font-weight" "bold"
-            , HtmlAttr.style "color" "rgb(61,43,31)"
-            , HtmlAttr.style "font-size" "24px"
-            ]
+            (
+            shopButtonStyle 
+            ++ [ HtmlAttr.style "top" "400px"
+                , HtmlAttr.style "height" "200px"
+                , HtmlAttr.style "left" "1000px"
+                , HtmlAttr.style "line-height" "60px"
+                , HtmlAttr.style "width" "400px"
+                , HtmlAttr.style "font-size" "24px"
+                ]
+            )
             [ text "You have obtained all heroes!" ]
 
     else if List.length model.indexedheroes <= 2 then
         button
-            [ HtmlAttr.style "background" "#34495f"
-            , HtmlAttr.style "top" "400px"
-            , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "myfont"
-            , HtmlAttr.style "height" "200px"
-            , HtmlAttr.style "left" "1000px"
-            , HtmlAttr.style "line-height" "60px"
-            , HtmlAttr.style "outline" "none"
-            , HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "background" "transparent"
-            , HtmlAttr.style "border" "transparent"
-            , HtmlAttr.style "font-weight" "bold"
-            , HtmlAttr.style "color" "rgb(61,43,31)"
-            , HtmlAttr.style "font-size" "24px"
-            , onClick LuckyDraw
-            ]
+            (
+            shopButtonStyle 
+            ++ [ HtmlAttr.style "top" "400px"
+                , HtmlAttr.style "height" "200px"
+                , HtmlAttr.style "left" "1000px"
+                , HtmlAttr.style "line-height" "60px"
+                , HtmlAttr.style "width" "400px"
+                , HtmlAttr.style "font-size" "24px"
+                , onClick LuckyDraw
+                ]
+            )
             [ text "0 coins to draw a powerful hero!" ]
 
     else
         button
-            [ HtmlAttr.style "background" "#34495f"
-            , HtmlAttr.style "top" "400px"
-            , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "height" "200px"
-            , HtmlAttr.style "font-family" "myfont"
-            , HtmlAttr.style "left" "1000px"
-            , HtmlAttr.style "line-height" "60px"
-            , HtmlAttr.style "outline" "none"
-            , HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "background" "transparent"
-            , HtmlAttr.style "border" "transparent"
-            , HtmlAttr.style "font-weight" "bold"
-            , HtmlAttr.style "color" "rgb(61,43,31)"
-            , HtmlAttr.style "font-size" "24px"
-            , onClick LuckyDraw
-            ]
+            (
+            shopButtonStyle 
+            ++ [ HtmlAttr.style "top" "400px"
+               , HtmlAttr.style "height" "200px"
+               , HtmlAttr.style "left" "1000px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "width" "400px"
+               , HtmlAttr.style "font-size" "24px"
+               , onClick LuckyDraw
+               ]
+            )
             [ text "100 coins to draw a powerful hero!" ]
 
 
@@ -307,28 +212,8 @@ drawButton model =
 -}
 viewUpgradePage : Model -> Html Msg
 viewUpgradePage model =
-    let
-        ( w, h ) =
-            model.size
-
-        r =
-            if w / h > pixelWidth / pixelHeight then
-                Basics.min 1 (h / pixelHeight)
-
-            else
-                Basics.min 1 (w / pixelWidth)
-    in
     div
-        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-        , HtmlAttr.style "transform-origin" "0 0"
-        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "myfont"
-        ]
+        (shopDivStyle model)
         ([ viewTask model
          , Svg.svg
             [ SvgAttr.width "100%"
@@ -355,26 +240,21 @@ viewUpgradePage model =
 enterUpgradeButton : Html Msg
 enterUpgradeButton =
     button
-        [ HtmlAttr.style "background" "#34495f"
-        , HtmlAttr.style "top" "400px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-size" "24px"
-        , HtmlAttr.style "font-weight" "500"
-        , HtmlAttr.style "height" "200px"
-        , HtmlAttr.style "left" "500px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "400px"
-        , HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "border" "transparent"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "24px"
-        , onClick EnterUpgrade
+        (
+        shopButtonStyle 
+        ++ [ HtmlAttr.style "top" "400px"
+            , HtmlAttr.style "font-size" "24px"
+            , HtmlAttr.style "height" "200px"
+            , HtmlAttr.style "left" "500px"
+            , HtmlAttr.style "line-height" "60px"
+            , HtmlAttr.style "width" "400px"
+            , HtmlAttr.style "font-size" "24px"
+            , onClick EnterUpgrade
+            ]
+        )
+        [ text 
+            "go to upgrade your heroes" 
         ]
-        [ text "go to upgrade your heroes" ]
 
 
 upgradeButton : Model -> List (Html Msg)
@@ -387,50 +267,38 @@ upgradeButton model =
         Just ( hero, ind ) ->
             if isClassHave ( hero, ind ) model then
                 [ button
-                    [ HtmlAttr.style "top" "775px"
-                    , HtmlAttr.style "font-size" "24px"
-                    , HtmlAttr.style "height" "150px"
-                    , HtmlAttr.style "left" "850px"
-                    , HtmlAttr.style "line-height" "60px"
-                    , HtmlAttr.style "font-family" "myfont"
-                    , HtmlAttr.style "outline" "none"
-                    , HtmlAttr.style "position" "absolute"
-                    , HtmlAttr.style "width" "300px"
-                    , HtmlAttr.style "background" "transparent"
-                    , HtmlAttr.style "border" "transparent"
-                    , HtmlAttr.style "font-weight" "bold"
-                    , HtmlAttr.style "color" "rgb(61,43,31)"
-                    , onClick (LevelUp ( hero, ind ))
-                    , Html.Events.onMouseOver (DisplayUpgrade True)
-                    , Html.Events.onMouseOut (DisplayUpgrade False)
-                    ]
-                    [ text
-                        ("50 coins to upgrade "
-                            ++ toString hero.class
-                        )
+                    (
+                    shopButtonStyle 
+                    ++ [ HtmlAttr.style "top" "775px"
+                        , HtmlAttr.style "font-size" "24px"
+                        , HtmlAttr.style "height" "150px"
+                        , HtmlAttr.style "left" "850px"
+                        , HtmlAttr.style "line-height" "60px"
+                        , HtmlAttr.style "width" "300px"
+                        , onClick (LevelUp ( hero, ind ))
+                        , Html.Events.onMouseOver (DisplayUpgrade True)
+                        , Html.Events.onMouseOut (DisplayUpgrade False)
+                        ]
+                    )
+                    [ text 
+                        ("50 coins to upgrade " ++ toString hero.class )
                     ]
                 ]
 
             else
                 [ button
-                    [ HtmlAttr.style "top" "750px"
-                    , HtmlAttr.style "height" "200px"
-                    , HtmlAttr.style "left" "800px"
-                    , HtmlAttr.style "line-height" "60px"
-                    , HtmlAttr.style "outline" "none"
-                    , HtmlAttr.style "position" "absolute"
-                    , HtmlAttr.style "font-family" "myfont"
-                    , HtmlAttr.style "width" "400px"
-                    , HtmlAttr.style "background" "transparent"
-                    , HtmlAttr.style "border" "transparent"
-                    , HtmlAttr.style "font-weight" "bold"
-                    , HtmlAttr.style "color" "rgb(61,43,31)"
-                    , HtmlAttr.style "font-size" "24px"
-                    ]
+                    (
+                    shopButtonStyle 
+                    ++ [ HtmlAttr.style "top" "750px"
+                        , HtmlAttr.style "height" "200px"
+                        , HtmlAttr.style "left" "800px"
+                        , HtmlAttr.style "line-height" "60px"
+                        , HtmlAttr.style "width" "400px"
+                        , HtmlAttr.style "font-size" "24px"
+                        ]
+                    )
                     [ text
-                        ("Locked "
-                            ++ toString hero.class
-                        )
+                        ( "Locked " ++ toString hero.class )
                     ]
                 ]
 
@@ -479,27 +347,24 @@ viewShopHeroes model ( hero, index ) =
 
         class =
             toString hero.class
-    in
-    if isClassHave ( hero, index ) model then
-        Svg.image
+
+        imageStyle = 
             [ SvgAttr.width (toString mywidth)
             , SvgAttr.height (toString mywidth)
             , SvgAttr.x (toString x)
             , SvgAttr.y (toString y)
             , SvgAttr.preserveAspectRatio "none"
-            , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
             ]
+
+    in
+    if isClassHave ( hero, index ) model then
+        Svg.image
+            (SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png") :: imageStyle )
             []
 
     else
         Svg.image
-            [ SvgAttr.width (toString mywidth)
-            , SvgAttr.height (toString mywidth)
-            , SvgAttr.x (toString x)
-            , SvgAttr.y (toString y)
-            , SvgAttr.preserveAspectRatio "none"
-            , SvgAttr.xlinkHref "./assets/image/Locked.png"
-            ]
+            ( SvgAttr.xlinkHref "./assets/image/Locked.png" :: imageStyle )
             []
 
 
@@ -507,28 +372,8 @@ viewShopHeroes model ( hero, index ) =
 -}
 viewDrawnHero : Model -> Class -> Html Msg
 viewDrawnHero model class =
-    let
-        ( w, h ) =
-            model.size
-
-        r =
-            if w / h > pixelWidth / pixelHeight then
-                Basics.min 1 (h / pixelHeight)
-
-            else
-                Basics.min 1 (w / pixelWidth)
-    in
     div
-        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-        , HtmlAttr.style "transform-origin" "0 0"
-        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "black"
-        , HtmlAttr.style "font-family" "myfont"
-        ]
+        (shopDivStyle model)
         [ Svg.svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
@@ -559,8 +404,12 @@ isClassHave ( _, ind ) model =
 idealAllHeroes : Model -> List ( Hero, Int )
 idealAllHeroes model =
     let
+        haveIndex = List.map (\( _, yindex ) -> yindex) model.indexedheroes
+
+        ishave = \( _, index ) -> not (List.member index haveIndex)
         donthave =
-            List.filter (\( _, index ) -> not (List.member index (List.map (\( _, yindex ) -> yindex) model.indexedheroes))) Data.allSampleHeroes
+            Data.allSampleHeroes
+            |> List.filter ishave
     in
     model.indexedheroes ++ donthave
 
@@ -607,60 +456,80 @@ viewHeroAttr model =
 
         isdplup =
             model.isDisplayUpgrade
+            
+
+        imageStyle = 
+            [ SvgAttr.width "55"
+            , SvgAttr.height "55"
+            , SvgAttr.x "850"
+            , SvgAttr.preserveAspectRatio "none"
+            ]
+
+
+        textStyle = 
+            [ SvgAttr.x "950"
+            , SvgAttr.dominantBaseline "middle"
+            , SvgAttr.fill "white"
+            , SvgAttr.fontSize "50"
+            ]
     in
     viewUIFrame 400 240 800 20
         ++ [ Svg.image
-                [ SvgAttr.width "55"
-                , SvgAttr.height "55"
-                , SvgAttr.x "850"
-                , SvgAttr.y "40"
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/Heart.png"
-                ]
+                ([ SvgAttr.y "40", SvgAttr.xlinkHref "./assets/image/Heart.png"] ++ imageStyle)
                 []
            , Svg.image
-                [ SvgAttr.width "55"
-                , SvgAttr.height "55"
-                , SvgAttr.x "850"
-                , SvgAttr.y "110"
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/Sword.png"
-                ]
+                ([ SvgAttr.y "110", SvgAttr.xlinkHref "./assets/image/Sword.png"] ++ imageStyle)
                 []
            , Svg.image
-                [ SvgAttr.width "55"
-                , SvgAttr.height "55"
-                , SvgAttr.x "850"
-                , SvgAttr.y "180"
-                , SvgAttr.preserveAspectRatio "none"
-                , SvgAttr.xlinkHref "./assets/image/Energy.png"
-                ]
+                ([ SvgAttr.y "180", SvgAttr.xlinkHref "./assets/image/Energy.png"] ++ imageStyle)
                 []
            , Svg.text_
-                [ SvgAttr.x "950"
-                , SvgAttr.y "67.5"
-                , SvgAttr.dominantBaseline "middle"
-                , SvgAttr.fill "white"
-                , SvgAttr.fontSize "50"
-                ]
+                ((SvgAttr.y "67.5") :: textStyle)
                 [ Svg.text shealth
                 ]
            , Svg.text_
-                [ SvgAttr.x "950"
-                , SvgAttr.y "137.5"
-                , SvgAttr.dominantBaseline "middle"
-                , SvgAttr.fill "white"
-                , SvgAttr.fontSize "50"
-                ]
+                ((SvgAttr.y "137.5") :: textStyle)
                 [ Svg.text sdmg
                 ]
            , Svg.text_
-                [ SvgAttr.x "950"
-                , SvgAttr.y "208"
-                , SvgAttr.dominantBaseline "middle"
-                , SvgAttr.fill "white"
-                , SvgAttr.fontSize "50"
-                ]
+                ((SvgAttr.y "208") :: textStyle)
                 [ Svg.text senergy
                 ]
            ]
+
+
+shopButtonStyle : List (Attribute msg)
+shopButtonStyle =
+    [ HtmlAttr.style "background" "transparent"
+    , HtmlAttr.style "border" "transparent"
+    , HtmlAttr.style "font-weight" "bold"
+    , HtmlAttr.style "color" "rgb(61,43,31)"
+    , HtmlAttr.style "font-family" "myfont"
+    , HtmlAttr.style "outline" "none"
+    , HtmlAttr.style "position" "absolute"
+    ]
+
+
+shopDivStyle : Model -> List (Attribute msg)
+shopDivStyle model =
+    let
+        ( w, h ) =
+            model.size
+
+        r =
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
+
+            else
+                Basics.min 1 (w / pixelWidth)
+    in
+    [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+    , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
+    , HtmlAttr.style "position" "absolute"
+    , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+    , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
+    , HtmlAttr.style "transform-origin" "0 0"
+    , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
+    , HtmlAttr.style "font-family" "myfont"
+    , HtmlAttr.style "background" "black"
+    ]
