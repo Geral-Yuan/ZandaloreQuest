@@ -3,7 +3,7 @@ module UpdateShop exposing (updateShop)
 import Data exposing (allSampleHeroes)
 import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
-import NPC exposing (npcDarkKnight1)
+import NPC exposing (npcMap)
 import Random
 import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
@@ -37,7 +37,7 @@ updateShop msg model =
 
         LuckyDraw ->
             if model.cntTask == GoToShop then
-                ( { model | cntTask = Level 1, npclist = npcDarkKnight1 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
+                ( { model | cntTask = Level 1, npclist = npcMap 8 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
 
             else if model.bag.coins > 99 then
                 ( { model | bag = { newBag | coins = currCoins - 100 } }, Random.generate GetNewHero (drawHero model) )

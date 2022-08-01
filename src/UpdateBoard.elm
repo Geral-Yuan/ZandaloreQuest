@@ -1,13 +1,26 @@
-module UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
+module UpdateBoard exposing (updateBeaten, updateBoardGame)
 
-import Action exposing (attackedByHeroArcherRange, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
-import Data exposing (distance, rotateStuff, sampleEnemy)
+import Action exposing (attackedByHeroArcherRange, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
+import Bag exposing (addCoin)
+import Data exposing (cartesianProduct, distance, neighbour, pixelHeight, pixelWidth, rotateStuff, sampleEnemy, subneighbour, vecAdd)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
-import HeroAttack exposing (checkAttack, heroTurretAttack)
-import ListOperation exposing (listDifference)
+import HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
+import ListOperation exposing (listDifference, unionList)
 import Message exposing (Msg(..))
-import Svg.Attributes exposing (rotate)
-import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, HeroState(..), ItemType(..), Obstacle, ObstacleType(..), Pos, Turn(..))
+import NPC exposing (npcMap)
+import Random exposing (Generator)
+import Type exposing (..)
+
+
+updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
+updateBoardGame msg model =
+    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+        |> checkMouseMove msg
+        |> checkHit msg
+        |> randomCrate msg
+        |> randomEnemies
+        |> checkRotationDone
+        |> checkEnd
 
 
 updateBoardAnimation : Msg -> Board -> Board
@@ -118,6 +131,254 @@ updateBoardOthers msg board =
 
         _ ->
             board
+
+
+checkMouseMove : Msg -> Model -> Model
+checkMouseMove msg model =
+    let
+        board =
+            model.board
+    in
+    case msg of
+        Point x y ->
+            let
+                ( w, h ) =
+                    model.size
+            in
+            if w / h > pixelWidth / pixelHeight then
+                { model | board = { board | pointPos = ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h ) } }
+
+            else
+                { model | board = { board | pointPos = ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight ) } }
+
+        _ ->
+            model
+
+
+checkHit : Msg -> Model -> ( Model, Cmd Msg )
+checkHit msg model =
+    case msg of
+        Hit pos ->
+            case model.board.turn of
+                PlayerTurn ->
+                    if model.board.boardState == NoActions then
+                        ( model, generateDamage pos )
+
+                    else
+                        ( model, Cmd.none )
+
+                TurretTurn ->
+                    ( model, Cmd.none )
+
+                EnemyTurn ->
+                    ( model, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+randomEnemies : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+randomEnemies ( model, cmd ) =
+    if List.length model.board.enemies == 0 && model.board.spawn > 0 then
+        ( model, Cmd.batch [ Random.generate SpawnEnemy (Random.pair groupEnemyClasses (groupEnemPositions model)), cmd ] )
+
+    else
+        ( model, cmd )
+
+
+groupEnemyClasses : Generator (List Class)
+groupEnemyClasses =
+    Random.list 3 (Random.uniform Warrior [ Archer, Mage, Assassin, Healer ])
+
+
+groupEnemPositions : Model -> Generator (List Pos)
+groupEnemPositions model =
+    chooseEnemyPosition model []
+        |> Random.andThen
+            (\pos1 ->
+                chooseEnemyPosition model [ pos1 ]
+                    |> Random.andThen
+                        (\pos2 ->
+                            chooseEnemyPosition model [ pos1, pos2 ]
+                                |> Random.andThen (\pos3 -> chooseEnemyPosition model [ pos1, pos2, pos3 ])
+                                |> Random.pair (Random.constant pos2)
+                        )
+                    |> Random.pair (Random.constant pos1)
+            )
+        |> Random.map (\( x, ( y, z ) ) -> [ x, y, z ])
+
+
+chooseEnemyPosition : Model -> List Pos -> Generator Pos
+chooseEnemyPosition model list_pos =
+    let
+        possiblePos =
+            possibleEnemyPosition model list_pos
+    in
+    case possiblePos of
+        [] ->
+            chooseEnemyPosition model list_pos
+
+        head :: rest ->
+            Random.uniform head rest
+
+
+possibleEnemyPosition : Model -> List Pos -> List Pos
+possibleEnemyPosition model future_enemies_pos =
+    let
+        heroes_pos =
+            List.map .pos model.board.heroes
+
+        close_heroes =
+            (( 0, 0 ) :: neighbour ++ subneighbour)
+                |> cartesianProduct vecAdd heroes_pos
+
+        -- close_enemy =
+        --     (neighbour ++ subneighbour)
+        --         |> cartesianProduct vecAdd future_enemies_pos
+        possible_pos =
+            unionList [ close_heroes, List.map .pos model.board.obstacles, future_enemies_pos ]
+                |> listDifference model.board.map
+    in
+    if future_enemies_pos == [] then
+        unionList [ close_heroes, List.map .pos model.board.obstacles ]
+            |> listDifference model.board.map
+
+    else
+        possible_pos
+
+
+randomCrate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+randomCrate msg ( model, cmd ) =
+    case msg of
+        EndTurn ->
+            case model.board.turn of
+                PlayerTurn ->
+                    if Tuple.first model.board.mapRotating then
+                        ( model, cmd )
+
+                    else if possibleCratePosition model /= [] then
+                        ( { model | board = turnTurret model.board }, Cmd.batch [ cmd, Random.generate SpawnCrate (generateCrate model) ] )
+
+                    else
+                        ( { model | board = turnTurret model.board }, cmd )
+
+                _ ->
+                    ( model, cmd )
+
+        _ ->
+            ( model, cmd )
+
+
+generateCrate : Model -> Generator ( Pos, ItemType )
+generateCrate model =
+    let
+        possible_pos =
+            possibleCratePosition model
+    in
+    case possible_pos of
+        [] ->
+            generateCrate model
+
+        head :: rest ->
+            Random.uniform HealthPotion [ EnergyPotion, Gold 10 ]
+                |> Random.pair (Random.uniform head rest)
+
+
+possibleCratePosition : Model -> List Pos
+possibleCratePosition model =
+    let
+        heroes_pos =
+            List.map .pos model.board.heroes
+
+        enemies_pos =
+            List.map .pos model.board.enemies
+
+        close_heroes =
+            (( 0, 0 ) :: neighbour)
+                |> cartesianProduct vecAdd heroes_pos
+
+        close_enemies =
+            (( 0, 0 ) :: neighbour)
+                |> cartesianProduct vecAdd enemies_pos
+    in
+    if (model.board.obstacles |> List.filter (\x -> x.obstacleType == MysteryBox) |> List.length) < 5 then
+        unionList [ close_heroes, close_enemies, List.map .pos model.board.obstacles, List.map .pos model.board.item ]
+            |> listDifference model.board.map
+
+    else
+        []
+
+
+checkRotationDone : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkRotationDone ( model, cmd ) =
+    let
+        board =
+            model.board
+
+        ( rotating, time ) =
+            board.mapRotating
+    in
+    if rotating && time > 1 then
+        ( { model | board = { board | mapRotating = ( False, 0 ) } }, cmd )
+
+    else
+        ( model, cmd )
+
+
+checkEnd : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkEnd ( model, cmd ) =
+    let
+        myboard =
+            model.board
+
+        wincoins =
+            myboard.coins + 50
+
+        losecoins =
+            myboard.coins
+
+        win =
+            List.isEmpty myboard.enemies && myboard.spawn == 0 && List.all (\hero -> hero.state == Waiting) model.board.heroes
+
+        lose =
+            List.isEmpty myboard.heroes && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
+
+        nmodel =
+            case model.mode of
+                BoardGame ->
+                    if win && (model.level == 0) then
+                        { model
+                            | mode = Dialog FinishTutorial
+                            , level = model.level + 1
+                            , cntTask = nextTask model.cntTask
+                            , bag = addCoin model.bag wincoins
+                            , unlockShop = True
+                            , npclist = model.npclist |> updateBeaten
+                        }
+
+                    else if win then
+                        { model
+                            | mode = Summary
+                            , cntTask = nextTask model.cntTask
+                            , bag = addCoin model.bag wincoins
+                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                            , unlockDungeon = model.unlockDungeon || (model.level == 2)
+                            , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
+                        }
+
+                    else if lose then
+                        { model
+                            | mode = model.previousMode
+                            , bag = addCoin model.bag losecoins
+                        }
+
+                    else
+                        model
+
+                _ ->
+                    model
+    in
+    ( nmodel, cmd )
 
 
 returnHeroToWaiting : Hero -> Hero
@@ -361,15 +622,6 @@ fullEnergy class =
             5
 
 
-
--- To be rewritten later
-{-
-   legalEnemyMove : Board -> List Hero -> Enemy -> Bool
-   legalEnemyMove board hero_list enemy =
-       List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
--}
-
-
 selectHero : Board -> Hero -> Board
 selectHero board clickedhero =
     let
@@ -404,31 +656,6 @@ spawnEnemies list_class list_pos board =
         board
 
 
-
-{-
-   -- the stats of each enemies can be changed later
-
-
-   mapClassEnemy : Class -> Pos -> Int -> Enemy
-   mapClassEnemy class pos idx =
-       case class of
-           Warrior ->
-               Enemy class pos 100 10 0 False idx
-
-           Archer ->
-               Enemy class pos 100 10 0 False idx
-
-           Assassin ->
-               Enemy class pos 100 10 0 False idx
-
-           Mage ->
-               Enemy class pos 100 10 0 False idx
-
-           Healer ->
-               Enemy class pos 100 10 0 False idx
--}
-
-
 spawnCrate : Pos -> ItemType -> Board -> Board
 spawnCrate pos itype board =
     let
@@ -439,22 +666,6 @@ spawnCrate pos itype board =
             crate :: board.obstacles
     in
     { board | obstacles = nobstacles }
-
-
-
--- wait for more scene
-{-
-   checkEnd : Model -> Model
-   checkEnd model =
-       if List.length model.heroes == 0 then
-           model
-
-       else if List.length model.board.enemies == 0 then
-           model
-
-       else
-           model
--}
 
 
 actionTurret : Board -> Board
@@ -533,3 +744,37 @@ checkTurretDone turret =
 
     else
         turret
+
+
+nextTask : Task -> Task
+nextTask task =
+    case task of
+        MeetElder ->
+            GoToShop
+
+        GoToShop ->
+            Level 1
+
+        Level k ->
+            Level (k + 1)
+
+        _ ->
+            BeatBoss
+
+
+nextNPC : Task -> List NPC
+nextNPC task =
+    case task of
+        Level 6 ->
+            []
+
+        Level k ->
+            [ npcMap (k + 8) ]
+
+        _ ->
+            []
+
+
+updateBeaten : List NPC -> List NPC
+updateBeaten npclist =
+    List.map (\npc -> { npc | beaten = True }) npclist

@@ -1,7 +1,7 @@
 module Data exposing (..)
 
 import ListOperation exposing (unionList)
-import Svg.Attributes exposing (cy, x2, y2)
+import Svg.Attributes exposing (class, cy, x2, y2)
 import Type exposing (..)
 
 
@@ -446,3 +446,79 @@ upgradeHealth class =
 
         _ ->
             0
+
+
+mode2Scene : GameMode -> Scene
+mode2Scene mode =
+    case mode of
+        Castle ->
+            CastleScene
+
+        Shop ->
+            ShopScene
+
+        Dungeon ->
+            DungeonScene
+
+        _ ->
+            Dungeon2Scene
+
+
+scene2Mode : Scene -> GameMode
+scene2Mode scene =
+    case scene of
+        CastleScene ->
+            Castle
+
+        ShopScene ->
+            Shop
+
+        DungeonScene ->
+            Dungeon
+
+        Dungeon2Scene ->
+            Dungeon2
+
+
+class2Index : Class -> Int
+class2Index class =
+    case class of
+        Warrior ->
+            1
+
+        Archer ->
+            2
+
+        Assassin ->
+            3
+
+        Mage ->
+            4
+
+        Healer ->
+            5
+
+        _ ->
+            6
+
+
+index2Class : Int -> Class
+index2Class index =
+    case index of
+        1 ->
+            Warrior
+
+        2 ->
+            Archer
+
+        3 ->
+            Assassin
+
+        4 ->
+            Mage
+
+        5 ->
+            Healer
+
+        _ ->
+            Engineer

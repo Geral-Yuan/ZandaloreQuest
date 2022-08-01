@@ -5,7 +5,7 @@ import Board exposing (sampleBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (allSampleHeroes, pixelHeight, pixelWidth)
 import Message exposing (Msg(..))
-import NPC exposing (npcArcher, npcAssassin, npcElder, npcEngineer, npcHealer, npcMage, npcWarrior)
+import NPC exposing (npcMap)
 import Task
 import Type exposing (..)
 
@@ -47,7 +47,7 @@ initModel =
     , level = 0
     , time = 0
     , cntTask = MeetElder
-    , npclist = [ npcElder, npcWarrior, npcArcher, npcAssassin, npcMage, npcHealer, npcEngineer ]
+    , npclist = List.map npcMap (List.range 1 7)
     , unlockShop = False
     , unlockDungeon = False
     , unlockDungeon2 = False
