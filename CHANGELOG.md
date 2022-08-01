@@ -7,6 +7,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
+## [m1.58] -- 2022-8-2
+
+### Changed
+
+- Simplify codes in ShortPath.elm
+
+- Simplify codes in ViewShop.elm
+
+- Simplify codes in UpdateShop.elm
+
+- Simplify codes in EnemyAction.elm
+
 ## [m1.57] -- 2022-7-29
 
 ### Added
