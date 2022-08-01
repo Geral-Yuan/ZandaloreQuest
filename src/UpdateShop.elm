@@ -143,8 +143,9 @@ updateDamage hero =
 drawHero : Model -> Random.Generator Class
 drawHero model =
     let
-        ( _, nothave ) =
-            List.partition (\x -> List.member x (List.map (\( hero, _ ) -> hero.class) model.indexedheroes)) [ Warrior, Archer, Mage, Assassin, Healer, Engineer ]
+        have_class = List.map (\( hero, _ ) -> hero.class) model.indexedheroes
+
+        nothave = listDifference [ Warrior, Archer, Mage, Assassin, Healer, Engineer ] have_class
     in
     case nothave of
         [] ->
