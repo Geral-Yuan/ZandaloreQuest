@@ -128,7 +128,7 @@ viewHeroInfo class =
         ]
         [ text (toString health) ]
     , div
-        [ HtmlAttr.style "top" "400px"
+        [ HtmlAttr.style "top" "410px"
         , HtmlAttr.style "left" "1350px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -141,7 +141,7 @@ viewHeroInfo class =
         ]
         [ text (toString damage) ]
     , div
-        [ HtmlAttr.style "top" "500px"
+        [ HtmlAttr.style "top" "510px"
         , HtmlAttr.style "left" "1350px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
@@ -173,7 +173,7 @@ viewDescription class =
 
         Mage ->
             [ dialogHelper 1100 20 500 700 40 "white" "- Range: any one hexagon 2 steps away from it"
-            , dialogHelper 1100 20 500 770 40 "white" "- Specialty: heros around the hexagon that was clicked will be damaged too"
+            , dialogHelper 1000 20 500 770 40 "white" "- Specialty: heros around the hexagon that was clicked will be damaged too"
             , dialogHelper 1100 20 850 50 120 "white" "Mage"
             ]
 
@@ -248,8 +248,6 @@ rightEncyclopediaButton =
     button
         [ HtmlAttr.style "background" "url('./assets/image/rightArrow.png')"
         , HtmlAttr.style "top" "520px"
-
-        -- , HtmlAttr.style "color" "white"
         , HtmlAttr.style "height" "160px"
         , HtmlAttr.style "left" "1700px"
         , HtmlAttr.style "outline" "none"
@@ -267,8 +265,6 @@ leftEncyclopediaButton =
         [ HtmlAttr.style "background" "url('./assets/image/rightArrow.png')"
         , HtmlAttr.style "top" "520px"
         , HtmlAttr.style "transform" "scaleX(-1)"
-
-        -- , HtmlAttr.style "color" "white"
         , HtmlAttr.style "height" "160px"
         , HtmlAttr.style "left" "200px"
         , HtmlAttr.style "outline" "none"
@@ -286,8 +282,6 @@ exitEncyclopediaButton =
         [ HtmlAttr.style "background" "url('./assets/image/cancel.png') no-repeat fixed"
         , HtmlAttr.style "object-fit" "cover"
         , HtmlAttr.style "top" "50px"
-
-        -- , HtmlAttr.style "color" "white"
         , HtmlAttr.style "height" "100px"
         , HtmlAttr.style "left" "50px"
         , HtmlAttr.style "outline" "none"
