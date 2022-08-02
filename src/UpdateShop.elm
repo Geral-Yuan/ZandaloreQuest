@@ -1,5 +1,14 @@
 module UpdateShop exposing (updateShop)
 
+{-| This file fills functions related to update in the shop.
+
+
+# Functions
+
+@docs updateShop
+
+-}
+
 import Data exposing (allSampleHeroes)
 import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
@@ -8,6 +17,9 @@ import Random
 import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
 
+{-| "updateShop" includes entering the BuyItem page, lucky draw, entering upgrade page, switching upgraded heroes, upgrading and exit.
+
+-}
 updateShop : Msg -> Model -> ( Model, Cmd Msg )
 updateShop msg model =
     let
@@ -143,8 +155,9 @@ updateDamage hero =
 drawHero : Model -> Random.Generator Class
 drawHero model =
     let
-        ( _, nothave ) =
-            List.partition (\x -> List.member x (List.map (\( hero, _ ) -> hero.class) model.indexedheroes)) [ Warrior, Archer, Mage, Assassin, Healer, Engineer ]
+        have_class = List.map (\( hero, _ ) -> hero.class) model.indexedheroes
+
+        nothave = listDifference [ Warrior, Archer, Mage, Assassin, Healer, Engineer ] have_class
     in
     case nothave of
         [] ->
