@@ -1,4 +1,4 @@
-module ViewAllEnemy exposing (..)
+module ViewAllEnemy exposing (viewEnemy, viewEnemyInfo, viewEnemyOnboard)
 
 import Data exposing (findPos, offsetEnemy)
 import Debug exposing (toString)
@@ -11,8 +11,17 @@ import Svg.Attributes as SvgAttr
 import Type exposing (Board, Enemy, HeroState(..))
 
 
-viewEnemy : Board -> Enemy -> Svg Msg
-viewEnemy board enemy =
+viewEnemy : Board -> List (Svg msg)
+viewEnemy board =
+    List.map (viewEnemyOuterFrame board) board.enemies
+        ++ List.map (viewEnemyInnerFrame board) board.enemies
+        ++ List.map (viewEnemyImage board) board.enemies
+        ++ List.concatMap (viewEnemyCondition board) board.enemies
+        ++ List.concatMap (viewEnemyHealth board) board.enemies
+
+
+viewEnemyOnboard : Board -> Enemy -> Svg Msg
+viewEnemyOnboard board enemy =
     let
         ( rotating, time ) =
             board.mapRotating
@@ -326,17 +335,4 @@ viewEnemyInfo board enemy =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text (toString enemy.damage) ]
-
-    --    , div
-    --        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
-    --        , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
-    --        , HtmlAttr.style "color" "blue"
-    --        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-    --        , HtmlAttr.style "font-size" "30px"
-    --        , HtmlAttr.style "font-weight" "bold"
-    --        , HtmlAttr.style "text-align" "center"
-    --        , HtmlAttr.style "line-height" "60px"
-    --        , HtmlAttr.style "position" "absolute"
-    --        ]
-    --        [ text (toString hero.energy) ]
     ]
