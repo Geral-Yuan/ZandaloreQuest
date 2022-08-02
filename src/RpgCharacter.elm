@@ -1,6 +1,5 @@
-module RpgCharacter exposing (moveCharacter, moveCharacterDir)
+module RpgCharacter exposing (moveCharacter)
 
-import Html.Events exposing (on)
 import Type exposing (Dir(..), RpgCharacter)
 
 

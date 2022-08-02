@@ -1,17 +1,15 @@
 module Update exposing (update)
 
 import Board exposing (initBoard)
-import Data exposing (allSampleHeroes, class2Index, findChosenHero, index2Class, initialHeroes, mode2Scene, pixelHeight, pixelWidth)
+import Data exposing (class2Index, findChosenHero, index2Class, initialHeroes)
 import Message exposing (Msg(..))
-import NPC exposing (allNPC)
-import RpgCharacter exposing (moveCharacter)
-import Svg.Attributes exposing (mode)
-import Type exposing (..)
+import Type exposing (Class, FailToDo(..), GameMode(..), Hero, Model, Task(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 import UpdateBoard exposing (updateBoardGame)
-import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
+import UpdateCharacter exposing (updateCharacter)
+import UpdateRPG exposing (updateRPG)
 import UpdateShop exposing (updateShop)
 import UpdateTutorial exposing (updateTutorial)
-import ViewNPCTask exposing (checkTalkRange)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -234,205 +232,6 @@ initIndexOnBoard heroes =
             initIndexOnBoard (List.reverse rest) ++ [ { lastHero | indexOnBoard = List.length heroes } ]
 
 
-updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-updateCharacter msg ( model, cmd ) =
-    case msg of
-        Tick elapse ->
-            let
-                newCharacter =
-                    moveCharacter model.character (elapse / 1000)
-            in
-            if isReachable model.mode newCharacter.pos model.npclist then
-                ( { model | character = newCharacter }, cmd )
-
-            else
-                ( model, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
-
-
-isReachable : GameMode -> ( Float, Float ) -> List NPC -> Bool
-isReachable mode ( x, y ) npclist =
-    not (List.foldr (||) False (List.map (npcCollisionRange ( x, y )) (npclist |> List.filter (\npc -> npc.scene == mode2Scene mode))))
-        && List.foldr (||) False (List.map (reachableRectangle ( x, y )) (sceneReachable mode))
-
-
-reachableRectangle : ( Float, Float ) -> ( ( Float, Float ), ( Float, Float ) ) -> Bool
-reachableRectangle ( x, y ) ( ( xmin, xmax ), ( ymin, ymax ) ) =
-    x > xmin && x <= xmax && y > ymin && y <= ymax
-
-
-sceneReachable : GameMode -> List ( ( Float, Float ), ( Float, Float ) )
-sceneReachable mode =
-    case mode of
-        Castle ->
-            [ ( ( 310, 1692 ), ( 782, 812 ) )
-            , ( ( 572, 1427 ), ( 407, 782 ) )
-            , ( ( 732, 1272 ), ( 382, 407 ) )
-            , ( ( 572, 667 ), ( 197, 407 ) )
-            , ( ( 1332, 1427 ), ( 197, 407 ) )
-            , ( ( 322, 1692 ), ( 167, 197 ) )
-            , ( ( 322, 497 ), ( 197, 602 ) )
-            , ( ( 1492, 1692 ), ( 197, 602 ) )
-            , ( ( 322, 447 ), ( 32, 167 ) )
-            , ( ( 1557, 1692 ), ( 32, 167 ) )
-            ]
-
-        Shop ->
-            [ ( ( 682, 902 ), ( 782, 902 ) )
-            , ( ( 392, 1217 ), ( 582, 782 ) )
-            , ( ( 392, 462 ), ( 410, 582 ) )
-            ]
-
-        Dungeon ->
-            [ ( ( 502, 1542 ), ( 241, 914 ) ) ]
-
-        Dungeon2 ->
-            [ ( ( 502, 1542 ), ( 241, 914 ) ) ]
-
-        _ ->
-            []
-
-
-npcCollisionRange : ( Float, Float ) -> NPC -> Bool
-npcCollisionRange ( x, y ) npc =
-    let
-        ( nx, ny ) =
-            npc.position
-
-        ( nw, nh ) =
-            npc.size
-    in
-    x > nx - nw + 20 && x < nx + nw - 20 && y > ny - nh && y < ny + nh - 30
-
-
-updateHealth : ( Hero, Int ) -> ( Hero, Int )
-updateHealth hero =
-    let
-        currHero =
-            Tuple.first hero
-
-        index =
-            Tuple.second hero
-
-        currHealth =
-            currHero.health
-    in
-    ( { currHero | health = currHealth + 5, maxHealth = currHealth + 5 }, index )
-
-
-updateDamage : ( Hero, Int ) -> ( Hero, Int )
-updateDamage hero =
-    let
-        currHero =
-            Tuple.first hero
-
-        index =
-            Tuple.second hero
-
-        currDamage =
-            currHero.damage
-    in
-    ( { currHero | damage = currDamage + 2 }, index )
-
-
-updateRPG : Msg -> Model -> ( Model, Cmd Msg )
-updateRPG msg model =
-    let
-        character =
-            model.character
-
-        ( x, y ) =
-            character.pos
-
-        currCoins =
-            model.bag.coins
-
-        bag =
-            model.bag
-
-        currHeroes =
-            model.indexedheroes
-    in
-    case msg of
-        Enter False ->
-            case model.mode of
-                Shop ->
-                    ( model |> checkLeaveShop, Cmd.none )
-
-                Castle ->
-                    ( model |> checkLeaveCastle, Cmd.none )
-
-                Dungeon ->
-                    ( model |> checkLeaveDungeon, Cmd.none )
-
-                Dungeon2 ->
-                    ( model |> checkLeaveDungeon2, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        Talk False ->
-            if model.mode == Shop then
-                if x > 600 && x < 1000 && y <= 650 then
-                    ( { model | mode = BuyingItems }, Cmd.none )
-
-                else
-                    ( model, Cmd.none )
-
-            else
-                ( model |> checkTalkRange, Cmd.none )
-
-        Key Left on ->
-            ( { model | character = { character | moveLeft = on, moveRight = character.moveRight && not on } }, Cmd.none )
-
-        Key Right on ->
-            ( { model | character = { character | moveRight = on, moveLeft = character.moveLeft && not on } }, Cmd.none )
-
-        Key Up on ->
-            ( { model | character = { character | moveUp = on, moveDown = character.moveDown && not on } }, Cmd.none )
-
-        Key Down on ->
-            ( { model | character = { character | moveDown = on, moveUp = character.moveUp && not on } }, Cmd.none )
-
-        UpgradeHealth ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
-        UpgradeDamage ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { bag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
-        ExitShop ->
-            ( { model | mode = Shop }, Cmd.none )
-
-        Test ->
-            ( { model
-                | test = True
-                , npclist = allNPC
-                , unlockShop = True
-                , unlockDungeon = True
-                , unlockDungeon2 = True
-                , cntTask = BeatBoss
-                , indexedheroes = allSampleHeroes
-              }
-            , Cmd.none
-            )
-
-        SeeEncyclopedia ->
-            ( { model | previousMode = model.mode, mode = Encyclopedia Warrior }, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
-
-
 updateScene : Msg -> Model -> Model
 updateScene msg model =
     case msg of
@@ -479,5 +278,3 @@ getviewport msg model =
 
         _ ->
             model
-
-

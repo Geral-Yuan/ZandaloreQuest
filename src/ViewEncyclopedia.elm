@@ -1,6 +1,5 @@
 module ViewEncyclopedia exposing (viewEncyclopedia, viewEncyclopediaButton)
 
-import Data exposing (pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, button, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
@@ -9,6 +8,7 @@ import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Class(..), Model)
+import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (dialogHelper, viewUIFrame)
 
 

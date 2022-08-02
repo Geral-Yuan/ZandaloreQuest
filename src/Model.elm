@@ -1,13 +1,14 @@
-module Model exposing (..)
+module Model exposing (init)
 
 import Bag exposing (initBag)
 import Board exposing (sampleBoard)
 import Browser.Dom exposing (getViewport)
-import Data exposing (allSampleHeroes, pixelHeight, pixelWidth)
+import Data exposing (allSampleHeroes)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
 import Task
-import Type exposing (..)
+import Type exposing (BoardState(..), Class(..), Dir(..), FailToDo(..), GameMode(..), Model, RpgCharacter, Task(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 
 
 init : () -> ( Model, Cmd Msg )

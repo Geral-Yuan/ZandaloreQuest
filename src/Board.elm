@@ -1,8 +1,8 @@
 module Board exposing (initBoard, sampleBoard)
 
-import Data exposing (initBoss, map, sampleEnemy)
+import Data exposing (initBoss, sampleEnemy)
+import BoardMap exposing (map)
 import Message exposing (Msg(..))
-import Time exposing (ZoneName(..))
 import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, ItemType(..), Obstacle, ObstacleType(..), Turn(..))
 
 

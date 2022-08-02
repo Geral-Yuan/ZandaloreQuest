@@ -10,10 +10,10 @@ module ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, l
 -}
 
 import Action exposing (attackedByArcherRange, attackedByMageRange)
-import Data exposing (distance, neighbour, vecAdd)
 import List exposing (append, minimum, partition)
 import ListOperation exposing (listDifference, unionList)
 import Type exposing (Board, Enemy, Pos, Spa_row)
+import VectorOperation exposing (distance, vecAdd, neighbour)
 
 
 {-| Output the warrior and assassin shortest path towards the nearest hero. The output path does not include the begin Pos.

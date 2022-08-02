@@ -9,15 +9,16 @@ module ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePa
 
 -}
 
-import Data exposing (pixelHeight, pixelWidth, upgradeDamage, upgradeHealth)
+import Data exposing (upgradeDamage, upgradeHealth)
 import Debug exposing (toString)
-import Html exposing (Html, button, div, Attribute)
+import Html exposing (Attribute, Html, button, div)
 import Html.Attributes as HtmlAttr
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Class(..), Hero, HeroState(..), Model, Scene(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
 import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipForC, viewTipForDir, viewTipForEnter)
@@ -28,27 +29,27 @@ import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipFo
 viewShop : Model -> Html Msg
 viewShop model =
     div
-    (shopDivStyle model)
-    ( viewKeyGif
-        ++ [ viewTask model
-            , Svg.svg
-                [ SvgAttr.width "100%"
-                , SvgAttr.height "100%"
-                ]
-                (viewShopSvg
-                ++ viewTaskBoard
-                ++ [ viewCoinSVG ( 1500, 900 ) ]
-                )
+        (shopDivStyle model)
+        (viewKeyGif
+            ++ [ viewTask model
+               , Svg.svg
+                    [ SvgAttr.width "100%"
+                    , SvgAttr.height "100%"
+                    ]
+                    (viewShopSvg
+                        ++ viewTaskBoard
+                        ++ [ viewCoinSVG ( 1500, 900 ) ]
+                    )
 
-            --, viewCharacterPos model.character
-            , viewTipForDir
-            , viewTipForC
-            , viewTipForEnter
-            , viewBagCoin model
-            ]
-        ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
-        ++ [ viewRpgCharacter model.character ]
-    )
+               --, viewCharacterPos model.character
+               , viewTipForDir
+               , viewTipForC
+               , viewTipForEnter
+               , viewBagCoin model
+               ]
+            ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
+            ++ [ viewRpgCharacter model.character ]
+        )
 
 
 viewShopSvg : List (Svg msg)
@@ -147,16 +148,15 @@ viewShopChoose model =
 exitButton : Html Msg
 exitButton =
     button
-        (
-        shopButtonStyle 
-        ++ [ HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "top" "920px"
-        , HtmlAttr.style "height" "50px"
-        , HtmlAttr.style "left" "1400px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "width" "100px"
-        , onClick ExitShop
-        ]
+        (shopButtonStyle
+            ++ [ HtmlAttr.style "font-size" "18px"
+               , HtmlAttr.style "top" "920px"
+               , HtmlAttr.style "height" "50px"
+               , HtmlAttr.style "left" "1400px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "width" "100px"
+               , onClick ExitShop
+               ]
         )
         [ text "Exit" ]
 
@@ -165,45 +165,42 @@ drawButton : Model -> Html Msg
 drawButton model =
     if List.length model.indexedheroes >= 6 then
         button
-            (
-            shopButtonStyle 
-            ++ [ HtmlAttr.style "top" "400px"
-                , HtmlAttr.style "height" "200px"
-                , HtmlAttr.style "left" "1000px"
-                , HtmlAttr.style "line-height" "60px"
-                , HtmlAttr.style "width" "400px"
-                , HtmlAttr.style "font-size" "24px"
-                ]
+            (shopButtonStyle
+                ++ [ HtmlAttr.style "top" "400px"
+                   , HtmlAttr.style "height" "200px"
+                   , HtmlAttr.style "left" "1000px"
+                   , HtmlAttr.style "line-height" "60px"
+                   , HtmlAttr.style "width" "400px"
+                   , HtmlAttr.style "font-size" "24px"
+                   ]
             )
             [ text "You have obtained all heroes!" ]
 
     else if List.length model.indexedheroes <= 2 then
         button
-            (
-            shopButtonStyle 
-            ++ [ HtmlAttr.style "top" "400px"
-                , HtmlAttr.style "height" "200px"
-                , HtmlAttr.style "left" "1000px"
-                , HtmlAttr.style "line-height" "60px"
-                , HtmlAttr.style "width" "400px"
-                , HtmlAttr.style "font-size" "24px"
-                , onClick LuckyDraw
-                ]
+            (shopButtonStyle
+                ++ [ HtmlAttr.style "top" "400px"
+                   , HtmlAttr.style "height" "200px"
+                   , HtmlAttr.style "left" "1000px"
+                   , HtmlAttr.style "line-height" "60px"
+                   , HtmlAttr.style "width" "400px"
+                   , HtmlAttr.style "font-size" "24px"
+                   , onClick LuckyDraw
+                   ]
             )
             [ text "0 coins to draw a powerful hero!" ]
 
     else
         button
-            (
-            shopButtonStyle 
-            ++ [ HtmlAttr.style "top" "400px"
-               , HtmlAttr.style "height" "200px"
-               , HtmlAttr.style "left" "1000px"
-               , HtmlAttr.style "line-height" "60px"
-               , HtmlAttr.style "width" "400px"
-               , HtmlAttr.style "font-size" "24px"
-               , onClick LuckyDraw
-               ]
+            (shopButtonStyle
+                ++ [ HtmlAttr.style "top" "400px"
+                   , HtmlAttr.style "height" "200px"
+                   , HtmlAttr.style "left" "1000px"
+                   , HtmlAttr.style "line-height" "60px"
+                   , HtmlAttr.style "width" "400px"
+                   , HtmlAttr.style "font-size" "24px"
+                   , onClick LuckyDraw
+                   ]
             )
             [ text "100 coins to draw a powerful hero!" ]
 
@@ -240,20 +237,19 @@ viewUpgradePage model =
 enterUpgradeButton : Html Msg
 enterUpgradeButton =
     button
-        (
-        shopButtonStyle 
-        ++ [ HtmlAttr.style "top" "400px"
-            , HtmlAttr.style "font-size" "24px"
-            , HtmlAttr.style "height" "200px"
-            , HtmlAttr.style "left" "500px"
-            , HtmlAttr.style "line-height" "60px"
-            , HtmlAttr.style "width" "400px"
-            , HtmlAttr.style "font-size" "24px"
-            , onClick EnterUpgrade
-            ]
+        (shopButtonStyle
+            ++ [ HtmlAttr.style "top" "400px"
+               , HtmlAttr.style "font-size" "24px"
+               , HtmlAttr.style "height" "200px"
+               , HtmlAttr.style "left" "500px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "width" "400px"
+               , HtmlAttr.style "font-size" "24px"
+               , onClick EnterUpgrade
+               ]
         )
-        [ text 
-            "go to upgrade your heroes" 
+        [ text
+            "go to upgrade your heroes"
         ]
 
 
@@ -267,38 +263,36 @@ upgradeButton model =
         Just ( hero, ind ) ->
             if isClassHave ( hero, ind ) model then
                 [ button
-                    (
-                    shopButtonStyle 
-                    ++ [ HtmlAttr.style "top" "775px"
-                        , HtmlAttr.style "font-size" "24px"
-                        , HtmlAttr.style "height" "150px"
-                        , HtmlAttr.style "left" "850px"
-                        , HtmlAttr.style "line-height" "60px"
-                        , HtmlAttr.style "width" "300px"
-                        , onClick (LevelUp ( hero, ind ))
-                        , Html.Events.onMouseOver (DisplayUpgrade True)
-                        , Html.Events.onMouseOut (DisplayUpgrade False)
-                        ]
+                    (shopButtonStyle
+                        ++ [ HtmlAttr.style "top" "775px"
+                           , HtmlAttr.style "font-size" "24px"
+                           , HtmlAttr.style "height" "150px"
+                           , HtmlAttr.style "left" "850px"
+                           , HtmlAttr.style "line-height" "60px"
+                           , HtmlAttr.style "width" "300px"
+                           , onClick (LevelUp ( hero, ind ))
+                           , Html.Events.onMouseOver (DisplayUpgrade True)
+                           , Html.Events.onMouseOut (DisplayUpgrade False)
+                           ]
                     )
-                    [ text 
-                        ("50 coins to upgrade " ++ toString hero.class )
+                    [ text
+                        ("50 coins to upgrade " ++ toString hero.class)
                     ]
                 ]
 
             else
                 [ button
-                    (
-                    shopButtonStyle 
-                    ++ [ HtmlAttr.style "top" "750px"
-                        , HtmlAttr.style "height" "200px"
-                        , HtmlAttr.style "left" "800px"
-                        , HtmlAttr.style "line-height" "60px"
-                        , HtmlAttr.style "width" "400px"
-                        , HtmlAttr.style "font-size" "24px"
-                        ]
+                    (shopButtonStyle
+                        ++ [ HtmlAttr.style "top" "750px"
+                           , HtmlAttr.style "height" "200px"
+                           , HtmlAttr.style "left" "800px"
+                           , HtmlAttr.style "line-height" "60px"
+                           , HtmlAttr.style "width" "400px"
+                           , HtmlAttr.style "font-size" "24px"
+                           ]
                     )
                     [ text
-                        ( "Locked " ++ toString hero.class )
+                        ("Locked " ++ toString hero.class)
                     ]
                 ]
 
@@ -348,23 +342,22 @@ viewShopHeroes model ( hero, index ) =
         class =
             toString hero.class
 
-        imageStyle = 
+        imageStyle =
             [ SvgAttr.width (toString mywidth)
             , SvgAttr.height (toString mywidth)
             , SvgAttr.x (toString x)
             , SvgAttr.y (toString y)
             , SvgAttr.preserveAspectRatio "none"
             ]
-
     in
     if isClassHave ( hero, index ) model then
         Svg.image
-            (SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png") :: imageStyle )
+            (SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png") :: imageStyle)
             []
 
     else
         Svg.image
-            ( SvgAttr.xlinkHref "./assets/image/Locked.png" :: imageStyle )
+            (SvgAttr.xlinkHref "./assets/image/Locked.png" :: imageStyle)
             []
 
 
@@ -404,12 +397,15 @@ isClassHave ( _, ind ) model =
 idealAllHeroes : Model -> List ( Hero, Int )
 idealAllHeroes model =
     let
-        haveIndex = List.map (\( _, yindex ) -> yindex) model.indexedheroes
+        haveIndex =
+            List.map (\( _, yindex ) -> yindex) model.indexedheroes
 
-        ishave = \( _, index ) -> not (List.member index haveIndex)
+        ishave =
+            \( _, index ) -> not (List.member index haveIndex)
+
         donthave =
             Data.allSampleHeroes
-            |> List.filter ishave
+                |> List.filter ishave
     in
     model.indexedheroes ++ donthave
 
@@ -456,17 +452,15 @@ viewHeroAttr model =
 
         isdplup =
             model.isDisplayUpgrade
-            
 
-        imageStyle = 
+        imageStyle =
             [ SvgAttr.width "55"
             , SvgAttr.height "55"
             , SvgAttr.x "850"
             , SvgAttr.preserveAspectRatio "none"
             ]
 
-
-        textStyle = 
+        textStyle =
             [ SvgAttr.x "950"
             , SvgAttr.dominantBaseline "middle"
             , SvgAttr.fill "white"
@@ -475,24 +469,24 @@ viewHeroAttr model =
     in
     viewUIFrame 400 240 800 20
         ++ [ Svg.image
-                ([ SvgAttr.y "40", SvgAttr.xlinkHref "./assets/image/Heart.png"] ++ imageStyle)
+                ([ SvgAttr.y "40", SvgAttr.xlinkHref "./assets/image/Heart.png" ] ++ imageStyle)
                 []
            , Svg.image
-                ([ SvgAttr.y "110", SvgAttr.xlinkHref "./assets/image/Sword.png"] ++ imageStyle)
+                ([ SvgAttr.y "110", SvgAttr.xlinkHref "./assets/image/Sword.png" ] ++ imageStyle)
                 []
            , Svg.image
-                ([ SvgAttr.y "180", SvgAttr.xlinkHref "./assets/image/Energy.png"] ++ imageStyle)
+                ([ SvgAttr.y "180", SvgAttr.xlinkHref "./assets/image/Energy.png" ] ++ imageStyle)
                 []
            , Svg.text_
-                ((SvgAttr.y "67.5") :: textStyle)
+                (SvgAttr.y "67.5" :: textStyle)
                 [ Svg.text shealth
                 ]
            , Svg.text_
-                ((SvgAttr.y "137.5") :: textStyle)
+                (SvgAttr.y "137.5" :: textStyle)
                 [ Svg.text sdmg
                 ]
            , Svg.text_
-                ((SvgAttr.y "208") :: textStyle)
+                (SvgAttr.y "208" :: textStyle)
                 [ Svg.text senergy
                 ]
            ]

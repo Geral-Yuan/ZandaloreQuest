@@ -1,11 +1,11 @@
 module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
 import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, maxTurret, selectedHero, unselectedHero)
-import Data exposing (extentPos, neighbour, vecAdd)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
 import Random exposing (Generator)
 import Type exposing (Board, BoardState(..), Class(..), Critical(..), Enemy, FailToDo(..), Hero, HeroState(..), ObstacleType(..), Pos)
+import VectorOperation exposing (extentPos, neighbour, vecAdd)
 
 
 randomDamage : Generator Critical

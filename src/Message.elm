@@ -25,8 +25,6 @@ type Msg
     | SpawnCrate ( Pos, ItemType )
     | Kill Bool
     | Talk Bool
-    | UpgradeHealth
-    | UpgradeDamage
     | DisplayUpgrade Bool
     | LuckyDraw
     | GetNewHero Class

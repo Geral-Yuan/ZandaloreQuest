@@ -1,10 +1,11 @@
 module Action exposing (..)
 
-import Data exposing (..)
+import Data exposing (findHexagon)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
 import Time exposing (Weekday(..))
 import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
+import VectorOperation exposing (leastdistance, neighbour, sameline, subneighbour, subsubneighbour, vecAdd, vecScale)
 
 
 updateEnemyAttackable : Board -> Board
@@ -66,10 +67,10 @@ attackRange : Board -> Hero -> List Pos
 attackRange board hero =
     case hero.class of
         Archer ->
-            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
+            List.concatMap (stuckInWay board hero.pos Friend) neighbour
 
         Turret ->
-            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
+            List.concatMap (stuckInWay board hero.pos Friend) neighbour
 
         Mage ->
             subneighbour
@@ -159,7 +160,7 @@ stuckInWay board my_pos my_side nbhd_pos =
 
 attackedByMageRange : Pos -> List Pos
 attackedByMageRange pos =
-    pos :: List.map (vecAdd pos) subsubneighbour
+    List.map (vecAdd pos) subsubneighbour
 
 
 updateTarget : Board -> Board

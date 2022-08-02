@@ -18,7 +18,6 @@ import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
 
 {-| "updateShop" includes entering the BuyItem page, lucky draw, entering upgrade page, switching upgraded heroes, upgrading and exit.
-
 -}
 updateShop : Msg -> Model -> ( Model, Cmd Msg )
 updateShop msg model =
@@ -28,25 +27,8 @@ updateShop msg model =
 
         newBag =
             model.bag
-
-        currHeroes =
-            model.indexedheroes
     in
     case msg of
-        UpgradeHealth ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
-        UpgradeDamage ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
         LuckyDraw ->
             if model.cntTask == GoToShop then
                 ( { model | cntTask = Level 1, npclist = npcMap 8 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
@@ -155,9 +137,11 @@ updateDamage hero =
 drawHero : Model -> Random.Generator Class
 drawHero model =
     let
-        have_class = List.map (\( hero, _ ) -> hero.class) model.indexedheroes
+        have_class =
+            List.map (\( hero, _ ) -> hero.class) model.indexedheroes
 
-        nothave = listDifference [ Warrior, Archer, Mage, Assassin, Healer, Engineer ] have_class
+        nothave =
+            listDifference [ Warrior, Archer, Mage, Assassin, Healer, Engineer ] have_class
     in
     case nothave of
         [] ->

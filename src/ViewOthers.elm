@@ -1,6 +1,6 @@
 module ViewOthers exposing (..)
 
-import Data exposing (..)
+import Data exposing (findFixedPos, posToString)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
@@ -10,6 +10,7 @@ import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Board, FailToDo(..), Model, Pos, Scene(..))
+import VectorOperation exposing (distance, neighbour, vecAdd, vecAddFloat)
 
 
 dialogHelper : Float -> Float -> Float -> Float -> Float -> String -> String -> Html Msg

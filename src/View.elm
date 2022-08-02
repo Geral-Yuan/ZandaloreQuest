@@ -1,6 +1,6 @@
 module View exposing (view)
 
-import Data exposing (findPos, pixelHeight, pixelWidth)
+import Data exposing (findPos)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div)
@@ -15,12 +15,13 @@ import ViewAllEnemy exposing (..)
 import ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
 import ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 import ViewChoose exposing (viewHeroChoose)
+import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewDialog exposing (viewDialog)
-import ViewEncyclopedia exposing (..)
+import ViewEncyclopedia exposing (viewEncyclopedia)
 import ViewOthers exposing (..)
 import ViewScenes exposing (viewBoardGameBackGround, viewCastle, viewDungeon, viewDungeon2, viewScene0, viewSummary)
 import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
-import ViewTutorial exposing (..)
+import ViewTutorial exposing (viewHintBackground, viewTutorialScene)
 
 
 view : Model -> Html Msg
@@ -115,16 +116,16 @@ viewTutorial k model =
             (viewBoardGameBackGround 100
                 :: viewMap model.board
                 --++ List.map viewCoordinate model.board.map
-                ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
-                ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
-                ++ List.concat (List.map viewHeroImage model.board.heroes)
-                ++ List.concat (List.map viewHeroCondition model.board.heroes)
-                ++ List.concat (List.map (viewHeroHealth model.board) model.board.heroes)
+                ++ List.concatMap viewHeroOuterFrame model.board.heroes
+                ++ List.concatMap viewHeroInnerFrame model.board.heroes
+                ++ List.concatMap viewHeroImage model.board.heroes
+                ++ List.concatMap viewHeroCondition model.board.heroes
+                ++ List.concatMap (viewHeroHealth model.board) model.board.heroes
                 ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
-                ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
-                ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
+                ++ List.concatMap (viewEnemyCondition model.board) model.board.enemies
+                ++ List.concatMap (viewEnemyHealth model.board) model.board.enemies
                 ++ List.map (viewCrate model.board) model.board.obstacles
                 ++ List.concatMap (viewItem model.board) model.board.item
                 ++ viewUIFrame 420 500 1570 500
@@ -149,9 +150,9 @@ viewTutorial k model =
                --  , viewTips
                ]
             ++ List.map (viewHero model.board) (List.sortBy .indexOnBoard model.board.heroes)
-            ++ List.concat (List.map viewHeroInfo model.board.heroes)
+            ++ List.concatMap viewHeroInfo model.board.heroes
             ++ List.map (viewEnemy model.board) (List.sortBy .indexOnBoard model.board.enemies)
-            ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
+            ++ List.concatMap (viewEnemyInfo model.board) model.board.enemies
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
@@ -191,16 +192,16 @@ viewBoard model =
                 -- TODO: make the board game looks nicer
                 :: viewMap model.board
                 --++ List.map viewCoordinate model.board.map
-                ++ List.concat (List.map viewHeroOuterFrame model.board.heroes)
-                ++ List.concat (List.map viewHeroInnerFrame model.board.heroes)
-                ++ List.concat (List.map viewHeroImage model.board.heroes)
-                ++ List.concat (List.map viewHeroCondition model.board.heroes)
-                ++ List.concat (List.map (viewHeroHealth model.board) model.board.heroes)
+                ++ List.concatMap viewHeroOuterFrame model.board.heroes
+                ++ List.concatMap viewHeroInnerFrame model.board.heroes
+                ++ List.concatMap viewHeroImage model.board.heroes
+                ++ List.concatMap viewHeroCondition model.board.heroes
+                ++ List.concatMap (viewHeroHealth model.board) model.board.heroes
                 ++ List.map (viewEnemyOuterFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyInnerFrame model.board) model.board.enemies
                 ++ List.map (viewEnemyImage model.board) model.board.enemies
-                ++ List.concat (List.map (viewEnemyCondition model.board) model.board.enemies)
-                ++ List.concat (List.map (viewEnemyHealth model.board) model.board.enemies)
+                ++ List.concatMap (viewEnemyCondition model.board) model.board.enemies
+                ++ List.concatMap (viewEnemyHealth model.board) model.board.enemies
                 ++ List.map (viewCrate model.board) model.board.obstacles
                 ++ List.concatMap (viewItem model.board) model.board.item
                 ++ viewUIFrame 420 500 1570 500
@@ -239,38 +240,14 @@ viewBoard model =
          --  , viewTips
          ]
             ++ List.map (viewHero model.board) (List.sortBy .indexOnBoard model.board.heroes)
-            ++ List.concat (List.map viewHeroInfo model.board.heroes)
+            ++ List.concatMap viewHeroInfo model.board.heroes
             ++ List.map (viewEnemy model.board) (List.sortBy .indexOnBoard model.board.enemies)
-            ++ List.concat (List.map (viewEnemyInfo model.board) model.board.enemies)
+            ++ List.concatMap (viewEnemyInfo model.board) model.board.enemies
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
          --++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
         )
-
-
-
--- view where the enermy archer can attack the hero (for debugging)
-{-
-   viewLines :  Board -> List (Svg msg)
-   viewLines board  =
-       let
-
-           list_points =
-               --List.concatMap (\x -> leastArcherPath x board) board.enemies
-                getHeroesLines board
-       in
-       List.map
-           (\x ->
-               Svg.circle
-                   [ SvgAttr.cx (toString (Tuple.first x))
-                   , SvgAttr.cy (toString (Tuple.second x))
-                   , SvgAttr.r "5"
-                   ]
-                   []
-           )
-           (List.map findPos list_points)
--}
 
 
 viewMap : Board -> List (Svg Msg)

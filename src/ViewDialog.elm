@@ -1,6 +1,5 @@
 module ViewDialog exposing (viewDialog)
 
-import Data exposing (pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
@@ -9,6 +8,7 @@ import NPC exposing (npcMap)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Model, Task(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (dialogHelper)
 import ViewScenes exposing (viewCastleSvg, viewDungeonSvg)
 
