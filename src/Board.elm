@@ -1,38 +1,9 @@
-module Board exposing (Board, initBoard, sampleBoard)
+module Board exposing (initBoard, sampleBoard)
 
-import Data exposing (..)
+import Data exposing (initBoss, sampleEnemy)
+import BoardMap exposing (map)
 import Message exposing (Msg(..))
-import Time exposing (ZoneName(..))
-
-
-type alias Board =
-    { map : List Pos
-    , obstacles : List Obstacle
-    , enemies : List Enemy
-    , heroes : List Hero
-    , totalHeroNumber : Int
-    , turn : Turn
-    , cntEnemy : Int
-    , cntTurret : Int
-    , boardState : BoardState
-    , critical : Int
-    , moveable : List ( Pos, Dir )
-    , attackable : List Pos
-    , enemyAttackable : List Pos
-    , skillable : List Pos
-    , target : List Pos
-    , item : List Item
-    , timeTurn : Float
-    , timeBoardState : Float
-    , spawn : Int -- number of times group of enemies will be spawned
-    , index : Int -- highest enemies index
-    , pointPos : ( Float, Float )
-    , coins : Int
-    , level : Int
-    , mapRotating : ( Bool, Float )
-    , popUpHint : ( FailToDo, Float )
-    , hintOn : Bool
-    }
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, ItemType(..), Obstacle, ObstacleType(..), Turn(..))
 
 
 initObstacles : Int -> List Obstacle
@@ -229,7 +200,6 @@ initBoard heroes k =
     , cntTurret = 0
     , boardState = NoActions
     , critical = 0
-    , moveable = []
     , attackable = []
     , enemyAttackable = []
     , skillable = []
@@ -260,7 +230,6 @@ sampleBoard =
     , cntTurret = 0
     , boardState = NoActions
     , critical = 0
-    , moveable = []
     , attackable = []
     , enemyAttackable = []
     , skillable = []

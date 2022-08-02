@@ -1,7 +1,6 @@
-module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
+module ViewAllHero exposing (viewHero, viewHeroInfo, viewHeroOnboard)
 
-import Board exposing (Board)
-import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
+import Data exposing (findPos, offsetHero)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
@@ -10,6 +9,16 @@ import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, Class(..), Hero, HeroState(..))
+
+
+viewHero : Board -> List (Svg msg)
+viewHero board =
+    List.concatMap viewHeroOuterFrame board.heroes
+        ++ List.concatMap viewHeroInnerFrame board.heroes
+        ++ List.concatMap viewHeroImage board.heroes
+        ++ List.concatMap viewHeroCondition board.heroes
+        ++ List.concatMap (viewHeroHealth board) board.heroes
 
 
 viewHeroImage : Hero -> List (Svg msg)
@@ -219,8 +228,8 @@ viewHeroInfo hero =
         ]
 
 
-viewHero : Board -> Hero -> Html Msg
-viewHero board hero =
+viewHeroOnboard : Board -> Hero -> Html Msg
+viewHeroOnboard board hero =
     let
         ( rotating, time ) =
             board.mapRotating
@@ -264,15 +273,6 @@ viewHero board hero =
                     []
                 ]
 
-        -- Svg.image
-        --     [ SvgAttr.width "80"
-        --     , SvgAttr.height "80"
-        --     , SvgAttr.x (toString (x - 40))
-        --     , SvgAttr.y (toString (y - 40))
-        --     , SvgAttr.preserveAspectRatio "none"
-        --     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "BlueGIF.gif")
-        --     ]
-        --     []
         Attacked _ ->
             div
                 [ HtmlAttr.style "position" "absolute"

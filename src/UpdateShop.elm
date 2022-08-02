@@ -1,12 +1,24 @@
 module UpdateShop exposing (updateShop)
 
-import Data exposing (Class(..), Dir(..), GameMode(..), Hero, Task(..), allSampleHeroes, listDifference)
+{-| This file fills functions related to update in the shop.
+
+
+# Functions
+
+@docs updateShop
+
+-}
+
+import Data exposing (allSampleHeroes)
+import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
-import Model exposing (Model)
-import NPC exposing (npcDarkKnight1)
+import NPC exposing (npcMap)
 import Random
+import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
 
+{-| "updateShop" includes entering the BuyItem page, lucky draw, entering upgrade page, switching upgraded heroes, upgrading and exit.
+-}
 updateShop : Msg -> Model -> ( Model, Cmd Msg )
 updateShop msg model =
     let
@@ -15,28 +27,11 @@ updateShop msg model =
 
         newBag =
             model.bag
-
-        currHeroes =
-            model.indexedheroes
     in
     case msg of
-        UpgradeHealth ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateHealth currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
-        UpgradeDamage ->
-            if model.bag.coins > 49 then
-                ( { model | bag = { newBag | coins = currCoins - 50 }, indexedheroes = List.map updateDamage currHeroes }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
-
         LuckyDraw ->
             if model.cntTask == GoToShop then
-                ( { model | cntTask = Level 1, npclist = npcDarkKnight1 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
+                ( { model | cntTask = Level 1, npclist = npcMap 8 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
 
             else if model.bag.coins > 99 then
                 ( { model | bag = { newBag | coins = currCoins - 100 } }, Random.generate GetNewHero (drawHero model) )
@@ -97,7 +92,7 @@ updateShop msg model =
                 ( model, Cmd.none )
 
         DisplayUpgrade on ->
-            ({model | isDisplayUpgrade = on}, Cmd.none)
+            ( { model | isDisplayUpgrade = on }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -133,7 +128,8 @@ updateDamage hero =
         currDamage =
             currHero.damage
 
-        adddmg = Data.upgradeDamage currHero.class
+        adddmg =
+            Data.upgradeDamage currHero.class
     in
     ( { currHero | damage = currDamage + adddmg }, index )
 
@@ -141,8 +137,11 @@ updateDamage hero =
 drawHero : Model -> Random.Generator Class
 drawHero model =
     let
-        ( _, nothave ) =
-            List.partition (\x -> List.member x (List.map (\( hero, _ ) -> hero.class) model.indexedheroes)) [ Warrior, Archer, Mage, Assassin, Healer, Engineer ]
+        have_class =
+            List.map (\( hero, _ ) -> hero.class) model.indexedheroes
+
+        nothave =
+            listDifference [ Warrior, Archer, Mage, Assassin, Healer, Engineer ] have_class
     in
     case nothave of
         [] ->

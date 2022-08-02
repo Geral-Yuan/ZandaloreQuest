@@ -1,24 +1,56 @@
-module NPC exposing (..)
+module NPC exposing (npcMap, allNPC)
 
-import Data exposing (Dir(..), NPC, Scene(..), Task(..))
+import Type exposing (Dir(..), NPC, Scene(..), Task(..))
+
+
+npcMap : Int -> NPC
+npcMap idx =
+    case idx of
+        1 ->
+            npcElder
+        
+        2 ->
+            npcWarrior
+
+        3 ->
+            npcArcher
+
+        4 ->
+            npcAssassin
+
+        5 ->
+            npcMage
+
+        6 ->
+            npcHealer
+
+        7 ->
+            npcEngineer
+
+        8 ->
+            npcDarkKnight1
+
+        9 ->
+            npcDarkKnight2
+
+        10 ->
+            npcSkullKnight1
+
+        11 ->
+            npcSkullKnight2
+
+        12 ->
+            npcSkullKnight3
+
+        _ ->
+            npcBoss
+
+        
 
 
 allNPC : List NPC
 allNPC =
-    [ npcElder
-    , npcDarkKnight1
-    , npcDarkKnight2
-    , npcSkullKnight1
-    , npcSkullKnight2
-    , npcSkullKnight3
-    , npcBoss
-    , npcWarrior
-    , npcArcher
-    , npcAssassin
-    , npcMage
-    , npcHealer
-    , npcEngineer
-    ]
+    List.map npcMap (List.range 1 13)
 
 
 npcElder : NPC

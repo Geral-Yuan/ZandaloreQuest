@@ -1,9 +1,6 @@
-module Bag exposing (Bag, addCoin, initBag)
+module Bag exposing (addCoin, initBag)
 
-
-type alias Bag =
-    { coins : Int
-    }
+import Type exposing (Bag)
 
 
 initBag : Bag

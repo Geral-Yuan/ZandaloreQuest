@@ -1,23 +1,6 @@
-module RpgCharacter exposing (RpgCharacter, moveCharacter, moveCharacterDir)
+module RpgCharacter exposing (moveCharacter)
 
-import Data exposing (Dir(..))
-import Html.Events exposing (on)
-
-
-type alias RpgCharacter =
-    { pos : ( Float, Float )
-    , moveLeft : Bool
-    , moveRight : Bool
-    , moveUp : Bool
-    , moveDown : Bool
-
-    --    , state : CharacterState
-    , faceDir : Dir
-    , height : Float
-    , width : Float
-    , speed : Float
-    , move_range : ( Float, Float ) -- right bound and bottom bound
-    }
+import Type exposing (Dir(..), RpgCharacter)
 
 
 moveCharacter : RpgCharacter -> Float -> RpgCharacter
@@ -60,6 +43,3 @@ newCharacterPos ( px, py ) dir ds =
 
         Down ->
             ( px, py + ds / 1.2 )
-
-        _ ->
-            ( px, py )

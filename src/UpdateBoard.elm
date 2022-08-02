@@ -1,12 +1,29 @@
-module UpdateBoard exposing (checkCurrentTurret, turnTurret, updateBoardAnimation, updateBoardOthers, updateTurretAttackable)
+module UpdateBoard exposing (updateBeaten, updateBoardGame)
 
-import Action exposing (attackedByHeroArcherRange, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateEnemyAttackable)
-import Board exposing (Board)
-import Data exposing (..)
+import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
+import Bag exposing (addCoin)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
-import HeroAttack exposing (checkAttack, heroTurretAttack)
+import HeroAttack exposing (checkAttack, generateDamage)
+import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
-import Svg.Attributes exposing (rotate)
+import NPC exposing (npcMap)
+import Type exposing (..)
+import UpdateMap exposing (updateMap)
+import UpdateSpawn exposing (randomCrate, randomEnemies, spawnCrate, spawnEnemies)
+import UpdateTurret exposing (actionTurret, checkCurrentTurret, checkTurretDone, updateTurretAttackable)
+import VectorOperation exposing (distance)
+import ViewConst exposing (pixelHeight, pixelWidth)
+
+
+updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
+updateBoardGame msg model =
+    { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
+        |> checkMouseMove msg
+        |> checkHit msg
+        |> randomCrate msg
+        |> randomEnemies
+        |> checkRotationDone
+        |> checkEnd
 
 
 updateBoardAnimation : Msg -> Board -> Board
@@ -119,6 +136,122 @@ updateBoardOthers msg board =
             board
 
 
+checkMouseMove : Msg -> Model -> Model
+checkMouseMove msg model =
+    let
+        board =
+            model.board
+    in
+    case msg of
+        Point x y ->
+            let
+                ( w, h ) =
+                    model.size
+            in
+            if w / h > pixelWidth / pixelHeight then
+                { model | board = { board | pointPos = ( (x - 1 / 2) * w / h * pixelHeight + 1 / 2 * pixelWidth, y * pixelHeight * w / h ) } }
+
+            else
+                { model | board = { board | pointPos = ( x * pixelWidth, (y - 1 / 2 * h / w) * pixelWidth + 1 / 2 * pixelHeight ) } }
+
+        _ ->
+            model
+
+
+checkHit : Msg -> Model -> ( Model, Cmd Msg )
+checkHit msg model =
+    case msg of
+        Hit pos ->
+            case model.board.turn of
+                PlayerTurn ->
+                    if model.board.boardState == NoActions then
+                        ( model, generateDamage pos )
+
+                    else
+                        ( model, Cmd.none )
+
+                TurretTurn ->
+                    ( model, Cmd.none )
+
+                EnemyTurn ->
+                    ( model, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+checkRotationDone : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkRotationDone ( model, cmd ) =
+    let
+        board =
+            model.board
+
+        ( rotating, time ) =
+            board.mapRotating
+    in
+    if rotating && time > 1 then
+        ( { model | board = { board | mapRotating = ( False, 0 ) } }, cmd )
+
+    else
+        ( model, cmd )
+
+
+checkEnd : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+checkEnd ( model, cmd ) =
+    let
+        myboard =
+            model.board
+
+        wincoins =
+            myboard.coins + 50
+
+        losecoins =
+            myboard.coins
+
+        win =
+            List.isEmpty myboard.enemies && myboard.spawn == 0 && List.all (\hero -> hero.state == Waiting) model.board.heroes
+
+        lose =
+            List.isEmpty myboard.heroes && List.all (\enemy -> enemy.state == Waiting) model.board.enemies
+
+        nmodel =
+            case model.mode of
+                BoardGame ->
+                    if win && (model.level == 0) then
+                        { model
+                            | mode = Dialog FinishTutorial
+                            , level = model.level + 1
+                            , cntTask = nextTask model.cntTask
+                            , bag = addCoin model.bag wincoins
+                            , unlockShop = True
+                            , npclist = model.npclist |> updateBeaten
+                        }
+
+                    else if win then
+                        { model
+                            | mode = Summary
+                            , cntTask = nextTask model.cntTask
+                            , bag = addCoin model.bag wincoins
+                            , npclist = (model.npclist |> updateBeaten) ++ nextNPC model.cntTask
+                            , unlockDungeon = model.unlockDungeon || (model.level == 2)
+                            , unlockDungeon2 = model.unlockDungeon2 || (model.level == 4)
+                        }
+
+                    else if lose then
+                        { model
+                            | mode = model.previousMode
+                            , bag = addCoin model.bag losecoins
+                        }
+
+                    else
+                        model
+
+                _ ->
+                    model
+    in
+    ( nmodel, cmd )
+
+
 returnHeroToWaiting : Hero -> Hero
 returnHeroToWaiting hero =
     case hero.state of
@@ -137,16 +270,6 @@ returnEnemyToWaiting enemy =
 
         _ ->
             { enemy | state = Waiting }
-
-
-turnTurret : Board -> Board
-turnTurret board =
-    { board
-        | turn = TurretTurn
-        , enemies = List.sortBy .indexOnBoard board.enemies
-        , heroes = List.map deselectHeroes board.heroes
-        , timeTurn = 0
-    }
 
 
 resetSteps : Enemy -> Enemy
@@ -172,31 +295,17 @@ resetSteps enemy =
 resetEnergy : Hero -> Hero
 resetEnergy hero =
     case hero.class of
-        Warrior ->
-            { hero | energy = 5 }
-
-        Archer ->
-            { hero | energy = 5 }
-
         Mage ->
             { hero | energy = 3 }
 
         Assassin ->
             { hero | energy = 6 }
 
-        Healer ->
-            { hero | energy = 5 }
-
-        Engineer ->
-            { hero | energy = 5 }
-
-        _ ->
+        Turret ->
             { hero | energy = 0 }
 
-
-deselectHeroes : Hero -> Hero
-deselectHeroes hero =
-    { hero | selected = False }
+        _ ->
+            { hero | energy = 5 }
 
 
 checkCurrentEnemy : Board -> Board
@@ -223,54 +332,6 @@ checkTurn board =
 
     else
         board
-
-
-updateMap : Int -> Board -> Board
-updateMap level board =
-    case level of
-        5 ->
-            { board | mapRotating = ( True, 0 ) }
-                |> rotate ( 5, 5 ) 4 False
-                |> rotate ( 5, 5 ) 2 True
-
-        6 ->
-            { board | mapRotating = ( True, 0 ) }
-                |> rotate ( 5, 5 ) 4 True
-                |> rotate ( 5, 5 ) 3 True
-                |> rotate ( 5, 5 ) 2 True
-                |> rotate ( 5, 5 ) 1 False
-                |> rotate ( 2, 5 ) 1 True
-                |> rotate ( 2, 8 ) 1 False
-                |> rotate ( 5, 8 ) 1 True
-                |> rotate ( 8, 5 ) 1 False
-                |> rotate ( 8, 2 ) 1 True
-                |> rotate ( 5, 2 ) 1 False
-
-        _ ->
-            board
-
-
-rotate : Pos -> Int -> Bool -> Board -> Board
-rotate center dis clockwise board =
-    let
-        ( targetHeroes, restHeroes ) =
-            List.partition (\hero -> distance center hero.pos == dis) board.heroes
-
-        ( targetEnemies, restEnemies ) =
-            List.partition (\hero -> distance center hero.pos == dis) board.enemies
-
-        ( targetObstacles, restObstacles ) =
-            List.partition (\hero -> distance center hero.pos == dis) board.obstacles
-
-        ( targetItems, restItems ) =
-            List.partition (\hero -> distance center hero.pos == dis) board.item
-    in
-    { board
-        | heroes = List.map (rotateStuff clockwise center) targetHeroes ++ restHeroes
-        , enemies = List.map (rotateStuff clockwise center) targetEnemies ++ restEnemies
-        , obstacles = List.map (rotateStuff clockwise center) targetObstacles ++ restObstacles
-        , item = List.map (rotateStuff clockwise center) targetItems ++ restItems
-    }
 
 
 moveHero : Board -> Pos -> Board
@@ -343,9 +404,6 @@ checkHeroItem hero board =
                 , boardState = HeroEnergy
             }
 
-        Buff ->
-            board
-
         NoItem ->
             board
 
@@ -361,15 +419,6 @@ fullEnergy class =
 
         _ ->
             5
-
-
-
--- To be rewritten later
-{-
-   legalEnemyMove : Board -> List Hero -> Enemy -> Bool
-   legalEnemyMove board hero_list enemy =
-       List.member enemy.pos board.map && not (List.member enemy.pos (board.barrier ++ List.map .pos hero_list ++ List.map .pos board.enemies))
--}
 
 
 selectHero : Board -> Hero -> Board
@@ -392,146 +441,35 @@ selectHero board clickedhero =
             { board | heroes = newwantedHero ++ newunwantedHero }
 
 
-spawnEnemies : List Class -> List Pos -> Board -> Board
-spawnEnemies list_class list_pos board =
-    if List.length board.enemies == 0 && board.spawn > 0 then
-        let
-            n_enemies =
-                List.range (board.index + 1) (board.index + 3)
-                    |> List.map3 sampleEnemy list_class list_pos
-        in
-        { board | enemies = n_enemies, spawn = board.spawn - 1 }
+nextTask : Task -> Task
+nextTask task =
+    case task of
+        MeetElder ->
+            GoToShop
 
-    else
-        board
+        GoToShop ->
+            Level 1
 
+        Level k ->
+            Level (k + 1)
 
-
-{-
-   -- the stats of each enemies can be changed later
+        _ ->
+            BeatBoss
 
 
-   mapClassEnemy : Class -> Pos -> Int -> Enemy
-   mapClassEnemy class pos idx =
-       case class of
-           Warrior ->
-               Enemy class pos 100 10 0 False idx
+nextNPC : Task -> List NPC
+nextNPC task =
+    case task of
+        Level 6 ->
+            []
 
-           Archer ->
-               Enemy class pos 100 10 0 False idx
+        Level k ->
+            [ npcMap (k + 8) ]
 
-           Assassin ->
-               Enemy class pos 100 10 0 False idx
-
-           Mage ->
-               Enemy class pos 100 10 0 False idx
-
-           Healer ->
-               Enemy class pos 100 10 0 False idx
--}
+        _ ->
+            []
 
 
-spawnCrate : Pos -> ItemType -> Board -> Board
-spawnCrate pos itype board =
-    let
-        crate =
-            Obstacle MysteryBox pos itype
-
-        nobstacles =
-            crate :: board.obstacles
-    in
-    { board | obstacles = nobstacles }
-
-
-
--- wait for more scene
-{-
-   checkEnd : Model -> Model
-   checkEnd model =
-       if List.length model.heroes == 0 then
-           model
-
-       else if List.length model.board.enemies == 0 then
-           model
-
-       else
-           model
--}
-
-
-actionTurret : Board -> Board
-actionTurret board =
-    let
-        undoneTurret =
-            List.filter (\turret -> (turret.class == Turret) && (turret.energy == 0)) board.heroes
-
-        selectboard =
-            case undoneTurret of
-                [] ->
-                    board
-
-                turret :: _ ->
-                    let
-                        attackedenemy =
-                            heroTurretAttack turret board
-                    in
-                    if attackedenemy /= board.enemies then
-                        { board
-                            | enemies = attackedenemy |> List.filter (\x -> x.health > 0)
-                            , heroes = { turret | energy = -3, state = Attacking } :: listDifference board.heroes [ turret ]
-                            , boardState = HeroAttack
-                            , attackable = attackedByHeroArcherRange board turret.pos
-                        }
-
-                    else
-                        { board
-                            | heroes = { turret | energy = -3, state = Waiting } :: listDifference board.heroes [ turret ]
-                            , attackable = attackedByHeroArcherRange board turret.pos
-                        }
-    in
-    selectboard
-
-
-checkCurrentTurret : Board -> Board
-checkCurrentTurret board =
-    let
-        undoneTurret =
-            List.filter (\turret -> (turret.class == Turret) && (turret.energy /= -6)) board.heroes
-    in
-    case undoneTurret of
-        [] ->
-            { board | cntTurret = 0 }
-
-        enemy :: _ ->
-            { board | cntTurret = enemy.indexOnBoard }
-
-
-updateTurretAttackable : Board -> Board
-updateTurretAttackable board =
-    let
-        maybeTurret =
-            List.head (List.filter (\x -> x.indexOnBoard == board.cntTurret) board.heroes)
-    in
-    if board.turn == TurretTurn then
-        case maybeTurret of
-            Nothing ->
-                { board | attackable = [] }
-
-            Just turret ->
-                let
-                    realattackRange =
-                        attackedByHeroArcherRange board turret.pos
-                in
-                { board | attackable = realattackRange }
-
-    else
-        board
-
-
-checkTurretDone : Hero -> Hero
-checkTurretDone turret =
-    if turret.energy == -3 && turret.state == Waiting && turret.class == Turret then
-        { turret | energy = -6 }
-
-    else
-        turret
+updateBeaten : List NPC -> List NPC
+updateBeaten npclist =
+    List.map (\npc -> { npc | beaten = True }) npclist

@@ -1,14 +1,13 @@
 module ViewTutorial exposing (viewHintBackground, viewTutorialScene)
 
-import Data exposing (..)
+import Data exposing (findFixedPos)
 import Debug exposing (toString)
-import Html exposing (Html, button, div)
+import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
-import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Model exposing (Model)
-import Svg exposing (Svg, text, view)
+import Svg exposing (Svg)
 import Svg.Attributes as SvgAttr
+import Type exposing (BoardState(..), Model, Turn(..))
 import ViewOthers exposing (dialogHelper, shapeHelper)
 
 

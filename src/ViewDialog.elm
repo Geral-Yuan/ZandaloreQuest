@@ -1,14 +1,14 @@
 module ViewDialog exposing (viewDialog)
 
-import Data exposing (Task(..), pixelHeight, pixelWidth)
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
-import Model exposing (Model)
-import NPC exposing (npcBoss, npcDarkKnight1, npcDarkKnight2, npcElder, npcSkullKnight1, npcSkullKnight2, npcSkullKnight3)
+import NPC exposing (npcMap)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Model, Task(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (dialogHelper)
 import ViewScenes exposing (viewCastleSvg, viewDungeonSvg)
 
@@ -110,6 +110,10 @@ viewFinishTutorial =
 
 viewDialogElder : Html Msg
 viewDialogElder =
+    let
+        npcElder =
+            npcMap 1
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -126,6 +130,10 @@ viewDialogElder =
 
 viewDialogDarkKnight1 : Html Msg
 viewDialogDarkKnight1 =
+    let
+        npcDarkKnight1 =
+            npcMap 8
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -142,6 +150,10 @@ viewDialogDarkKnight1 =
 
 viewDialogDarkKnight2 : Html Msg
 viewDialogDarkKnight2 =
+    let
+        npcDarkKnight2 =
+            npcMap 9
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -158,6 +170,10 @@ viewDialogDarkKnight2 =
 
 viewDialogSkullKnight1 : Html Msg
 viewDialogSkullKnight1 =
+    let
+        npcSkullKnight1 =
+            npcMap 10
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -174,6 +190,10 @@ viewDialogSkullKnight1 =
 
 viewDialogSkullKnight2 : Html Msg
 viewDialogSkullKnight2 =
+    let
+        npcSkullKnight2 =
+            npcMap 11
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -190,6 +210,10 @@ viewDialogSkullKnight2 =
 
 viewDialogSkullKnight3 : Html Msg
 viewDialogSkullKnight3 =
+    let
+        npcSkullKnight3 =
+            npcMap 12
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"
@@ -206,6 +230,10 @@ viewDialogSkullKnight3 =
 
 viewDialogBoss : Html Msg
 viewDialogBoss =
+    let
+        npcBoss =
+            npcMap 13
+    in
     div
         [ HtmlAttr.style "width" "100%"
         , HtmlAttr.style "height" "100%"

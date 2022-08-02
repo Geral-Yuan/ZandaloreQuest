@@ -1,37 +1,16 @@
 module ViewScenes exposing (..)
 
-import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg)
-import Model exposing (Model)
-import RpgCharacter exposing (RpgCharacter)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Dir(..), Model, RpgCharacter, Scene(..))
+import ViewConst exposing (logoHeight, logoWidth, pixelHeight, pixelWidth)
 import ViewEncyclopedia exposing (viewEncyclopediaButton)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (determineOpct, viewCoinSVG, viewPopUpHint, viewUIButton, viewUIFrame)
-
-
-logoWidth : Float
-logoWidth =
-    300 * sqrt 3
-
-
-logoHeight : Float
-logoHeight =
-    600
-
-
-startWidth : Float
-startWidth =
-    2000
-
-
-startHeight : Float
-startHeight =
-    1000
 
 
 viewScene0 : Model -> Html Msg
@@ -260,7 +239,6 @@ viewDungeon model =
 
                --, viewCharacterPos model.character
                , viewBagCoin model
-               , viewTipForT
                , viewTipForDir
                , viewTipForC
                , viewTipForEnter
@@ -311,7 +289,6 @@ viewDungeon2 model =
                --, viewCharacterPos model.character
                , viewBagCoin model
                , viewTipForDir
-               , viewTipForT
                , viewTipForC
                , viewTipForEnter
                , viewEncyclopediaButton
@@ -539,18 +516,18 @@ viewStarting model =
             model.size
 
         r =
-            if w / h > startWidth / startHeight then
-                Basics.min 1 (h / startHeight)
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
 
             else
-                Basics.min 1 (w / startWidth)
+                Basics.min 1 (w / pixelWidth)
     in
     div
-        [ HtmlAttr.style "width" (String.fromFloat startWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat startHeight ++ "px")
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat (600 + (w - startWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "left" (String.fromFloat (600 + (w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
@@ -558,7 +535,7 @@ viewStarting model =
             ++ " no-repeat fixed "
             ++ " 0px "
             ++ " 0px / "
-            ++ (toString startWidth ++ "px " ++ (toString startHeight ++ "px"))
+            ++ (toString pixelWidth ++ "px " ++ (toString pixelHeight ++ "px"))
           )
             |> HtmlAttr.style "background"
         ]
@@ -588,18 +565,18 @@ viewSummary model =
             model.size
 
         r =
-            if w / h > startWidth / startHeight then
-                Basics.min 1 (h / startHeight)
+            if w / h > pixelWidth / pixelHeight then
+                Basics.min 1 (h / pixelHeight)
 
             else
-                Basics.min 1 (w / startWidth)
+                Basics.min 1 (w / pixelWidth)
     in
     div
-        [ HtmlAttr.style "width" (String.fromFloat startWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat startHeight ++ "px")
+        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
+        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
         , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat ((w - startWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - startHeight * r) / 2) ++ "px")
+        , HtmlAttr.style "left" (String.fromFloat ((w - pixelWidth * r) / 2) ++ "px")
+        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
         , HtmlAttr.style "font-family" "myfont"

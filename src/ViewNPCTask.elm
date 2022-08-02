@@ -1,13 +1,12 @@
 module ViewNPCTask exposing (checkTalkRange, viewSingleNPC, viewTask, viewTaskBoard)
 
-import Data exposing (..)
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
-import Message exposing (..)
-import Model exposing (Model)
+import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Dir(..), FailToDo(..), GameMode(..), Model, NPC, Scene(..), Task(..))
 
 
 viewSingleNPC : NPC -> List (Html Msg)

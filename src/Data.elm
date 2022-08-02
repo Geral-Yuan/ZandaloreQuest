@@ -1,341 +1,13 @@
 module Data exposing (..)
 
-import Svg.Attributes exposing (cy, x2, y2)
+import BoardMap exposing (map)
+import Type exposing (..)
+import VectorOperation exposing (distance)
+import ViewConst exposing (halfWid, pixelWidth, sideLen)
 
 
 
 -- Basic types
-
-
-type GameMode
-    = Castle
-    | Shop
-    | Dungeon
-    | Dungeon2
-    | BuyingItems
-    | UpgradePage
-    | DrawHero Class
-    | HeroChoose
-    | BoardGame
-    | Summary
-    | Logo
-    | Tutorial Int
-    | Dialog Task
-    | Encyclopedia Class
-
-
-type Task
-    = MeetElder
-    | FinishTutorial
-    | GoToShop
-    | Level Int
-    | BeatBoss
-
-
-type Scene
-    = CastleScene
-    | ShopScene
-    | DungeonScene
-    | Dungeon2Scene
-
-
-type alias Pos =
-    ( Int, Int )
-
-
-type Critical
-    = Less
-    | None
-    | Low
-    | Medium
-    | High
-
-
-type Turn
-    = PlayerTurn
-    | TurretTurn
-    | EnemyTurn
-
-
-type BoardState
-    = NoActions
-    | EnemyAttack
-    | TurretAttack
-    | HeroAttack
-    | HeroMoving
-    | HeroHealth
-    | HeroEnergy
-    | Healing
-
-
-type FailToDo
-    = FailtoEnter Scene
-    | FailtoTalk NPC
-    | LackEnergy
-    | Noop
-
-
-
--- | GettingAttacked
-
-
-type Class
-    = Warrior
-    | Archer
-    | Assassin
-    | Healer
-    | Mage
-    | Engineer
-    | Turret
-
-
-type ObstacleType
-    = MysteryBox
-    | Unbreakable
-
-
-type ItemType
-    = HealthPotion
-    | EnergyPotion
-    | Gold Int
-    | Buff
-    | NoItem
-
-
-type HeroState
-    = Waiting
-    | Attacking
-    | Attacked Int
-    | Moving
-    | TakingHealth Int
-    | TakingEnergy
-    | GettingHealed Int
-
-
-type alias Obstacle =
-    { obstacleType : ObstacleType
-    , pos : Pos
-    , itemType : ItemType
-    }
-
-
-type alias Item =
-    { itemType : ItemType
-    , pos : Pos
-    }
-
-
-type alias Hero =
-    { class : Class
-    , pos : Pos
-    , maxHealth : Int
-    , health : Int
-    , damage : Int
-    , energy : Int
-    , selected : Bool
-    , state : HeroState
-    , indexOnBoard : Int --give an index to the heroes on the board
-    }
-
-
-type alias Enemy =
-    { class : Class
-    , pos : Pos
-    , maxHealth : Int
-    , health : Int
-    , damage : Int
-    , steps : Int
-    , done : Bool
-    , state : HeroState
-    , justAttack : Bool
-    , indexOnBoard : Int --give an index to the enemies on the board
-    , boss : Bool
-    , bossState : Int
-    }
-
-
-type alias NPC =
-    { scene : Scene
-    , name : String
-    , dialogue : String
-    , image : String
-    , faceDir : Dir
-    , position : ( Float, Float )
-    , size : ( Float, Float )
-    , beaten : Bool
-    , talkRange : ( ( Float, Float ), ( Float, Float ) )
-    , task : Task
-    , level : Int
-    }
-
-
-type Dir
-    = W
-    | E
-    | D
-    | X
-    | Z
-    | A
-    | Left
-    | Right
-    | Up
-    | Down
-
-
-type Side
-    = Hostile
-    | Friend
-
-
-pixelWidth : Float
-pixelWidth =
-    2000
-
-
-pixelHeight : Float
-pixelHeight =
-    1000
-
-
-sideLen : Float
-sideLen =
-    70
-
-
-halfWid : Float
-halfWid =
-    35 * sqrt 3
-
-
-neighbour : List Pos
-neighbour =
-    [ ( 1, 0 ), ( 0, 1 ), ( -1, 1 ), ( -1, 0 ), ( 0, -1 ), ( 1, -1 ) ]
-
-
-subneighbour : List Pos
-subneighbour =
-    [ ( 2, 0 ), ( 1, 1 ), ( 0, 2 ), ( -1, 2 ), ( -2, 2 ), ( -2, 1 ), ( -2, 0 ), ( -1, -1 ), ( 0, -2 ), ( 1, -2 ), ( 2, -2 ), ( 2, -1 ) ]
-
-
-subsubneighbour : List Pos
-subsubneighbour =
-    List.map (\y -> List.concatMap (\x -> [ vecAdd x y ]) neighbour) subneighbour
-        |> unionList
-
-
-map : Int -> List Pos
-map level =
-    case level of
-        0 ->
-            basicMap
-                |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
-
-        3 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> modBy 2 (x + y) == 0)
-            )
-                ++ [ ( 6, 1 ), ( 1, 8 ), ( 9, 2 ), ( 4, 9 ) ]
-
-        4 ->
-            basicMap
-                |> List.filter (\( x, y ) -> not (List.member ( x, y ) hollow))
-
-        5 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> distance ( 5, 5 ) ( x, y ) /= 3)
-            )
-                ++ [ ( 2, 5 ), ( 5, 8 ), ( 8, 2 ) ]
-
-        6 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> x /= y && x + 2 * y /= 15 && 2 * x + y /= 15)
-            )
-                ++ [ ( 5, 5 ) ]
-
-        _ ->
-            basicMap
-
-
-basicMap : List Pos
-basicMap =
-    List.concat
-        (List.map2 pairRange
-            (List.range 1 9)
-            [ ( 5, 9 )
-            , ( 4, 9 )
-            , ( 3, 9 )
-            , ( 2, 9 )
-            , ( 1, 9 )
-            , ( 1, 8 )
-            , ( 1, 7 )
-            , ( 1, 6 )
-            , ( 1, 5 )
-            ]
-        )
-
-
-hollow : List Pos
-hollow =
-    [ ( 3, 4 )
-    , ( 4, 3 )
-    , ( 4, 4 )
-    , ( 2, 7 )
-    , ( 2, 6 )
-    , ( 3, 6 )
-    , ( 4, 8 )
-    , ( 3, 8 )
-    , ( 4, 7 )
-    , ( 7, 6 )
-    , ( 6, 7 )
-    , ( 6, 6 )
-    , ( 8, 3 )
-    , ( 8, 4 )
-    , ( 7, 4 )
-    , ( 6, 2 )
-    , ( 7, 2 )
-    , ( 6, 3 )
-    ]
-
-
-rotateHexagon : Bool -> Pos -> Pos -> Pos
-rotateHexagon clockwise ( cx, cy ) ( xi, yi ) =
-    let
-        deltaX =
-            xi - cx
-
-        deltaY =
-            yi - cy
-
-        deltaXY =
-            deltaX + deltaY
-    in
-    if clockwise then
-        ( cx - deltaY, cy + deltaXY )
-
-    else
-        ( cx + deltaXY, cy - deltaX )
-
-
-rotateStuff : Bool -> Pos -> { a | pos : Pos } -> { a | pos : Pos }
-rotateStuff clockwise ( cx, cy ) stuff =
-    let
-        ( xi, yi ) =
-            stuff.pos
-
-        deltaX =
-            xi - cx
-
-        deltaY =
-            yi - cy
-
-        deltaXY =
-            deltaX + deltaY
-    in
-    if clockwise then
-        { stuff | pos = ( cx - deltaY, cy + deltaXY ) }
-
-    else
-        { stuff | pos = ( cx + deltaXY, cy - deltaX ) }
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy
@@ -366,110 +38,9 @@ initBoss =
 -- Basic Functions
 
 
-neighborToDir : Pos -> Dir
-neighborToDir pos =
-    if pos == ( -1, 0 ) then
-        W
-
-    else if pos == ( 0, -1 ) then
-        E
-
-    else if pos == ( 1, -1 ) then
-        D
-
-    else if pos == ( 1, 0 ) then
-        X
-
-    else if pos == ( 0, 1 ) then
-        Z
-
-    else
-        A
-
-
-extentPos : List Pos -> List Pos -> List Pos
-extentPos posList relativePos =
-    List.concat (List.map (\pos -> List.map (vecAdd pos) relativePos) posList)
-
-
-sameline : Pos -> List Pos
-sameline pos =
-    List.map (\k -> vecScale k pos) (List.range 1 8)
-
-
-listIntersection : List a -> List a -> List a
-listIntersection list1 list2 =
-    List.filter (\x -> List.member x list2) list1
-
-
-intersectionList : List (List a) -> List a
-intersectionList llist =
-    case llist of
-        [] ->
-            []
-
-        [ list ] ->
-            list
-
-        list1 :: (list2 :: rest) ->
-            intersectionList (listIntersection list1 list2 :: rest)
-
-
-listDifference : List a -> List a -> List a
-listDifference list1 list2 =
-    List.filter (\x -> not (List.member x list2)) list1
-
-
-listUnion : List a -> List a -> List a
-listUnion list1 list2 =
-    let
-        newElements =
-            List.filter (\x -> not (List.member x list2)) list1
-    in
-    list2 ++ newElements
-
-
-unionList : List (List a) -> List a
-unionList list_of_list =
-    case list_of_list of
-        [] ->
-            []
-
-        [ list ] ->
-            list
-
-        list1 :: (list2 :: restlists) ->
-            unionList (listUnion list1 list2 :: restlists)
-
-
-pairRange : Int -> ( Int, Int ) -> List Pos
-pairRange x ( y1, y2 ) =
-    List.map (Tuple.pair x) (List.range y1 y2)
-
-
 posToString : ( Float, Float ) -> String
 posToString ( x, y ) =
     String.fromFloat x ++ "," ++ String.fromFloat y ++ " "
-
-
-vecAdd : Pos -> Pos -> Pos
-vecAdd ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
-
-
-vecAddFloat : ( Float, Float ) -> ( Float, Float ) -> ( Float, Float )
-vecAddFloat ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
-
-
-vecScale : Int -> Pos -> Pos
-vecScale a ( x, y ) =
-    ( a * x, a * y )
-
-
-cartesianProduct : (a -> b -> c) -> List a -> List b -> List c
-cartesianProduct f x y =
-    List.concatMap (\x_ -> List.map (f x_) y) x
 
 
 findPos : Bool -> Int -> Float -> ( Int, Int ) -> ( Float, Float )
@@ -610,20 +181,6 @@ inHexagon ( x, y ) pos =
     abs (x - cx) < halfWid && abs (x - cx) + sqrt 3 * abs (y - cy) < sqrt 3 * sideLen
 
 
-distance : Pos -> Pos -> Int
-distance ( x1, y1 ) ( x2, y2 ) =
-    let
-        maxDis =
-            max (max (abs (x1 - x2)) (abs (y1 - y2))) (abs (x1 + y1 - x2 - y2))
-    in
-    abs (x1 - x2) + abs (y1 - y2) + abs (x1 + y1 - x2 - y2) - maxDis
-
-
-leastdistance : List Pos -> Pos -> Maybe Int
-leastdistance pos_list pos =
-    List.minimum (List.map (distance pos) pos_list)
-
-
 allSampleHeroes : List ( Hero, Int )
 allSampleHeroes =
     [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
@@ -690,3 +247,79 @@ upgradeHealth class =
 
         _ ->
             0
+
+
+mode2Scene : GameMode -> Scene
+mode2Scene mode =
+    case mode of
+        Castle ->
+            CastleScene
+
+        Shop ->
+            ShopScene
+
+        Dungeon ->
+            DungeonScene
+
+        _ ->
+            Dungeon2Scene
+
+
+scene2Mode : Scene -> GameMode
+scene2Mode scene =
+    case scene of
+        CastleScene ->
+            Castle
+
+        ShopScene ->
+            Shop
+
+        DungeonScene ->
+            Dungeon
+
+        Dungeon2Scene ->
+            Dungeon2
+
+
+class2Index : Class -> Int
+class2Index class =
+    case class of
+        Warrior ->
+            1
+
+        Archer ->
+            2
+
+        Assassin ->
+            3
+
+        Mage ->
+            4
+
+        Healer ->
+            5
+
+        _ ->
+            6
+
+
+index2Class : Int -> Class
+index2Class index =
+    case index of
+        1 ->
+            Warrior
+
+        2 ->
+            Archer
+
+        3 ->
+            Assassin
+
+        4 ->
+            Mage
+
+        5 ->
+            Healer
+
+        _ ->
+            Engineer
