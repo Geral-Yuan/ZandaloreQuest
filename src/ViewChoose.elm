@@ -8,8 +8,8 @@ import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Hero, Model)
-import ViewOthers exposing (viewUIButton, viewUIFrame)
 import ViewConst exposing (pixelHeight, pixelWidth)
+import ViewOthers exposing (viewUIButton, viewUIFrame)
 
 
 viewHeroChoose : Model -> Html Msg
@@ -34,7 +34,7 @@ viewHeroChoose model =
         , HtmlAttr.style "transform-origin" "0 0"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , HtmlAttr.style "background" "grey"
+        , HtmlAttr.style "background" "rgb(246,210,172)"
         ]
         [ Svg.svg
             [ SvgAttr.width "100%"
@@ -66,7 +66,7 @@ viewFrame index =
         , SvgAttr.y (toString y)
         , SvgAttr.rx "20"
         , SvgAttr.fill "transparent"
-        , SvgAttr.stroke "gold"
+        , SvgAttr.stroke "blue"
         , SvgAttr.strokeWidth "10"
         ]
         []
@@ -118,13 +118,11 @@ confirmButton =
         [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "875px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "25px"
+        , HtmlAttr.style "font-size" "28px"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "height" "100px"
         , HtmlAttr.style "left" "875px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "250px"
         , HtmlAttr.style "border" "transparent"
