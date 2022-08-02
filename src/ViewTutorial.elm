@@ -89,8 +89,8 @@ viewTutorial1 =
             , shapeHelper ( 300, 430 ) ( 1780, 165 ) "blue" ( 0, 0 )
             , shapeHelper ( 100, 100 ) (findFixedPos ( 5, 5 )) "blue" ( 0, 0 )
             , viewHintBackground 600 70 20 170
-            , viewHintBackground 400 130 1250 50
-            , viewHintBackground 600 190 950 700
+            , viewHintBackground 290 170 1240 50
+            , viewHintBackground 600 240 940 700
             , viewHintBackground 800 70 20 900
             ]
         , dialogHelper 600 20 20 170 50 "white" "Enemies Information (Red)"
@@ -156,7 +156,7 @@ viewTutorial4 =
             , SvgAttr.height "100%"
             ]
             [ shapeHelper ( 100, 100 ) (findFixedPos ( 4, 6 )) "blue" ( 4, 6 )
-            , viewHintBackground 800 190 580 50
+            , viewHintBackground 800 200 580 50
             ]
         , dialogHelper 800 30 580 50 50 "white" "Each hero has an energy limit. -2 to move and -3 to attack. Energy refreshes after each turn. Left click to move."
         ]
@@ -196,7 +196,7 @@ viewTutorial6 =
             , SvgAttr.height "100%"
             ]
             [ shapeHelper ( 100, 100 ) (findFixedPos ( 5, 4 )) "blue" ( 5, 4 )
-            , viewHintBackground 700 190 580 50
+            , viewHintBackground 700 210 580 50
             ]
         , dialogHelper 700 20 580 50 50 "white" "Right click on the crate to attack. A random item (health/energy potion or gold) will be dropped."
         ]
@@ -326,7 +326,7 @@ viewTutorial12 =
             , SvgAttr.height "100%"
             ]
             [ shapeHelper ( 100, 100 ) (findFixedPos ( 7, 2 )) "blue" ( 7, 2 )
-            , viewHintBackground 600 190 580 50
+            , viewHintBackground 600 210 580 50
             ]
         , dialogHelper 600 20 580 50 50 "white" "Now right click on the enemy hero to attack it. Crticial damage may be dealt."
         ]
