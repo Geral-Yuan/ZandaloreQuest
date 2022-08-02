@@ -163,46 +163,28 @@ exitButton =
 
 drawButton : Model -> Html Msg
 drawButton model =
-    if List.length model.indexedheroes >= 6 then
-        button
-            (shopButtonStyle
-                ++ [ HtmlAttr.style "top" "400px"
-                   , HtmlAttr.style "height" "200px"
-                   , HtmlAttr.style "left" "1000px"
-                   , HtmlAttr.style "line-height" "60px"
-                   , HtmlAttr.style "width" "400px"
-                   , HtmlAttr.style "font-size" "24px"
-                   ]
-            )
-            [ text "You have obtained all heroes!" ]
+    let
+        display =
+            if List.length model.indexedheroes >= 6 then
+                "You have obtained all heroes!"
 
-    else if List.length model.indexedheroes <= 2 then
-        button
-            (shopButtonStyle
-                ++ [ HtmlAttr.style "top" "400px"
-                   , HtmlAttr.style "height" "200px"
-                   , HtmlAttr.style "left" "1000px"
-                   , HtmlAttr.style "line-height" "60px"
-                   , HtmlAttr.style "width" "400px"
-                   , HtmlAttr.style "font-size" "24px"
-                   , onClick LuckyDraw
-                   ]
-            )
-            [ text "0 coins to draw a powerful hero!" ]
+            else if List.length model.indexedheroes <= 2 then
+                "0 coins to recruit a random hero!"
 
-    else
-        button
-            (shopButtonStyle
-                ++ [ HtmlAttr.style "top" "400px"
-                   , HtmlAttr.style "height" "200px"
-                   , HtmlAttr.style "left" "1000px"
-                   , HtmlAttr.style "line-height" "60px"
-                   , HtmlAttr.style "width" "400px"
-                   , HtmlAttr.style "font-size" "24px"
-                   , onClick LuckyDraw
-                   ]
-            )
-            [ text "100 coins to draw a powerful hero!" ]
+            else
+                "100 coins to recruit a random hero!"
+    in
+    button
+        (shopButtonStyle
+            ++ [ HtmlAttr.style "top" "400px"
+               , HtmlAttr.style "height" "200px"
+               , HtmlAttr.style "left" "1000px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "width" "400px"
+               , HtmlAttr.style "font-size" "24px"
+               ]
+        )
+        [ text display ]
 
 
 {-| view the page where the player can upgrade heroes
@@ -249,7 +231,7 @@ enterUpgradeButton =
                ]
         )
         [ text
-            "go to upgrade your heroes"
+            "Upgrade your heroes"
         ]
 
 
