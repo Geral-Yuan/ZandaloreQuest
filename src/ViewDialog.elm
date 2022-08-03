@@ -1,5 +1,14 @@
 module ViewDialog exposing (viewDialog)
 
+{-| This file fills functions related to viewing the game dialog.
+
+
+# Function
+
+@docs viewDialog
+
+-}
+
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
@@ -13,6 +22,8 @@ import ViewOthers exposing (dialogHelper)
 import ViewScenes exposing (viewCastleSvg, viewDungeonSvg)
 
 
+{-| This function will display the dialog according to the task.
+-}
 viewDialog : Task -> Model -> Html Msg
 viewDialog task model =
     let

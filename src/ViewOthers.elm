@@ -1,6 +1,15 @@
-module ViewOthers exposing (..)
+module ViewOthers exposing (detPoints, determineOpct, dialogHelper, endTurnButton, shapeHelper, skipButton, viewBoardCoin, viewCoinSVG, viewCritical, viewLevel, viewPopUpHint, viewUIButton, viewUIFrame)
 
-import Data exposing (buttonHtmlAttr, findFixedPos, posToString)
+{-| This file fills functions related to viewing other things.
+
+
+# Function
+
+@docs detPoints, determineOpct, dialogHelper, endTurnButton, shapeHelper, skipButton, viewBoardCoin, viewCoinSVG, viewCritical, viewLevel, viewPopUpHint, viewUIButton, viewUIFrame
+
+-}
+
+import Data exposing (buttonHtmlAttr, posToString)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
@@ -13,6 +22,8 @@ import Type exposing (Board, FailToDo(..), Model, Pos, Scene(..))
 import VectorOperation exposing (distance, neighbour, vecAdd, vecAddFloat)
 
 
+{-| This function is a helper function to align texts.
+-}
 dialogHelper : Float -> Float -> Float -> Float -> Float -> String -> String -> Html Msg
 dialogHelper width height left top fontSize color textIn =
     div
@@ -28,6 +39,8 @@ dialogHelper width height left top fontSize color textIn =
         [ text textIn ]
 
 
+{-| This function is a helper function to draw a rectangle.
+-}
 shapeHelper : ( Float, Float ) -> ( Float, Float ) -> String -> Pos -> Svg Msg
 shapeHelper ( height, width ) ( x, y ) color pos =
     Svg.rect
@@ -44,6 +57,8 @@ shapeHelper ( height, width ) ( x, y ) color pos =
         []
 
 
+{-| This function will display the generated critical damage
+-}
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
@@ -61,6 +76,8 @@ viewCritical board =
         [ text ("Critical Damage: " ++ toString board.critical) ]
 
 
+{-| This function will display the amount of coins obtained during the board game mode.
+-}
 viewBoardCoin : Board -> Html Msg
 viewBoardCoin board =
     div
@@ -76,6 +93,8 @@ viewBoardCoin board =
         [ text (toString board.coins) ]
 
 
+{-| This function will display a coin symbol.
+-}
 viewCoinSVG : ( Float, Float ) -> Svg Msg
 viewCoinSVG ( x, y ) =
     Svg.image
@@ -88,6 +107,8 @@ viewCoinSVG ( x, y ) =
         []
 
 
+{-| This function will display the current level the player is playing.
+-}
 viewLevel : Int -> Html Msg
 viewLevel level =
     let
@@ -117,29 +138,8 @@ viewLevel level =
         [ text levelText ]
 
 
-viewCoordinate : Pos -> Svg msg
-viewCoordinate ( row, column ) =
-    let
-        ( c_x, c_y ) =
-            findFixedPos ( row, column )
-
-        s_row =
-            toString row
-
-        s_column =
-            toString column
-    in
-    Svg.text_
-        [ SvgAttr.x (toString c_x)
-        , SvgAttr.y (toString c_y)
-        , SvgAttr.textAnchor "middle"
-        , SvgAttr.dominantBaseline "middle"
-        , SvgAttr.fill "grey"
-        ]
-        [ Svg.text (s_row ++ " , " ++ s_column)
-        ]
-
-
+{-| This function will return the on-screen position of the hexagon cell.
+-}
 detPoints : Board -> Pos -> ( Float, Float ) -> String
 detPoints board ( row, column ) ( x, y ) =
     let
@@ -221,6 +221,8 @@ rotateHexagonSelf ( x, y ) theta =
     ( x * cos theta - y * sin theta, x * sin theta + y * cos theta )
 
 
+{-| This function will display the end turn button.
+-}
 endTurnButton : Html Msg
 endTurnButton =
     button
@@ -239,6 +241,8 @@ endTurnButton =
         [ text "End Your Turn" ]
 
 
+{-| This function will display skip button.
+-}
 skipButton : Html Msg
 skipButton =
     button
@@ -256,6 +260,8 @@ skipButton =
         [ text "Skip" ]
 
 
+{-| This function will display UI frame
+-}
 viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)
 viewUIFrame w h x y =
     -- outer
@@ -284,6 +290,8 @@ viewUIFrame w h x y =
     ]
 
 
+{-| This function will display UI for button.
+-}
 viewUIButton : Int -> Int -> Int -> Int -> List (Svg msg)
 viewUIButton w h x y =
     -- outer
@@ -312,6 +320,8 @@ viewUIButton w h x y =
     ]
 
 
+{-| This function will display popup hint when the player did something no according to the task.
+-}
 viewPopUpHint : Model -> List (Html Msg)
 viewPopUpHint model =
     let
@@ -360,6 +370,8 @@ viewPopUpHint model =
         ]
 
 
+{-| This function will determine the opacity of the logo.
+-}
 determineOpct : Float -> Float -> Float
 determineOpct t tMax =
     if t <= tMax then

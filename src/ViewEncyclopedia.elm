@@ -1,5 +1,14 @@
 module ViewEncyclopedia exposing (viewEncyclopedia, viewEncyclopediaButton)
 
+{-| This file fills functions related to viewing encyclopedia.
+
+
+# Function
+
+@docs viewEncyclopedia, viewEncyclopediaButton
+
+-}
+
 import Debug exposing (toString)
 import Html exposing (Html, button, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
@@ -12,6 +21,8 @@ import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (dialogHelper, viewUIFrame)
 
 
+{-| This function will display the encyclopedia that collect the heroes description.
+-}
 viewEncyclopedia : Class -> Model -> Html Msg
 viewEncyclopedia class model =
     let
@@ -293,6 +304,8 @@ exitEncyclopediaButton =
         []
 
 
+{-| This function will display encyclopedia button to enter the encyclopedia page.
+-}
 viewEncyclopediaButton : Html Msg
 viewEncyclopediaButton =
     button
