@@ -1,13 +1,20 @@
 module BoardMap exposing (map, rotateStuff)
 
+{-| This file fills functions related to board map or shape.
+
+
+# Functions
+
+@docs map, rotateStuff
+
+-}
+
 import Type exposing (Pos)
 import VectorOperation exposing (distance)
 
 
-
-{- This function will give the shape of map according to the level. -}
-
-
+{-| This function will give the shape of map according to the level.
+-}
 map : Int -> List Pos
 map level =
     case level of
@@ -89,10 +96,8 @@ hollow =
     first_part ++ second_part
 
 
-
-{- This function will rotate the position of everything on the board. -}
-
-
+{-| This function will rotate the position of everything on the board.
+-}
 rotateStuff : Bool -> Pos -> { a | pos : Pos } -> { a | pos : Pos }
 rotateStuff clockwise ( cx, cy ) stuff =
     let

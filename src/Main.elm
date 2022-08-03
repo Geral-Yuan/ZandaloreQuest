@@ -1,5 +1,14 @@
 module Main exposing (main)
 
+{-| This file fills functions related to main.
+
+
+# Function
+
+@docs main
+
+-}
+
 import Browser
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
 import Html.Events exposing (keyCode)
@@ -11,6 +20,8 @@ import Update exposing (update)
 import View exposing (view)
 
 
+{-| This is the main function
+-}
 main : Program () Model Msg
 main =
     Browser.element { init = init, view = view, update = update, subscriptions = subscriptions }

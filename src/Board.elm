@@ -1,5 +1,14 @@
 module Board exposing (initBoard, sampleBoard)
 
+{-| This file fills functions related to board.
+
+
+# Functions
+
+@docs initBoard, sampleBoard
+
+-}
+
 import BoardMap exposing (map)
 import Data exposing (initBoss, sampleEnemy)
 import Message exposing (Msg(..))
@@ -188,10 +197,8 @@ spawnTimes k =
             2
 
 
-
-{- This function will return the initial state of Board. -}
-
-
+{-| This function will return the initial state of Board.
+-}
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
     { map = map k
@@ -222,10 +229,8 @@ initBoard heroes k =
     }
 
 
-
-{- This function will provide a sample board. -}
-
-
+{-| This function will provide a sample board.
+-}
 sampleBoard : Board
 sampleBoard =
     { map = []

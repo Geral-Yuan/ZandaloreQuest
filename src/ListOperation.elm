@@ -1,17 +1,24 @@
-module ListOperation exposing (..)
+module ListOperation exposing (cartesianProduct, intersectionList, listDifference, listIntersection, listUnion, unionList)
 
-{- get the intersection of two lists -}
+{-| This file fills functions related to wide used list operations.
 
 
+# Functions
+
+@docs cartesianProduct, intersectionList, listDifference, listIntersection, listUnion, unionList
+
+-}
+
+
+{-| This function will return the intersection between two lists with the same element type
+-}
 listIntersection : List a -> List a -> List a
 listIntersection list1 list2 =
     List.filter (\x -> List.member x list2) list1
 
 
-
-{- get the intersection of all lists which are elements of input list -}
-
-
+{-| This function will return the intersection of all lists in the nested `List (List a)`
+-}
 intersectionList : List (List a) -> List a
 intersectionList llist =
     case llist of
@@ -25,19 +32,15 @@ intersectionList llist =
             intersectionList (listIntersection list1 list2 :: rest)
 
 
-
-{- get list of elements in list1 but not in list2 -}
-
-
+{-| This function will return every element in `list1` that is not in `list2`
+-}
 listDifference : List a -> List a -> List a
 listDifference list1 list2 =
     List.filter (\x -> not (List.member x list2)) list1
 
 
-
-{- get the union of two lists -}
-
-
+{-| This functnion will return the union of two lists with same element type
+-}
 listUnion : List a -> List a -> List a
 listUnion list1 list2 =
     let
@@ -47,10 +50,8 @@ listUnion list1 list2 =
     list2 ++ newElements
 
 
-
-{- get the union of all lists which are elements of input list -}
-
-
+{-| This function will return the list of union of all lists in the nested `List (List a)`
+-}
 unionList : List (List a) -> List a
 unionList list_of_list =
     case list_of_list of
@@ -64,10 +65,8 @@ unionList list_of_list =
             unionList (listUnion list1 list2 :: restlists)
 
 
-
-{- apply f to each element in x and y -}
-
-
+{-| This function will apply function `f` to every pair possible between `List a` and `List b` and return `List c`.
+-}
 cartesianProduct : (a -> b -> c) -> List a -> List b -> List c
 cartesianProduct f x y =
     List.concatMap (\x_ -> List.map (f x_) y) x
