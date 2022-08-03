@@ -1,37 +1,18 @@
-module Board exposing (Board, initBoard, sampleBoard)
+module Board exposing (initBoard, sampleBoard)
 
-import Data exposing (..)
+{-| This file fills functions related to board.
+
+
+# Functions
+
+@docs initBoard, sampleBoard
+
+-}
+
+import BoardMap exposing (map)
+import Data exposing (initBoss, sampleEnemy)
 import Message exposing (Msg(..))
-import Time exposing (ZoneName(..))
-
-
-type alias Board =
-    { map : List Pos
-    , obstacles : List Obstacle
-    , enemies : List Enemy
-    , heroes : List Hero
-    , totalHeroNumber : Int
-    , turn : Turn
-    , cntEnemy : Int
-    , cntTurret : Int
-    , boardState : BoardState
-    , critical : Int
-    , moveable : List ( Pos, Dir )
-    , attackable : List Pos
-    , enemyAttackable : List Pos
-    , skillable : List Pos
-    , target : List Pos
-    , item : List Item
-    , timeTurn : Float
-    , timeBoardState : Float
-    , spawn : Int -- number of times group of enemies will be spawned
-    , index : Int -- highest enemies index
-    , pointPos : ( Float, Float )
-    , coins : Int
-    , level : Int
-    , mapRotating : ( Bool, Float )
-    , popUpHint : ( FailToDo, Float )
-    }
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, ItemType(..), Obstacle, ObstacleType(..), Turn(..))
 
 
 initObstacles : Int -> List Obstacle
@@ -39,23 +20,23 @@ initObstacles k =
     -- need to change this
     case k of
         0 ->
-            [ Obstacle MysteryBox ( 5, 5 ) (Gold 3)
+            [ Obstacle MysteryBox ( 5, 5 ) (Gold 5)
             , Obstacle MysteryBox ( 5, 4 ) EnergyPotion
             , Obstacle MysteryBox ( 6, 5 ) HealthPotion
             ]
 
         1 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 2, 6 ), ( 5, 5 ), ( 6, 2 ) ]
-                ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 3)
+                ++ [ Obstacle MysteryBox ( 4, 8 ) (Gold 5)
                    , Obstacle MysteryBox ( 8, 4 ) EnergyPotion
                    ]
 
         2 ->
             List.map (\pos -> Obstacle Unbreakable pos NoItem) [ ( 1, 9 ), ( 3, 7 ), ( 5, 5 ), ( 7, 3 ), ( 9, 1 ) ]
-                ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 3)
+                ++ [ Obstacle MysteryBox ( 2, 8 ) (Gold 5)
                    , Obstacle MysteryBox ( 4, 6 ) EnergyPotion
                    , Obstacle MysteryBox ( 6, 4 ) HealthPotion
-                   , Obstacle MysteryBox ( 8, 2 ) (Gold 3)
+                   , Obstacle MysteryBox ( 8, 2 ) (Gold 5)
                    ]
 
         3 ->
@@ -216,6 +197,8 @@ spawnTimes k =
             2
 
 
+{-| This function will return the initial state of Board.
+-}
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
     { map = map k
@@ -228,7 +211,6 @@ initBoard heroes k =
     , cntTurret = 0
     , boardState = NoActions
     , critical = 0
-    , moveable = []
     , attackable = []
     , enemyAttackable = []
     , skillable = []
@@ -242,10 +224,13 @@ initBoard heroes k =
     , coins = 0
     , level = k
     , mapRotating = ( False, 0 )
-    , popUpHint = (Noop, 0)
+    , popUpHint = ( Noop, 0 )
+    , hintOn = False
     }
 
 
+{-| This function will provide a sample board.
+-}
 sampleBoard : Board
 sampleBoard =
     { map = []
@@ -258,7 +243,6 @@ sampleBoard =
     , cntTurret = 0
     , boardState = NoActions
     , critical = 0
-    , moveable = []
     , attackable = []
     , enemyAttackable = []
     , skillable = []
@@ -272,5 +256,6 @@ sampleBoard =
     , coins = 0
     , level = 0
     , mapRotating = ( False, 0 )
-    , popUpHint = (Noop, 0)
+    , popUpHint = ( Noop, 0 )
+    , hintOn = False
     }

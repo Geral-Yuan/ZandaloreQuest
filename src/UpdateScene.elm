@@ -1,10 +1,20 @@
 module UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop)
 
-import Data exposing (FailToDo(..), GameMode(..), Scene(..))
+{-| This file fills functions related to updating scenes.
+
+
+# Function
+
+@docs checkLeaveCastle, checkLeaveDungeon, checkLeaveDungeon2, checkLeaveShop
+
+-}
+
 import Message exposing (Msg(..))
-import Model exposing (Model)
+import Type exposing (FailToDo(..), GameMode(..), Model, Scene(..))
 
 
+{-| This function will check the position of the main character that is able to leave the shop.
+-}
 checkLeaveShop : Model -> Model
 checkLeaveShop model =
     let
@@ -21,6 +31,8 @@ checkLeaveShop model =
         model
 
 
+{-| This function will check the position of the main character that is able to leave the castle.
+-}
 checkLeaveCastle : Model -> Model
 checkLeaveCastle model =
     let
@@ -64,6 +76,8 @@ checkLeaveCastle model =
         model
 
 
+{-| This function will check the position of the main character that is able to leave the first dungeon.
+-}
 checkLeaveDungeon : Model -> Model
 checkLeaveDungeon model =
     let
@@ -80,6 +94,8 @@ checkLeaveDungeon model =
         model
 
 
+{-| This function will check the position of the main character that is able to leave the second dungeon.
+-}
 checkLeaveDungeon2 : Model -> Model
 checkLeaveDungeon2 model =
     let

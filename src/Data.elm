@@ -1,343 +1,28 @@
-module Data exposing (..)
+module Data exposing (allSampleHeroes, buttonHtmlAttr, class2Index, findChosenHero, findFixedPos, findHexagon, findPos, index2Class, initBoss, initialHeroes, mode2Scene, offsetEnemy, offsetHero, posToString, sampleEnemy, upgradeDamage, upgradeHealth)
 
-import Svg.Attributes exposing (cy, x2, y2)
+{-| This file fills functions related to all the basic function used in the game.
+
+
+# Functions
+
+@docs allSampleHeroes, buttonHtmlAttr, class2Index, findChosenHero, findFixedPos, findHexagon, findPos, index2Class, initBoss, initialHeroes, mode2Scene, offsetEnemy, offsetHero, posToString, sampleEnemy, upgradeDamage, upgradeHealth
+
+-}
+
+import BoardMap exposing (map)
+import Html exposing (Attribute)
+import Html.Attributes as HtmlAttr
+import Type exposing (Class(..), Enemy, GameMode(..), Hero, HeroState(..), Pos, Scene(..))
+import VectorOperation exposing (distance)
+import ViewConst exposing (halfWid, pixelWidth, sideLen)
 
 
 
 -- Basic types
 
 
-type GameMode
-    = Castle
-    | Shop
-    | Dungeon
-    | Dungeon2
-    | BuyingItems
-    | UpgradePage
-    | DrawHero Class
-    | HeroChoose
-    | BoardGame
-    | Summary
-    | Logo
-    | Tutorial Int
-    | Dialog Task
-    | Encyclopedia Class
-
-
-type Task
-    = MeetElder
-    | FinishTutorial
-    | GoToShop
-    | Level Int
-    | BeatBoss
-
-
-type Scene
-    = CastleScene
-    | ShopScene
-    | DungeonScene
-    | Dungeon2Scene
-
-
-type alias Pos =
-    ( Int, Int )
-
-
-type Critical
-    = Less
-    | None
-    | Low
-    | Medium
-    | High
-
-
-type Turn
-    = PlayerTurn
-    | TurretTurn
-    | EnemyTurn
-
-
-type BoardState
-    = NoActions
-    | EnemyAttack
-    | TurretAttack
-    | HeroAttack
-    | HeroMoving
-    | HeroHealth
-    | HeroEnergy
-    | Healing
-
-
-type FailToDo
-    = FailtoEnter Scene
-    | FailtoTalk NPC
-    | LackEnergy
-    | Noop
-
-
-
--- | GettingAttacked
-
-
-type Class
-    = Warrior
-    | Archer
-    | Assassin
-    | Healer
-    | Mage
-    | Engineer
-    | Turret
-
-
-type ObstacleType
-    = MysteryBox
-    | Unbreakable
-
-
-type ItemType
-    = HealthPotion
-    | EnergyPotion
-    | Gold Int
-    | Buff
-    | NoItem
-
-
-type HeroState
-    = Waiting
-    | Attacking
-    | Attacked Int
-    | Moving
-    | TakingHealth Int
-    | TakingEnergy
-    | GettingHealed Int
-
-
-type alias Obstacle =
-    { obstacleType : ObstacleType
-    , pos : Pos
-    , itemType : ItemType
-    }
-
-
-type alias Item =
-    { itemType : ItemType
-    , pos : Pos
-    }
-
-
-type alias Hero =
-    { class : Class
-    , pos : Pos
-    , maxHealth : Int
-    , health : Int
-    , damage : Int
-    , energy : Int
-    , selected : Bool
-    , state : HeroState
-    , indexOnBoard : Int --give an index to the heroes on the board
-    }
-
-
-type alias Enemy =
-    { class : Class
-    , pos : Pos
-    , maxHealth : Int
-    , health : Int
-    , damage : Int
-    , steps : Int
-    , done : Bool
-    , state : HeroState
-    , justAttack : Bool
-    , indexOnBoard : Int --give an index to the enemies on the board
-    , boss : Bool
-    , bossState : Int
-    }
-
-
-type alias NPC =
-    { scene : Scene
-    , name : String
-    , dialogue : String
-    , image : String
-    , faceDir : Dir
-    , position : ( Float, Float )
-    , size : ( Float, Float )
-    , beaten : Bool
-    , talkRange : ( ( Float, Float ), ( Float, Float ) )
-    , task : Task
-    , level : Int
-    }
-
-
-type Dir
-    = W
-    | E
-    | D
-    | X
-    | Z
-    | A
-    | Left
-    | Right
-    | Up
-    | Down
-
-
-type Side
-    = Hostile
-    | Friend
-
-
-pixelWidth : Float
-pixelWidth =
-    2000
-
-
-pixelHeight : Float
-pixelHeight =
-    1000
-
-
-sideLen : Float
-sideLen =
-    70
-
-
-halfWid : Float
-halfWid =
-    35 * sqrt 3
-
-
-neighbour : List Pos
-neighbour =
-    [ ( 1, 0 ), ( 0, 1 ), ( -1, 1 ), ( -1, 0 ), ( 0, -1 ), ( 1, -1 ) ]
-
-
-subneighbour : List Pos
-subneighbour =
-    [ ( 2, 0 ), ( 1, 1 ), ( 0, 2 ), ( -1, 2 ), ( -2, 2 ), ( -2, 1 ), ( -2, 0 ), ( -1, -1 ), ( 0, -2 ), ( 1, -2 ), ( 2, -2 ), ( 2, -1 ) ]
-
-
-subsubneighbour : List Pos
-subsubneighbour =
-    List.map (\y -> List.concatMap (\x -> [ vecAdd x y ]) neighbour) subneighbour
-        |> unionList
-
-
-map : Int -> List Pos
-map level =
-    case level of
-        0 ->
-            basicMap
-                |> List.filter (\( x, y ) -> x + y >= 9 && x + y <= 11)
-
-        3 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> modBy 2 (x + y) == 0)
-            )
-                ++ [ ( 6, 1 ), ( 1, 8 ), ( 9, 2 ), ( 4, 9 ) ]
-
-        4 ->
-            basicMap
-                |> List.filter (\( x, y ) -> not (List.member ( x, y ) hollow))
-
-        5 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> distance ( 5, 5 ) ( x, y ) /= 3)
-            )
-                ++ [ ( 2, 5 ), ( 5, 8 ), ( 8, 2 ) ]
-
-        6 ->
-            (basicMap
-                |> List.filter (\( x, y ) -> x /= y && x + 2 * y /= 15 && 2 * x + y /= 15)
-            )
-                ++ [ ( 5, 5 ) ]
-
-        _ ->
-            basicMap
-
-
-basicMap : List Pos
-basicMap =
-    List.concat
-        (List.map2 pairRange
-            (List.range 1 9)
-            [ ( 5, 9 )
-            , ( 4, 9 )
-            , ( 3, 9 )
-            , ( 2, 9 )
-            , ( 1, 9 )
-            , ( 1, 8 )
-            , ( 1, 7 )
-            , ( 1, 6 )
-            , ( 1, 5 )
-            ]
-        )
-
-
-hollow : List Pos
-hollow =
-    [ ( 3, 4 )
-    , ( 4, 3 )
-    , ( 4, 4 )
-    , ( 2, 7 )
-    , ( 2, 6 )
-    , ( 3, 6 )
-    , ( 4, 8 )
-    , ( 3, 8 )
-    , ( 4, 7 )
-    , ( 7, 6 )
-    , ( 6, 7 )
-    , ( 6, 6 )
-    , ( 8, 3 )
-    , ( 8, 4 )
-    , ( 7, 4 )
-    , ( 6, 2 )
-    , ( 7, 2 )
-    , ( 6, 3 )
-    ]
-
-
-rotateHexagon : Bool -> Pos -> Pos -> Pos
-rotateHexagon clockwise ( cx, cy ) ( xi, yi ) =
-    let
-        deltaX =
-            xi - cx
-
-        deltaY =
-            yi - cy
-
-        deltaXY =
-            deltaX + deltaY
-    in
-    if clockwise then
-        ( cx - deltaY, cy + deltaXY )
-
-    else
-        ( cx + deltaXY, cy - deltaX )
-
-
-rotateStuff : Bool -> Pos -> { a | pos : Pos } -> { a | pos : Pos }
-rotateStuff clockwise ( cx, cy ) stuff =
-    let
-        ( xi, yi ) =
-            stuff.pos
-
-        deltaX =
-            xi - cx
-
-        deltaY =
-            yi - cy
-
-        deltaXY =
-            deltaX + deltaY
-    in
-    if clockwise then
-        { stuff | pos = ( cx - deltaY, cy + deltaXY ) }
-
-    else
-        { stuff | pos = ( cx + deltaXY, cy - deltaX ) }
-
-
+{-| This function will give sample of every class of enemy.
+-}
 sampleEnemy : Class -> Pos -> Int -> Enemy
 sampleEnemy class pos index =
     case class of
@@ -357,121 +42,26 @@ sampleEnemy class pos index =
             Enemy Mage pos 50 50 6 0 True Waiting False index False 0
 
 
+{-| This function will initiate boss.
+-}
 initBoss : Enemy
 initBoss =
-    Enemy Turret ( 5, 5 ) 200 200 10 0 True Waiting False 1 True 1
+    Enemy Turret ( 5, 5 ) 300 300 20 0 True Waiting False 1 True 1
 
 
 
 -- Basic Functions
 
 
-neighborToDir : Pos -> Dir
-neighborToDir pos =
-    if pos == ( -1, 0 ) then
-        W
-
-    else if pos == ( 0, -1 ) then
-        E
-
-    else if pos == ( 1, -1 ) then
-        D
-
-    else if pos == ( 1, 0 ) then
-        X
-
-    else if pos == ( 0, 1 ) then
-        Z
-
-    else
-        A
-
-
-extentPos : List Pos -> List Pos -> List Pos
-extentPos posList relativePos =
-    List.concat (List.map (\pos -> List.map (vecAdd pos) relativePos) posList)
-
-
-sameline : Pos -> List Pos
-sameline pos =
-    List.map (\k -> vecScale k pos) (List.range 1 8)
-
-
-listIntersection : List a -> List a -> List a
-listIntersection list1 list2 =
-    List.filter (\x -> List.member x list2) list1
-
-
-intersectionList : List (List a) -> List a
-intersectionList llist =
-    case llist of
-        [] ->
-            []
-
-        [ list ] ->
-            list
-
-        list1 :: (list2 :: rest) ->
-            intersectionList (listIntersection list1 list2 :: rest)
-
-
-listDifference : List a -> List a -> List a
-listDifference list1 list2 =
-    List.filter (\x -> not (List.member x list2)) list1
-
-
-listUnion : List a -> List a -> List a
-listUnion list1 list2 =
-    let
-        newElements =
-            List.filter (\x -> not (List.member x list2)) list1
-    in
-    list2 ++ newElements
-
-
-unionList : List (List a) -> List a
-unionList list_of_list =
-    case list_of_list of
-        [] ->
-            []
-
-        [ list ] ->
-            list
-
-        list1 :: (list2 :: restlists) ->
-            unionList (listUnion list1 list2 :: restlists)
-
-
-pairRange : Int -> ( Int, Int ) -> List Pos
-pairRange x ( y1, y2 ) =
-    List.map (Tuple.pair x) (List.range y1 y2)
-
-
+{-| This function will give the string form of the position
+-}
 posToString : ( Float, Float ) -> String
 posToString ( x, y ) =
     String.fromFloat x ++ "," ++ String.fromFloat y ++ " "
 
 
-vecAdd : Pos -> Pos -> Pos
-vecAdd ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
-
-
-vecAddFloat : ( Float, Float ) -> ( Float, Float ) -> ( Float, Float )
-vecAddFloat ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
-
-
-vecScale : Int -> Pos -> Pos
-vecScale a ( x, y ) =
-    ( a * x, a * y )
-
-
-cartesianProduct : (a -> b -> c) -> List a -> List b -> List c
-cartesianProduct f x y =
-    List.concatMap (\x_ -> List.map (f x_) y) x
-
-
+{-| This function will give the position of everything.
+-}
 findPos : Bool -> Int -> Float -> ( Int, Int ) -> ( Float, Float )
 findPos rotating level time ( row, column ) =
     let
@@ -531,6 +121,8 @@ findPos rotating level time ( row, column ) =
         fixedPos
 
 
+{-| This function will find the fixed position.
+-}
 findFixedPos : ( Int, Int ) -> ( Float, Float )
 findFixedPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
@@ -545,6 +137,8 @@ rotatePos ( cx, cy ) theta ( ix, iy ) =
     ( cx + deltaX * cos theta - deltaY * sin theta, cy + deltaX * sin theta + deltaY * cos theta )
 
 
+{-| This function will find the chosen hero during the choosing hero scene.
+-}
 findChosenHero : ( Float, Float ) -> Int
 findChosenHero ( x, y ) =
     let
@@ -578,6 +172,8 @@ findChosenHero ( x, y ) =
         (row - 1) * 3 + column
 
 
+{-| This function will give the offset of a hero when it is selected.
+-}
 offsetHero : Hero -> Float
 offsetHero hero =
     if hero.selected then
@@ -587,6 +183,8 @@ offsetHero hero =
         0
 
 
+{-| This function will give the offset of an enemy when it is taking action.
+-}
 offsetEnemy : Bool -> Float
 offsetEnemy selected =
     if selected then
@@ -596,6 +194,8 @@ offsetEnemy selected =
         0
 
 
+{-| This function will find set the hexagon cells position according to the level.
+-}
 findHexagon : ( Float, Float ) -> Int -> Maybe Pos
 findHexagon targetPos level =
     List.head (List.filter (inHexagon targetPos) (map level))
@@ -610,20 +210,8 @@ inHexagon ( x, y ) pos =
     abs (x - cx) < halfWid && abs (x - cx) + sqrt 3 * abs (y - cy) < sqrt 3 * sideLen
 
 
-distance : Pos -> Pos -> Int
-distance ( x1, y1 ) ( x2, y2 ) =
-    let
-        maxDis =
-            max (max (abs (x1 - x2)) (abs (y1 - y2))) (abs (x1 + y1 - x2 - y2))
-    in
-    abs (x1 - x2) + abs (y1 - y2) + abs (x1 + y1 - x2 - y2) - maxDis
-
-
-leastdistance : List Pos -> Pos -> Maybe Int
-leastdistance pos_list pos =
-    List.minimum (List.map (distance pos) pos_list)
-
-
+{-| This function will give sample of every class of hero.
+-}
 allSampleHeroes : List ( Hero, Int )
 allSampleHeroes =
     [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
@@ -635,6 +223,8 @@ allSampleHeroes =
     ]
 
 
+{-| This function will give the initial heroes at the beginning of the game.
+-}
 initialHeroes : List Hero
 initialHeroes =
     [ Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 1
@@ -642,6 +232,8 @@ initialHeroes =
     ]
 
 
+{-| This function will determine how many damage each class will be upgraded per once.
+-}
 upgradeDamage : Class -> Int
 upgradeDamage class =
     case class of
@@ -667,6 +259,8 @@ upgradeDamage class =
             0
 
 
+{-| This function will determine how many health each class will be upgraded per once.
+-}
 upgradeHealth : Class -> Int
 upgradeHealth class =
     case class of
@@ -690,3 +284,83 @@ upgradeHealth class =
 
         _ ->
             0
+
+
+{-| This function will convert from model mode to model scene.
+-}
+mode2Scene : GameMode -> Scene
+mode2Scene mode =
+    case mode of
+        Castle ->
+            CastleScene
+
+        Shop ->
+            ShopScene
+
+        Dungeon ->
+            DungeonScene
+
+        _ ->
+            Dungeon2Scene
+
+
+{-| This function will convert from class to index
+-}
+class2Index : Class -> Int
+class2Index class =
+    case class of
+        Warrior ->
+            1
+
+        Archer ->
+            2
+
+        Assassin ->
+            3
+
+        Mage ->
+            4
+
+        Healer ->
+            5
+
+        _ ->
+            6
+
+
+{-| This function will convert the index to class.
+-}
+index2Class : Int -> Class
+index2Class index =
+    case index of
+        1 ->
+            Warrior
+
+        2 ->
+            Archer
+
+        3 ->
+            Assassin
+
+        4 ->
+            Mage
+
+        5 ->
+            Healer
+
+        _ ->
+            Engineer
+
+
+{-| This function will set the common Html Attribute for button.
+-}
+buttonHtmlAttr : List (Attribute msg)
+buttonHtmlAttr =
+    [ HtmlAttr.style "background" "transparent"
+    , HtmlAttr.style "border" "transparent"
+    , HtmlAttr.style "color" "rgb(61,43,31)"
+    , HtmlAttr.style "position" "absolute"
+    , HtmlAttr.style "text-align" "center"
+    , HtmlAttr.style "font-family" "myfont"
+    , HtmlAttr.style "font-weight" "bold"
+    ]

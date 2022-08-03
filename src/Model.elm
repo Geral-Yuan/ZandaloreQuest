@@ -1,52 +1,37 @@
-module Model exposing (..)
+module Model exposing (init)
 
-import Bag exposing (Bag, initBag)
-import Board exposing (Board, sampleBoard)
+{-| This file fills functions related to model.
+
+
+# Function
+
+@docs init
+
+-}
+
+import Bag exposing (initBag)
+import Board exposing (sampleBoard)
 import Browser.Dom exposing (getViewport)
-import Data exposing (Class(..), Dir(..), FailToDo(..), GameMode(..), Hero, HeroState(..), NPC, Task(..), allSampleHeroes, pixelHeight, pixelWidth)
+import Data exposing (allSampleHeroes)
 import Message exposing (Msg(..))
-import NPC exposing (npcArcher, npcAssassin, npcElder, npcEngineer, npcHealer, npcMage, npcWarrior)
-import RpgCharacter exposing (RpgCharacter)
-import Task
+import NPC exposing (npcMap)
+import Task exposing (perform)
+import Type exposing (BoardState(..), Class(..), Dir(..), FailToDo(..), GameMode(..), Model, RpgCharacter, Task(..))
+import ViewConst exposing (pixelHeight, pixelWidth)
 
 
-type alias Model =
-    { mode : GameMode
-    , indexedheroes : List ( Hero, Int ) -- each hero linked to an index where 0 means not obtained so far
-    , upgradePageIndex : Int
-    , board : Board
-    , size : ( Float, Float )
-    , character : RpgCharacter
-    , chosenHero : List Int
-    , bag : Bag
-    , previousMode : GameMode
-    , level : Int
-    , time : Float
-    , cntTask : Task
-    , npclist : List NPC
-    , unlockShop : Bool
-    , unlockDungeon : Bool
-    , unlockDungeon2 : Bool
-    , popUpHint : ( FailToDo, Float )
-    , test : Bool
-    , isDisplayUpgrade : Bool
-
-    -- , time : Float
-    }
-
-
+{-| This function will return the initial state of the model.
+-}
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel
-    , Task.perform GetViewport getViewport
+    , perform GetViewport getViewport
     )
 
 
 initCharacter : RpgCharacter
 initCharacter =
     { pos = ( 1005, 555 )
-
-    --    , state = Still
     , moveLeft = False
     , moveRight = False
     , moveUp = False
@@ -57,10 +42,6 @@ initCharacter =
     , speed = 500
     , move_range = ( pixelWidth, pixelHeight )
     }
-
-
-
--- Hero Healer ( 6, 6 ) 100 5 5 5 False 1 -- heal 5 health
 
 
 initModel : Model
@@ -78,13 +59,11 @@ initModel =
     , level = 0
     , time = 0
     , cntTask = MeetElder
-    , npclist = [ npcElder, npcWarrior, npcArcher, npcAssassin, npcMage, npcHealer, npcEngineer ]
+    , npclist = List.map npcMap (List.range 1 7)
     , unlockShop = False
     , unlockDungeon = False
     , unlockDungeon2 = False
     , popUpHint = ( Noop, 0 )
     , test = False
     , isDisplayUpgrade = False
-
-    -- , time = 0
     }

@@ -1,9 +1,19 @@
 module Message exposing (Msg(..))
 
+{-| This file fills types related to message.
+
+
+# Type
+
+@docs Msg
+
+-}
+
 import Browser.Dom exposing (Viewport)
-import Data exposing (Class, Critical, Dir, Hero, ItemType, Pos)
+import Type exposing (Class, Critical, Dir, Hero, ItemType, Pos)
 
-
+{-| This is the main message type
+-}
 type Msg
     = Key Dir Bool
     | Choose Pos
@@ -25,8 +35,6 @@ type Msg
     | SpawnCrate ( Pos, ItemType )
     | Kill Bool
     | Talk Bool
-    | UpgradeHealth
-    | UpgradeDamage
     | DisplayUpgrade Bool
     | LuckyDraw
     | GetNewHero Class
@@ -39,3 +47,4 @@ type Msg
     | RightEncyclopedia
     | LeftEncyclopedia
     | Test
+    | ViewHint Bool

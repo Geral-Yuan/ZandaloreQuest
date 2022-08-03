@@ -1,11 +1,23 @@
-module Action exposing (..)
+module Action exposing (attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
 
-import Board exposing (Board)
-import Data exposing (..)
+{-| This file fills functions related to all heroes actions.
+
+
+# Functions
+
+@docs attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, maxTurret, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget
+
+-}
+
+import Data exposing (findHexagon)
+import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
-import Time exposing (Weekday(..))
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
+import VectorOperation exposing (leastdistance, neighbour, sameline, subneighbour, subsubneighbour, vecAdd, vecScale)
 
 
+{-| This function will update the attackable position according to the enemy's position
+-}
 updateEnemyAttackable : Board -> Board
 updateEnemyAttackable board =
     let
@@ -28,6 +40,8 @@ updateEnemyAttackable board =
         board
 
 
+{-| This function will update the attackable position according to the hero's position.
+-}
 updateAttackable : Board -> Board
 updateAttackable board =
     case selectedHero board.heroes of
@@ -65,10 +79,10 @@ attackRange : Board -> Hero -> List Pos
 attackRange board hero =
     case hero.class of
         Archer ->
-            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
+            List.concatMap (stuckInWay board hero.pos Friend) neighbour
 
         Turret ->
-            List.concat (List.map (stuckInWay board hero.pos Friend) neighbour)
+            List.concatMap (stuckInWay board hero.pos Friend) neighbour
 
         Mage ->
             subneighbour
@@ -120,11 +134,15 @@ skillRange hero =
             []
 
 
+{-| This function will return List of Positions that can be hit by Archer on the Board.
+-}
 attackedByArcherRange : Board -> Pos -> List Pos
 attackedByArcherRange board pos =
     List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Hostile) neighbour))
 
 
+{-| This function will return List of Positions that can be hit by Hero Archer on the Board.
+-}
 attackedByHeroArcherRange : Board -> Pos -> List Pos
 attackedByHeroArcherRange board pos =
     List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Friend) neighbour))
@@ -156,28 +174,15 @@ stuckInWay board my_pos my_side nbhd_pos =
 --for enemy mage
 
 
+{-| This function will return List of Positions that can be hit by Mage on the Board.
+-}
 attackedByMageRange : Pos -> List Pos
 attackedByMageRange pos =
-    pos :: List.map (vecAdd pos) subsubneighbour
+    List.map (vecAdd pos) subsubneighbour
 
 
-updateMoveable : Board -> Board
-updateMoveable board =
-    case selectedHero board.heroes of
-        Nothing ->
-            { board | moveable = [] }
-
-        Just hero ->
-            let
-                can_move =
-                    List.map (\neighberpos -> ( vecAdd hero.pos neighberpos, neighborToDir neighberpos )) neighbour
-
-                really_can_move =
-                    List.filter (\moveable -> List.member (Tuple.first moveable) board.map && not (List.member (Tuple.first moveable) (unMoveable board))) can_move
-            in
-            { board | moveable = really_can_move }
-
-
+{-| This function will update the target's position according to the hero's position
+-}
 updateTarget : Board -> Board
 updateTarget board =
     case selectedHero board.heroes of
@@ -202,30 +207,29 @@ updateTarget board =
                     { board | target = [] }
 
 
+{-| This function will detect the selected hero.
+-}
 selectedHero : List Hero -> Maybe Hero
 selectedHero hero_list =
     List.head (List.filter (\hero -> hero.selected) hero_list)
 
 
+{-| This function will detect the unselected hero.
+-}
 unselectedHero : List Hero -> List Hero
 unselectedHero hero_list =
     List.filter (\hero -> not hero.selected) hero_list
 
 
-checkItemType : Pos -> Item -> ItemType
-checkItemType ( row, column ) item =
-    if item.pos == ( row, column ) then
-        item.itemType
-
-    else
-        NoItem
-
-
+{-| This function will give List of unmoveable Positions.
+-}
 unMoveable : Board -> List Pos
 unMoveable board =
     List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes
 
 
+{-| This function will destroy the destructable obstacle if being hit.
+-}
 checkAttackObstacle : List Pos -> Board -> Board
 checkAttackObstacle pos_list board =
     let
@@ -238,6 +242,8 @@ checkAttackObstacle pos_list board =
     { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
 
 
+{-| This function will set the limit of the maximum turret on the board.
+-}
 maxTurret : Int
 maxTurret =
     2
@@ -248,6 +254,8 @@ sampleTurret health dmg pos board =
     Hero Turret pos (health - 10) (health - 10) (2 * dmg) 0 False Waiting (board.totalHeroNumber + 1)
 
 
+{-| This function will let Engineer build Turret.
+-}
 checkBuildTurret : Hero -> Pos -> Board -> Board
 checkBuildTurret myhero pos board =
     case myhero.class of
@@ -259,6 +267,9 @@ checkBuildTurret myhero pos board =
 
                     else
                         board.heroes
+
+                otherHeroes =
+                    List.filter (\hero -> hero.class /= Engineer) board.heroes
             in
             case pos2Hero board.heroes pos of
                 Nothing ->
@@ -266,7 +277,7 @@ checkBuildTurret myhero pos board =
                         { board | heroes = newherolist, totalHeroNumber = board.totalHeroNumber + 1, boardState = HeroAttack }
 
                     else
-                        board
+                        { board | popUpHint = ( FailtoBuild, 0 ), heroes = myhero :: otherHeroes }
 
                 Just hero ->
                     if hero.class == Turret then
@@ -279,6 +290,8 @@ checkBuildTurret myhero pos board =
             board
 
 
+{-| This function will check if a character receive a heal.
+-}
 checkHeal : Class -> Pos -> Board -> Board
 checkHeal class pos board =
     case selectedHero board.heroes of
@@ -313,11 +326,15 @@ checkHeal class pos board =
                     board
 
 
+{-| This function will calculate the heal according to the Healer's damage.
+-}
 calculateHeal : Int -> Int
 calculateHeal damage =
     2 * damage
 
 
+{-| This function will detect if that position have item.
+-}
 pos2Item : List Item -> Pos -> Item
 pos2Item all_items pos =
     case List.filter (\x -> pos == x.pos) all_items of
@@ -338,6 +355,8 @@ pos2Hero all_hero pos =
             Just chosen
 
 
+{-| This function will convert from the hero index to hero in the choosing hero scene.
+-}
 index2Hero : Int -> List Hero -> Hero
 index2Hero index l_hero =
     case List.filter (\x -> index == x.indexOnBoard) l_hero of

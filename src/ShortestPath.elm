@@ -1,81 +1,91 @@
 module ShortestPath exposing (leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath)
 
-import Action exposing (attackedByArcherRange, attackedByMageRange)
-import Board exposing (Board)
-import Data exposing (..)
-import List exposing (append, minimum, partition)
+{-| This file fills functions that finds Shortest Path for each class.
 
 
-type alias Spa_row =
-    { pos : Pos
-    , path_length : Int
-    , pre_pos : Maybe Pos
-    }
+# Functions
 
-
-
-{- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
-
-   "my_enemy" is the enemy that is to move
-
-   "board" is the current board
+@docs leastArcherPath, leastHealerPath, leastMagePath, leastWarriorPath
 
 -}
 
+import Action exposing (attackedByArcherRange, attackedByMageRange)
+import List exposing (append, minimum, partition)
+import ListOperation exposing (listDifference, unionList)
+import Type exposing (Board, Enemy, Pos, Spa_row)
+import VectorOperation exposing (distance, neighbour, vecAdd)
 
+
+{-| Output the warrior and assassin shortest path towards the nearest hero. The output path does not include the begin Pos.
+
+`my_enemy` is the enemy that is to move
+
+`board` is the current board
+
+-}
 leastWarriorPath : Enemy -> Board -> List Pos
 leastWarriorPath my_enemy board =
-    leastPathHelper my_enemy board (unionList (List.map (\hero -> List.map (vecAdd hero.pos) neighbour) board.heroes))
+    List.map getNeighbour board.heroes
+        |> unionList
+        |> leastPathHelper my_enemy board
 
 
+getNeighbour : { a | pos : Pos } -> List Pos
+getNeighbour tgt =
+    List.map (vecAdd tgt.pos) neighbour
 
-{- Output the archer shortest path towards the nearest hero in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
 
-   "my_enemy" is the enemy that is to move
+{-| Output the archer shortest path towards the nearest position to attack heroes. The output path does not include the begin Pos.
 
-   "board" is the current board
+`my_enemy` is the enemy that is to move
+
+`board` is the current board
 
 -}
-
-
 leastArcherPath : Enemy -> Board -> List Pos
 leastArcherPath my_enemy board =
-    leastPathHelper my_enemy board (unionList (List.map (attackedByArcherRange board) (List.map .pos board.heroes)))
+    List.map (attackedByArcherRange board) (List.map .pos board.heroes)
+        |> unionList
+        |> leastPathHelper my_enemy board
 
 
+{-| Output the mage shortest path towards the nearest position to attack heroes. The output path does not include the begin Pos.
+Remark : the output path does not include the begin Pos
 
-{- Output the warrior shortest path towards the nearest hero in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
+`my_enemy` is the enemy that is to move
 
-   "my_enemy" is the enemy that is to move
-
-   "board" is the current board
+`board` is the current board
 
 -}
-
-
 leastMagePath : Enemy -> Board -> List Pos
 leastMagePath my_enemy board =
-    leastPathHelper my_enemy board (unionList (List.map attackedByMageRange (List.map .pos board.heroes)))
+    List.map attackedByMageRange (List.map .pos board.heroes)
+        |> unionList
+        |> leastPathHelper my_enemy board
 
 
-leastHealerPath : Enemy -> Board -> List Pos
-leastHealerPath my_enemy board =
-    leastPathHelper my_enemy board (unionList (List.map (\enemy -> List.map (vecAdd enemy.pos) neighbour) (listDifference board.enemies [ my_enemy ])))
+{-| Output the healer shortest path towards the nearest position to heal other enemies. The output path does not include the begin Pos.
 
+`my_enemy` is the enemy that is to move
 
-
-{- A useful helper to find the shortest path from my_enemy's position towards a list of end positions
-
-   "my_enemy" is the enemy that is to move
-
-   "board" is the current board
+`board` is the current board
 
 -}
+leastHealerPath : Enemy -> Board -> List Pos
+leastHealerPath my_enemy board =
+    listDifference board.enemies [ my_enemy ]
+        |> List.map getNeighbour
+        |> unionList
+        |> leastPathHelper my_enemy board
 
 
+{-| A useful helper to find the shortest path from my\_enemy's position towards a list of end positions.
+
+`my_enemy` is the enemy that is to move
+
+`board` is the current board
+
+-}
 leastPathHelper : Enemy -> Board -> List Pos -> List Pos
 leastPathHelper my_enemy board tgt_list =
     let
@@ -108,30 +118,30 @@ leastPathHelper my_enemy board tgt_list =
                 shortestPath whole_map unmoveable my_enemy.pos tgt_list
 
 
+{-| Output the shortest path in the form of (List Pos).
+Remark : the output path does not include the begin Pos
 
-{- Output the shortest path in the form of (List Pos).
-   Remark : the output path does not include the begin Pos
+`wholemap` is the map of the board
 
-   "wholemap" is the map of the board
+`unmoveable` is a list of the positions can be reached
 
-   "unmoveable" is a list of the positions can be reached
+`target` is a list of target positions
 
-   "target" is a list of target positions
+`begin` is the Pos of the character i.e. one enemy or hero
 
-   "begin" is the Pos of the character i.e. one enemy or hero
+`end_list` is the target Pos
 
-   "end_list" is the target Pos
-
-   For example, in the simplest situation, where there is no hero, enemy or obstacle,
-   shortestPath board hero_list (1,5) (4,5) == [(2,5), (3,5), (4,5)]
+For example, in the simplest situation, where there is no hero, enemy or obstacle,
+shortestPath board hero\_list (1,5) (4,5) == [(2,5), (3,5), (4,5)]
 
 -}
-
-
 shortestPath : List Pos -> List Pos -> Pos -> List Pos -> List Pos
 shortestPath wholemap unmoveable begin end_list =
-    shortPathFind unmoveable begin end_list ( ( initVisited, initTable begin wholemap ), [] )
-        |> Tuple.second
+    let
+        ( _, path ) =
+            shortPathFind unmoveable begin end_list ( ( initVisited, initTable begin wholemap ), [] )
+    in
+    path
 
 
 shortPathFind : List Pos -> Pos -> List Pos -> ( ( List Pos, List Spa_row ), List Pos ) -> ( ( List Pos, List Spa_row ), List Pos )
@@ -310,23 +320,20 @@ chooseChosen table visited =
                 Nothing ->
                     -1
     in
-    (pathLength2Spa_row min_path table visited).pos
+    (pathLength2SpaRow min_path table visited).pos
 
 
 isVisited : List Pos -> Spa_row -> Bool
 isVisited visited row =
-    if List.any (\x -> x == row.pos) visited then
-        True
-
-    else
-        False
+    List.any (\x -> x == row.pos) visited
 
 
-pathLength2Spa_row : Int -> List Spa_row -> List Pos -> Spa_row
-pathLength2Spa_row leng table visited =
+pathLength2SpaRow : Int -> List Spa_row -> List Pos -> Spa_row
+pathLength2SpaRow leng table visited =
     let
         possible_list =
-            List.filter (\x -> x.path_length == leng) (Tuple.second (List.partition (isVisited visited) table)) |> List.head
+            List.filter (isPossibleLengthRow leng visited) table
+                |> List.head
     in
     case possible_list of
         Just row ->
@@ -334,3 +341,12 @@ pathLength2Spa_row leng table visited =
 
         Nothing ->
             { pos = ( 999, 999 ), pre_pos = Nothing, path_length = 999 }
+
+
+
+--999 for not existing
+
+
+isPossibleLengthRow : Int -> List Pos -> Spa_row -> Bool
+isPossibleLengthRow leng visited row =
+    row.path_length == leng && not (isVisited visited row)

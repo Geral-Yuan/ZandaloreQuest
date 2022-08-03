@@ -1,10 +1,20 @@
 module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
-import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, maxTurret, selectedHero, unselectedHero)
-import Board exposing (Board)
-import Data exposing (..)
+{-| This file fills functions related to hero attack actions.
+
+
+# Functions
+
+@docs checkAttack, generateDamage, heroTurretAttack
+
+-}
+
+import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, selectedHero, unselectedHero)
+import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
 import Random exposing (Generator)
+import Type exposing (Board, BoardState(..), Class(..), Critical(..), Enemy, FailToDo(..), Hero, HeroState(..), ObstacleType(..), Pos)
+import VectorOperation exposing (extentPos, neighbour, vecAdd)
 
 
 randomDamage : Generator Critical
@@ -18,11 +28,15 @@ randomDamage =
         ]
 
 
+{-| This function will generate attacked damage with random value.
+-}
 generateDamage : Pos -> Cmd Msg
 generateDamage pos =
     Random.generate (Attack pos) randomDamage
 
 
+{-| This function will reduce the hero's energy by 3 and change the hero's state to Attacking.
+-}
 checkAttack : Board -> Pos -> Critical -> Board
 checkAttack board pos critical =
     -- reduce the energy of a hero when player clicks h (hit) and check surroundings for enemies
@@ -99,16 +113,12 @@ meaningfulTarget : Board -> Class -> List Pos
 meaningfulTarget board class =
     case class of
         Engineer ->
-            if List.length (List.filter (\x -> x.class == Turret) board.heroes) < maxTurret then
-                listDifference board.map
-                    (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
-                        ++ List.map .pos board.heroes
-                        ++ List.map .pos board.item
-                    )
-                    ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
-
-            else
-                List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
+            listDifference board.map
+                (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
+                    ++ List.map .pos board.heroes
+                    ++ List.map .pos board.item
+                )
+                ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
 
         Healer ->
             List.map .pos board.enemies
@@ -147,6 +157,8 @@ damageEnemy damage critical enemy =
     { enemy | health = enemy.health - damage - critical, state = Attacked (critical + damage) }
 
 
+{-| This function will allow the turret to attack.
+-}
 heroTurretAttack : Hero -> Board -> List Enemy
 heroTurretAttack my_hero board =
     let

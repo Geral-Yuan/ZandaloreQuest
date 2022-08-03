@@ -1,18 +1,40 @@
-module ViewAllEnemy exposing (..)
+module ViewAllEnemy exposing (viewEnemy, viewEnemyInfo, viewEnemyOnboard)
 
-import Board exposing (Board)
-import Data exposing (..)
+{-| This file fills functions related to viewing enemies.
+
+
+# Function
+
+@docs viewEnemy, viewEnemyInfo, viewEnemyOnboard
+
+-}
+
+import Data exposing (findPos, offsetEnemy)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
 import Message exposing (Msg(..))
-import Svg exposing (..)
+import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, Enemy, HeroState(..))
 
 
-viewEnemy : Board -> Enemy -> Svg Msg
-viewEnemy board enemy =
+{-| This function will display enemies' information board properties on the board.
+-}
+viewEnemy : Board -> List (Svg msg)
+viewEnemy board =
+    List.map (viewEnemyOuterFrame board) board.enemies
+        ++ List.map (viewEnemyInnerFrame board) board.enemies
+        ++ List.map (viewEnemyImage board) board.enemies
+        ++ List.concatMap (viewEnemyCondition board) board.enemies
+        ++ List.concatMap (viewEnemyHealth board) board.enemies
+
+
+{-| This function will display the enemies' image.
+-}
+viewEnemyOnboard : Board -> Enemy -> Svg Msg
+viewEnemyOnboard board enemy =
     let
         ( rotating, time ) =
             board.mapRotating
@@ -76,14 +98,36 @@ viewEnemy board enemy =
                     ]
 
     else
-        div
-            [ HtmlAttr.style "position" "absolute"
-            , HtmlAttr.style "top" (toString (y - 40) ++ "px")
-            , HtmlAttr.style "left" (toString (x - 40) ++ "px")
-            , onContentMenu (Hit enemy.pos)
-            ]
-            [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
-            ]
+        case enemy.state of
+            Attacking ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/Boss.gif", height 80, width 115 ] []
+                    ]
+
+            Attacked _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/BossGotHit.png", height 80, width 80 ] []
+                    ]
+
+            _ ->
+                div
+                    [ HtmlAttr.style "position" "absolute"
+                    , HtmlAttr.style "top" (toString (y - 40) ++ "px")
+                    , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                    , onContentMenu (Hit enemy.pos)
+                    ]
+                    [ img [ src "./assets/image/SkullKnight.png", height 80, width 80 ] []
+                    ]
 
 
 viewEnemyImage : Board -> Enemy -> Svg msg
@@ -110,6 +154,7 @@ viewEnemyImage board enemy =
             , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Red.png")
             ]
             []
+
     else
         Svg.image
             [ SvgAttr.width "70"
@@ -117,7 +162,7 @@ viewEnemyImage board enemy =
             , SvgAttr.x (toString (50 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
             , SvgAttr.y (toString (idxOnBoard * 150 - 100))
             , SvgAttr.preserveAspectRatio "none"
-            , SvgAttr.xlinkHref ("./assets/image/SkullKnight.png")
+            , SvgAttr.xlinkHref "./assets/image/SkullKnight.png"
             ]
             []
 
@@ -199,16 +244,6 @@ viewEnemyCondition board enemy =
         , SvgAttr.xlinkHref "./assets/image/Sword.png"
         ]
         []
-
-    --        , Svg.image
-    --            [ SvgAttr.width "30"
-    --            , SvgAttr.height "30"
-    --            , SvgAttr.x (toString (280 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)))
-    --            , SvgAttr.y (toString (enemy.indexOnBoard * 150 - 60))
-    --            , SvgAttr.preserveAspectRatio "none"
-    --            , SvgAttr.xlinkHref "./assets/image/Energy.png"
-    --            ]
-    --        []
     ]
 
 
@@ -278,6 +313,8 @@ viewEnemyHealth board enemy =
     ]
 
 
+{-| This function will display the enemies' information on the side of the board.
+-}
 viewEnemyInfo : Board -> Enemy -> List (Html Msg)
 viewEnemyInfo board enemy =
     let
@@ -293,7 +330,7 @@ viewEnemyInfo board enemy =
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 115) ++ "px")
         , HtmlAttr.style "left" (toString (250 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -305,7 +342,7 @@ viewEnemyInfo board enemy =
         [ HtmlAttr.style "top" (toString (idxOnBoard * 150 - 75) ++ "px")
         , HtmlAttr.style "left" (toString (200 + offsetEnemy (enemy.indexOnBoard == board.cntEnemy)) ++ "px")
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "30px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -313,17 +350,4 @@ viewEnemyInfo board enemy =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text (toString enemy.damage) ]
-
-    --    , div
-    --        [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
-    --        , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
-    --        , HtmlAttr.style "color" "blue"
-    --        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
-    --        , HtmlAttr.style "font-size" "30px"
-    --        , HtmlAttr.style "font-weight" "bold"
-    --        , HtmlAttr.style "text-align" "center"
-    --        , HtmlAttr.style "line-height" "60px"
-    --        , HtmlAttr.style "position" "absolute"
-    --        ]
-    --        [ text (toString hero.energy) ]
     ]

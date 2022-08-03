@@ -1,6 +1,15 @@
-module ViewAllHero exposing (viewHero, viewHeroCondition, viewHeroHealth, viewHeroImage, viewHeroInfo, viewHeroInnerFrame, viewHeroOuterFrame)
+module ViewAllHero exposing (viewHero, viewHeroInfo, viewHeroOnboard)
 
-import Data exposing (Class(..), Hero, HeroState(..), findPos, offsetHero)
+{-| This file fills functions related to viewing heroes.
+
+
+# Function
+
+@docs viewHero, viewHeroInfo, viewHeroOnboard
+
+-}
+
+import Data exposing (findPos, offsetHero)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, audio, div, img)
@@ -9,7 +18,18 @@ import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
-import Board exposing (Board)
+import Type exposing (Board, Class(..), Hero, HeroState(..))
+
+
+{-| This function will display heroes' information board properties on the board.
+-}
+viewHero : Board -> List (Svg msg)
+viewHero board =
+    List.concatMap viewHeroOuterFrame board.heroes
+        ++ List.concatMap viewHeroInnerFrame board.heroes
+        ++ List.concatMap viewHeroImage board.heroes
+        ++ List.concatMap viewHeroCondition board.heroes
+        ++ List.concatMap (viewHeroHealth board) board.heroes
 
 
 viewHeroImage : Hero -> List (Svg msg)
@@ -174,6 +194,8 @@ viewHeroHealth board hero =
            ]
 
 
+{-| This function will display the heroes' information on the side of the board.
+-}
 viewHeroInfo : Hero -> List (Html Msg)
 viewHeroInfo hero =
     if hero.class == Turret then
@@ -184,7 +206,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 115) ++ "px")
             , HtmlAttr.style "left" (toString (1800 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -196,7 +218,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1750 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -208,7 +230,7 @@ viewHeroInfo hero =
             [ HtmlAttr.style "top" (toString (hero.indexOnBoard * 150 - 75) ++ "px")
             , HtmlAttr.style "left" (toString (1880 - offsetHero hero) ++ "px")
             , HtmlAttr.style "color" "white"
-            , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "font-size" "30px"
             , HtmlAttr.style "font-weight" "bold"
             , HtmlAttr.style "text-align" "center"
@@ -219,8 +241,10 @@ viewHeroInfo hero =
         ]
 
 
-viewHero : Board -> Hero -> Html Msg
-viewHero board hero =
+{-| This function will display the heroes' image.
+-}
+viewHeroOnboard : Board -> Hero -> Html Msg
+viewHeroOnboard board hero =
     let
         ( rotating, time ) =
             board.mapRotating
@@ -251,6 +275,7 @@ viewHero board hero =
                 [ HtmlAttr.style "position" "absolute"
                 , HtmlAttr.style "top" (toString (y - 45) ++ "px")
                 , HtmlAttr.style "left" (toString (x - 40) ++ "px")
+                , HtmlAttr.style "font-family" "myfont"
                 ]
                 [ img [ src (fimage ++ "BlueGIF.gif"), height 85, width 115 ] []
                 , audio
@@ -263,15 +288,6 @@ viewHero board hero =
                     []
                 ]
 
-        -- Svg.image
-        --     [ SvgAttr.width "80"
-        --     , SvgAttr.height "80"
-        --     , SvgAttr.x (toString (x - 40))
-        --     , SvgAttr.y (toString (y - 40))
-        --     , SvgAttr.preserveAspectRatio "none"
-        --     , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "BlueGIF.gif")
-        --     ]
-        --     []
         Attacked _ ->
             div
                 [ HtmlAttr.style "position" "absolute"

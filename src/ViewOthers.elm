@@ -1,24 +1,36 @@
-module ViewOthers exposing (..)
+module ViewOthers exposing (detPoints, determineOpct, dialogHelper, endTurnButton, shapeHelper, skipButton, viewBoardCoin, viewCoinSVG, viewCritical, viewLevel, viewPopUpHint, viewUIButton, viewUIFrame)
 
-import Board exposing (Board)
-import Data exposing (..)
+{-| This file fills functions related to viewing other things.
+
+
+# Function
+
+@docs detPoints, determineOpct, dialogHelper, endTurnButton, shapeHelper, skipButton, viewBoardCoin, viewCoinSVG, viewCritical, viewLevel, viewPopUpHint, viewUIButton, viewUIFrame
+
+-}
+
+import Data exposing (buttonHtmlAttr, posToString)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr exposing (height, width)
 import Html.Events exposing (onClick)
 import Message exposing (Msg(..))
-import Model exposing (Model)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
+import Type exposing (Board, FailToDo(..), Model, Pos, Scene(..))
+import VectorOperation exposing (distance, neighbour, vecAdd, vecAddFloat)
 
 
+{-| This function is a helper function to align texts.
+-}
 dialogHelper : Float -> Float -> Float -> Float -> Float -> String -> String -> Html Msg
 dialogHelper width height left top fontSize color textIn =
     div
         [ HtmlAttr.style "width" (toString width ++ "px")
         , HtmlAttr.style "height" (toString height ++ "px")
         , HtmlAttr.style "position" "fixed"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "left" (toString left ++ "px")
         , HtmlAttr.style "top" (toString top ++ "px")
         , HtmlAttr.style "color" color
@@ -27,6 +39,8 @@ dialogHelper width height left top fontSize color textIn =
         [ text textIn ]
 
 
+{-| This function is a helper function to draw a rectangle.
+-}
 shapeHelper : ( Float, Float ) -> ( Float, Float ) -> String -> Pos -> Svg Msg
 shapeHelper ( height, width ) ( x, y ) color pos =
     Svg.rect
@@ -43,14 +57,16 @@ shapeHelper ( height, width ) ( x, y ) color pos =
         []
 
 
+{-| This function will display the generated critical damage
+-}
 viewCritical : Board -> Html Msg
 viewCritical board =
     div
         [ HtmlAttr.style "top" "720px"
-        , HtmlAttr.style "left" "1600px"
+        , HtmlAttr.style "left" "1630px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "left"
@@ -60,13 +76,15 @@ viewCritical board =
         [ text ("Critical Damage: " ++ toString board.critical) ]
 
 
+{-| This function will display the amount of coins obtained during the board game mode.
+-}
 viewBoardCoin : Board -> Html Msg
 viewBoardCoin board =
     div
         [ HtmlAttr.style "top" "800px"
         , HtmlAttr.style "left" "1800px"
         , HtmlAttr.style "color" "orange"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "line-height" "60px"
@@ -75,6 +93,8 @@ viewBoardCoin board =
         [ text (toString board.coins) ]
 
 
+{-| This function will display a coin symbol.
+-}
 viewCoinSVG : ( Float, Float ) -> Svg Msg
 viewCoinSVG ( x, y ) =
     Svg.image
@@ -87,6 +107,8 @@ viewCoinSVG ( x, y ) =
         []
 
 
+{-| This function will display the current level the player is playing.
+-}
 viewLevel : Int -> Html Msg
 viewLevel level =
     let
@@ -106,7 +128,7 @@ viewLevel level =
         , HtmlAttr.style "left" "1580px"
         , HtmlAttr.style "width" "400px"
         , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "40px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -116,29 +138,8 @@ viewLevel level =
         [ text levelText ]
 
 
-viewCoordinate : Pos -> Svg msg
-viewCoordinate ( row, column ) =
-    let
-        ( c_x, c_y ) =
-            findFixedPos ( row, column )
-
-        s_row =
-            toString row
-
-        s_column =
-            toString column
-    in
-    Svg.text_
-        [ SvgAttr.x (toString c_x)
-        , SvgAttr.y (toString c_y)
-        , SvgAttr.textAnchor "middle"
-        , SvgAttr.dominantBaseline "middle"
-        , SvgAttr.fill "grey"
-        ]
-        [ Svg.text (s_row ++ " , " ++ s_column)
-        ]
-
-
+{-| This function will return the on-screen position of the hexagon cell.
+-}
 detPoints : Board -> Pos -> ( Float, Float ) -> String
 detPoints board ( row, column ) ( x, y ) =
     let
@@ -220,26 +221,48 @@ rotateHexagonSelf ( x, y ) theta =
     ( x * cos theta - y * sin theta, x * sin theta + y * cos theta )
 
 
+{-| This function will display the end turn button.
+-}
 endTurnButton : Html Msg
 endTurnButton =
     button
         [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "900px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
         , HtmlAttr.style "left" "1700px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
-        , HtmlAttr.style "border" "transparent"
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]
 
 
+{-| This function will display skip button.
+-}
+skipButton : Html Msg
+skipButton =
+    button
+        (buttonHtmlAttr
+            ++ [ HtmlAttr.style "top" "750px"
+               , HtmlAttr.style "font-size" "24px"
+               , HtmlAttr.style "font-weight" "bold"
+               , HtmlAttr.style "height" "80px"
+               , HtmlAttr.style "left" "10px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "outline" "none"
+               , HtmlAttr.style "width" "170px"
+               , onClick (Kill False)
+               ]
+        )
+        [ text "Skip" ]
+
+
+{-| This function will display UI frame
+-}
 viewUIFrame : Int -> Int -> Int -> Int -> List (Svg msg)
 viewUIFrame w h x y =
     -- outer
@@ -268,6 +291,8 @@ viewUIFrame w h x y =
     ]
 
 
+{-| This function will display UI for button.
+-}
 viewUIButton : Int -> Int -> Int -> Int -> List (Svg msg)
 viewUIButton w h x y =
     -- outer
@@ -296,6 +321,8 @@ viewUIButton w h x y =
     ]
 
 
+{-| This function will display popup hint when the player did something no according to the task.
+-}
 viewPopUpHint : Model -> List (Html Msg)
 viewPopUpHint model =
     let
@@ -307,19 +334,22 @@ viewPopUpHint model =
                 FailtoEnter scene ->
                     case scene of
                         ShopScene ->
-                            "The door to shop is locked"
+                            "The door to Shop is locked"
 
                         DungeonScene ->
-                            "The door to dungeon is locked"
+                            "The door to Side Dungeon is locked"
 
                         _ ->
-                            "The door to dungeon2 is locked"
+                            "The door to Main Dungeon is locked"
 
                 LackEnergy ->
                     "Your energy is not enough"
 
                 FailtoTalk npc ->
                     "You have defeated " ++ npc.name
+
+                FailtoBuild ->
+                    "Engineer can build at most two turrets"
 
                 _ ->
                     ""
@@ -337,11 +367,15 @@ viewPopUpHint model =
             , HtmlAttr.style "color" "red"
             , HtmlAttr.style "font-size" "40px"
             , HtmlAttr.style "text-align" "center"
+            , HtmlAttr.style "font-family" "myfont"
             , HtmlAttr.style "opacity" (toString (determineOpct time 2))
             ]
             [ text hintText ]
         ]
 
+
+{-| This function will determine the opacity of the logo.
+-}
 determineOpct : Float -> Float -> Float
 determineOpct t tMax =
     if t <= tMax then

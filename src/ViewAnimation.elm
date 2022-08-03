@@ -1,13 +1,25 @@
 module ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 
-import Data exposing (Class(..), Enemy, Hero, HeroState(..), findFixedPos)
+{-| This file fills functions related to viewing animation.
+
+
+# Function
+
+@docs animateEnemyVisuals, animateHeroVisuals
+
+-}
+
+import Data exposing (findFixedPos)
 import Debug exposing (toString)
 import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
 import Svg exposing (text)
+import Type exposing (Class(..), Enemy, Hero, HeroState(..))
 
 
+{-| This function will display the enemies' animation
+-}
 animateEnemyVisuals : Enemy -> Html Msg
 animateEnemyVisuals enemy =
     let
@@ -18,7 +30,7 @@ animateEnemyVisuals enemy =
         [ HtmlAttr.style "left" (toString x ++ "px")
         , HtmlAttr.style "top" (toString (y - 80) ++ "px")
         , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "60px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -37,6 +49,8 @@ animateEnemyVisuals enemy =
         ]
 
 
+{-| This function will display the heroes' animation
+-}
 animateHeroVisuals : Hero -> Html Msg
 animateHeroVisuals hero =
     let
@@ -47,7 +61,7 @@ animateHeroVisuals hero =
         [ HtmlAttr.style "left" (toString (x + 40) ++ "px")
         , HtmlAttr.style "top" (toString (y - 80) ++ "px")
         , HtmlAttr.style "color" "blue"
-        , HtmlAttr.style "font-family" "Helvetica, Arial, sans-serif"
+        , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "60px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "text-align" "center"
@@ -59,7 +73,7 @@ animateHeroVisuals hero =
                 text "-2 Energy"
 
             TakingEnergy ->
-                text "+2 Energy"
+                text "Max Energy reached"
 
             TakingHealth h1 ->
                 text ("+" ++ toString h1)

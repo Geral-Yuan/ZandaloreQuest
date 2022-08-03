@@ -1,19 +1,30 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Browser
+{-| This file fills functions related to main.
+
+
+# Function
+
+@docs main
+
+-}
+
+import Browser exposing (element)
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
-import Data exposing (Dir(..))
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
 import Message exposing (Msg(..))
-import Model exposing (Model, init)
+import Model exposing (init)
+import Type exposing (Dir(..), Model)
 import Update exposing (update)
 import View exposing (view)
 
 
+{-| This is the main function
+-}
 main : Program () Model Msg
 main =
-    Browser.element { init = init, view = view, update = update, subscriptions = subscriptions }
+    element { init = init, view = view, update = update, subscriptions = subscriptions }
 
 
 subscriptions : Model -> Sub Msg
@@ -31,23 +42,6 @@ subscriptions _ =
 key : Bool -> Int -> Msg
 key on keycode =
     case keycode of
-        --        87 ->
-        --            Key W on
-        --
-        --        69 ->
-        --            Key E on
-        --
-        --        68 ->
-        --            Key D on
-        --
-        --        88 ->
-        --            Key X on
-        --
-        --        90 ->
-        --            Key Z on
-        --
-        --        65 ->
-        --            Key A on
         13 ->
             Enter on
 
@@ -65,10 +59,6 @@ key on keycode =
 
         67 ->
             Talk on
-
-        75 ->
-            -- Key K
-            Kill on
 
         84 ->
             -- Key T

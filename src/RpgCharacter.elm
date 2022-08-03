@@ -1,25 +1,19 @@
-module RpgCharacter exposing (RpgCharacter, moveCharacter, moveCharacterDir)
+module RpgCharacter exposing (moveCharacter)
 
-import Data exposing (Dir(..))
-import Html.Events exposing (on)
-
-
-type alias RpgCharacter =
-    { pos : ( Float, Float )
-    , moveLeft : Bool
-    , moveRight : Bool
-    , moveUp : Bool
-    , moveDown : Bool
-
-    --    , state : CharacterState
-    , faceDir : Dir
-    , height : Float
-    , width : Float
-    , speed : Float
-    , move_range : ( Float, Float ) -- right bound and bottom bound
-    }
+{-| This file fills functions related to RPG character.
 
 
+# Function
+
+@docs moveCharacter
+
+-}
+
+import Type exposing (Dir(..), RpgCharacter)
+
+
+{-| This function will move the character according to the arrow key pressed
+-}
 moveCharacter : RpgCharacter -> Float -> RpgCharacter
 moveCharacter character dt =
     List.foldr (moveCharacterDir dt) character [ ( character.moveLeft, Left ), ( character.moveRight, Right ), ( character.moveUp, Up ), ( character.moveDown, Down ) ]
@@ -60,6 +54,3 @@ newCharacterPos ( px, py ) dir ds =
 
         Down ->
             ( px, py + ds / 1.2 )
-
-        _ ->
-            ( px, py )
