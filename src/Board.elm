@@ -188,6 +188,10 @@ spawnTimes k =
             2
 
 
+
+{- This function will return the initial state of Board. -}
+
+
 initBoard : List Hero -> Int -> Board
 initBoard heroes k =
     { map = map k
@@ -216,6 +220,10 @@ initBoard heroes k =
     , popUpHint = ( Noop, 0 )
     , hintOn = False
     }
+
+
+
+{- This function will provide a sample board. -}
 
 
 sampleBoard : Board

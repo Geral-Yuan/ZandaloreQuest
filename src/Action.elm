@@ -20,7 +20,6 @@ module Action exposing
 import Data exposing (findHexagon)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
-import Time exposing (Weekday(..))
 import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
 import VectorOperation exposing (leastdistance, neighbour, sameline, subneighbour, subsubneighbour, vecAdd, vecScale)
 
