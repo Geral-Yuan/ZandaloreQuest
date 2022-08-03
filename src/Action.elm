@@ -5,7 +5,7 @@ module Action exposing (attackedByArcherRange, attackedByHeroArcherRange, attack
 
 # Functions
 
-@docs attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, maxTurret, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget
+@docs attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget
 
 -}
 
