@@ -1,5 +1,6 @@
 module ViewChoose exposing (viewHeroChoose)
 
+import Data exposing (buttonHtmlAttr)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
@@ -115,18 +116,13 @@ viewChooseText =
 confirmButton : Html Msg
 confirmButton =
     button
-        [ HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "top" "875px"
-        , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "28px"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "height" "100px"
-        , HtmlAttr.style "left" "875px"
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "width" "250px"
-        , HtmlAttr.style "border" "transparent"
-        , HtmlAttr.style "text-align" "center"
-        , onClick Confirm
-        ]
+        (buttonHtmlAttr
+            ++ [ HtmlAttr.style "top" "875px"
+               , HtmlAttr.style "font-size" "28px"
+               , HtmlAttr.style "height" "100px"
+               , HtmlAttr.style "left" "875px"
+               , HtmlAttr.style "width" "250px"
+               , onClick Confirm
+               ]
+        )
         [ text "Confirm" ]

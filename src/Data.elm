@@ -334,4 +334,6 @@ buttonHtmlAttr =
     , HtmlAttr.style "color" "rgb(61,43,31)"
     , HtmlAttr.style "position" "absolute"
     , HtmlAttr.style "text-align" "center"
+    , HtmlAttr.style "font-family" "myfont"
+    , HtmlAttr.style "font-weight" "bold"
     ]
