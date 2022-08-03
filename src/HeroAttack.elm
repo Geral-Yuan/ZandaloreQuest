@@ -9,7 +9,7 @@ module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
 -}
 
-import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, maxTurret, selectedHero, unselectedHero)
+import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, selectedHero, unselectedHero)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
 import Random exposing (Generator)
@@ -113,16 +113,12 @@ meaningfulTarget : Board -> Class -> List Pos
 meaningfulTarget board class =
     case class of
         Engineer ->
-            if List.length (List.filter (\x -> x.class == Turret) board.heroes) < maxTurret then
-                listDifference board.map
-                    (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
-                        ++ List.map .pos board.heroes
-                        ++ List.map .pos board.item
-                    )
-                    ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
-
-            else
-                List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
+            listDifference board.map
+                (List.map .pos (List.filter (\obstacle -> obstacle.obstacleType == Unbreakable) board.obstacles)
+                    ++ List.map .pos board.heroes
+                    ++ List.map .pos board.item
+                )
+                ++ List.map .pos (List.filter (\x -> x.class == Turret) board.heroes)
 
         Healer ->
             List.map .pos board.enemies

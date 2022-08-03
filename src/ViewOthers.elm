@@ -348,6 +348,9 @@ viewPopUpHint model =
                 FailtoTalk npc ->
                     "You have defeated " ++ npc.name
 
+                FailtoBuild ->
+                    "Engineer can build at most two turrets"
+
                 _ ->
                     ""
     in

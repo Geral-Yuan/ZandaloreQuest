@@ -59,6 +59,7 @@ type BoardState
 type FailToDo
     = FailtoEnter Scene
     | FailtoTalk NPC
+    | FailtoBuild
     | LackEnergy
     | Noop
 
