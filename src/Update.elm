@@ -59,6 +59,9 @@ update msg model =
                 UpgradePage ->
                     updateShop msg model
 
+                DrawHero _ ->
+                    updateShop msg model
+
                 _ ->
                     updateRPG msg model
                         |> updateCharacter msg

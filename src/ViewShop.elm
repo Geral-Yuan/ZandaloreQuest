@@ -173,17 +173,25 @@ drawButton model =
 
             else
                 "100 coins to recruit a random hero!"
+
+        button_style =
+            shopButtonStyle
+                    ++ [ HtmlAttr.style "top" "400px"
+                    , HtmlAttr.style "height" "200px"
+                    , HtmlAttr.style "left" "1000px"
+                    , HtmlAttr.style "line-height" "60px"
+                    , HtmlAttr.style "width" "400px"
+                    , HtmlAttr.style "font-size" "24px"
+                    ]
+
+        draw_style = 
+            if List.length model.indexedheroes >=6 then
+                button_style
+            else
+                (onClick LuckyDraw) :: button_style
     in
     button
-        (shopButtonStyle
-            ++ [ HtmlAttr.style "top" "400px"
-               , HtmlAttr.style "height" "200px"
-               , HtmlAttr.style "left" "1000px"
-               , HtmlAttr.style "line-height" "60px"
-               , HtmlAttr.style "width" "400px"
-               , HtmlAttr.style "font-size" "24px"
-               ]
-        )
+        draw_style
         [ text display ]
 
 
