@@ -1,4 +1,22 @@
-module Data exposing (..)
+module Data exposing
+    ( allSampleHeroes
+    , buttonHtmlAttr
+    , class2Index
+    , findChosenHero
+    , findFixedPos
+    , findHexagon
+    , findPos
+    , index2Class
+    , initBoss
+    , initialHeroes
+    , mode2Scene
+    , offsetEnemy
+    , offsetHero
+    , posToString
+    , sampleEnemy
+    , upgradeDamage
+    , upgradeHealth
+    )
 
 import BoardMap exposing (map)
 import Html exposing (Attribute)
@@ -10,6 +28,7 @@ import ViewConst exposing (halfWid, pixelWidth, sideLen)
 
 
 -- Basic types
+{- This function will give sample of every class of enemy. -}
 
 
 sampleEnemy : Class -> Pos -> Int -> Enemy
@@ -31,6 +50,10 @@ sampleEnemy class pos index =
             Enemy Mage pos 50 50 6 0 True Waiting False index False 0
 
 
+
+{- This function will initiate boss. -}
+
+
 initBoss : Enemy
 initBoss =
     Enemy Turret ( 5, 5 ) 300 300 20 0 True Waiting False 1 True 1
@@ -38,11 +61,16 @@ initBoss =
 
 
 -- Basic Functions
+{- This function will give the string form of the position -}
 
 
 posToString : ( Float, Float ) -> String
 posToString ( x, y ) =
     String.fromFloat x ++ "," ++ String.fromFloat y ++ " "
+
+
+
+{- This function will give the position of everything. -}
 
 
 findPos : Bool -> Int -> Float -> ( Int, Int ) -> ( Float, Float )
@@ -104,6 +132,10 @@ findPos rotating level time ( row, column ) =
         fixedPos
 
 
+
+{- This function will find the fixed position. -}
+
+
 findFixedPos : ( Int, Int ) -> ( Float, Float )
 findFixedPos ( row, column ) =
     ( pixelWidth / 2 + toFloat (row - column) * halfWid, toFloat (80 + (row + column - 6) * 105) )
@@ -116,6 +148,10 @@ rotatePos ( cx, cy ) theta ( ix, iy ) =
             ( ix - cx, iy - cy )
     in
     ( cx + deltaX * cos theta - deltaY * sin theta, cy + deltaX * sin theta + deltaY * cos theta )
+
+
+
+{- This function will find the chosen hero during the choosing hero scene. -}
 
 
 findChosenHero : ( Float, Float ) -> Int
@@ -151,6 +187,10 @@ findChosenHero ( x, y ) =
         (row - 1) * 3 + column
 
 
+
+{- This function will give the offset of a hero when it is selected. -}
+
+
 offsetHero : Hero -> Float
 offsetHero hero =
     if hero.selected then
@@ -160,6 +200,10 @@ offsetHero hero =
         0
 
 
+
+{- This function will give the offset of an enemy when it is taking action. -}
+
+
 offsetEnemy : Bool -> Float
 offsetEnemy selected =
     if selected then
@@ -167,6 +211,10 @@ offsetEnemy selected =
 
     else
         0
+
+
+
+{- This function will find set the hexagon cells position according to the level. -}
 
 
 findHexagon : ( Float, Float ) -> Int -> Maybe Pos
@@ -183,6 +231,10 @@ inHexagon ( x, y ) pos =
     abs (x - cx) < halfWid && abs (x - cx) + sqrt 3 * abs (y - cy) < sqrt 3 * sideLen
 
 
+
+{- This function will give sample of every class of hero. -}
+
+
 allSampleHeroes : List ( Hero, Int )
 allSampleHeroes =
     [ ( Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 0, 1 )
@@ -194,11 +246,19 @@ allSampleHeroes =
     ]
 
 
+
+{- This function will give the initial heroes at the beginning of the game. -}
+
+
 initialHeroes : List Hero
 initialHeroes =
     [ Hero Warrior ( 0, 0 ) 80 80 15 5 False Waiting 1
     , Hero Archer ( 0, 0 ) 30 30 20 5 False Waiting 2
     ]
+
+
+
+{- This function will determine how many damage each class will be upgraded per once. -}
 
 
 upgradeDamage : Class -> Int
@@ -226,6 +286,10 @@ upgradeDamage class =
             0
 
 
+
+{- This function will determine how many health each class will be upgraded per once. -}
+
+
 upgradeHealth : Class -> Int
 upgradeHealth class =
     case class of
@@ -251,6 +315,10 @@ upgradeHealth class =
             0
 
 
+
+{- This function will convert from model mode to model scene. -}
+
+
 mode2Scene : GameMode -> Scene
 mode2Scene mode =
     case mode of
@@ -267,20 +335,8 @@ mode2Scene mode =
             Dungeon2Scene
 
 
-scene2Mode : Scene -> GameMode
-scene2Mode scene =
-    case scene of
-        CastleScene ->
-            Castle
 
-        ShopScene ->
-            Shop
-
-        DungeonScene ->
-            Dungeon
-
-        Dungeon2Scene ->
-            Dungeon2
+{- This function will convert from class to index -}
 
 
 class2Index : Class -> Int
@@ -305,6 +361,10 @@ class2Index class =
             6
 
 
+
+{- This function will convert the index to class. -}
+
+
 index2Class : Int -> Class
 index2Class index =
     case index of
@@ -325,6 +385,10 @@ index2Class index =
 
         _ ->
             Engineer
+
+
+
+{- This function will set the common Html Attribute for button. -}
 
 
 buttonHtmlAttr : List (Attribute msg)

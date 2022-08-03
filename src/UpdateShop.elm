@@ -9,7 +9,7 @@ module UpdateShop exposing (updateShop)
 
 -}
 
-import Data exposing (allSampleHeroes)
+import Data exposing (allSampleHeroes, upgradeDamage, upgradeHealth)
 import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
@@ -111,7 +111,7 @@ updateHealth hero =
             currHero.health
 
         adhealth =
-            Data.upgradeHealth currHero.class
+            upgradeHealth currHero.class
     in
     ( { currHero | health = currHealth + adhealth, maxHealth = currHealth + adhealth }, index )
 
@@ -129,7 +129,7 @@ updateDamage hero =
             currHero.damage
 
         adddmg =
-            Data.upgradeDamage currHero.class
+            upgradeDamage currHero.class
     in
     ( { currHero | damage = currDamage + adddmg }, index )
 
