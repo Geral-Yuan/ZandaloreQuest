@@ -88,7 +88,7 @@ viewYourHeroes : List ( Hero, Int ) -> List (Svg Msg)
 viewYourHeroes indexHerolist =
     let
         ( ownIndex, others ) =
-            List.partition (\idx -> List.member idx (List.range 1 6)) (List.map Tuple.second indexHerolist)
+            List.partition (\idx -> List.member idx (List.map Tuple.second indexHerolist)) (List.range 1 6)
     in
     List.map (viewOneHero True) ownIndex ++ List.map (viewOneHero False) others
 
