@@ -243,15 +243,6 @@ unselectedHero hero_list =
     List.filter (\hero -> not hero.selected) hero_list
 
 
-checkItemType : Pos -> Item -> ItemType
-checkItemType ( row, column ) item =
-    if item.pos == ( row, column ) then
-        item.itemType
-
-    else
-        NoItem
-
-
 
 {- This function will give List of unmoveable Positions. -}
 
