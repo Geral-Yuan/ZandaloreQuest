@@ -63,7 +63,10 @@ unionList list_of_list =
         list1 :: (list2 :: restlists) ->
             unionList (listUnion list1 list2 :: restlists)
 
+
+
 {- apply f to each element in x and y -}
+
 
 cartesianProduct : (a -> b -> c) -> List a -> List b -> List c
 cartesianProduct f x y =

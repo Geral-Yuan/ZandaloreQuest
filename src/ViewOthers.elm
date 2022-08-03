@@ -232,11 +232,8 @@ endTurnButton =
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
         , HtmlAttr.style "left" "1700px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
-        , HtmlAttr.style "border" "transparent"
         , onClick EndTurn
         ]
         [ text "End Your Turn" ]

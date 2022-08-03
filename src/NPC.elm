@@ -1,4 +1,4 @@
-module NPC exposing (npcMap, allNPC)
+module NPC exposing (allNPC, npcMap)
 
 import Type exposing (Dir(..), NPC, Scene(..), Task(..))
 
@@ -8,7 +8,7 @@ npcMap idx =
     case idx of
         1 ->
             npcElder
-        
+
         2 ->
             npcWarrior
 
@@ -44,8 +44,6 @@ npcMap idx =
 
         _ ->
             npcBoss
-
-        
 
 
 allNPC : List NPC
