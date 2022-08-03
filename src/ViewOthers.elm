@@ -1,6 +1,6 @@
 module ViewOthers exposing (..)
 
-import Data exposing (findFixedPos, posToString)
+import Data exposing (buttonHtmlAttr, findFixedPos, posToString)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
 import Html exposing (Html, button, div)
@@ -242,15 +242,17 @@ endTurnButton =
 skipButton : Html Msg
 skipButton =
     button
-        [ HtmlAttr.style "top" "800px"
-        , HtmlAttr.style "font-size" "18px"
-        , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "29px"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "outline" "none"
-        , HtmlAttr.style "width" "170px"
-        , onClick (Kill False)
-        ]
+        (buttonHtmlAttr
+            ++ [ HtmlAttr.style "top" "800px"
+               , HtmlAttr.style "font-size" "18px"
+               , HtmlAttr.style "height" "80px"
+               , HtmlAttr.style "left" "29px"
+               , HtmlAttr.style "line-height" "60px"
+               , HtmlAttr.style "outline" "none"
+               , HtmlAttr.style "width" "170px"
+               , onClick (Kill False)
+               ]
+        )
         [ text "Skip" ]
 
 

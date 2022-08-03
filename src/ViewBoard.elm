@@ -57,8 +57,6 @@ viewBoard model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                --++ viewUIButton 170 80 29 700
-                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
@@ -135,8 +133,6 @@ viewTutorialBoard k model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                --++ viewUIButton 170 80 29 700
-                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
