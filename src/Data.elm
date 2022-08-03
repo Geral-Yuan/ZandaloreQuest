@@ -1,6 +1,8 @@
 module Data exposing (..)
 
 import BoardMap exposing (map)
+import Html exposing (Attribute)
+import Html.Attributes as HtmlAttr
 import Type exposing (..)
 import VectorOperation exposing (distance)
 import ViewConst exposing (halfWid, pixelWidth, sideLen)
@@ -323,3 +325,13 @@ index2Class index =
 
         _ ->
             Engineer
+
+
+buttonHtmlAttr : List (Attribute msg)
+buttonHtmlAttr =
+    [ HtmlAttr.style "background" "transparent"
+    , HtmlAttr.style "border" "transparent"
+    , HtmlAttr.style "color" "rgb(61,43,31)"
+    , HtmlAttr.style "position" "absolute"
+    , HtmlAttr.style "text-align" "center"
+    ]
