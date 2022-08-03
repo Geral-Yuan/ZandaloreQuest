@@ -15,7 +15,7 @@ import Browser.Dom exposing (getViewport)
 import Data exposing (allSampleHeroes)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
-import Task
+import Task exposing (perform)
 import Type exposing (BoardState(..), Class(..), Dir(..), FailToDo(..), GameMode(..), Model, RpgCharacter, Task(..))
 import ViewConst exposing (pixelHeight, pixelWidth)
 
@@ -25,7 +25,7 @@ import ViewConst exposing (pixelHeight, pixelWidth)
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel
-    , Task.perform GetViewport getViewport
+    , perform GetViewport getViewport
     )
 
 

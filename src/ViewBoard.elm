@@ -12,7 +12,7 @@ module ViewBoard exposing (viewBoard, viewTutorialBoard)
 import Html exposing (Html, audio, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
-import Svg
+import Svg exposing (svg)
 import Svg.Attributes as SvgAttr
 import Type exposing (Model)
 import ViewAllEnemy exposing (viewEnemy, viewEnemyInfo, viewEnemyOnboard)
@@ -51,7 +51,7 @@ viewBoard model =
         , HtmlAttr.style "background" "grey"
         , HtmlAttr.style "font-family" "myfont"
         ]
-        ([ Svg.svg
+        ([ svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
@@ -130,7 +130,7 @@ viewTutorialBoard k model =
         , HtmlAttr.style "background" "grey"
         , HtmlAttr.style "font-family" "myfont"
         ]
-        (Svg.svg
+        (svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]

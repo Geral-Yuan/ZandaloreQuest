@@ -13,7 +13,7 @@ import Data exposing (allSampleHeroes, upgradeDamage, upgradeHealth)
 import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
-import Random
+import Random exposing (generate, Generator, uniform)
 import Type exposing (Class(..), Dir(..), GameMode(..), Hero, Model, Task(..))
 
 
@@ -31,10 +31,10 @@ updateShop msg model =
     case msg of
         LuckyDraw ->
             if model.cntTask == GoToShop then
-                ( { model | cntTask = Level 1, npclist = npcMap 8 :: model.npclist }, Random.generate GetNewHero (drawHero model) )
+                ( { model | cntTask = Level 1, npclist = npcMap 8 :: model.npclist }, generate GetNewHero (drawHero model) )
 
             else if model.bag.coins > 99 then
-                ( { model | bag = { newBag | coins = currCoins - 100 } }, Random.generate GetNewHero (drawHero model) )
+                ( { model | bag = { newBag | coins = currCoins - 100 } }, generate GetNewHero (drawHero model) )
 
             else
                 ( model, Cmd.none )
@@ -134,7 +134,7 @@ updateDamage hero =
     ( { currHero | damage = currDamage + adddmg }, index )
 
 
-drawHero : Model -> Random.Generator Class
+drawHero : Model -> Generator Class
 drawHero model =
     let
         have_class =
@@ -145,7 +145,7 @@ drawHero model =
     in
     case nothave of
         [] ->
-            Random.uniform Turret []
+            uniform Turret []
 
         class :: others ->
-            Random.uniform class others
+            uniform class others

@@ -9,7 +9,7 @@ module Main exposing (main)
 
 -}
 
-import Browser
+import Browser exposing (element)
 import Browser.Events exposing (onAnimationFrameDelta, onClick, onKeyDown, onKeyUp, onMouseMove, onResize)
 import Html.Events exposing (keyCode)
 import Json.Decode as Decode
@@ -24,7 +24,7 @@ import View exposing (view)
 -}
 main : Program () Model Msg
 main =
-    Browser.element { init = init, view = view, update = update, subscriptions = subscriptions }
+    element { init = init, view = view, update = update, subscriptions = subscriptions }
 
 
 subscriptions : Model -> Sub Msg
