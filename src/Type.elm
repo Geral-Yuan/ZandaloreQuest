@@ -1,4 +1,13 @@
-module Type exposing (..)
+module Type exposing (Bag, Board, BoardState(..), Class(..), Critical(..), Dir(..), Enemy, FailToDo(..), GameMode(..), Hero, HeroState(..), Item, ItemType(..), Model, NPC, Obstacle, ObstacleType(..), Pos, RpgCharacter, Scene(..), Side(..), Spa_row, Task(..), Turn(..))
+
+{-| This file fills every types related to the game.
+
+
+# Type
+
+@docs Bag, Board, BoardState, Class, Critical, Dir, Enemy, FailToDo, GameMode, Hero, HeroState, Item, ItemType, Model, NPC, Obstacle, ObstacleType, Pos, RpgCharacter, Scene, Side, Spa_row, Task, Turn
+
+-}
 
 -- For Type definition
 

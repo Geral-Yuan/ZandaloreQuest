@@ -12,7 +12,7 @@ module Data exposing (allSampleHeroes, buttonHtmlAttr, class2Index, findChosenHe
 import BoardMap exposing (map)
 import Html exposing (Attribute)
 import Html.Attributes as HtmlAttr
-import Type exposing (..)
+import Type exposing (Class(..), Enemy, GameMode(..), Hero, HeroState(..), Pos, Scene(..))
 import VectorOperation exposing (distance)
 import ViewConst exposing (halfWid, pixelWidth, sideLen)
 
