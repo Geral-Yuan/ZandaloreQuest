@@ -1,4 +1,4 @@
-module ViewScenes exposing (viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForC, viewTipForDir, viewTipForEnter)
+module ViewScenes exposing (viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForKeys)
 
 {-| This file fills functions related to viewing every scene.
 
@@ -154,24 +154,18 @@ viewCastle model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
-                        ++ viewUIFrame 200 42 1525 688
+                        ++ viewUIFrame 100 42 1575 688
                         -- shop
                         ++ viewUIFrame 200 42 268 688
                         ++ viewUIFrame 200 42 899 270
                         -- dungeon1
-                        ++ viewUIButton 170 80 29 800
+                        ++ viewUIButton 170 80 10 650
                     )
 
                --, viewCharacterPos model.character
                , viewBagCoin model
-               , viewTipForDir
-               , viewTipForC
-               , viewTipForEnter
                , viewEncyclopediaButton
                , viewTipForT
-               , viewDungeon1Location
-               , viewShopLocation
-               , viewDungeon2Location
                , div
                     [ HtmlAttr.style "bottom" "20px"
                     , HtmlAttr.style "left" "0px"
@@ -188,6 +182,8 @@ viewCastle model =
                         []
                     ]
                ]
+            ++ viewTipForKeys
+            ++ viewLocation
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == CastleScene)))
             ++ (viewRpgCharacter model.character
                     :: viewPopUpHint model
@@ -231,16 +227,14 @@ viewDungeon model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
-                        ++ viewUIButton 170 80 29 800
+                        ++ viewUIButton 170 80 10 650
                     )
 
                --, viewCharacterPos model.character
                , viewBagCoin model
-               , viewTipForDir
-               , viewTipForC
-               , viewTipForEnter
                , viewEncyclopediaButton
                ]
+            ++ viewTipForKeys
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == DungeonScene)))
             ++ [ viewRpgCharacter model.character ]
         )
@@ -282,35 +276,17 @@ viewDungeon2 model =
                      , viewCoinSVG ( 1500, 900 )
                      ]
                         ++ viewTaskBoard
-                        ++ viewUIButton 170 80 29 800
+                        ++ viewUIButton 170 80 10 650
                     )
 
                --, viewCharacterPos model.character
                , viewBagCoin model
-               , viewTipForDir
-               , viewTipForC
-               , viewTipForEnter
                , viewEncyclopediaButton
                ]
+            ++ viewTipForKeys
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == Dungeon2Scene)))
             ++ [ viewRpgCharacter model.character ]
         )
-
-
-
--- viewExit : Svg Msg
--- viewExit =
---     Svg.rect
---         [ SvgAttr.width "60"
---         , SvgAttr.height "90"
---         , SvgAttr.x (toString (pixelWidth / 2 - 30))
---         , SvgAttr.y (toString (pixelHeight / 2 + 410))
---         , SvgAttr.fontSize "20"
---         , SvgAttr.fontStyle "blue"
---         , SvgAttr.color "black"
---         , SvgAttr.fill "white"
---         ]
---         [ Svg.text "Exit" ]
 
 
 {-| This function will display dungeon scene background.
@@ -345,7 +321,7 @@ viewSvgForDir =
         , HtmlAttr.style "top" "100px"
         , HtmlAttr.style "left" "0px"
         ]
-        [ img [ src "./assets/image/keyGIF.gif", height 150, width 225 ] []
+        [ img [ src "./assets/image/keyGIF.gif", height 120, width 180 ] []
         ]
 
 
@@ -353,10 +329,10 @@ viewSvgForC : Svg msg
 viewSvgForC =
     div
         [ HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "top" "600px"
-        , HtmlAttr.style "left" "72.5px"
+        , HtmlAttr.style "top" "470px"
+        , HtmlAttr.style "left" "58px"
         ]
-        [ img [ src "./assets/image/cGIF.gif", height 80, width 80 ] []
+        [ img [ src "./assets/image/cGIF.gif", height 64, width 64 ] []
         ]
 
 
@@ -364,16 +340,16 @@ viewSvgForEnter : Svg msg
 viewSvgForEnter =
     div
         [ HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "top" "400px"
-        , HtmlAttr.style "left" "32.5px"
+        , HtmlAttr.style "top" "320px"
+        , HtmlAttr.style "left" "26px"
         ]
-        [ img [ src "./assets/image/enterGIF.gif", height 80, width 160 ] []
+        [ img [ src "./assets/image/enterGIF.gif", height 64, width 128 ] []
         ]
 
 
-viewShopLocation : Html msg
-viewShopLocation =
-    div
+viewLocation : List (Html msg)
+viewLocation =
+    [ div
         [ HtmlAttr.style "top" "680px"
         , HtmlAttr.style "left" "1599px"
         , HtmlAttr.style "color" "white"
@@ -385,11 +361,7 @@ viewShopLocation =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Shop" ]
-
-
-viewDungeon1Location : Html msg
-viewDungeon1Location =
-    div
+    , div
         [ HtmlAttr.style "top" "263px"
         , HtmlAttr.style "left" "921px"
         , HtmlAttr.style "color" "white"
@@ -401,12 +373,8 @@ viewDungeon1Location =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Main Dungeon" ]
-
-
-viewDungeon2Location : Html msg
-viewDungeon2Location =
-    div
-        [ HtmlAttr.style "top" "682px"
+    , div
+        [ HtmlAttr.style "top" "680px"
         , HtmlAttr.style "left" "286px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "myfont"
@@ -417,15 +385,16 @@ viewDungeon2Location =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Side Dungeon" ]
+    ]
 
 
-{-| This function will display text about pressing arrow keys.
+{-| This function will display text about pressing keys.
 -}
-viewTipForDir : Html Msg
-viewTipForDir =
-    div
-        [ HtmlAttr.style "top" "280px"
-        , HtmlAttr.style "left" "10px"
+viewTipForKeys : List (Html Msg)
+viewTipForKeys =
+    [ div
+        [ HtmlAttr.style "top" "230px"
+        , HtmlAttr.style "left" "0px"
         , HtmlAttr.style "color" "white"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "font-size" "22px"
@@ -435,8 +404,35 @@ viewTipForDir =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Press ⬆⬅⬇➡ to move" ]
+    , div
+        [ HtmlAttr.style "top" "540px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press C to talk to NPCs" ]
+    , div
+        [ HtmlAttr.style "top" "390px"
+        , HtmlAttr.style "left" "0px"
+        , HtmlAttr.style "color" "white"
+        , HtmlAttr.style "font-family" "myfont"
+        , HtmlAttr.style "font-size" "22px"
+        , HtmlAttr.style "font-weight" "bold"
+        , HtmlAttr.style "text-align" "center"
+        , HtmlAttr.style "line-height" "60px"
+        , HtmlAttr.style "position" "absolute"
+        ]
+        [ text "Press Enter to pass doors" ]
+    ]
 
 
+{-| This function will display text about pressing T key.
+-}
 viewTipForT : Html Msg
 viewTipForT =
     div
@@ -451,57 +447,6 @@ viewTipForT =
         , HtmlAttr.style "position" "absolute"
         ]
         [ text "Press T to access all levels" ]
-
-
-
---    div
---        [ HtmlAttr.style "top" "30px"
---        , HtmlAttr.style "left" "0px"
---        , HtmlAttr.style "color" "white"
---        , HtmlAttr.style "font-family" "myfont"
---        , HtmlAttr.style "font-size" "22px"
---        , HtmlAttr.style "font-weight" "bold"
---        , HtmlAttr.style "text-align" "center"
---        , HtmlAttr.style "line-height" "60px"
---        , HtmlAttr.style "position" "absolute"
---        ]
---        [ text "Press T to access all levels" ]
-
-
-{-| This function will display text about pressing C key.
--}
-viewTipForC : Html Msg
-viewTipForC =
-    div
-        [ HtmlAttr.style "top" "700px"
-        , HtmlAttr.style "left" "5px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-size" "22px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text "Press C to talk to NPCs" ]
-
-
-{-| This function will display text about pressing enter key.
--}
-viewTipForEnter : Html Msg
-viewTipForEnter =
-    div
-        [ HtmlAttr.style "top" "500px"
-        , HtmlAttr.style "left" "-5px"
-        , HtmlAttr.style "color" "white"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-size" "22px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text "Press Enter to pass doors" ]
 
 
 {-| This function will display castle.

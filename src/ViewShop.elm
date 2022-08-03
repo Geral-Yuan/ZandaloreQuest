@@ -21,7 +21,8 @@ import Type exposing (Class(..), Hero, HeroState(..), Model, Scene(..))
 import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (viewCoinSVG, viewUIButton, viewUIFrame)
-import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipForC, viewTipForDir, viewTipForEnter)
+import ViewScenes exposing (viewBagCoin, viewKeyGif, viewRpgCharacter, viewTipForKeys)
+import ViewEncyclopedia exposing (viewEncyclopediaButton)
 
 
 {-| view the shop where the rpg character can move
@@ -38,15 +39,15 @@ viewShop model =
                     ]
                     (viewShopSvg
                         ++ viewTaskBoard
+                        ++ viewUIButton 170 80 10 650
                         ++ [ viewCoinSVG ( 1500, 900 ) ]
                     )
 
                --, viewCharacterPos model.character
-               , viewTipForDir
-               , viewTipForC
-               , viewTipForEnter
+               , viewEncyclopediaButton
                , viewBagCoin model
                ]
+            ++ viewTipForKeys
             ++ List.concat (List.map viewSingleNPC (model.npclist |> List.filter (\x -> x.scene == ShopScene)))
             ++ [ viewRpgCharacter model.character ]
         )
