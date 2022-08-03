@@ -1,5 +1,14 @@
 module ViewChoose exposing (viewHeroChoose)
 
+{-| This file fills functions related to view things in hero selection scene.
+
+
+# Function
+
+@docs viewHeroChoose
+
+-}
+
 import Data exposing (buttonHtmlAttr)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
@@ -13,6 +22,8 @@ import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (viewUIButton, viewUIFrame)
 
 
+{-| This function will display heroes and their frame when get selected.
+-}
 viewHeroChoose : Model -> Html Msg
 viewHeroChoose model =
     let

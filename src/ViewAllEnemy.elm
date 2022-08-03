@@ -1,5 +1,14 @@
 module ViewAllEnemy exposing (viewEnemy, viewEnemyInfo, viewEnemyOnboard)
 
+{-| This file fills functions related to viewing enemies.
+
+
+# Function
+
+@docs viewEnemy, viewEnemyInfo, viewEnemyOnboard
+
+-}
+
 import Data exposing (findPos, offsetEnemy)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
@@ -11,6 +20,8 @@ import Svg.Attributes as SvgAttr
 import Type exposing (Board, Enemy, HeroState(..))
 
 
+{-| This function will display enemies' information board properties on the board.
+-}
 viewEnemy : Board -> List (Svg msg)
 viewEnemy board =
     List.map (viewEnemyOuterFrame board) board.enemies
@@ -20,6 +31,8 @@ viewEnemy board =
         ++ List.concatMap (viewEnemyHealth board) board.enemies
 
 
+{-| This function will display the enemies' image.
+-}
 viewEnemyOnboard : Board -> Enemy -> Svg Msg
 viewEnemyOnboard board enemy =
     let
@@ -300,6 +313,8 @@ viewEnemyHealth board enemy =
     ]
 
 
+{-| This function will display the enemies' information on the side of the board.
+-}
 viewEnemyInfo : Board -> Enemy -> List (Html Msg)
 viewEnemyInfo board enemy =
     let

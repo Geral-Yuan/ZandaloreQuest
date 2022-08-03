@@ -1,5 +1,14 @@
 module ViewBoard exposing (viewBoard, viewTutorialBoard)
 
+{-| This file fills functions related to viewing board.
+
+
+# Function
+
+@docs viewBoard, viewTutorialBoard
+
+-}
+
 import Html exposing (Html, audio, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
@@ -16,6 +25,8 @@ import ViewScenes exposing (viewBoardGameBackGround)
 import ViewTutorial exposing (viewTutorialScene)
 
 
+{-| This function will display the board and everything on the board.
+-}
 viewBoard : Model -> Html Msg
 viewBoard model =
     let
@@ -93,6 +104,8 @@ viewBoard model =
         )
 
 
+{-| This function will display the tutorial board and everything on it.
+-}
 viewTutorialBoard : Int -> Model -> Html Msg
 viewTutorialBoard k model =
     let

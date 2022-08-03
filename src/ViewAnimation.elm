@@ -1,5 +1,14 @@
 module ViewAnimation exposing (animateEnemyVisuals, animateHeroVisuals)
 
+{-| This file fills functions related to viewing animation.
+
+
+# Function
+
+@docs animateEnemyVisuals, animateHeroVisuals
+
+-}
+
 import Data exposing (findFixedPos)
 import Debug exposing (toString)
 import Html exposing (Html, div)
@@ -9,6 +18,8 @@ import Svg exposing (text)
 import Type exposing (Class(..), Enemy, Hero, HeroState(..))
 
 
+{-| This function will display the enemies' animation
+-}
 animateEnemyVisuals : Enemy -> Html Msg
 animateEnemyVisuals enemy =
     let
@@ -38,6 +49,8 @@ animateEnemyVisuals enemy =
         ]
 
 
+{-| This function will display the heroes' animation
+-}
 animateHeroVisuals : Hero -> Html Msg
 animateHeroVisuals hero =
     let

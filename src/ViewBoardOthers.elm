@@ -1,4 +1,13 @@
-module ViewBoardOthers exposing (viewMap, viewItem, viewCrate, viewTurn)
+module ViewBoardOthers exposing (viewCrate, viewItem, viewMap, viewTurn)
+
+{-| This file fills functions related to viewing item, obstacles and turn.
+
+
+# Function
+
+@docs viewCrate, viewItem, viewMap, viewTurn
+
+-}
 
 import Data exposing (findPos)
 import Debug exposing (toString)
@@ -11,10 +20,11 @@ import Message exposing (Msg(..))
 import Svg exposing (Svg, text)
 import Svg.Attributes as SvgAttr
 import Type exposing (Board, BoardState(..), Item, ItemType(..), Model, Obstacle, ObstacleType(..), Pos, Turn(..))
-import ViewOthers exposing (detPoints, shapeHelper, dialogHelper)
-import ViewTutorial exposing (viewHintBackground)
+import ViewOthers exposing (detPoints)
 
 
+{-| This function will display the board map.
+-}
 viewMap : Board -> List (Svg Msg)
 viewMap board =
     List.map (viewCell board) board.map
@@ -86,6 +96,8 @@ viewCell board pos =
             []
 
 
+{-| This function will disiplay the turn whether it is `PlayerTurn` or `TurretTurn` or `EnemyTurn`.
+-}
 viewTurn : Model -> Html Msg
 viewTurn model =
     div
@@ -112,6 +124,8 @@ viewTurn model =
         ]
 
 
+{-| This function will display crates on the board.
+-}
 viewCrate : Board -> Obstacle -> Svg Msg
 viewCrate board obs =
     let
@@ -138,6 +152,8 @@ viewCrate board obs =
         Svg.rect [] []
 
 
+{-| This function will display items on the board.
+-}
 viewItem : Board -> Item -> List (Svg Msg)
 viewItem board item =
     let
@@ -181,57 +197,3 @@ viewItem board item =
                 ]
                 []
             ]
-
-
-viewHints : Bool -> Board -> Html Msg
-viewHints bool board =
-    let
-        ( rotating, time ) =
-            board.mapRotating
-
-        enemiesPos =
-            List.map (\enemy -> enemy.pos) board.enemies
-
-        enemyPos =
-            Maybe.withDefault ( 0, 0 ) (List.head enemiesPos)
-
-        ( ex, ey ) =
-            findPos rotating board.level time enemyPos
-
-        heroesPos =
-            List.map (\hero -> hero.pos) board.heroes
-
-        heroPos =
-            Maybe.withDefault ( 0, 0 ) (List.head heroesPos)
-
-        ( hx, hy ) =
-            findPos rotating board.level time heroPos
-    in
-    if bool == True then
-        div
-            [ HtmlAttr.style "width" "100%"
-            , HtmlAttr.style "height" "100%"
-            , HtmlAttr.style "position" "fixed"
-            , HtmlAttr.style "left" "0"
-            , HtmlAttr.style "top" "0"
-            , HtmlAttr.style "font-family" "myfont"
-            ]
-            [ Svg.svg
-                [ SvgAttr.width "100%"
-                , SvgAttr.height "100%"
-                ]
-                [ shapeHelper ( 100, 100 ) ( hx, hy + 5 ) "blue" ( 0, 0 )
-                , shapeHelper ( 100, 100 ) ( ex, ey + 5 ) "red" ( 0, 0 )
-                , viewHintBackground 400 50 (hx + 50) (hy - 50)
-                , viewHintBackground 500 50 (hx + 50) (hy + 50)
-                , viewHintBackground 450 50 (ex + 50) (ey - 50)
-                , viewHintBackground 350 50 210 680
-                ]
-            , dialogHelper 400 20 (hx + 50) (hy - 50) 30 "white" "1. Left click on a hero to select"
-            , dialogHelper 500 20 (hx + 50) (hy + 50) 30 "white" "2. Left click on blue hexagons to move"
-            , dialogHelper 450 20 (ex + 50) (ey - 50) 30 "white" "3. Right click on enemies to attack"
-            , dialogHelper 350 20 210 680 30 "white" "4. Click to turn of the hint"
-            ]
-
-    else
-        div [] []
