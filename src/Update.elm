@@ -1,17 +1,28 @@
 module Update exposing (update)
 
+{-| This file fills functions related to the main update function.
+
+
+# Function
+
+@docs update
+
+-}
+
 import Board exposing (initBoard)
 import Data exposing (class2Index, findChosenHero, index2Class, initialHeroes)
 import Message exposing (Msg(..))
 import Type exposing (Class, FailToDo(..), GameMode(..), Hero, Model, Task(..))
-import ViewConst exposing (pixelHeight, pixelWidth)
 import UpdateBoard exposing (updateBoardGame)
 import UpdateCharacter exposing (updateCharacter)
 import UpdateRPG exposing (updateRPG)
 import UpdateShop exposing (updateShop)
 import UpdateTutorial exposing (updateTutorial)
+import ViewConst exposing (pixelHeight, pixelWidth)
 
 
+{-| This is the main update function.
+-}
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let

@@ -1,5 +1,14 @@
 module ViewTutorial exposing (viewHintBackground, viewTutorialScene)
 
+{-| This file fills functions related to viewing tutorial.
+
+
+# Function
+
+@docs viewHintBackground, viewTutorialScene
+
+-}
+
 import Data exposing (findFixedPos)
 import Debug exposing (toString)
 import Html exposing (Html, div)
@@ -11,6 +20,8 @@ import Type exposing (BoardState(..), Model, Turn(..))
 import ViewOthers exposing (dialogHelper, shapeHelper)
 
 
+{-| This function will display live tutorial step by step.
+-}
 viewTutorialScene : Model -> Int -> List (Html Msg)
 viewTutorialScene model k =
     if model.board.boardState == NoActions && model.board.turn == PlayerTurn then
@@ -58,6 +69,8 @@ viewTutorialScene model k =
         []
 
 
+{-| This function will display the tutorial text background.
+-}
 viewHintBackground : Float -> Float -> Float -> Float -> Svg msg
 viewHintBackground w h x y =
     Svg.rect

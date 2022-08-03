@@ -1,5 +1,14 @@
 module ViewAllHero exposing (viewHero, viewHeroInfo, viewHeroOnboard)
 
+{-| This file fills functions related to viewing heroes.
+
+
+# Function
+
+@docs viewHero, viewHeroInfo, viewHeroOnboard
+
+-}
+
 import Data exposing (findPos, offsetHero)
 import Debug exposing (toString)
 import DetectMouse exposing (onContentMenu)
@@ -12,6 +21,8 @@ import Svg.Attributes as SvgAttr
 import Type exposing (Board, Class(..), Hero, HeroState(..))
 
 
+{-| This function will display heroes' information board properties on the board.
+-}
 viewHero : Board -> List (Svg msg)
 viewHero board =
     List.concatMap viewHeroOuterFrame board.heroes
@@ -183,6 +194,8 @@ viewHeroHealth board hero =
            ]
 
 
+{-| This function will display the heroes' information on the side of the board.
+-}
 viewHeroInfo : Hero -> List (Html Msg)
 viewHeroInfo hero =
     if hero.class == Turret then
@@ -228,6 +241,8 @@ viewHeroInfo hero =
         ]
 
 
+{-| This function will display the heroes' image.
+-}
 viewHeroOnboard : Board -> Hero -> Html Msg
 viewHeroOnboard board hero =
     let

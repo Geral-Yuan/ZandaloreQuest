@@ -1,9 +1,21 @@
-module UpdateMap exposing (..)
+module UpdateMap exposing (updateMap)
 
-import Type exposing (Board, Pos)
+{-| This file fills functions related to updating board game map.
+
+
+# Function
+
+@docs updateMap
+
+-}
+
 import BoardMap exposing (rotateStuff)
+import Type exposing (Board, Pos)
 import VectorOperation exposing (distance)
 
+
+{-| This function will update map shape according to the level and rotating state.
+-}
 updateMap : Int -> Board -> Board
 updateMap level board =
     case level of

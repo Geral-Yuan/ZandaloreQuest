@@ -1,4 +1,13 @@
-module ViewScenes exposing (..)
+module ViewScenes exposing (viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForC, viewTipForDir, viewTipForEnter)
+
+{-| This file fills functions related to viewing every scene.
+
+
+# Function
+
+@docs viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForC, viewTipForDir, viewTipForEnter
+
+-}
 
 import Debug exposing (toString)
 import Html exposing (Html, audio, div, img)
@@ -13,6 +22,8 @@ import ViewNPCTask exposing (viewSingleNPC, viewTask, viewTaskBoard)
 import ViewOthers exposing (determineOpct, viewCoinSVG, viewPopUpHint, viewUIButton, viewUIFrame)
 
 
+{-| This function will display logo at the beginning of the game.
+-}
 viewScene0 : Model -> Html Msg
 viewScene0 model =
     let
@@ -59,6 +70,8 @@ viewLogo t =
         []
 
 
+{-| This function will display the main character in RPG mode.
+-}
 viewRpgCharacter : RpgCharacter -> Html Msg
 viewRpgCharacter character =
     let
@@ -105,26 +118,8 @@ viewRpgCharacter character =
         ]
 
 
-viewCharacterPos : RpgCharacter -> Html Msg
-viewCharacterPos character =
-    let
-        ( x, y ) =
-            character.pos
-    in
-    div
-        [ HtmlAttr.style "bottom" "100px"
-        , HtmlAttr.style "left" "0px"
-        , HtmlAttr.style "color" "red"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "font-size" "40px"
-        , HtmlAttr.style "font-weight" "bold"
-        , HtmlAttr.style "text-align" "center"
-        , HtmlAttr.style "line-height" "60px"
-        , HtmlAttr.style "position" "absolute"
-        ]
-        [ text ("( " ++ toString (floor x) ++ " ," ++ toString (floor y) ++ " )") ]
-
-
+{-| This function will display RPG mode components.
+-}
 viewCastle : Model -> Html Msg
 viewCastle model =
     let
@@ -200,6 +195,8 @@ viewCastle model =
         )
 
 
+{-| This function will display first dungeon components.
+-}
 viewDungeon : Model -> Html Msg
 viewDungeon model =
     let
@@ -249,6 +246,8 @@ viewDungeon model =
         )
 
 
+{-| This function will display second dungeon components.
+-}
 viewDungeon2 : Model -> Html Msg
 viewDungeon2 model =
     let
@@ -314,6 +313,8 @@ viewDungeon2 model =
 --         [ Svg.text "Exit" ]
 
 
+{-| This function will display dungeon scene background.
+-}
 viewDungeonSvg : Svg Msg
 viewDungeonSvg =
     Svg.image
@@ -327,6 +328,8 @@ viewDungeonSvg =
         []
 
 
+{-| This function will display GIF for arrow keys, c key, and enter key.
+-}
 viewKeyGif : List (Html msg)
 viewKeyGif =
     [ viewSvgForDir
@@ -416,6 +419,8 @@ viewDungeon2Location =
         [ text "Side Dungeon" ]
 
 
+{-| This function will display text about pressing arrow keys.
+-}
 viewTipForDir : Html Msg
 viewTipForDir =
     div
@@ -463,6 +468,8 @@ viewTipForT =
 --        [ text "Press T to access all levels" ]
 
 
+{-| This function will display text about pressing C key.
+-}
 viewTipForC : Html Msg
 viewTipForC =
     div
@@ -479,6 +486,8 @@ viewTipForC =
         [ text "Press C to talk to NPCs" ]
 
 
+{-| This function will display text about pressing enter key.
+-}
 viewTipForEnter : Html Msg
 viewTipForEnter =
     div
@@ -495,6 +504,8 @@ viewTipForEnter =
         [ text "Press Enter to pass doors" ]
 
 
+{-| This function will display castle.
+-}
 viewCastleSvg : Svg msg
 viewCastleSvg =
     Svg.image
@@ -508,40 +519,8 @@ viewCastleSvg =
         []
 
 
-viewStarting : Model -> Html Msg
-viewStarting model =
-    -- Add this when the homepage has been designed
-    let
-        ( w, h ) =
-            model.size
-
-        r =
-            if w / h > pixelWidth / pixelHeight then
-                Basics.min 1 (h / pixelHeight)
-
-            else
-                Basics.min 1 (w / pixelWidth)
-    in
-    div
-        [ HtmlAttr.style "width" (String.fromFloat pixelWidth ++ "px")
-        , HtmlAttr.style "height" (String.fromFloat pixelHeight ++ "px")
-        , HtmlAttr.style "position" "absolute"
-        , HtmlAttr.style "left" (String.fromFloat (600 + (w - pixelWidth * r) / 2) ++ "px")
-        , HtmlAttr.style "top" (String.fromFloat ((h - pixelHeight * r) / 2) ++ "px")
-        , HtmlAttr.style "transform-origin" "0 0"
-        , HtmlAttr.style "font-family" "myfont"
-        , HtmlAttr.style "transform" ("scale(" ++ String.fromFloat r ++ ")")
-        , ("url('./assets/image/Start.png')"
-            ++ " no-repeat fixed "
-            ++ " 0px "
-            ++ " 0px / "
-            ++ (toString pixelWidth ++ "px " ++ (toString pixelHeight ++ "px"))
-          )
-            |> HtmlAttr.style "background"
-        ]
-        []
-
-
+{-| This function will display amount of coins the player has.
+-}
 viewBagCoin : Model -> Html Msg
 viewBagCoin model =
     div
@@ -558,6 +537,8 @@ viewBagCoin model =
         [ text (toString model.bag.coins) ]
 
 
+{-| This function will display the summary screen of each board game level.
+-}
 viewSummary : Model -> Html Msg
 viewSummary model =
     let
@@ -630,6 +611,8 @@ viewSummary model =
         ]
 
 
+{-| This function will display background of board game mode.
+-}
 viewBoardGameBackGround : Int -> Svg Msg
 viewBoardGameBackGround opac =
     Svg.image

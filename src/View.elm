@@ -1,5 +1,14 @@
 module View exposing (view)
 
+{-| This file fills functions related to the main view function.
+
+
+# Function
+
+@docs view
+
+-}
+
 import Html exposing (Html, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
@@ -12,6 +21,8 @@ import ViewScenes exposing (viewCastle, viewDungeon, viewDungeon2, viewScene0, v
 import ViewShop exposing (viewDrawnHero, viewShop, viewShopChoose, viewUpgradePage)
 
 
+{-| This is the main view function.
+-}
 view : Model -> Html Msg
 view model =
     let

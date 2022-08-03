@@ -1,20 +1,31 @@
 module Model exposing (init)
 
+{-| This file fills functions related to model.
+
+
+# Function
+
+@docs init
+
+-}
+
 import Bag exposing (initBag)
 import Board exposing (sampleBoard)
 import Browser.Dom exposing (getViewport)
 import Data exposing (allSampleHeroes)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
-import Task
+import Task exposing (perform)
 import Type exposing (BoardState(..), Class(..), Dir(..), FailToDo(..), GameMode(..), Model, RpgCharacter, Task(..))
 import ViewConst exposing (pixelHeight, pixelWidth)
 
 
+{-| This function will return the initial state of the model.
+-}
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel
-    , Task.perform GetViewport getViewport
+    , perform GetViewport getViewport
     )
 
 

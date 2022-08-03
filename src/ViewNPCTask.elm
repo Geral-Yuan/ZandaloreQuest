@@ -1,5 +1,14 @@
 module ViewNPCTask exposing (checkTalkRange, viewSingleNPC, viewTask, viewTaskBoard)
 
+{-| This file fills functions related to viewing NPC tasks.
+
+
+# Function
+
+@docs checkTalkRange, viewSingleNPC, viewTask, viewTaskBoard
+
+-}
+
 import Debug exposing (toString)
 import Html exposing (Html, div, img)
 import Html.Attributes as HtmlAttr exposing (height, src, width)
@@ -9,6 +18,8 @@ import Svg.Attributes as SvgAttr
 import Type exposing (Dir(..), FailToDo(..), GameMode(..), Model, NPC, Scene(..), Task(..))
 
 
+{-| This function will display an NPC's image according to its name.
+-}
 viewSingleNPC : NPC -> List (Html Msg)
 viewSingleNPC npc =
     let
@@ -61,6 +72,8 @@ viewChatBox ( x, y ) scaleFactor =
         ]
 
 
+{-| This function will display the task board outline and properties.
+-}
 viewTaskBoard : List (Svg msg)
 viewTaskBoard =
     [ Svg.rect
@@ -88,6 +101,8 @@ viewTaskBoard =
     ]
 
 
+{-| This function will display task for player to follow.
+-}
 viewTask : Model -> Html Msg
 viewTask model =
     div
@@ -133,6 +148,8 @@ textTask model =
             ""
 
 
+{-| This function will allow player to talk to the NPCs.
+-}
 checkTalkRange : Model -> Model
 checkTalkRange model =
     let

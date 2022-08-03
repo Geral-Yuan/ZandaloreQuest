@@ -1,9 +1,18 @@
 module ViewBoard exposing (viewBoard, viewTutorialBoard)
 
+{-| This file fills functions related to viewing board.
+
+
+# Function
+
+@docs viewBoard, viewTutorialBoard
+
+-}
+
 import Html exposing (Html, audio, div)
 import Html.Attributes as HtmlAttr
 import Message exposing (Msg(..))
-import Svg
+import Svg exposing (svg)
 import Svg.Attributes as SvgAttr
 import Type exposing (Model)
 import ViewAllEnemy exposing (viewEnemy, viewEnemyInfo, viewEnemyOnboard)
@@ -16,6 +25,8 @@ import ViewScenes exposing (viewBoardGameBackGround)
 import ViewTutorial exposing (viewTutorialScene)
 
 
+{-| This function will display the board and everything on the board.
+-}
 viewBoard : Model -> Html Msg
 viewBoard model =
     let
@@ -40,7 +51,7 @@ viewBoard model =
         , HtmlAttr.style "background" "grey"
         , HtmlAttr.style "font-family" "myfont"
         ]
-        ([ Svg.svg
+        ([ svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
@@ -57,8 +68,6 @@ viewBoard model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                --++ viewUIButton 170 80 29 700
-                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
@@ -95,6 +104,8 @@ viewBoard model =
         )
 
 
+{-| This function will display the tutorial board and everything on it.
+-}
 viewTutorialBoard : Int -> Model -> Html Msg
 viewTutorialBoard k model =
     let
@@ -119,7 +130,7 @@ viewTutorialBoard k model =
         , HtmlAttr.style "background" "grey"
         , HtmlAttr.style "font-family" "myfont"
         ]
-        (Svg.svg
+        (svg
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
@@ -135,8 +146,6 @@ viewTutorialBoard k model =
                 -- UI for end turn button
                 ++ viewUIButton 170 80 29 800
                 -- UI for skip button
-                --++ viewUIButton 170 80 29 700
-                -- UI for hint button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )

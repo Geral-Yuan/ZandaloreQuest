@@ -1,11 +1,22 @@
 module UpdateCharacter exposing (updateCharacter)
 
+{-| This file fills functions related to updating main character.
+
+
+# Function
+
+@docs updateCharacter
+
+-}
+
 import Data exposing (mode2Scene)
 import Message exposing (Msg(..))
 import RpgCharacter exposing (moveCharacter)
 import Type exposing (GameMode(..), Model, NPC)
 
 
+{-| This function will update the main character when walking, entering, talking
+-}
 updateCharacter : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 updateCharacter msg ( model, cmd ) =
     case msg of
@@ -58,10 +69,10 @@ sceneReachable mode =
             ]
 
         Dungeon ->
-            [ ( ( 502, 1542 ), ( 241, 914 ) ) ]
+            [ ( ( 502, 1542 ), ( 241, 970 ) ) ]
 
         Dungeon2 ->
-            [ ( ( 502, 1542 ), ( 241, 914 ) ) ]
+            [ ( ( 502, 1542 ), ( 241, 970 ) ) ]
 
         _ ->
             []

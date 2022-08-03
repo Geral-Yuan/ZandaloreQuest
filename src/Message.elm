@@ -1,5 +1,14 @@
 module Message exposing (Msg(..))
 
+{-| This file fills types related to message.
+
+
+# Type
+
+@docs Msg
+
+-}
+
 import Browser.Dom exposing (Viewport)
 import Type exposing (Class, Critical, Dir, Hero, ItemType, Pos)
 

@@ -1,5 +1,14 @@
 module HeroAttack exposing (checkAttack, generateDamage, heroTurretAttack)
 
+{-| This file fills functions related to hero attack actions.
+
+
+# Functions
+
+@docs checkAttack, generateDamage, heroTurretAttack
+
+-}
+
 import Action exposing (attackedByHeroArcherRange, checkAttackObstacle, checkBuildTurret, checkHeal, maxTurret, selectedHero, unselectedHero)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
@@ -19,11 +28,15 @@ randomDamage =
         ]
 
 
+{-| This function will generate attacked damage with random value.
+-}
 generateDamage : Pos -> Cmd Msg
 generateDamage pos =
     Random.generate (Attack pos) randomDamage
 
 
+{-| This function will reduce the hero's energy by 3 and change the hero's state to Attacking.
+-}
 checkAttack : Board -> Pos -> Critical -> Board
 checkAttack board pos critical =
     -- reduce the energy of a hero when player clicks h (hit) and check surroundings for enemies
@@ -148,6 +161,8 @@ damageEnemy damage critical enemy =
     { enemy | health = enemy.health - damage - critical, state = Attacked (critical + damage) }
 
 
+{-| This function will allow the turret to attack.
+-}
 heroTurretAttack : Hero -> Board -> List Enemy
 heroTurretAttack my_hero board =
     let
