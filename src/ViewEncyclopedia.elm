@@ -310,13 +310,13 @@ viewEncyclopediaButton : Html Msg
 viewEncyclopediaButton =
     button
         [ HtmlAttr.style "background" "transparent"
-        , HtmlAttr.style "top" "800px"
+        , HtmlAttr.style "top" "650px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
         , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
-        , HtmlAttr.style "left" "29px"
+        , HtmlAttr.style "left" "10px"
         , HtmlAttr.style "position" "absolute"
         , HtmlAttr.style "width" "170px"
         , HtmlAttr.style "border" "transparent"

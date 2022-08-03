@@ -301,7 +301,7 @@ viewTutorial10 =
             [ shapeHelper ( 100, 100 ) (findFixedPos ( 5, 4 )) "blue" ( 5, 4 )
             , viewHintBackground 700 190 580 50
             ]
-        , dialogHelper 700 20 580 50 50 "white" "Move the warrior onto the item and it will receive +10 health/+2 energy."
+        , dialogHelper 700 20 580 50 50 "white" "Move the warrior onto the item and its energy will be full."
         ]
 
 

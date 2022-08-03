@@ -229,7 +229,7 @@ endTurnButton =
         [ HtmlAttr.style "background" "transparent"
         , HtmlAttr.style "top" "900px"
         , HtmlAttr.style "color" "rgb(61,43,31)"
-        , HtmlAttr.style "font-size" "18px"
+        , HtmlAttr.style "font-size" "24px"
         , HtmlAttr.style "font-weight" "bold"
         , HtmlAttr.style "font-family" "myfont"
         , HtmlAttr.style "height" "80px"
@@ -247,10 +247,11 @@ skipButton : Html Msg
 skipButton =
     button
         (buttonHtmlAttr
-            ++ [ HtmlAttr.style "top" "800px"
-               , HtmlAttr.style "font-size" "18px"
+            ++ [ HtmlAttr.style "top" "750px"
+               , HtmlAttr.style "font-size" "24px"
+               , HtmlAttr.style "font-weight" "bold"
                , HtmlAttr.style "height" "80px"
-               , HtmlAttr.style "left" "29px"
+               , HtmlAttr.style "left" "10px"
                , HtmlAttr.style "line-height" "60px"
                , HtmlAttr.style "outline" "none"
                , HtmlAttr.style "width" "170px"
@@ -346,6 +347,9 @@ viewPopUpHint model =
 
                 FailtoTalk npc ->
                     "You have defeated " ++ npc.name
+
+                FailtoBuild ->
+                    "Engineer can build at most two turrets"
 
                 _ ->
                     ""

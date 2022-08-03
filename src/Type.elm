@@ -12,10 +12,14 @@ module Type exposing (Bag, Board, BoardState(..), Class(..), Critical(..), Dir(.
 -- For Type definition
 
 
+{-| This is the Pos type
+-}
 type alias Pos =
     ( Int, Int )
 
 
+{-| This is the Scene type
+-}
 type Scene
     = CastleScene
     | ShopScene
@@ -23,6 +27,8 @@ type Scene
     | Dungeon2Scene
 
 
+{-| This is the Task type
+-}
 type Task
     = MeetElder
     | FinishTutorial
@@ -31,6 +37,8 @@ type Task
     | BeatBoss
 
 
+{-| This is the Critical type
+-}
 type Critical
     = Less
     | None
@@ -39,12 +47,16 @@ type Critical
     | High
 
 
+{-| This is the Turn type
+-}
 type Turn
     = PlayerTurn
     | TurretTurn
     | EnemyTurn
 
 
+{-| This is the Boardstate type
+-}
 type BoardState
     = NoActions
     | EnemyAttack
@@ -56,13 +68,18 @@ type BoardState
     | Healing
 
 
+{-| This is the FailToDo type
+-}
 type FailToDo
     = FailtoEnter Scene
     | FailtoTalk NPC
+    | FailtoBuild
     | LackEnergy
     | Noop
 
 
+{-| This is the Class type
+-}
 type Class
     = Warrior
     | Archer
@@ -73,11 +90,15 @@ type Class
     | Turret
 
 
+{-| This is the ObstacleType type
+-}
 type ObstacleType
     = MysteryBox
     | Unbreakable
 
 
+{-| This is the IteamType type
+-}
 type ItemType
     = HealthPotion
     | EnergyPotion
@@ -85,6 +106,8 @@ type ItemType
     | NoItem
 
 
+{-| This is the HeroState type
+-}
 type HeroState
     = Waiting
     | Attacking
@@ -95,6 +118,8 @@ type HeroState
     | GettingHealed Int
 
 
+{-| This is Obstacle type
+-}
 type alias Obstacle =
     { obstacleType : ObstacleType
     , pos : Pos
@@ -102,12 +127,16 @@ type alias Obstacle =
     }
 
 
+{-| This is Item type
+-}
 type alias Item =
     { itemType : ItemType
     , pos : Pos
     }
 
 
+{-| This is the Hero type
+-}
 type alias Hero =
     { class : Class
     , pos : Pos
@@ -121,6 +150,8 @@ type alias Hero =
     }
 
 
+{-| This is the Enemy type
+-}
 type alias Enemy =
     { class : Class
     , pos : Pos
@@ -137,6 +168,8 @@ type alias Enemy =
     }
 
 
+{-| This is the NPC type
+-}
 type alias NPC =
     { scene : Scene
     , name : String
@@ -152,6 +185,8 @@ type alias NPC =
     }
 
 
+{-| This is the Dir type
+-}
 type Dir
     = Left
     | Right
@@ -159,11 +194,15 @@ type Dir
     | Down
 
 
+{-| This is the Side type
+-}
 type Side
     = Hostile
     | Friend
 
 
+{-| This is the GameMode type
+-}
 type GameMode
     = Castle
     | Shop
@@ -181,11 +220,15 @@ type GameMode
     | Encyclopedia Class
 
 
+{-| This is the Bag type
+-}
 type alias Bag =
     { coins : Int
     }
 
 
+{-| This is the RpgCHaracter type
+-}
 type alias RpgCharacter =
     { pos : ( Float, Float )
     , moveLeft : Bool
@@ -200,6 +243,8 @@ type alias RpgCharacter =
     }
 
 
+{-| This is the Spa\_row type
+-}
 type alias Spa_row =
     { pos : Pos
     , path_length : Int
@@ -207,6 +252,8 @@ type alias Spa_row =
     }
 
 
+{-| This is the Board type
+-}
 type alias Board =
     { map : List Pos
     , obstacles : List Obstacle
@@ -236,6 +283,8 @@ type alias Board =
     }
 
 
+{-| This is the Model type
+-}
 type alias Model =
     { mode : GameMode
     , indexedheroes : List ( Hero, Int ) -- each hero linked to an index where 0 means not obtained so far

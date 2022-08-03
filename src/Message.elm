@@ -12,7 +12,8 @@ module Message exposing (Msg(..))
 import Browser.Dom exposing (Viewport)
 import Type exposing (Class, Critical, Dir, Hero, ItemType, Pos)
 
-
+{-| This is the main message type
+-}
 type Msg
     = Key Dir Bool
     | Choose Pos

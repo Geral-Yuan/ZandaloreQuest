@@ -6,8 +6,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [1.0.0] -- 2022-8-3
 
-## [m1.61] -- 2022-8-3
+### Added
+
+- Add locked heroes image for hero choose scene
+
+### Removed
+
+- Effect of key K
+
+### Changed
+
+- Adjust the UI face
+
+## [0.5.4] -- 2022-8-3
 
 ### Fixed
 
@@ -15,14 +28,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - cannot exit after drawing hero
 
-## [m1.60] -- 2022-8-3
+## [0.5.3] -- 2022-8-3
 
 ### Changed
 
 - Elm doc
 - Simplify codes
 
-## [m1.59] -- 2022-8-2
+## [0.5.2] -- 2022-8-2
 
 ### Changed
 
@@ -34,7 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - resolved formatting issues in view functions 
 
-## [m1.58] -- 2022-8-2
+## [0.5.1] -- 2022-8-2
 
 ### Changed
 
@@ -46,7 +59,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Simplify codes in EnemyAction.elm
 
-## [m1.57] -- 2022-7-29
+## [0.5.0] -- 2022-7-29
 
 ### Added
 - all dialogues
@@ -60,13 +73,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - rotate in update
 - formatting in encyclopedia
 
-## [m1.56] -- 2022-7-27
+## [0.4.9] -- 2022-7-27
 
 ### Changed
 
 - fix the wrong text in lucky draw
 
-## [m1.55] -- 2022-7-28
+## [0.4.8] -- 2022-7-28
 
 ### Added
 
@@ -76,7 +89,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - The boss with skills of any classes
 
-## [m1.54] -- 2022-7-27
+## [0.4.7] -- 2022-7-27
 
 ### Changed
 
@@ -93,7 +106,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - change turret generation attribute
 
 
-## [m1.53] -- 2022-7-27
+## [0.4.6] -- 2022-7-27
 
 ### Added
 - added UI for button
@@ -106,7 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - fixed wrong information in encyclopedia
 
 
-## [m1.52] -- 2022-7-26 
+## [0.4.5] -- 2022-7-26 
 
 ### Added
 - Encyclopedia messages and gameMode
@@ -116,7 +129,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 - some typos
-## [m1.51] -- 2022-7-26
+## [0.4.4] -- 2022-7-26
 
 ### Added
 
@@ -138,7 +151,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Not to show energy use for turret
 - Improve the module exposing and import clear and concrete
 
-## [m1.50] -- 2022
+## [0.4.3] -- 2022
 ### Added
 - added UI for board game
 
@@ -149,7 +162,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - changed board game background to have simpler color
 - changed formatting issues such as text alignment
 
-## [m1.49] -- 2022-7-24
+## [0.4.2] -- 2022-7-24
 
 ### Added
 - added SFXs for every character
@@ -162,14 +175,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - fixed select nonplayable character
 
 
-## [m1.48] -- 2022-7-24
+## [0.4.1] -- 2022-7-24
 
 ### Changed
 - changed some of the formmatting for tutorial
 - corrected some typos in tutorial 
 
 
-## [m1.47] -- 2022-7-23
+## [0.4.0] -- 2022-7-23
 
 ### Added
 
@@ -179,7 +192,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - use ← and → to switch heroes
 
 
-## [m1.46] -- 2022-7-23
+## [0.3.9] -- 2022-7-23
 
 ### Added
 
@@ -190,7 +203,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 
-## [m1.45] -- 2022-7-23
+## [0.3.8] -- 2022-7-23
 
 ### Added
 
@@ -205,7 +218,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - fix health exceeding maxhealth
 - fix different time interval of attack range display of turret and enemy
-## [m1.44] -- 2022-7-22
+## [0.3.7] -- 2022-7-22
 
 ### Changed
 
@@ -215,7 +228,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Right click hexagon in skillable range to use skill
 - Adjust the message of left and right click to simplify it
 
-## [m1.43] -- 2022-7-22 
+## [0.3.6] -- 2022-7-22 
 ### Added 
 - update Tutorial 
 - viewTutorial.elm file 
@@ -226,7 +239,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed 
 - Tutorial in update.elm 
 
-## [m1.42] -- 2022-7-21
+## [0.3.5] -- 2022-7-21
 
 ### Added
 
@@ -240,12 +253,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Add many new NPCs on the different scenes
 
-## [m1.41] -- 2022-7-18
+## [0.3.4] -- 2022-7-18
 
 ### Added
 
 - Add healer enemy will try to find the nearest position to heal another enemy. Otherwise, it will have the same action like the enemy warrior. (i.e. find the nearest hero and move to attack)
-## [m1.40] -- 2022-7-18
+## [0.3.3] -- 2022-7-18
 
 ### Added
 
@@ -263,7 +276,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Adjust the duration of the enemy animation
 
-## [m1.39] -- 2022-7-17
+## [0.3.2] -- 2022-7-17
 
 ### Added
 - Animation for healing
@@ -277,14 +290,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - bug for turn and time 
 - 4 heroes in a list bug for smartmage function 
 
-## [m1.38] -- 2022-7-17
+## [0.3.1] -- 2022-7-17
 
 ### Fixed
 
 - image lost in NoItem
 
 
-## [m1.37] -- 2022-7-16
+## [0.3.0] -- 2022-7-16
 
 ### Changed
 
@@ -298,7 +311,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Fix the bug that the RPG character will get stuck in wall when exiting the shop or after beating the second
 
-## [m1.36] -- 2022-7-16
+## [0.2.17] -- 2022-7-16
 
 ### Add
 
@@ -307,19 +320,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Fix
 
 - Animation of RPGcharacter
-## [m1.35] -- 2022-7-16
+## [0.2.16] -- 2022-7-16
 
 ### Add
 
 - Engineer Class: attack, build and destroy
-## [m1.34] -- 2022-7-16
+## [0.2.15] -- 2022-7-16
 
 ### Add
 - RPG character animations
 - Board visuals to enhance game experience 
 - Animations for RPG character and heroes
 
-## [m1.33] -- 2022-7-14
+## [0.2.14] -- 2022-7-14
 
 ### Add
 
@@ -331,13 +344,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Archer Enemies can attack heroes with another enemy in between.
 
-## [m1.32] -- 2022-7-12
+## [0.2.13] -- 2022-7-12
 
 ### Changed
 
 - Make the character move more freely and improve the code quality
 
-## [m1.31] -- 2022-7-11
+## [0.2.12] -- 2022-7-11
 
 ### Added 
 
@@ -345,7 +358,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - NPCs where players can engage in a battle with them 
 
-## [m1.30] -- 2022-7-10
+## [0.2.11] -- 2022-7-10
 
 ### Added
 
@@ -359,7 +372,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Unused Armor
 
-## [m1.29] -- 2022-7-10
+## [0.2.10] -- 2022-7-10
 
 ### Added 
 
@@ -369,7 +382,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - the viewItem function to display the gold properly
 
 
-## [m1.28] -- 2022-7-10
+## [0.2.9] -- 2022-7-10
 
 ### Added 
 
@@ -381,7 +394,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - boundaries of the map so that players cannot walk out of the map
 
-## [m1.27] -- 2022-7-10
+## [0.2.8] -- 2022-7-10
 
 ### Added 
 
@@ -407,7 +420,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - optimized the updateRPG function to include the shope system 
 
-## [m1.26] -- 2022-7-10
+## [0.2.7] -- 2022-7-10
 
 ### Added
 
@@ -421,7 +434,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - use index to check interactions between items and (heroes & enemies)
 
 
-## [m1.25] -- 2022-7-10
+## [0.2.6] -- 2022-7-10
 
 ### Added
 
@@ -430,7 +443,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - coin field in Bag
 - Enemies can break items
 
-## [m1.24] -- 2022-7-9
+## [0.2.5] -- 2022-7-9
 
 ### Added
 
@@ -447,7 +460,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 
-## [m1.23] -- 2022-7-9
+## [0.2.4] -- 2022-7-9
 
 ### Added
 
@@ -463,7 +476,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Attack for hero mage.
 
-## [m1.22] -- 2022-7-8
+## [0.2.3] -- 2022-7-8
 
 ### Added
 - EnergyPotion in ItemType
@@ -484,7 +497,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Prevent randomly generate enemy in the same position
 
 
-## [m1.21] -- 2022-7-6
+## [0.2.2] -- 2022-7-6
 
 ### Added
 
@@ -494,7 +507,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Related functions of Movement and Attack of Mage Enemy.
 
-## [m1.20] -- 2022-7-6
+## [0.2.1] -- 2022-7-6
 
 ### Added
 
@@ -524,14 +537,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Optimized View function to accommodate new functions for RPG 
 
-## [m1.19] -- 2022-7-5
+## [0.2.0] -- 2022-7-5
 
 ### Changed
 
 - Change input of the previous `shortestPath` function from `Pos` to `List Pos`, and correspondingly change the input `end` to `end_list`.
 - Change the `leastPathFind` functions for warriors and archers to implement the more efficient `shortestPath`.
 
-## [m1.18] -- 2022-7-5
+## [0.1.1] -- 2022-7-5
 
 ### Added
 - Added field spawn and index in type alias Board
@@ -544,7 +557,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 - display enemies' position too
 
-## [m1.17] -- 2022-7-4
+## [0.1.0] -- 2022-7-4
 
 ### Added
 
@@ -563,7 +576,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Enemy movement bugs.
 
 - Improve code quality.
-## [m1.16] -- 2022-7-4
+## [0.0.10] -- 2022-7-4
 
 ### Added
 - logo.png into assets/image
@@ -592,14 +605,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 
 
-## [m1.15] -- 2022-7-2
+## [0.0.9] -- 2022-7-2
 
 ### Changed
 
 - Change the enemy's attack range. Now the enemy archer can attack the hero behind other enemies.
 
 
-## [m1.14] -- 2022-7-2
+## [0.0.8] -- 2022-7-2
 
 ### Added
 
@@ -611,7 +624,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Move functions related to enemy action from `Update.elm` to `EnemyAction.elm`
 
-## [m1.13] -- 2022-7-2
+## [0.0.7] -- 2022-7-2
 
 ### Added
 
@@ -625,7 +638,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Rewrite function to detect attackable hexagons and moveable hexagons.
 
-## [m1.12] -- 2022-7-2
+## [0.0.6] -- 2022-7-2
 
 ### Added 
 
@@ -645,7 +658,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Changed the first hero on board to healer
 
 
-## [m1.11] -- 2022-7-2
+## [0.0.5] -- 2022-7-2
 
 ### Added
 
@@ -669,7 +682,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Delete some unuseful functions.
 
-## [m1.10] -- 2022-7-1
+## [0.0.4] -- 2022-7-1
 ### Added
 - Added moveable and attackable fields in type alias Board in `Board.elm`
 - Added vecScale and cartesianProduct functions in `Data.elm` 
@@ -679,7 +692,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 - Changed viewCell function to be able to view the extra highlighted hexagons `View.elm`
 
-## [m1.9] -- 2022-7-1 
+## [0.0.3] -- 2022-7-1 
 ### Added
 
 - leastPath which generates the current optimal path for one enemy 
@@ -694,7 +707,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - viewRoute (no need for testing)
 
-## [m1.8] -- 2022-6-30 
+## [0.0.2] -- 2022-6-30 
 ### Added
 
 - Added a heroattack file where all functions related to heroes attacking will be there
@@ -713,7 +726,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - changed the sequence of update to accommodate the RNG
 
-## [m1.7] -- 2022-6-30
+## [0.0.1] -- 2022-6-30
 
 ### Added 
 - added checkEnd function
@@ -726,7 +739,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Removed
 - 
 
-## [m1.6] -- 2022-6-29
+## [GS.6] -- 2022-6-29
 
 ### Added 
 - added key H for hit message
@@ -740,7 +753,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Removed
 - viewInfo file
 
-## [m1.5] -- 2022-6-28
+## [GS.5] -- 2022-6-28
 
 ### Added
 
@@ -753,7 +766,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - In `View.elm`, add `viewCoordinate` to view the coordinate of all hexagons
 
 
-## [m1.4] -- 2022-6-28
+## [GS.4] -- 2022-6-28
 
 ### Added
 - numberOnBoard field to hero class as an index for the heroes in the game because players can choose different heroes every round
@@ -765,7 +778,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 - moveHero function can now only be move the character only if the hero has sufficient energy 
 
-## [m1.3] -- 2022-6-27
+## [GS.3] -- 2022-6-27
 
 ### Added
 
@@ -785,7 +798,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Change the name of type Charater into Hero and so do all relative parameters.
 
-## [m1.2] -- 2022-06-26
+## [GS.2] -- 2022-06-26
 
 ### Added
 
@@ -793,7 +806,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Realize the selection of heroes by the players. (Press 1/2/3/4 to select Warrior/Archer/Assissin/Mage)
 
-## [m1.1] -- 2022-06-25
+## [GS.1] -- 2022-06-25
 
 ### Added
 

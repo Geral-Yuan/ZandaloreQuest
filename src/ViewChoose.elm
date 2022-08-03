@@ -9,7 +9,7 @@ module ViewChoose exposing (viewHeroChoose)
 
 -}
 
-import Data exposing (buttonHtmlAttr)
+import Data exposing (buttonHtmlAttr, index2Class)
 import Debug exposing (toString)
 import Html exposing (Html, button, div)
 import Html.Attributes as HtmlAttr
@@ -52,7 +52,7 @@ viewHeroChoose model =
             [ SvgAttr.width "100%"
             , SvgAttr.height "100%"
             ]
-            (List.map viewYourHeroes (List.filter (\( _, y ) -> y /= 0) model.indexedheroes)
+            (viewYourHeroes model.indexedheroes
                 ++ List.map viewFrame model.chosenHero
                 ++ viewUIFrame 600 125 700 25
                 ++ viewUIButton 250 100 875 875
@@ -84,8 +84,17 @@ viewFrame index =
         []
 
 
-viewYourHeroes : ( Hero, Int ) -> Svg Msg
-viewYourHeroes ( hero, index ) =
+viewYourHeroes : List ( Hero, Int ) -> List (Svg Msg)
+viewYourHeroes indexHerolist =
+    let
+        ( ownIndex, others ) =
+            List.partition (\idx -> List.member idx (List.map Tuple.second indexHerolist)) (List.range 1 6)
+    in
+    List.map (viewOneHero True) ownIndex ++ List.map (viewOneHero False) others
+
+
+viewOneHero : Bool -> Int -> Svg Msg
+viewOneHero own index =
     let
         y =
             ((index - 1) // 3) * 325 + 225
@@ -94,17 +103,29 @@ viewYourHeroes ( hero, index ) =
             modBy 3 (index - 1) * 450 + 425
 
         class =
-            toString hero.class
+            toString (index2Class index)
     in
-    Svg.image
-        [ SvgAttr.width "250"
-        , SvgAttr.height "250"
-        , SvgAttr.x (toString x)
-        , SvgAttr.y (toString y)
-        , SvgAttr.preserveAspectRatio "none"
-        , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
-        ]
-        []
+    if own then
+        Svg.image
+            [ SvgAttr.width "250"
+            , SvgAttr.height "250"
+            , SvgAttr.x (toString x)
+            , SvgAttr.y (toString y)
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref ("./assets/image/" ++ class ++ "Blue.png")
+            ]
+            []
+
+    else
+        Svg.image
+            [ SvgAttr.width "250"
+            , SvgAttr.height "250"
+            , SvgAttr.x (toString x)
+            , SvgAttr.y (toString y)
+            , SvgAttr.preserveAspectRatio "none"
+            , SvgAttr.xlinkHref "./assets/image/Locked.png"
+            ]
+            []
 
 
 viewChooseText : Svg msg

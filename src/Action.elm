@@ -1,4 +1,4 @@
-module Action exposing (attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, maxTurret, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
+module Action exposing (attackedByArcherRange, attackedByHeroArcherRange, attackedByMageRange, calculateHeal, checkAttackObstacle, checkBuildTurret, checkHeal, index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
 
 {-| This file fills functions related to all heroes actions.
 
@@ -12,7 +12,7 @@ module Action exposing (attackedByArcherRange, attackedByHeroArcherRange, attack
 import Data exposing (findHexagon)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
 import Message exposing (Msg(..))
-import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
 import VectorOperation exposing (leastdistance, neighbour, sameline, subneighbour, subsubneighbour, vecAdd, vecScale)
 
 
@@ -267,6 +267,9 @@ checkBuildTurret myhero pos board =
 
                     else
                         board.heroes
+
+                otherHeroes =
+                    List.filter (\hero -> hero.class /= Engineer) board.heroes
             in
             case pos2Hero board.heroes pos of
                 Nothing ->
@@ -274,7 +277,7 @@ checkBuildTurret myhero pos board =
                         { board | heroes = newherolist, totalHeroNumber = board.totalHeroNumber + 1, boardState = HeroAttack }
 
                     else
-                        board
+                        { board | popUpHint = ( FailtoBuild, 0 ), heroes = myhero :: otherHeroes }
 
                 Just hero ->
                     if hero.class == Turret then

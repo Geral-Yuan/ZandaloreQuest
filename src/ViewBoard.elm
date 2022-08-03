@@ -23,6 +23,7 @@ import ViewConst exposing (pixelHeight, pixelWidth)
 import ViewOthers exposing (..)
 import ViewScenes exposing (viewBoardGameBackGround)
 import ViewTutorial exposing (viewTutorialScene)
+import ViewEncyclopedia exposing (viewEncyclopediaButton)
 
 
 {-| This function will display the board and everything on the board.
@@ -66,8 +67,10 @@ viewBoard model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 29 800
+                ++ viewUIButton 170 80 10 750
                 -- UI for skip button
+                ++ viewUIButton 170 80 10 650
+                -- UI for encyclopedia button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
@@ -100,6 +103,7 @@ viewBoard model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
+            ++ [viewEncyclopediaButton]
          --++ [ viewHints model.board.hintOn model.board, hintButton model.board ]
         )
 
@@ -144,8 +148,10 @@ viewTutorialBoard k model =
                 ++ viewUIFrame 420 500 1570 500
                 ++ viewUIButton 170 80 1700 900
                 -- UI for end turn button
-                ++ viewUIButton 170 80 29 800
+                ++ viewUIButton 170 80 10 750
                 -- UI for skip button
+                ++ viewUIButton 170 80 10 650
+                -- UI for encyclopedia button
                 ++ [ viewCoinSVG ( 1700, 785 ) ]
              --++ viewLines model.board
             )
@@ -164,5 +170,6 @@ viewTutorialBoard k model =
             ++ List.map animateHeroVisuals model.board.heroes
             ++ List.map animateEnemyVisuals model.board.enemies
             ++ viewPopUpHint model
+            ++ [viewEncyclopediaButton]
          --++ [ viewHints model.board.hintOn model.board ]
         )
