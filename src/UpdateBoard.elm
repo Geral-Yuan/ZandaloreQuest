@@ -1,5 +1,14 @@
 module UpdateBoard exposing (updateBeaten, updateBoardGame)
 
+{-| This file fills functions related to updateing board game mode.
+
+
+# Function
+
+@docs updateBeaten, updateBoardGame
+
+-}
+
 import Action exposing (index2Hero, pos2Item, selectedHero, unMoveable, unselectedHero, updateAttackable, updateEnemyAttackable, updateTarget)
 import Bag exposing (addCoin)
 import EnemyAction exposing (actionEnemy, checkEnemyDone)
@@ -7,7 +16,7 @@ import HeroAttack exposing (checkAttack, generateDamage)
 import ListOperation exposing (listDifference)
 import Message exposing (Msg(..))
 import NPC exposing (npcMap)
-import Type exposing (..)
+import Type exposing (Board, BoardState(..), Class(..), Enemy, FailToDo(..), GameMode(..), Hero, HeroState(..), ItemType(..), Model, NPC, Pos, Task(..), Turn(..))
 import UpdateMap exposing (updateMap)
 import UpdateSpawn exposing (randomCrate, randomEnemies, spawnCrate, spawnEnemies)
 import UpdateTurret exposing (actionTurret, checkCurrentTurret, checkTurretDone, updateTurretAttackable)
@@ -15,6 +24,8 @@ import VectorOperation exposing (distance)
 import ViewConst exposing (pixelHeight, pixelWidth)
 
 
+{-| This function update board game mode
+-}
 updateBoardGame : Msg -> Model -> ( Model, Cmd Msg )
 updateBoardGame msg model =
     { model | board = model.board |> updateBoardAnimation msg |> updateBoardOthers msg |> updateAttackable |> updateTarget |> checkCurrentTurret |> updateTurretAttackable }
@@ -470,6 +481,8 @@ nextNPC task =
             []
 
 
+{-| This function will update the NPC list that has been beaten.
+-}
 updateBeaten : List NPC -> List NPC
 updateBeaten npclist =
     List.map (\npc -> { npc | beaten = True }) npclist

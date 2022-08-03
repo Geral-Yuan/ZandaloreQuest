@@ -1,11 +1,22 @@
 module UpdateTurret exposing (actionTurret, checkCurrentTurret, checkTurretDone, updateTurretAttackable)
 
+{-| This file fills functions related to turret action.
+
+
+# Function
+
+@docs actionTurret, checkCurrentTurret, checkTurretDone, updateTurretAttackable
+
+-}
+
 import Action exposing (attackedByHeroArcherRange)
 import HeroAttack exposing (heroTurretAttack)
 import ListOperation exposing (listDifference)
 import Type exposing (Board, BoardState(..), Class(..), Hero, HeroState(..), Turn(..))
 
 
+{-| This function will let the turret take action.
+-}
 actionTurret : Board -> Board
 actionTurret board =
     let
@@ -39,6 +50,8 @@ actionTurret board =
     selectboard
 
 
+{-| This function will detect which turret will be taking action at that moment.
+-}
 checkCurrentTurret : Board -> Board
 checkCurrentTurret board =
     let
@@ -53,6 +66,8 @@ checkCurrentTurret board =
             { board | cntTurret = enemy.indexOnBoard }
 
 
+{-| This function will update the turret attackable range.
+-}
 updateTurretAttackable : Board -> Board
 updateTurretAttackable board =
     let
@@ -75,6 +90,8 @@ updateTurretAttackable board =
         board
 
 
+{-| This function will prevent turret from attacking more.
+-}
 checkTurretDone : Hero -> Hero
 checkTurretDone turret =
     if turret.energy == -3 && turret.state == Waiting && turret.class == Turret then

@@ -1,5 +1,14 @@
 module UpdateTutorial exposing (updateTutorial)
 
+{-| This file fills functions related to updating tutorial.
+
+
+# Function
+
+@docs updateTutorial
+
+-}
+
 import Bag exposing (addCoin)
 import Message exposing (Msg(..))
 import Type exposing (BoardState(..), Class(..), GameMode(..), Model, Task(..), Turn(..))
@@ -74,6 +83,8 @@ followTutorial msg k =
             False
 
 
+{-| This function will update the tutorial
+-}
 updateTutorial : Msg -> Int -> Model -> ( Model, Cmd Msg )
 updateTutorial msg k model =
     case k of

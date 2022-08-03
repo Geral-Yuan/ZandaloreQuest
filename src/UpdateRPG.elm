@@ -1,5 +1,14 @@
 module UpdateRPG exposing (updateRPG)
 
+{-| This file fills functions related to updating RPG game mode.
+
+
+# Function
+
+@docs updateRPG
+
+-}
+
 import Data exposing (allSampleHeroes)
 import Message exposing (Msg(..))
 import NPC exposing (allNPC)
@@ -8,6 +17,8 @@ import UpdateScene exposing (checkLeaveCastle, checkLeaveDungeon, checkLeaveDung
 import ViewNPCTask exposing (checkTalkRange)
 
 
+{-| This function update RPG mode
+-}
 updateRPG : Msg -> Model -> ( Model, Cmd Msg )
 updateRPG msg model =
     let

@@ -1,5 +1,14 @@
 module UpdateSpawn exposing (randomCrate, randomEnemies, spawnCrate, spawnEnemies)
 
+{-| This file fills functions related to generating random obstacles and enemies in the board game mode.
+
+
+# Function
+
+@docs randomCrate, randomEnemies, spawnCrate, spawnEnemies
+
+-}
+
 import Data exposing (sampleEnemy)
 import ListOperation exposing (cartesianProduct, listDifference, unionList)
 import Message exposing (Msg(..))
@@ -8,6 +17,8 @@ import Type exposing (Board, Class(..), Hero, ItemType(..), Model, Obstacle, Obs
 import VectorOperation exposing (neighbour, subneighbour, vecAdd)
 
 
+{-| This function will spawn the generated enemies.
+-}
 spawnEnemies : List Class -> List Pos -> Board -> Board
 spawnEnemies list_class list_pos board =
     if List.length board.enemies == 0 && board.spawn > 0 then
@@ -22,6 +33,8 @@ spawnEnemies list_class list_pos board =
         board
 
 
+{-| This function will spawn the generated crate.
+-}
 spawnCrate : Pos -> ItemType -> Board -> Board
 spawnCrate pos itype board =
     let
@@ -34,6 +47,8 @@ spawnCrate pos itype board =
     { board | obstacles = nobstacles }
 
 
+{-| This function will generate group of enemies at random position and class.
+-}
 randomEnemies : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 randomEnemies ( model, cmd ) =
     if List.length model.board.enemies == 0 && model.board.spawn > 0 then
@@ -104,6 +119,8 @@ possibleEnemyPosition model future_enemies_pos =
         possible_pos
 
 
+{-| This function will generate a crate at random position and random item type.
+-}
 randomCrate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 randomCrate msg ( model, cmd ) =
     case msg of
