@@ -60,10 +60,6 @@ key on keycode =
         67 ->
             Talk on
 
-        75 ->
-            -- Key K
-            Kill on
-
         84 ->
             -- Key T
             Test
