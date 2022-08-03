@@ -1,5 +1,14 @@
 module Model exposing (init)
 
+{-| This file fills functions related to model.
+
+
+# Function
+
+@docs init
+
+-}
+
 import Bag exposing (initBag)
 import Board exposing (sampleBoard)
 import Browser.Dom exposing (getViewport)
@@ -11,6 +20,8 @@ import Type exposing (BoardState(..), Class(..), Dir(..), FailToDo(..), GameMode
 import ViewConst exposing (pixelHeight, pixelWidth)
 
 
+{-| This function will return the initial state of the model.
+-}
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( initModel

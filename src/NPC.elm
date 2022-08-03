@@ -1,8 +1,19 @@
 module NPC exposing (allNPC, npcMap)
 
+{-| This file fills functions related to NPC.
+
+
+# Function
+
+@docs allNPC, npcMap
+
+-}
+
 import Type exposing (Dir(..), NPC, Scene(..), Task(..))
 
 
+{-| This function will map between NPC's index and the NPC.
+-}
 npcMap : Int -> NPC
 npcMap idx =
     case idx of
@@ -46,6 +57,8 @@ npcMap idx =
             npcBoss
 
 
+{-| This function will return a List of all NPCs.
+-}
 allNPC : List NPC
 allNPC =
     List.map npcMap (List.range 1 13)
