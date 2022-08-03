@@ -1,4 +1,21 @@
-module Action exposing (..)
+module Action exposing
+    ( attackedByArcherRange
+    , attackedByHeroArcherRange
+    , attackedByMageRange
+    , calculateHeal
+    , checkAttackObstacle
+    , checkBuildTurret
+    , checkHeal
+    , index2Hero
+    , maxTurret
+    , pos2Item
+    , selectedHero
+    , unMoveable
+    , unselectedHero
+    , updateAttackable
+    , updateEnemyAttackable
+    , updateTarget
+    )
 
 import Data exposing (findHexagon)
 import ListOperation exposing (listDifference, listIntersection, listUnion)
@@ -6,6 +23,10 @@ import Message exposing (Msg(..))
 import Time exposing (Weekday(..))
 import Type exposing (Board, BoardState(..), Class(..), Enemy, Hero, HeroState(..), Item, ItemType(..), ObstacleType(..), Pos, Side(..), Turn(..))
 import VectorOperation exposing (leastdistance, neighbour, sameline, subneighbour, subsubneighbour, vecAdd, vecScale)
+
+
+
+{- This function will update the attackable position according to the enemy's position -}
 
 
 updateEnemyAttackable : Board -> Board
@@ -28,6 +49,10 @@ updateEnemyAttackable board =
 
     else
         board
+
+
+
+{- This function will update the attackable position according to the hero's position. -}
 
 
 updateAttackable : Board -> Board
@@ -122,9 +147,17 @@ skillRange hero =
             []
 
 
+
+{- This function will return List of Positions that can be hit by Archer on the Board. -}
+
+
 attackedByArcherRange : Board -> Pos -> List Pos
 attackedByArcherRange board pos =
     List.map (vecAdd pos) (List.concat (List.map (stuckInWay board pos Hostile) neighbour))
+
+
+
+{- This function will return List of Positions that can be hit by Hero Archer on the Board. -}
 
 
 attackedByHeroArcherRange : Board -> Pos -> List Pos
@@ -156,11 +189,16 @@ stuckInWay board my_pos my_side nbhd_pos =
 
 
 --for enemy mage
+{- This function will return List of Positions that can be hit by Mage on the Board. -}
 
 
 attackedByMageRange : Pos -> List Pos
 attackedByMageRange pos =
     List.map (vecAdd pos) subsubneighbour
+
+
+
+{- This function will update the target's position according to the hero's position -}
 
 
 updateTarget : Board -> Board
@@ -187,9 +225,17 @@ updateTarget board =
                     { board | target = [] }
 
 
+
+{- This function will detect the selected hero. -}
+
+
 selectedHero : List Hero -> Maybe Hero
 selectedHero hero_list =
     List.head (List.filter (\hero -> hero.selected) hero_list)
+
+
+
+{- This function will detect the unselected hero. -}
 
 
 unselectedHero : List Hero -> List Hero
@@ -206,9 +252,17 @@ checkItemType ( row, column ) item =
         NoItem
 
 
+
+{- This function will give List of unmoveable Positions. -}
+
+
 unMoveable : Board -> List Pos
 unMoveable board =
     List.map .pos board.obstacles ++ List.map .pos board.enemies ++ List.map .pos board.heroes
+
+
+
+{- This function will destroy the destructable obstacle if being hit. -}
 
 
 checkAttackObstacle : List Pos -> Board -> Board
@@ -223,6 +277,10 @@ checkAttackObstacle pos_list board =
     { board | obstacles = attackedOthers ++ others, item = List.map (\obstacle -> Item obstacle.itemType obstacle.pos) attackedBreakable ++ board.item }
 
 
+
+{- This function will set the limit of the maximum turret on the board. -}
+
+
 maxTurret : Int
 maxTurret =
     2
@@ -231,6 +289,10 @@ maxTurret =
 sampleTurret : Int -> Int -> Pos -> Board -> Hero
 sampleTurret health dmg pos board =
     Hero Turret pos (health - 10) (health - 10) (2 * dmg) 0 False Waiting (board.totalHeroNumber + 1)
+
+
+
+{- This function will let Engineer build Turret. -}
 
 
 checkBuildTurret : Hero -> Pos -> Board -> Board
@@ -262,6 +324,10 @@ checkBuildTurret myhero pos board =
 
         _ ->
             board
+
+
+
+{- This function will check if a character receive a heal. -}
 
 
 checkHeal : Class -> Pos -> Board -> Board
@@ -298,9 +364,17 @@ checkHeal class pos board =
                     board
 
 
+
+{- This function will calculate the heal according to the Healer's damage. -}
+
+
 calculateHeal : Int -> Int
 calculateHeal damage =
     2 * damage
+
+
+
+{- This function will detect if that position have item. -}
 
 
 pos2Item : List Item -> Pos -> Item
@@ -321,6 +395,10 @@ pos2Hero all_hero pos =
 
         chosen :: _ ->
             Just chosen
+
+
+
+{- This function will convert from the hero index to hero in the choosing hero scene. -}
 
 
 index2Hero : Int -> List Hero -> Hero
