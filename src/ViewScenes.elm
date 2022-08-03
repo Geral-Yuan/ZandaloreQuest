@@ -5,7 +5,7 @@ module ViewScenes exposing (viewBagCoin, viewBoardGameBackGround, viewCastle, vi
 
 # Function
 
-@docs viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForC, viewTipForDir, viewTipForEnter
+@docs viewBagCoin, viewBoardGameBackGround, viewCastle, viewCastleSvg, viewDungeon, viewDungeon2, viewDungeonSvg, viewKeyGif, viewRpgCharacter, viewScene0, viewSummary, viewTipForKeys
 
 -}
 
