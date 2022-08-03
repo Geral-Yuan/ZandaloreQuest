@@ -26,7 +26,8 @@ subneighbour : List Pos
 subneighbour =
     [ ( 2, 0 ), ( 1, 1 ), ( 0, 2 ), ( -1, 2 ), ( -2, 2 ), ( -2, 1 ), ( -2, 0 ), ( -1, -1 ), ( 0, -2 ), ( 1, -2 ), ( 2, -2 ), ( 2, -1 ) ]
 
-
+{-| This function will return list of positions that is in three steps
+-}
 subsubneighbour : List Pos
 subsubneighbour =
     List.map (\x_ -> List.map (vecAdd x_) subneighbour) neighbour
